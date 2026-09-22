@@ -1,0 +1,104 @@
+# ---------------------------------------------
+# Monorepo Franccino — api/ (Laravel) + web/ (Next.js)
+# ---------------------------------------------
+
+# --- Geral ---
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.bak
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# --- Segredos (nunca commitar) ---
+.env
+.env.*
+!.env.example
+!api/.env.example
+!web/.env.example
+*.pem
+*.key
+
+# ---------------------------------------------
+# api/ — Laravel 11 + Filament
+# ---------------------------------------------
+/api/vendor/
+/api/node_modules/
+/api/public/build/
+/api/public/hot
+/api/public/storage
+/api/storage/*.key
+/api/storage/app/public/*
+/api/storage/framework/cache/*
+/api/storage/framework/sessions/*
+/api/storage/framework/testing/*
+/api/storage/framework/views/*
+/api/storage/logs/*
+/api/bootstrap/cache/*
+/api/.phpunit.result.cache
+/api/.phpunit.cache
+/api/auth.json
+/api/Homestead.json
+/api/Homestead.yaml
+/api/.php-cs-fixer.cache
+/api/.rr.yaml
+/api/database/*.sqlite
+/api/database/*.sqlite-journal
+
+# Manter as pastas de storage no repo, ignorando o conteudo
+!/api/storage/app/public/.gitignore
+!/api/storage/framework/cache/.gitignore
+!/api/storage/framework/sessions/.gitignore
+!/api/storage/framework/views/.gitignore
+!/api/bootstrap/cache/.gitignore
+
+# ---------------------------------------------
+# web/ — Next.js (App Router)
+# ---------------------------------------------
+/web/node_modules/
+/web/.next/
+/web/out/
+/web/build/
+/web/.vercel
+/web/next-env.d.ts
+/web/.turbo
+/web/*.tsbuildinfo
+/web/coverage/
+
+# Dependencias e lockfiles de gerenciadores nao usados
+/web/.pnp
+/web/.pnp.*
+/web/.yarn/*
+!/web/.yarn/patches
+!/web/.yarn/plugins
+!/web/.yarn/releases
+!/web/.yarn/versions
+
+# ---------------------------------------------
+# Docker / ambiente local
+# ---------------------------------------------
+docker-compose.override.yml
+/docker/data/
+/docker/mysql/data/
+
+# ---------------------------------------------
+# Midia e arquivos pesados (vao para o Cloudflare R2)
+# ---------------------------------------------
+*.glb
+*.gltf
+*.fbx
+*.obj
+*.blend
+/uploads/
+/media/
+
+# ---------------------------------------------
+# Migracao do WordPress (dumps e exports temporarios)
+# ---------------------------------------------
+/migration/dumps/
+/migration/exports/
+*.sql
+!*.schema.sql
