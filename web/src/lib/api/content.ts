@@ -1,0 +1,166 @@
+/**
+ * Content resources: home, collections, designers, launches, projects,
+ * clients, stores, banners, pages, settings, sitemap and redirects. See
+ * `docs/api.md` ("Leitura") for the underlying routes.
+ */
+
+import type { Locale } from '@/i18n/config';
+import { apiGet, apiGetOrNull } from './client';
+import type {
+  Banner,
+  CacheTag,
+  Client,
+  CollectionCard,
+  CollectionDetail,
+  DesignerCard,
+  DesignerDetail,
+  Home,
+  Item,
+  LaunchCard,
+  LaunchDetail,
+  PageContent,
+  Paginated,
+  ProjectCard,
+  ProjectDetail,
+  RedirectRule,
+  Settings,
+  SitemapEntry,
+  Store,
+} from './types';
+
+/** Every cache tag in the contract — used for resources that aggregate all content (the sitemap). */
+const ALL_CACHE_TAGS: CacheTag[] = [
+  'home',
+  'areas',
+  'categories',
+  'products',
+  'lines',
+  'designers',
+  'collections',
+  'launches',
+  'projects',
+  'clients',
+  'stores',
+  'finishes',
+  'banners',
+  'pages',
+  'settings',
+  'redirects',
+];
+
+export type ProjectListParams = {
+  type?: string;
+  page?: number;
+  per_page?: number;
+};
+
+export type StoreListParams = {
+  state?: string;
+  type?: string;
+};
+
+export type StoreList = {
+  stores: Store[];
+  /** UFs (Brazilian states) with at least one store. */
+  states: string[];
+};
+
+export async function getHome(locale: Locale): Promise<Home> {
+  const { data } = await apiGet<Item<Home>>('/home', { locale, tags: ['home'] });
+  return data;
+}
+
+export async function getCollections(locale: Locale): Promise<CollectionCard[]> {
+  const { data } = await apiGet<Item<CollectionCard[]>>('/collections', { locale, tags: ['collections'] });
+  return data;
+}
+
+export async function getCollection(locale: Locale, slug: string): Promise<CollectionDetail | null> {
+  const result = await apiGetOrNull<Item<CollectionDetail>>(`/collections/${slug}`, {
+    locale,
+    tags: ['collections'],
+  });
+  return result?.data ?? null;
+}
+
+export async function getDesigners(locale: Locale): Promise<DesignerCard[]> {
+  const { data } = await apiGet<Item<DesignerCard[]>>('/designers', { locale, tags: ['designers'] });
+  return data;
+}
+
+export async function getDesigner(locale: Locale, slug: string): Promise<DesignerDetail | null> {
+  const result = await apiGetOrNull<Item<DesignerDetail>>(`/designers/${slug}`, {
+    locale,
+    tags: ['designers'],
+  });
+  return result?.data ?? null;
+}
+
+export async function getLaunches(locale: Locale): Promise<LaunchCard[]> {
+  const { data } = await apiGet<Item<LaunchCard[]>>('/launches', { locale, tags: ['launches'] });
+  return data;
+}
+
+export async function getLaunch(locale: Locale, slug: string): Promise<LaunchDetail | null> {
+  const result = await apiGetOrNull<Item<LaunchDetail>>(`/launches/${slug}`, { locale, tags: ['launches'] });
+  return result?.data ?? null;
+}
+
+export async function getProjects(
+  locale: Locale,
+  params: ProjectListParams = {},
+): Promise<Paginated<ProjectCard>> {
+  return apiGet<Paginated<ProjectCard>>('/projects', {
+    locale,
+    query: { ...params },
+    tags: ['projects'],
+  });
+}
+
+export async function getProject(locale: Locale, slug: string): Promise<ProjectDetail | null> {
+  const result = await apiGetOrNull<Item<ProjectDetail>>(`/projects/${slug}`, { locale, tags: ['projects'] });
+  return result?.data ?? null;
+}
+
+export async function getClients(locale: Locale): Promise<Client[]> {
+  const { data } = await apiGet<Item<Client[]>>('/clients', { locale, tags: ['clients'] });
+  return data;
+}
+
+export async function getStores(locale: Locale, params: StoreListParams = {}): Promise<StoreList> {
+  const result = await apiGet<Item<Store[]> & { meta: { states: string[] } }>('/stores', {
+    locale,
+    query: { ...params },
+    tags: ['stores'],
+  });
+  return { stores: result.data, states: result.meta.states };
+}
+
+export async function getBanners(locale: Locale, placement = 'home_hero'): Promise<Banner[]> {
+  const { data } = await apiGet<Item<Banner[]>>('/banners', {
+    locale,
+    query: { placement },
+    tags: ['banners'],
+  });
+  return data;
+}
+
+export async function getPage(locale: Locale, key: string): Promise<PageContent | null> {
+  const result = await apiGetOrNull<Item<PageContent>>(`/pages/${key}`, { locale, tags: ['pages'] });
+  return result?.data ?? null;
+}
+
+export async function getSettings(locale: Locale): Promise<Settings> {
+  const { data } = await apiGet<Item<Settings>>('/settings', { locale, tags: ['settings'] });
+  return data;
+}
+
+export async function getSitemap(locale: Locale): Promise<SitemapEntry[]> {
+  const { data } = await apiGet<Item<SitemapEntry[]>>('/sitemap', { locale, tags: ALL_CACHE_TAGS });
+  return data;
+}
+
+export async function getRedirects(locale: Locale): Promise<RedirectRule[]> {
+  const { data } = await apiGet<Item<RedirectRule[]>>('/redirects', { locale, tags: ['redirects'] });
+  return data;
+}
