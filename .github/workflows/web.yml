@@ -1,0 +1,35 @@
+name: web
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths: ['web/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.github/workflows/web.yml']
+  push:
+    branches: [develop, main]
+    paths: ['web/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.github/workflows/web.yml']
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      API_URL: http://127.0.0.1:9
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:9
+      SITE_URL: https://franccino.com.br
+      SITE_ENV: production
+      ALLOW_BUILD_WITHOUT_API: 'true'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web lint
+      - run: pnpm --filter web typecheck
+      - run: pnpm --filter web test
+      - run: pnpm --filter web build
