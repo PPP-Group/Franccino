@@ -172,8 +172,10 @@ As etapas 2 e 3 têm aprovação do usuário antes de seguir.
 - Dependabot semanal (composer, npm, actions) apontando para `develop`. Template de PR com checklist.
   `CODEOWNERS` com `@pedrivobg` (Pedro Ivo) como revisor obrigatório de tudo — passa a valer quando a
   organização tiver plano que aplique proteção de branch.
-- Idiomas ativos configuráveis por ambiente (`SITE_LOCALES=pt,en` no front, `APP_LOCALES` na API), para o
-  site poder ir ao ar só em `pt` se o inglês atrasar.
+- Idiomas ativos configuráveis por ambiente (`NEXT_PUBLIC_SITE_LOCALES=pt,en` no front, `APP_LOCALES` na
+  API), para o site poder ir ao ar só em `pt` se o inglês atrasar.
+- `scripts/setup.mjs` (multiplataforma) implementa o `pnpm setup`; entra na etapa de integração (F8), quando
+  os dois apps existirem.
 - `docs/`: esta spec, data-model, api, inventário, ADRs, `runbook-deploy.md` (rascunho com pendências).
 
 ## 8. Testes
