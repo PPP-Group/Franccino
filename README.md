@@ -25,12 +25,13 @@ e `vendor`.
 
 ```bash
 pnpm install        # dependências da raiz e do web/, instala os hooks de git
-pnpm setup          # cria os .env, instala o api/, gera a chave, roda migrations e seed
+pnpm bootstrap      # cria os .env, instala o api/, gera a chave, roda migrations e seed
 pnpm dev            # API em :8000, fila e site em :3000
 ```
 
 Painel: http://localhost:8000/admin (usuário definido em `ADMIN_EMAIL` / `ADMIN_PASSWORD` no `api/.env`).
-Com Docker: `docker compose up -d` antes do `pnpm setup` (e-mails de teste em http://localhost:8025).
+Com Docker instalado o bootstrap sobe o MySQL sozinho (`pnpm bootstrap --sqlite` força SQLite); e-mails de teste em
+http://localhost:8025. `pnpm setup` é um comando nativo do pnpm, não confunda.
 
 ## Comandos úteis
 

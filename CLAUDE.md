@@ -150,7 +150,7 @@ Requisitos: Node 24, pnpm 11, PHP 8.4 + Composer 2 no PATH, Docker Desktop (opci
 
 ```bash
 pnpm install          # dependencias da raiz e do web/, instala os hooks
-pnpm setup            # primeira vez: .env, dependencias do api/, chave, migrations e seed
+pnpm bootstrap        # primeira vez: .env, dependencias do api/, chave, migrations e seed
 pnpm dev              # sobe API (8000), fila e front (3000) juntos
 ```
 

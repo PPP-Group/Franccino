@@ -1,7 +1,7 @@
 # Fundação do projeto — spec de design
 
 - Data: 2026-09-23
-- Status: aguardando revisão
+- Status: aprovada (2026-09-23)
 - Branch: `feature/fundacao-projeto` (saindo de `develop`)
 - Documentos que fazem parte desta spec: [data-model.md](../data-model.md), [api.md](../api.md),
   [content-inventory.md](../content-inventory.md)
@@ -31,21 +31,21 @@ com dependência do cliente (migração do WordPress, carga do catálogo, go-liv
 
 ## 3. Decisões
 
-| # | Decisão | Motivo |
-|---|---|---|
-| D1 | **Laravel 13, PHP 8.4, Filament 5, Livewire 4, Pest 5** (roadmap citava Laravel 11 e PHP 8.3) | Laravel 11 está sem correção de segurança desde mar/2026. Pest 5 exige PHP 8.4. |
-| D2 | **Next.js 16 (App Router), React 19, TypeScript, Tailwind 4, next-intl 4, Node 24 LTS, pnpm** (roadmap citava Node 20) | Node 20 saiu de suporte em abr/2026. Versões estáveis atuais. |
-| D3 | Tradução em colunas JSON (`spatie/laravel-translatable`), editadas em **abas PT/EN lado a lado** no Filament | Uma linha por registro, sem joins; integração simples com Filament; `en` opcional com fallback para `pt`. Alternativa descartada: tabelas `*_translations`. |
-| D4 | Mídia com `spatie/laravel-medialibrary` + plugin oficial do Filament; conversões WebP por largura | Versões automáticas de imagem pedidas no roadmap; o front escolhe a conversão via loader próprio do `next/image`, sem custo de otimização de imagem da hospedagem. |
-| D5 | Dois discos: `media` (público, CDN) e `downloads` (privado, URL temporária) | Bloqueio de acesso direto aos arquivos técnicos, pedido no roadmap. Localmente o Laravel gera URL temporária do disco local; em produção, URL pré-assinada do R2. |
-| D6 | Painel com dois perfis (`admin`, `editor`) por coluna `role` + Policies, e 2FA nativo do Filament | Poucos perfis, sem pacote extra de permissões. |
-| D7 | API REST versionada `/api/v1`, leitura pública, escrita (contato, newsletter, link de download) chamada direto do navegador com CORS restrito, limite por IP e Turnstile opcional | Limite de taxa precisa do IP real do visitante. |
-| D8 | Cache no Next (fetch com tags) + webhook de revalidação disparado pelo Laravel | "Geração estática com revalidação" do roadmap sem depender de TTL curto. |
-| D9 | Rotas localizadas com prefixo sempre presente e caminhos traduzidos (`/pt/produtos/...`, `/en/products/...`) | Mantém a convenção do `CLAUDE.md` existente; caminhos traduzidos ajudam SEO em inglês. |
-| D10 | Testes do back-end em SQLite em memória localmente e em **MySQL 8.4** na CI | Rapidez local, paridade com produção na CI. |
-| D11 | Monorepo com workspace pnpm na raiz, husky + lint-staged + commitlint, `.gitattributes` com LF | Padrão de código e de commit garantido no pre-commit, inclusive no Windows. |
-| D12 | Ambiente local: PHP nativo + Docker só para MySQL e Mailpit; SQLite como alternativa sem Docker | Roadmap pede Docker para o banco; a máquina atual ainda não tem Docker. |
-| D13 | Claude Code como ferramenta do time: `CLAUDE.md` na raiz + um por app, `.claude/settings.json` negando leitura de `.env`, Laravel Boost (MCP oficial do Laravel) | Código coerente entre os três devs, como pede o roadmap. |
+| #   | Decisão                                                                                                                                                                           | Motivo                                                                                                                                                             |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| D1  | **Laravel 13, PHP 8.4, Filament 5, Livewire 4, Pest 5** (roadmap citava Laravel 11 e PHP 8.3)                                                                                     | Laravel 11 está sem correção de segurança desde mar/2026. Pest 5 exige PHP 8.4.                                                                                    |
+| D2  | **Next.js 16 (App Router), React 19, TypeScript, Tailwind 4, next-intl 4, Node 24 LTS, pnpm** (roadmap citava Node 20)                                                            | Node 20 saiu de suporte em abr/2026. Versões estáveis atuais.                                                                                                      |
+| D3  | Tradução em colunas JSON (`spatie/laravel-translatable`), editadas em **abas PT/EN lado a lado** no Filament                                                                      | Uma linha por registro, sem joins; integração simples com Filament; `en` opcional com fallback para `pt`. Alternativa descartada: tabelas `*_translations`.        |
+| D4  | Mídia com `spatie/laravel-medialibrary` + plugin oficial do Filament; conversões WebP por largura                                                                                 | Versões automáticas de imagem pedidas no roadmap; o front escolhe a conversão via loader próprio do `next/image`, sem custo de otimização de imagem da hospedagem. |
+| D5  | Dois discos: `media` (público, CDN) e `downloads` (privado, URL temporária)                                                                                                       | Bloqueio de acesso direto aos arquivos técnicos, pedido no roadmap. Localmente o Laravel gera URL temporária do disco local; em produção, URL pré-assinada do R2.  |
+| D6  | Painel com dois perfis (`admin`, `editor`) por coluna `role` + Policies, e 2FA nativo do Filament                                                                                 | Poucos perfis, sem pacote extra de permissões.                                                                                                                     |
+| D7  | API REST versionada `/api/v1`, leitura pública, escrita (contato, newsletter, link de download) chamada direto do navegador com CORS restrito, limite por IP e Turnstile opcional | Limite de taxa precisa do IP real do visitante.                                                                                                                    |
+| D8  | Cache no Next (fetch com tags) + webhook de revalidação disparado pelo Laravel                                                                                                    | "Geração estática com revalidação" do roadmap sem depender de TTL curto.                                                                                           |
+| D9  | Rotas localizadas com prefixo sempre presente e caminhos traduzidos (`/pt/produtos/...`, `/en/products/...`)                                                                      | Mantém a convenção do `CLAUDE.md` existente; caminhos traduzidos ajudam SEO em inglês.                                                                             |
+| D10 | Testes do back-end em SQLite em memória localmente e em **MySQL 8.4** na CI                                                                                                       | Rapidez local, paridade com produção na CI.                                                                                                                        |
+| D11 | Monorepo com workspace pnpm na raiz, husky + lint-staged + commitlint, `.gitattributes` com LF                                                                                    | Padrão de código e de commit garantido no pre-commit, inclusive no Windows.                                                                                        |
+| D12 | Ambiente local: PHP nativo + Docker só para MySQL e Mailpit; SQLite como alternativa sem Docker                                                                                   | Roadmap pede Docker para o banco; a máquina atual ainda não tem Docker.                                                                                            |
+| D13 | Claude Code como ferramenta do time: `CLAUDE.md` na raiz + um por app, `.claude/settings.json` negando leitura de `.env`, Laravel Boost (MCP oficial do Laravel)                  | Código coerente entre os três devs, como pede o roadmap.                                                                                                           |
 
 As decisões viram ADRs em `docs/decisions/` durante a implementação.
 
@@ -74,6 +74,7 @@ de recurso exclusivo de uma plataforma.
 Dev: `pestphp/pest` 5 (+ plugin Laravel), `larastan/larastan`, `laravel/pint`, `laravel/boost`.
 
 **Estrutura**:
+
 - `app/Models` (um por tabela de [data-model.md](../data-model.md)), `app/Enums` (enums com rótulo
   traduzido), `app/Policies`.
 - `app/Http/Controllers/Api/V1` enxutos; consultas e filtros em `app/Queries` (ex.: `ProductQuery`);
@@ -86,6 +87,7 @@ Dev: `pestphp/pest` 5 (+ plugin Laravel), `larastan/larastan`, `laravel/pint`, `
 - Observers disparam o job `RevalidateFrontend` com as tags do recurso.
 
 **Painel** (`/admin`), grupos de navegação:
+
 - Catálogo: Produtos (abas Geral, Conteúdo, Medidas, Acabamentos, Mídia e 3D, Arquivos técnicos, SEO),
   Categorias, Linhas, Áreas (só edição), Acabamentos, Grupos de acabamento.
 - Conteúdo: Coleções, Designers, Lançamentos, Projetos, Clientes, Banners, Páginas (só edição, com
@@ -104,25 +106,25 @@ busca por nome. Upload de GLB com limite de tamanho configurável (default 20 MB
 
 **Rotas** (todas sob `/[locale]`, com caminhos traduzidos):
 
-| Página | pt | en |
-|---|---|---|
-| Home | `/pt` | `/en` |
-| Área interna / externa | `/pt/indoor`, `/pt/outdoor` | `/en/indoor`, `/en/outdoor` |
-| Categoria na área | `/pt/indoor/[categoria]` | `/en/indoor/[category]` |
-| Todos os produtos (busca e filtros) | `/pt/produtos` | `/en/products` |
-| Produto | `/pt/produtos/[slug]` | `/en/products/[slug]` |
-| Lançamentos | `/pt/lancamentos`, `/pt/lancamentos/[slug]` | `/en/novelties`, `/en/novelties/[slug]` |
-| Coleções | `/pt/colecoes`, `/pt/colecoes/[slug]` | `/en/collections`, `/en/collections/[slug]` |
-| Designers | `/pt/designers`, `/pt/designers/[slug]` | `/en/designers`, `/en/designers/[slug]` |
-| Projetos | `/pt/projetos`, `/pt/projetos/[slug]` | `/en/projects`, `/en/projects/[slug]` |
-| Corporativo | `/pt/corporativo` | `/en/contract` |
-| Fábrica | `/pt/fabrica` | `/en/factory` |
-| Acabamentos | `/pt/acabamentos` | `/en/finishes` |
-| Downloads (blocos 3D e fichas) | `/pt/downloads` | `/en/downloads` |
-| Lojas | `/pt/lojas` | `/en/stores` |
-| Contato | `/pt/contato` | `/en/contact` |
-| Busca | `/pt/busca` | `/en/search` |
-| Privacidade, Termos | `/pt/privacidade`, `/pt/termos` | `/en/privacy`, `/en/terms` |
+| Página                              | pt                                          | en                                          |
+| ----------------------------------- | ------------------------------------------- | ------------------------------------------- |
+| Home                                | `/pt`                                       | `/en`                                       |
+| Área interna / externa              | `/pt/indoor`, `/pt/outdoor`                 | `/en/indoor`, `/en/outdoor`                 |
+| Categoria na área                   | `/pt/indoor/[categoria]`                    | `/en/indoor/[category]`                     |
+| Todos os produtos (busca e filtros) | `/pt/produtos`                              | `/en/products`                              |
+| Produto                             | `/pt/produtos/[slug]`                       | `/en/products/[slug]`                       |
+| Lançamentos                         | `/pt/lancamentos`, `/pt/lancamentos/[slug]` | `/en/novelties`, `/en/novelties/[slug]`     |
+| Coleções                            | `/pt/colecoes`, `/pt/colecoes/[slug]`       | `/en/collections`, `/en/collections/[slug]` |
+| Designers                           | `/pt/designers`, `/pt/designers/[slug]`     | `/en/designers`, `/en/designers/[slug]`     |
+| Projetos                            | `/pt/projetos`, `/pt/projetos/[slug]`       | `/en/projects`, `/en/projects/[slug]`       |
+| Corporativo                         | `/pt/corporativo`                           | `/en/contract`                              |
+| Fábrica                             | `/pt/fabrica`                               | `/en/factory`                               |
+| Acabamentos                         | `/pt/acabamentos`                           | `/en/finishes`                              |
+| Downloads (blocos 3D e fichas)      | `/pt/downloads`                             | `/en/downloads`                             |
+| Lojas                               | `/pt/lojas`                                 | `/en/stores`                                |
+| Contato                             | `/pt/contato`                               | `/en/contact`                               |
+| Busca                               | `/pt/busca`                                 | `/en/search`                                |
+| Privacidade, Termos                 | `/pt/privacidade`, `/pt/termos`             | `/en/privacy`, `/en/terms`                  |
 
 **Dados**: Server Components por padrão; cliente da API tipado em `src/lib/api` (tipos de
 [api.md](../api.md)), `fetch` com `next.tags` + revalidação por tempo como rede de segurança; rota
@@ -149,6 +151,7 @@ traduzidas, Turnstile quando `NEXT_PUBLIC_TURNSTILE_SITE_KEY` existir.
 fallback (sem modelo ou 3D desligado mostra a galeria).
 
 **Direção visual** (pedido explícito: nada do protótipo, resultado sofisticado):
+
 1. Pesquisa de referências de marcas de mobiliário autoral e alto padrão, nacionais e internacionais,
    com capturas e análise de tipografia, grid, fotografia, navegação, página de produto, filtros,
    apresentação de acabamentos e movimento.
@@ -164,7 +167,7 @@ As etapas 2 e 3 têm aprovação do usuário antes de seguir.
 ## 7. Ferramentas e repositório
 
 - Raiz: `package.json` (workspace pnpm com `web/`), `pnpm dev` sobe API, fila e front juntos;
-  `pnpm setup` prepara o ambiente do zero (cópia de `.env`, dependências, chave, migrations, seed).
+  `pnpm bootstrap` prepara o ambiente do zero (cópia de `.env`, dependências, chave, migrations, seed).
 - `compose.yaml`: MySQL 8.4 e Mailpit.
 - Hooks: pre-commit (Pint nos PHP alterados, ESLint + Prettier nos TS alterados), commit-msg (commitlint).
 - CI (`.github/workflows/ci.yml`) em PR e push para `develop`/`main`: job `api` (Pint, Larastan, Pest com
@@ -174,7 +177,7 @@ As etapas 2 e 3 têm aprovação do usuário antes de seguir.
   organização tiver plano que aplique proteção de branch.
 - Idiomas ativos configuráveis por ambiente (`NEXT_PUBLIC_SITE_LOCALES=pt,en` no front, `APP_LOCALES` na
   API), para o site poder ir ao ar só em `pt` se o inglês atrasar.
-- `scripts/setup.mjs` (multiplataforma) implementa o `pnpm setup`; entra na etapa de integração (F8), quando
+- `scripts/bootstrap.mjs` (multiplataforma) implementa o `pnpm bootstrap` (`pnpm setup` é comando nativo do pnpm); entra na etapa de integração (F8), quando
   os dois apps existirem.
 - `docs/`: esta spec, data-model, api, inventário, ADRs, `runbook-deploy.md` (rascunho com pendências).
 
@@ -209,27 +212,27 @@ de carga e go-live.
 
 ## 11. Riscos levantados agora
 
-| Risco | Situação | Encaminhamento |
-|---|---|---|
-| Não existe nenhum GLB | Confirmado no inventário | Levar ao tech lead já na semana 1: produção dos modelos ou 3D reduzido a um subconjunto. |
-| Conteúdo em inglês inexistente | Confirmado | Tradução é do cliente; site pode ir ao ar só em `pt` (idiomas ativos configuráveis). |
-| Campos do JetEngine fora da API REST | Confirmado | Pedir dump do banco ou habilitar REST nos campos. |
-| 1.094 URLs + URLs com query string | Confirmado | Tabela `redirects` + geração a partir de `legacy_url`. |
-| PDFs legais em `/wp-content/uploads/` | Confirmado | Redirect específico para os novos arquivos (configurações > documentos do rodapé). |
-| Plano Free da organização não aplica proteção de branch | Confirmado | Decisão do tech lead (GitHub Team). Até lá, disciplina de PR. |
+| Risco                                                   | Situação                 | Encaminhamento                                                                           |
+| ------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------- |
+| Não existe nenhum GLB                                   | Confirmado no inventário | Levar ao tech lead já na semana 1: produção dos modelos ou 3D reduzido a um subconjunto. |
+| Conteúdo em inglês inexistente                          | Confirmado               | Tradução é do cliente; site pode ir ao ar só em `pt` (idiomas ativos configuráveis).     |
+| Campos do JetEngine fora da API REST                    | Confirmado               | Pedir dump do banco ou habilitar REST nos campos.                                        |
+| 1.094 URLs + URLs com query string                      | Confirmado               | Tabela `redirects` + geração a partir de `legacy_url`.                                   |
+| PDFs legais em `/wp-content/uploads/`                   | Confirmado               | Redirect específico para os novos arquivos (configurações > documentos do rodapé).       |
+| Plano Free da organização não aplica proteção de branch | Confirmado               | Decisão do tech lead (GitHub Team). Até lá, disciplina de PR.                            |
 
 ## 12. Frentes de trabalho
 
-| Frente | Conteúdo | Depende de |
-|---|---|---|
-| F0 Fundação | raiz, docs, CI, Claude Code | — |
-| F1 API base | Laravel, Filament, pacotes, auth, perfis, 2FA | F0 |
-| F2 Dados | migrations, models, factories, seeders | F1 |
-| F3 Painel | resources, configurações, páginas | F2 |
-| F4 API pública | endpoints, recursos, testes, revalidação | F2 |
-| F5 Web base | Next, i18n, cliente da API, SEO, segurança | F0 |
-| F6 Direção visual | pesquisa, direções, composições (aprovação) | — |
-| F7 Páginas | design system e telas com dados reais da API | F4, F5, F6 |
-| F8 Verificação | tudo rodando junto, QA no navegador, docs, PR | todas |
+| Frente            | Conteúdo                                      | Depende de |
+| ----------------- | --------------------------------------------- | ---------- |
+| F0 Fundação       | raiz, docs, CI, Claude Code                   | —          |
+| F1 API base       | Laravel, Filament, pacotes, auth, perfis, 2FA | F0         |
+| F2 Dados          | migrations, models, factories, seeders        | F1         |
+| F3 Painel         | resources, configurações, páginas             | F2         |
+| F4 API pública    | endpoints, recursos, testes, revalidação      | F2         |
+| F5 Web base       | Next, i18n, cliente da API, SEO, segurança    | F0         |
+| F6 Direção visual | pesquisa, direções, composições (aprovação)   | —          |
+| F7 Páginas        | design system e telas com dados reais da API  | F4, F5, F6 |
+| F8 Verificação    | tudo rodando junto, QA no navegador, docs, PR | todas      |
 
 F1–F4, F5 e F6 correm em paralelo.

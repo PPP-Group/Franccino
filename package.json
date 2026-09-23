@@ -8,6 +8,7 @@
   },
   "scripts": {
     "prepare": "husky",
+    "bootstrap": "node scripts/bootstrap.mjs",
     "dev": "concurrently -k -n api,queue,web -c blue,magenta,green \"php api/artisan serve\" \"php api/artisan queue:listen --tries=1\" \"pnpm --filter web dev\"",
     "lint": "pnpm --filter web lint && cd api && composer lint",
     "test": "pnpm run test:api && pnpm run test:web",
