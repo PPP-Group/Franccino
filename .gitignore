@@ -107,3 +107,6 @@ docker-compose.override.yml
 # Raiz (workspace pnpm)
 # ---------------------------------------------
 /node_modules/
+
+# Worktrees locais (execucao paralela de planos)
+/.worktrees/
