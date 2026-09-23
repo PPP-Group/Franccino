@@ -102,3 +102,8 @@ docker-compose.override.yml
 /migration/exports/
 *.sql
 !*.schema.sql
+
+# ---------------------------------------------
+# Raiz (workspace pnpm)
+# ---------------------------------------------
+/node_modules/
