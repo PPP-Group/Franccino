@@ -1,0 +1,94 @@
+{
+  "common": {
+    "siteName": "Franccino",
+    "skipToContent": "Skip to content",
+    "loading": "Loading…",
+    "readMore": "Read more",
+    "close": "Close"
+  },
+  "nav": {
+    "indoor": "Indoor",
+    "outdoor": "Outdoor",
+    "products": "Products",
+    "launches": "Novelties",
+    "collections": "Collections",
+    "designers": "Designers",
+    "projects": "Projects",
+    "corporate": "Contract",
+    "factory": "Factory",
+    "finishes": "Finishes",
+    "downloads": "Downloads",
+    "stores": "Stores",
+    "contact": "Contact"
+  },
+  "footer": {
+    "rightsReserved": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms of use"
+  },
+  "language": {
+    "label": "Language",
+    "pt": "Português",
+    "en": "English"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "The content you are looking for doesn't exist or has moved.",
+      "backHome": "Back to the homepage"
+    },
+    "serverError": {
+      "title": "Something went wrong",
+      "description": "We couldn't complete this action. Please try again.",
+      "retry": "Try again"
+    }
+  },
+  "forms": {
+    "requiredField": "Required field",
+    "invalidEmail": "Invalid email address",
+    "submit": "Submit",
+    "success": "Sent successfully.",
+    "error": "We couldn't send this. Please try again."
+  },
+  "products": {
+    "viewDetails": "View details",
+    "download": "Download file",
+    "model3d": "View in 3D",
+    "relatedProducts": "Related products"
+  },
+  "pages": {
+    "home": { "title": "Home" },
+    "indoor": { "title": "Indoor" },
+    "indoorCategory": { "title": "Indoor" },
+    "outdoor": { "title": "Outdoor" },
+    "outdoorCategory": { "title": "Outdoor" },
+    "products": { "title": "Products" },
+    "productDetail": { "title": "Product" },
+    "launches": { "title": "Novelties" },
+    "launchDetail": { "title": "Novelty" },
+    "collections": { "title": "Collections" },
+    "collectionDetail": { "title": "Collection" },
+    "designers": { "title": "Designers" },
+    "designerDetail": { "title": "Designer" },
+    "projects": { "title": "Projects" },
+    "projectDetail": { "title": "Project" },
+    "corporate": { "title": "Contract" },
+    "factory": { "title": "Factory" },
+    "finishes": { "title": "Finishes" },
+    "downloads": { "title": "Downloads" },
+    "stores": { "title": "Stores" },
+    "contact": { "title": "Contact" },
+    "search": { "title": "Search" },
+    "privacy": { "title": "Privacy policy" },
+    "terms": { "title": "Terms of use" }
+  },
+  "dimensions": {
+    "width": "Width",
+    "height": "Height",
+    "depth": "Depth",
+    "diameter": "Diameter",
+    "weight": "Weight",
+    "unitCentimeters": "cm",
+    "unitKilograms": "kg"
+  }
+}
