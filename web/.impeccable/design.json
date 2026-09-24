@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T00:00:00Z",
+  "title": "Design System: Franccino",
+  "extensions": {
+    "colorMeta": {
+      "stone": { "role": "neutral", "displayName": "Stone Field", "canonical": "#f2f1ed" },
+      "paper": { "role": "neutral", "displayName": "Paper Surface", "canonical": "#ffffff" },
+      "ink": { "role": "primary", "displayName": "Ink", "canonical": "#171717" },
+      "ink-muted": { "role": "neutral", "displayName": "Ink Muted", "canonical": "#57564f" },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "#dcd9d1" },
+      "line-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "#bdb9ae" },
+      "wood": { "role": "secondary", "displayName": "Wood (Franccino Casa)", "canonical": "#7b4b2a" },
+      "garden": { "role": "secondary", "displayName": "Garden (Franccino Giardini / success)", "canonical": "#2e4a37" },
+      "alert": { "role": "error", "displayName": "Alert", "canonical": "#9b2c1f" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero plate headline and section-opening statements only." },
+      "headline": { "displayName": "Headline (h1)", "purpose": "Page-level titles: product name, catalog title." },
+      "title": { "displayName": "Title (h2)", "purpose": "Section headings within a page." },
+      "body": { "displayName": "Body", "purpose": "Running copy, max 68ch." },
+      "label": { "displayName": "Label / Meta", "purpose": "Supporting facts beside or below headings; never a kicker above them." }
+    },
+    "shadows": [
+      { "name": "plate-hover", "value": "0 18px 40px -28px rgba(23, 23, 23, 0.35)", "purpose": "Interactive product plate hover/focus only; never at rest." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default easing for hover, plate reveal, toast." },
+      { "name": "duration-fast", "value": "180ms", "purpose": "Micro state changes (color, border)." },
+      { "name": "duration-mid", "value": "420ms", "purpose": "Shadow, transform, toast transitions." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "560px" },
+      { "name": "md", "value": "900px" },
+      { "name": "lg", "value": "1180px" },
+      { "name": "xl", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action (add to quote list, send quote).",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Ver o catálogo</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 24px; border: 1px solid #171717; font-size: 0.9375rem; font-weight: 500; cursor: pointer; transition: background 180ms ease, color 180ms ease, border-color 180ms ease; border-radius: 0; } .ds-btn-primary { background: #171717; color: #ffffff; } .ds-btn-primary:hover { background: #000000; } .ds-btn-primary:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action beside a primary button.",
+      "html": "<button class=\"ds-btn ds-btn-ghost\">Montar uma sala</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #171717; border: 1px solid #171717; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 24px; font-size: 0.9375rem; font-weight: 500; cursor: pointer; border-radius: 0; transition: background 180ms ease, color 180ms ease; } .ds-btn-ghost:hover { background: #171717; color: #ffffff; }"
+    },
+    {
+      "name": "Product Plate",
+      "kind": "card",
+      "refersTo": "n/a",
+      "description": "Product card: white plate on stone field, area-dot identity, quick-add on hover.",
+      "html": "<a class=\"ds-plate\" href=\"#\"><div class=\"ds-plate-media\"><img src=\"placeholder.jpg\" alt=\"\"></div><div class=\"ds-plate-body\"><div class=\"ds-plate-row\"><span class=\"ds-meta\">Sérgio J. Matos</span><span class=\"ds-meta\"><span class=\"ds-dot ds-dot-casa\"></span>Poltronas</span></div><div class=\"ds-plate-name\">Poltrona Sô</div></div></a>",
+      "css": ".ds-plate { background: #ffffff; display: grid; grid-template-rows: auto 1fr; text-decoration: none; color: #171717; transition: box-shadow 420ms cubic-bezier(0.16,1,0.3,1); border-radius: 0; } .ds-plate:hover { box-shadow: 0 18px 40px -28px rgba(23,23,23,0.35); } .ds-plate-media { aspect-ratio: 4/3; overflow: hidden; background: #f2f1ed; } .ds-plate-media img { width: 100%; height: 100%; object-fit: contain; } .ds-plate-body { padding: 16px 18px 20px; display: grid; gap: 4px; border-top: 1px solid #f2f1ed; } .ds-plate-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.8125rem; color: #57564f; font-weight: 500; } .ds-plate-name { font-size: 1rem; font-weight: 500; } .ds-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; } .ds-dot-casa { background: #7b4b2a; } .ds-dot-giardini { background: #2e4a37; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "n/a",
+      "description": "Form input with square corners and ink focus outline.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-name\">Nome</label><input id=\"ds-name\" type=\"text\" placeholder=\"Seu nome\"></div>",
+      "css": ".ds-field { display: grid; gap: 6px; font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; } .ds-field label { font-size: 0.8125rem; font-weight: 600; color: #171717; } .ds-field input { border: 1px solid #bdb9ae; background: #ffffff; padding: 11px 12px; font-size: 0.9375rem; border-radius: 0; } .ds-field input:focus-visible { outline: 2px solid #171717; outline-offset: -1px; }"
+    },
+    {
+      "name": "Chip (filter)",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Catalog filter chip, toggled on selection.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Poltronas</button>",
+      "css": ".ds-chip { font-size: 0.8125rem; padding: 6px 12px; border: 1px solid #dcd9d1; background: transparent; cursor: pointer; border-radius: 0; transition: border-color 180ms ease, background 180ms ease, color 180ms ease; } .ds-chip:hover { border-color: #171717; } .ds-chip[aria-pressed='true'] { background: #171717; border-color: #171717; color: #ffffff; }"
+    },
+    {
+      "name": "Site Header",
+      "kind": "nav",
+      "refersTo": "n/a",
+      "description": "Sticky translucent header: wordmark, nav, tools with quote-count pill badge.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\">FRANCCINO</a><nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Catálogo</a><a href=\"#\">Coleções</a><a href=\"#\">Designers</a></nav><div class=\"ds-tools\"><button class=\"ds-list-btn\">Lista <span class=\"ds-count\">3</span></button></div></header>",
+      "css": ".ds-header { position: sticky; top: 0; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 32px; height: 72px; padding-inline: 24px; background: rgba(242,241,237,0.94); backdrop-filter: saturate(140%) blur(10px); border-bottom: 1px solid #dcd9d1; font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; } .ds-wordmark { font-size: 0.95rem; font-weight: 500; letter-spacing: 0.3em; text-decoration: none; color: #171717; } .ds-nav { display: flex; justify-content: center; gap: 20px; font-size: 0.875rem; } .ds-nav a { text-decoration: none; color: #57564f; border-bottom: 1px solid transparent; padding-block: 6px; } .ds-nav a:hover, .ds-nav a[aria-current='page'] { color: #171717; border-color: #171717; } .ds-tools { display: flex; align-items: center; gap: 18px; } .ds-list-btn { background: none; border: 0; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; color: #171717; font-size: 0.875rem; } .ds-count { min-width: 22px; height: 22px; padding-inline: 6px; border-radius: 999px; background: #171717; color: #ffffff; font-size: 0.75rem; font-weight: 600; display: inline-grid; place-items: center; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Showroom Plate",
+    "overview": "Franccino reads as a precise, factual showroom rather than an editorial lifestyle magazine. Every product sits on a white \"plate\" — a plain rectangle of paper-white floating on a warm stone ground — carrying only what a buyer or a specifying architect needs at a glance: designer, category, dimensions, finish. The system explicitly rejects the furniture category's default identity — the dark, full-bleed slider paired with a luxury serif — in favor of daylight photography, a single expanded grotesque, and square corners throughout. Nothing is decorated for its own sake: no drop shadows as ornament, no rounded cards, no italic flourishes. The one indulgence is scale: display type runs wide and large, and full-bleed photography does the emotional work, while every card, table and form stays flat and legible.",
+    "keyCharacteristics": [
+      "White plates on a stone ground; paper is the surface color, stone is the field.",
+      "One expanded grotesque (Archivo) doing both display and body duty via its width axis, not a display/body font pairing.",
+      "Square corners everywhere except two small functional exceptions (badge pill, status dot).",
+      "Flat by default; a single soft ambient shadow appears only as hover feedback on interactive plates, never as a resting decoration.",
+      "Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color."
+    ],
+    "rules": [
+      { "name": "The Two-Hue Rule", "body": "Wood and garden are area identifiers first. A new surface may use garden for a genuine positive/success state, but never introduces a third saturated accent, and never uses wood for anything other than marking Casa.", "section": "colors" },
+      { "name": "The One Face, Two Widths Rule", "body": "Every text role is Archivo; hierarchy comes from the wdth variation axis and size, never from switching to a second family.", "section": "typography" },
+      { "name": "The No-Kicker Rule", "body": "Metadata (.meta) sits below or beside a heading as a supporting fact line, never as an uppercase kicker above it.", "section": "typography" },
+      { "name": "The Flat-at-Rest Rule", "body": "No surface carries a shadow while idle. If a new component needs depth, reach for a border or a background-color break before reaching for box-shadow.", "section": "elevation" },
+      { "name": "The Square Corner Rule", "body": "Every card, button, input, table and panel uses border-radius: 0. Rounding is reserved for two small non-rectangular indicators (count badge, area dot).", "section": "shapes" }
+    ],
+    "dos": [
+      "Do treat every color, font-family, spacing and radius value as a swappable custom property — the brand manual will replace some of them, not the structure.",
+      "Do use the width axis (wdth) of Archivo, not a second font family, to build hierarchy.",
+      "Do keep corners square (border-radius: 0); reserve rounding for the count badge and area dot only.",
+      "Do reuse garden as the single success/confirmed signal and wood/garden as the only area identifiers.",
+      "Do keep metadata (.meta) below or beside headings as supporting fact, never as an uppercase kicker above them."
+    ],
+    "donts": [
+      "Don't add a resting shadow to a card, table row, or panel — shadow is reserved for interactive-plate hover only.",
+      "Don't introduce a third saturated accent color; wood and garden are reserved for Casa/Giardini identity.",
+      "Don't round a button, input, table, or card corner; square corners are the system's form language throughout.",
+      "Don't reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects.",
+      "Don't promote --ink-3 into use without a real call site; it is declared but unused in the current build."
+    ]
+  }
+}
