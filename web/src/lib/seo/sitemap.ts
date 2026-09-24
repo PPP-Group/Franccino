@@ -11,7 +11,7 @@ import { getPathname } from '@/i18n/navigation';
 import type { SitemapEntry } from '@/lib/api/types';
 import { absoluteUrl, type Href } from './metadata';
 
-/** Fixed routes for `type: 'page'` entries, keyed by the page's `key` (stored in `slugs`). */
+/** Fixed routes for `type: 'page'` entries, keyed by the page's own `key`. */
 const PAGE_ROUTES: Record<string, Href> = {
   home: { pathname: '/' },
   indoor: { pathname: '/indoor' },
@@ -41,9 +41,14 @@ function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
     case 'product':
       return { pathname: '/products/[slug]', params: { slug } };
     case 'category':
-      return entry.key === 'outdoor'
-        ? { pathname: '/outdoor/[category]', params: { category: slug } }
-        : { pathname: '/indoor/[category]', params: { category: slug } };
+      if (entry.key === 'indoor') {
+        return { pathname: '/indoor/[category]', params: { category: slug } };
+      }
+      if (entry.key === 'outdoor') {
+        return { pathname: '/outdoor/[category]', params: { category: slug } };
+      }
+      // Missing or unrecognized area key: no default area to fall back to.
+      return null;
     case 'collection':
       return { pathname: '/collections/[slug]', params: { slug } };
     case 'designer':
@@ -53,7 +58,9 @@ function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
     case 'project':
       return { pathname: '/projects/[slug]', params: { slug } };
     case 'page':
-      return PAGE_ROUTES[slug] ?? null;
+      // Pages are identified by their stable `key`, not by the (possibly
+      // per-locale) `slug` — see `SitemapEntry.key` in `lib/api/types.ts`.
+      return entry.key !== undefined ? (PAGE_ROUTES[entry.key] ?? null) : null;
     default:
       return null;
   }
