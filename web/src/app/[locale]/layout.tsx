@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { htmlLang, locales, type Locale } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
+import { getSettings } from '@/lib/api/content';
 import { serverEnv } from '@/lib/env';
+import { organizationJsonLd } from '@/lib/seo/jsonld';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -33,9 +36,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   setRequestLocale(locale);
 
+  const settings = await getSettings(locale as Locale);
+
   return (
     <html lang={htmlLang(locale as Locale)}>
       <body>
+        <JsonLd data={organizationJsonLd(settings)} />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

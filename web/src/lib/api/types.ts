@@ -275,6 +275,14 @@ export type SearchResult = {
 
 export type SitemapEntry = {
   type: string;
+  /**
+   * For `type: 'category'` entries, which area the category belongs to
+   * (mirrors `AreaRef.key`) — needed to route to `/indoor/[category]` vs
+   * `/outdoor/[category]`. Not part of the documented contract (`docs/api.md`
+   * only lists `type`, `slugs`, `updated_at` for `/sitemap`); assumed pending
+   * confirmation from the API team. See the task 5 report.
+   */
+  key?: 'indoor' | 'outdoor';
   slugs: Record<Locale, string | null>;
   updated_at: string;
 };

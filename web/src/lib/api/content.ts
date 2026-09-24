@@ -150,13 +150,34 @@ export async function getPage(locale: Locale, key: string): Promise<PageContent 
   return result?.data ?? null;
 }
 
+/** Empty `Settings`, used as the `ALLOW_BUILD_WITHOUT_API` fallback below. */
+const EMPTY_SETTINGS: Settings = {
+  contact_email: null,
+  contact_phone: null,
+  whatsapp: null,
+  social_links: [],
+  footer_documents: [],
+};
+
 export async function getSettings(locale: Locale): Promise<Settings> {
-  const { data } = await apiGet<Item<Settings>>('/settings', { locale, tags: ['settings'] });
+  // Read by every page (via the root layout's Organization JSON-LD), so a
+  // fallback keeps `ALLOW_BUILD_WITHOUT_API` builds working end to end.
+  const { data } = await apiGet<Item<Settings>>('/settings', {
+    locale,
+    tags: ['settings'],
+    fallback: { data: EMPTY_SETTINGS },
+  });
   return data;
 }
 
 export async function getSitemap(locale: Locale): Promise<SitemapEntry[]> {
-  const { data } = await apiGet<Item<SitemapEntry[]>>('/sitemap', { locale, tags: ALL_CACHE_TAGS });
+  // `app/sitemap.ts` runs at build time; a fallback keeps
+  // `ALLOW_BUILD_WITHOUT_API` builds working without the Laravel API up.
+  const { data } = await apiGet<Item<SitemapEntry[]>>('/sitemap', {
+    locale,
+    tags: ALL_CACHE_TAGS,
+    fallback: { data: [] },
+  });
   return data;
 }
 
