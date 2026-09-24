@@ -65,44 +65,84 @@ export type StoreList = {
   states: string[];
 };
 
+/** Empty `Home`, used as the `ALLOW_BUILD_WITHOUT_API` fallback below. */
+const EMPTY_HOME: Home = {
+  banners: [],
+  featured_products: [],
+  featured_collections: [],
+  current_launch: null,
+  designers: [],
+};
+
+/** Empty `Paginated`, used as the `ALLOW_BUILD_WITHOUT_API` fallback for listing endpoints below. */
+function emptyPaginated<T>(): Paginated<T> {
+  return {
+    data: [],
+    links: { first: null, last: null, prev: null, next: null },
+    meta: { current_page: 1, last_page: 1, per_page: 24, total: 0 },
+  };
+}
+
 export async function getHome(locale: Locale): Promise<Home> {
-  const { data } = await apiGet<Item<Home>>('/home', { locale, tags: ['home'] });
+  const { data } = await apiGet<Item<Home>>('/home', {
+    locale,
+    tags: ['home'],
+    fallback: { data: EMPTY_HOME },
+  });
   return data;
 }
 
 export async function getCollections(locale: Locale): Promise<CollectionCard[]> {
-  const { data } = await apiGet<Item<CollectionCard[]>>('/collections', { locale, tags: ['collections'] });
+  const { data } = await apiGet<Item<CollectionCard[]>>('/collections', {
+    locale,
+    tags: ['collections'],
+    fallback: { data: [] },
+  });
   return data;
 }
 
 export async function getCollection(locale: Locale, slug: string): Promise<CollectionDetail | null> {
-  const result = await apiGetOrNull<Item<CollectionDetail>>(`/collections/${slug}`, {
+  const result = await apiGetOrNull<Item<CollectionDetail | null>>(`/collections/${slug}`, {
     locale,
     tags: ['collections'],
+    fallback: { data: null },
   });
   return result?.data ?? null;
 }
 
 export async function getDesigners(locale: Locale): Promise<DesignerCard[]> {
-  const { data } = await apiGet<Item<DesignerCard[]>>('/designers', { locale, tags: ['designers'] });
+  const { data } = await apiGet<Item<DesignerCard[]>>('/designers', {
+    locale,
+    tags: ['designers'],
+    fallback: { data: [] },
+  });
   return data;
 }
 
 export async function getDesigner(locale: Locale, slug: string): Promise<DesignerDetail | null> {
-  const result = await apiGetOrNull<Item<DesignerDetail>>(`/designers/${slug}`, {
+  const result = await apiGetOrNull<Item<DesignerDetail | null>>(`/designers/${slug}`, {
     locale,
     tags: ['designers'],
+    fallback: { data: null },
   });
   return result?.data ?? null;
 }
 
 export async function getLaunches(locale: Locale): Promise<LaunchCard[]> {
-  const { data } = await apiGet<Item<LaunchCard[]>>('/launches', { locale, tags: ['launches'] });
+  const { data } = await apiGet<Item<LaunchCard[]>>('/launches', {
+    locale,
+    tags: ['launches'],
+    fallback: { data: [] },
+  });
   return data;
 }
 
 export async function getLaunch(locale: Locale, slug: string): Promise<LaunchDetail | null> {
-  const result = await apiGetOrNull<Item<LaunchDetail>>(`/launches/${slug}`, { locale, tags: ['launches'] });
+  const result = await apiGetOrNull<Item<LaunchDetail | null>>(`/launches/${slug}`, {
+    locale,
+    tags: ['launches'],
+    fallback: { data: null },
+  });
   return result?.data ?? null;
 }
 
@@ -114,16 +154,25 @@ export async function getProjects(
     locale,
     query: { ...params },
     tags: ['projects'],
+    fallback: emptyPaginated<ProjectCard>(),
   });
 }
 
 export async function getProject(locale: Locale, slug: string): Promise<ProjectDetail | null> {
-  const result = await apiGetOrNull<Item<ProjectDetail>>(`/projects/${slug}`, { locale, tags: ['projects'] });
+  const result = await apiGetOrNull<Item<ProjectDetail | null>>(`/projects/${slug}`, {
+    locale,
+    tags: ['projects'],
+    fallback: { data: null },
+  });
   return result?.data ?? null;
 }
 
 export async function getClients(locale: Locale): Promise<Client[]> {
-  const { data } = await apiGet<Item<Client[]>>('/clients', { locale, tags: ['clients'] });
+  const { data } = await apiGet<Item<Client[]>>('/clients', {
+    locale,
+    tags: ['clients'],
+    fallback: { data: [] },
+  });
   return data;
 }
 
@@ -132,6 +181,7 @@ export async function getStores(locale: Locale, params: StoreListParams = {}): P
     locale,
     query: { ...params },
     tags: ['stores'],
+    fallback: { data: [], meta: { states: [] } },
   });
   return { stores: result.data, states: result.meta.states };
 }
@@ -141,12 +191,17 @@ export async function getBanners(locale: Locale, placement = 'home_hero'): Promi
     locale,
     query: { placement },
     tags: ['banners'],
+    fallback: { data: [] },
   });
   return data;
 }
 
 export async function getPage(locale: Locale, key: string): Promise<PageContent | null> {
-  const result = await apiGetOrNull<Item<PageContent>>(`/pages/${key}`, { locale, tags: ['pages'] });
+  const result = await apiGetOrNull<Item<PageContent | null>>(`/pages/${key}`, {
+    locale,
+    tags: ['pages'],
+    fallback: { data: null },
+  });
   return result?.data ?? null;
 }
 

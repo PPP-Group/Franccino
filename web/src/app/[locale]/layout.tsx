@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { SiteFooter } from '@/components/layout/SiteFooter';
+import { SiteHeader } from '@/components/layout/SiteHeader';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { htmlLang, locales, type Locale } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
@@ -42,7 +44,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <html lang={htmlLang(locale as Locale)}>
       <body>
         <JsonLd data={organizationJsonLd(settings)} />
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <SiteHeader />
+          {children}
+          <SiteFooter settings={settings} />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

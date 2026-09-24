@@ -4,7 +4,9 @@
     "skipToContent": "Skip to content",
     "loading": "Loading…",
     "readMore": "Read more",
-    "close": "Close"
+    "close": "Close",
+    "viewAll": "View all",
+    "mainNavigation": "Main menu"
   },
   "nav": {
     "indoor": "Indoor",
@@ -14,17 +16,22 @@
     "collections": "Collections",
     "designers": "Designers",
     "projects": "Projects",
-    "corporate": "Contract",
+    "corporate": "Corporate projects",
     "factory": "Factory",
     "finishes": "Finishes",
     "downloads": "Downloads",
+    "blocks3d": "3D blocks",
     "stores": "Stores",
     "contact": "Contact"
   },
   "footer": {
     "rightsReserved": "All rights reserved.",
     "privacy": "Privacy",
-    "terms": "Terms of use"
+    "terms": "Terms of use",
+    "contactHeading": "Contact",
+    "documentsHeading": "Documents",
+    "newsletterHeading": "Get updates",
+    "legalNavigation": "Legal"
   },
   "language": {
     "label": "Language",
@@ -47,14 +54,88 @@
     "requiredField": "Required field",
     "invalidEmail": "Invalid email address",
     "submit": "Submit",
+    "sending": "Sending…",
     "success": "Sent successfully.",
-    "error": "We couldn't send this. Please try again."
+    "error": "We couldn't send this. Please try again.",
+    "rateLimited": "Too many attempts. Please try again shortly.",
+    "consent": "I have read and agree to the <link>privacy policy</link>.",
+    "turnstileLabel": "Security check",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "profession": "Profession",
+      "city": "City",
+      "state": "State",
+      "message": "Message",
+      "type": "Subject"
+    },
+    "contactTypes": {
+      "quote": "Quote",
+      "assistance": "Technical support",
+      "partnership": "Partnership",
+      "press": "Press",
+      "other": "Other"
+    }
   },
   "products": {
     "viewDetails": "View details",
     "download": "Download file",
     "model3d": "View in 3D",
-    "relatedProducts": "Related products"
+    "model3dLoading": "Loading 3D view…",
+    "relatedProducts": "Related products",
+    "dimensionsHeading": "Dimensions",
+    "materialsHeading": "Materials",
+    "finishesHeading": "Finishes",
+    "filesHeading": "Downloadable files",
+    "lineProductsHeading": "More from this line",
+    "quoteHeading": "Request a quote",
+    "downloadPreparing": "Preparing file…",
+    "downloadError": "We couldn't generate the link. Please try again."
+  },
+  "catalog": {
+    "filters": {
+      "category": "Category",
+      "designer": "Designer",
+      "collection": "Collection",
+      "line": "Line",
+      "finish": "Finish",
+      "sort": "Sort by",
+      "search": "Search",
+      "apply": "Apply",
+      "clear": "Clear filters"
+    },
+    "sort": {
+      "featured": "Featured",
+      "name": "Name",
+      "newest": "Newest"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "empty": "No products found.",
+    "categoriesHeading": "Categories"
+  },
+  "sections": {
+    "products": "Products",
+    "collections": "Collections",
+    "designers": "Designers",
+    "gallery": "Gallery"
+  },
+  "stores": {
+    "stateFilter": "State",
+    "allStates": "All states",
+    "empty": "No stores found."
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "What are you looking for?",
+    "submit": "Search",
+    "noResults": "No results found.",
+    "resultsFor": "Results for “{query}”"
   },
   "pages": {
     "home": { "title": "Home" },
@@ -72,7 +153,7 @@
     "designerDetail": { "title": "Designer" },
     "projects": { "title": "Projects" },
     "projectDetail": { "title": "Project" },
-    "corporate": { "title": "Contract" },
+    "corporate": { "title": "Corporate" },
     "factory": { "title": "Factory" },
     "finishes": { "title": "Finishes" },
     "downloads": { "title": "Downloads" },
@@ -83,12 +164,10 @@
     "terms": { "title": "Terms of use" }
   },
   "dimensions": {
-    "width": "Width",
-    "height": "Height",
-    "depth": "Depth",
-    "diameter": "Diameter",
-    "weight": "Weight",
-    "unitCentimeters": "cm",
-    "unitKilograms": "kg"
+    "width": "W",
+    "depth": "D",
+    "height": "H",
+    "seatHeight": "Seat",
+    "diameter": "Ø"
   }
 }

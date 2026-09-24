@@ -4,7 +4,9 @@
     "skipToContent": "Pular para o conteúdo",
     "loading": "Carregando…",
     "readMore": "Saiba mais",
-    "close": "Fechar"
+    "close": "Fechar",
+    "viewAll": "Ver tudo",
+    "mainNavigation": "Menu principal"
   },
   "nav": {
     "indoor": "Indoor",
@@ -14,17 +16,22 @@
     "collections": "Coleções",
     "designers": "Designers",
     "projects": "Projetos",
-    "corporate": "Corporativo",
+    "corporate": "Projetos corporativos",
     "factory": "Fábrica",
     "finishes": "Acabamentos",
     "downloads": "Downloads",
+    "blocks3d": "Blocos 3D",
     "stores": "Lojas",
     "contact": "Contato"
   },
   "footer": {
     "rightsReserved": "Todos os direitos reservados.",
     "privacy": "Privacidade",
-    "terms": "Termos de uso"
+    "terms": "Termos de uso",
+    "contactHeading": "Contato",
+    "documentsHeading": "Documentos",
+    "newsletterHeading": "Receba novidades",
+    "legalNavigation": "Institucional"
   },
   "language": {
     "label": "Idioma",
@@ -47,14 +54,88 @@
     "requiredField": "Campo obrigatório",
     "invalidEmail": "E-mail inválido",
     "submit": "Enviar",
+    "sending": "Enviando…",
     "success": "Enviado com sucesso.",
-    "error": "Não foi possível enviar. Tente novamente."
+    "error": "Não foi possível enviar. Tente novamente.",
+    "rateLimited": "Muitas tentativas. Tente novamente em alguns instantes.",
+    "consent": "Li e concordo com a <link>política de privacidade</link>.",
+    "turnstileLabel": "Verificação de segurança",
+    "fields": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "company": "Empresa",
+      "profession": "Profissão",
+      "city": "Cidade",
+      "state": "Estado",
+      "message": "Mensagem",
+      "type": "Assunto"
+    },
+    "contactTypes": {
+      "quote": "Orçamento",
+      "assistance": "Assistência técnica",
+      "partnership": "Parceria",
+      "press": "Imprensa",
+      "other": "Outro"
+    }
   },
   "products": {
     "viewDetails": "Ver detalhes",
     "download": "Baixar arquivo",
     "model3d": "Visualizar em 3D",
-    "relatedProducts": "Produtos relacionados"
+    "model3dLoading": "Carregando visualização 3D…",
+    "relatedProducts": "Produtos relacionados",
+    "dimensionsHeading": "Dimensões",
+    "materialsHeading": "Materiais",
+    "finishesHeading": "Acabamentos",
+    "filesHeading": "Arquivos para download",
+    "lineProductsHeading": "Outras peças da linha",
+    "quoteHeading": "Solicitar orçamento",
+    "downloadPreparing": "Preparando arquivo…",
+    "downloadError": "Não foi possível gerar o link. Tente novamente."
+  },
+  "catalog": {
+    "filters": {
+      "category": "Categoria",
+      "designer": "Designer",
+      "collection": "Coleção",
+      "line": "Linha",
+      "finish": "Acabamento",
+      "sort": "Ordenar por",
+      "search": "Buscar",
+      "apply": "Aplicar",
+      "clear": "Limpar filtros"
+    },
+    "sort": {
+      "featured": "Destaques",
+      "name": "Nome",
+      "newest": "Novidades"
+    },
+    "pagination": {
+      "label": "Paginação",
+      "previous": "Anterior",
+      "next": "Próxima"
+    },
+    "empty": "Nenhum produto encontrado.",
+    "categoriesHeading": "Categorias"
+  },
+  "sections": {
+    "products": "Produtos",
+    "collections": "Coleções",
+    "designers": "Designers",
+    "gallery": "Galeria"
+  },
+  "stores": {
+    "stateFilter": "Estado",
+    "allStates": "Todos os estados",
+    "empty": "Nenhuma loja encontrada."
+  },
+  "search": {
+    "label": "Buscar",
+    "placeholder": "O que você procura?",
+    "submit": "Buscar",
+    "noResults": "Nenhum resultado encontrado.",
+    "resultsFor": "Resultados para “{query}”"
   },
   "pages": {
     "home": { "title": "Início" },
@@ -83,12 +164,10 @@
     "terms": { "title": "Termos de uso" }
   },
   "dimensions": {
-    "width": "Largura",
-    "height": "Altura",
-    "depth": "Profundidade",
-    "diameter": "Diâmetro",
-    "weight": "Peso",
-    "unitCentimeters": "cm",
-    "unitKilograms": "kg"
+    "width": "L",
+    "depth": "P",
+    "height": "A",
+    "seatHeight": "Assento",
+    "diameter": "Ø"
   }
 }
