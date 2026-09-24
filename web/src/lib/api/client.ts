@@ -1,6 +1,13 @@
 import type { Locale } from '@/i18n/config';
 import { serverEnv } from '@/lib/env';
+import { ApiError } from './errors';
 import type { CacheTag } from './types';
+
+// Re-exported so existing call sites (and `catalog.ts`/`content.ts`) can keep
+// importing `ApiError` from `client.ts`. Browser-only modules must import it
+// from `./errors` directly instead, to avoid pulling `serverEnv` in — see
+// `errors.ts` for why.
+export { ApiError };
 
 const DEFAULT_REVALIDATE = 3600;
 
@@ -11,19 +18,6 @@ export type ApiGetOptions<T> = {
   revalidate?: number | false;
   fallback?: T;
 };
-
-/** Thrown for any non-OK API response (4xx/5xx). */
-export class ApiError extends Error {
-  readonly status: number;
-  readonly body: unknown;
-
-  constructor(status: number, body: unknown, message = `A API respondeu ${status}.`) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.body = body;
-  }
-}
 
 function buildUrl(
   apiUrl: string,

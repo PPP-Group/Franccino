@@ -9,7 +9,10 @@
 
 import type { Locale } from '@/i18n/config';
 import { getPublicEnv } from '@/lib/env';
-import { ApiError } from './client';
+// Imported from `./errors`, not `./client`: `client.ts` imports `serverEnv`
+// from `@/lib/env` at module scope, which must never enter the browser
+// bundle that "use client" components importing from this file pull in.
+import { ApiError } from './errors';
 
 export type ContactPayload = {
   type: 'quote' | 'assistance' | 'partnership' | 'press' | 'other';
