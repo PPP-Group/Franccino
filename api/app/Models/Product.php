@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Collection as CollectionModel;
 use App\Models\Concerns\HasImageConversions;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\ProductFactory;
@@ -104,5 +105,41 @@ class Product extends Model implements HasMedia
     public function downloadLogs(): HasMany
     {
         return $this->hasMany(DownloadLog::class);
+    }
+
+    /** @return BelongsToMany<CollectionModel, $this> */
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(CollectionModel::class, 'collection_product')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
+    }
+
+    /** @return BelongsToMany<Launch, $this> */
+    public function launches(): BelongsToMany
+    {
+        return $this->belongsToMany(Launch::class, 'launch_product')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
+    }
+
+    /** @return BelongsToMany<Project, $this> */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'product_project');
+    }
+
+    /**
+     * Whether this product belongs to a published launch from the current or previous
+     * year. Uses the `launches` relation when it is already loaded, to avoid an extra
+     * query when many products are checked at once.
+     */
+    public function isNew(): bool
+    {
+        $launches = $this->relationLoaded('launches') ? $this->launches : $this->launches()->get();
+
+        return $launches->contains(
+            fn (Launch $launch) => $launch->is_published && $launch->year >= now()->year - 1
+        );
     }
 }

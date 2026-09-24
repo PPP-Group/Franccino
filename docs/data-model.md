@@ -347,23 +347,24 @@ destinatários do formulário de contato (lista de e-mails, não exposta na API)
 
 ### contact_messages
 
-| Coluna      | Tipo              | Notas                                                                         |
-| ----------- | ----------------- | ----------------------------------------------------------------------------- |
-| type        | string enum       | `quote` \| `assistance` \| `partnership` \| `press` \| `other`                |
-| name, email | string            |                                                                               |
-| phone       | string, null      |                                                                               |
-| company     | string, null      |                                                                               |
-| profession  | string enum, null | `architect` \| `interior_designer` \| `retailer` \| `end_customer` \| `other` |
-| city        | string, null      |                                                                               |
-| state       | char(2), null     |                                                                               |
-| message     | text              |                                                                               |
-| product_id  | fk products, null | quando enviado da página de produto                                           |
-| locale      | string(2)         |                                                                               |
-| source_url  | string, null      |                                                                               |
-| consent_at  | timestamp         | aceite da política de privacidade                                             |
-| ip_hash     | string(64)        |                                                                               |
-| user_agent  | string(512), null |                                                                               |
-| read_at     | timestamp, null   |                                                                               |
+| Coluna      | Tipo              | Notas                                                                                                              |
+| ----------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| type        | string enum       | `quote` \| `assistance` \| `partnership` \| `press` \| `other`                                                     |
+| name, email | string            |                                                                                                                    |
+| phone       | string, null      |                                                                                                                    |
+| company     | string, null      |                                                                                                                    |
+| profession  | string enum, null | `architect` \| `interior_designer` \| `retailer` \| `end_customer` \| `other`                                      |
+| city        | string, null      |                                                                                                                    |
+| state       | char(2), null     |                                                                                                                    |
+| message     | text              |                                                                                                                    |
+| product_id  | fk products, null | quando enviado da página de produto                                                                                |
+| items       | json, null        | itens da lista de orçamento/Sala para montar: `[{product_id, quantity, finish_ids, note}]` (decisão de 2026-09-23) |
+| locale      | string(2)         |                                                                                                                    |
+| source_url  | string, null      |                                                                                                                    |
+| consent_at  | timestamp         | aceite da política de privacidade                                                                                  |
+| ip_hash     | string(64)        |                                                                                                                    |
+| user_agent  | string(512), null |                                                                                                                    |
+| read_at     | timestamp, null   |                                                                                                                    |
 
 ### newsletter_subscribers
 
