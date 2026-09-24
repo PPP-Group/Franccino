@@ -60,6 +60,44 @@ return [
             'report' => false,
         ],
 
+        'media' => env('R2_MEDIA_BUCKET') ? [
+            'driver' => 's3',
+            'key' => env('R2_ACCESS_KEY_ID'),
+            'secret' => env('R2_SECRET_ACCESS_KEY'),
+            'region' => 'auto',
+            'bucket' => env('R2_MEDIA_BUCKET'),
+            'endpoint' => env('R2_ENDPOINT'),
+            'url' => env('R2_MEDIA_PUBLIC_URL'),
+            'visibility' => 'public',
+            'throw' => true,
+        ] : [
+            'driver' => 'local',
+            'root' => storage_path('app/public/media'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/media',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'downloads' => env('R2_DOWNLOADS_BUCKET') ? [
+            'driver' => 's3',
+            'key' => env('R2_ACCESS_KEY_ID'),
+            'secret' => env('R2_SECRET_ACCESS_KEY'),
+            'region' => 'auto',
+            'bucket' => env('R2_DOWNLOADS_BUCKET'),
+            'endpoint' => env('R2_ENDPOINT'),
+            'visibility' => 'private',
+            'throw' => true,
+        ] : [
+            'driver' => 'local',
+            'root' => storage_path('app/private/downloads'),
+            'serve' => true,
+            // URL própria para não colidir com a do disco "local" (ambos servidos localmente
+            // com `serve => true`; o Laravel 13 exige uma URI única por disco servido).
+            'url' => '/downloads',
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*
