@@ -1,0 +1,55 @@
+{
+  "title": "Direção visual do novo site Franccino",
+  "question": "O sorteio atribuiu 'Habitat — modernismo impresso'. Manter, escolher um alternativo ou sortear de novo.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Habitat — modernismo impresso",
+      "kicker": "SORTEIO",
+      "lineage": "Revistas de design brasileiro dos anos 1950–60 (Habitat, Módulo) e azulejaria de Athos Bulcão",
+      "thesis": "O site como uma revista de design brasileiro: cada peça vira matéria de capa, com legenda de ficha técnica.",
+      "palette": ["#1E4D3A", "#E0A526", "#1D3E8A", "#CFCBC4", "#151515"],
+      "materials": ["campos de cor chapados", "concreto aparente", "papel offset", "fotografia recortada como arquitetura"],
+      "viewport": "Capa: logo, campo de cor com a peça recortada sobre foto de ambiente e um índice numerado 01–10 que é a própria navegação.",
+      "risk": "Com campos de cor tímidos vira blog editorial; as fotos do acervo atual precisam de recorte e tratamento."
+    },
+    {
+      "id": "challenger-sala",
+      "label": "Sala para montar",
+      "lineage": "Cyworld minihompy: salas isométricas que o dono decora",
+      "thesis": "Um ambiente isométrico que o visitante mobilia com peças Franccino e envia como lista de orçamento.",
+      "case": "Funde bem com 'montar e pedir orçamento', mas estiliza os móveis como adesivos e exige renders isométricos de 400 peças que não existem.",
+      "hero": "https://impeccable.style/worlds/cards/cyworld-minihompy-room-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/cyworld-minihompy-room.webp"
+    },
+    {
+      "id": "challenger-tabela",
+      "label": "Tabela de horários",
+      "lineage": "Horários de bolso de companhias aéreas dos anos 1970, lidos numa mesa de luz",
+      "thesis": "O catálogo como uma tabela: códigos, medidas e linhas em colunas de um único corpo de letra.",
+      "case": "Serve ao arquiteto que especifica; esconde a fotografia e o desejo de que o consumidor precisa.",
+      "hero": "https://impeccable.style/worlds/cards/rw-timetable-slide-rack-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/rw-timetable-slide-rack.webp"
+    },
+    {
+      "id": "challenger-letras",
+      "label": "Tempestade de letras",
+      "lineage": "Mundos tipográficos surreais",
+      "thesis": "Nomes de peças e materiais se condensam em palavras-matéria que formam a paisagem.",
+      "case": "Funde mal: o produto é físico e fotográfico, e tipografia como clima compete com as peças.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-alphabet-storm-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-alphabet-storm.webp"
+    }
+  ],
+  "reroll": true,
+  "canon": true,
+  "canonCard": {
+    "label": "O padrão da categoria",
+    "thesis": "O que Minotti e Tidelli fazem, executado com acabamento impecável.",
+    "palette": ["#FFFFFF", "#F2F1EE", "#1A1A1A", "#8A8A85"],
+    "materials": ["fotografia de ambiente em tela cheia", "sem serifa fina em caixa alta", "muito branco"],
+    "viewport": "Slider de fotos de ambiente em tela cheia, menu por tipologia e linha, grid branco de produtos e localizador de lojas.",
+    "risk": "Seguro e familiar, porém intercambiável com os concorrentes."
+  },
+  "steer": true
+}
