@@ -2,7 +2,14 @@ import { timingSafeEqual } from 'node:crypto';
 
 const BASIC_SCHEME = 'Basic';
 
-function safeEqual(a: string, b: string): boolean {
+/**
+ * Constant-time string comparison (`crypto.timingSafeEqual` under the hood,
+ * which requires equal-length buffers — mismatched lengths short-circuit to
+ * `false` without leaking timing). Shared by any secret comparison in the
+ * app (basic auth here, the revalidate webhook's shared secret in
+ * `app/api/revalidate/route.ts`).
+ */
+export function safeEqual(a: string, b: string): boolean {
   const bufferA = Buffer.from(a, 'utf8');
   const bufferB = Buffer.from(b, 'utf8');
 

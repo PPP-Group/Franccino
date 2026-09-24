@@ -26,6 +26,10 @@ describe('formatDimension', () => {
     );
   });
 
+  it('places diameter before width/depth/height when both are present', () => {
+    expect(formatDimension({ ...base, diameter: 1200, depth: null }, 'pt')).toBe('Ø 120 × L 60 × A 75 cm');
+  });
+
   it('returns empty for no values', () => {
     expect(
       formatDimension(

@@ -7,6 +7,7 @@
 import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { serverEnv } from '@/lib/env';
+import { safeEqual } from '@/lib/security/basic-auth';
 import type { CacheTag } from '@/lib/api/types';
 
 /** Every tag in the contract (`docs/api.md`, "Revalidação do front"). */
@@ -37,7 +38,7 @@ export async function POST(request: Request): Promise<Response> {
   const { REVALIDATE_SECRET } = serverEnv();
   const providedSecret = request.headers.get('x-revalidate-secret');
 
-  if (!REVALIDATE_SECRET || providedSecret !== REVALIDATE_SECRET) {
+  if (!REVALIDATE_SECRET || !providedSecret || !safeEqual(providedSecret, REVALIDATE_SECRET)) {
     return Response.json({ message: 'Não autorizado.' }, { status: 401 });
   }
 

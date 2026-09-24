@@ -6,6 +6,10 @@ import { revalidateTag } from 'next/cache';
 import { POST } from './route';
 
 function makeRequest(body: unknown, secret?: string): Request {
+  return makeRawRequest(JSON.stringify(body), secret);
+}
+
+function makeRawRequest(body: string, secret?: string): Request {
   const headers = new Headers({ 'content-type': 'application/json' });
   if (secret !== undefined) {
     headers.set('x-revalidate-secret', secret);
@@ -13,7 +17,7 @@ function makeRequest(body: unknown, secret?: string): Request {
   return new Request('http://localhost/api/revalidate', {
     method: 'POST',
     headers,
-    body: JSON.stringify(body),
+    body,
   });
 }
 
@@ -64,6 +68,12 @@ describe('POST /api/revalidate', () => {
 
   it('rejects an unknown tag', async () => {
     const response = await POST(makeRequest({ tags: ['unknown'] }, 'shh'));
+    expect(response.status).toBe(400);
+    expect(revalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('rejects a malformed (non-JSON) body even with the right secret', async () => {
+    const response = await POST(makeRawRequest('not-json', 'shh'));
     expect(response.status).toBe(400);
     expect(revalidateTag).not.toHaveBeenCalled();
   });

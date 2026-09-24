@@ -22,13 +22,19 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
   }
 
   const srcSet = buildSrcSet(image);
-  const style: CSSProperties | undefined = image.blur_data_url
-    ? {
-        backgroundImage: `url(${image.blur_data_url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }
-    : undefined;
+
+  const style: CSSProperties = {};
+  if (image.blur_data_url) {
+    style.backgroundImage = `url(${image.blur_data_url})`;
+    style.backgroundSize = 'cover';
+    style.backgroundPosition = 'center';
+  }
+  // Reserves layout space (avoids CLS) only when both dimensions are known;
+  // with just one, an aspect-ratio would distort the image instead.
+  if (image.width && image.height) {
+    style.aspectRatio = `${image.width} / ${image.height}`;
+  }
+  const hasStyle = Object.keys(style).length > 0;
 
   return (
     // eslint-disable-next-line @next/next/no-img-element -- see module comment above.
@@ -43,7 +49,7 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
       fetchPriority={priority ? 'high' : undefined}
       decoding="async"
       className={className}
-      style={style}
+      style={hasStyle ? style : undefined}
     />
   );
 }
