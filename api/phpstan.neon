@@ -13,10 +13,3 @@ parameters:
     # `$casts` property; this makes Larastan parse that method's return statement so it
     # still infers real cast types (enums, encrypted values, ...) for magic properties.
     parseModelCastsMethod: true
-    ignoreErrors:
-        # Concerns em app/Models/Concerns são traits reutilizáveis publicadas antes dos models
-        # que as consomem (plano dividido em tarefas); PHPStan não analisa um trait sem uso
-        # ainda existente e reporta isso como erro. Deixa de ser necessário assim que um model
-        # usar o trait.
-        - identifier: trait.unused
-          path: app/Models/Concerns/*

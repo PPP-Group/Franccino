@@ -10,7 +10,7 @@ class StoreImageMetadata
     {
         $media = $event->media;
 
-        if (! str_starts_with($media->mime_type, 'image/') || $media->mime_type === 'image/svg+xml') {
+        if (! str_starts_with($media->mime_type ?? '', 'image/') || $media->mime_type === 'image/svg+xml') {
             return;
         }
 

@@ -21,9 +21,9 @@ trait HasImageConversions
         }
 
         $this->addMediaConversion('lqip')
+            ->nonQueued()
             ->fit(Fit::Max, 24, 96)
             ->format('webp')
-            ->quality(40)
-            ->nonQueued();
+            ->quality(40);
     }
 }

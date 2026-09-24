@@ -40,106 +40,116 @@ media (spatie/laravel-medialibrary, polimórfica)
 ## Catálogo
 
 ### areas
+
 Áreas fixas do catálogo. Semeadas, editáveis, não criáveis pelo painel.
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| key | string, único | `indoor` \| `outdoor` |
-| name | json tr | "Interno" / "Indoor" |
-| brand_name | string | "Franccino Casa" / "Franccino Giardini" |
-| description | json tr | texto da página da área |
-| sort_order | int | |
-| seo_title, seo_description | json tr | |
+| Coluna                     | Tipo          | Notas                                                   |
+| -------------------------- | ------------- | ------------------------------------------------------- |
+| key                        | string, único | `indoor` \| `outdoor`                                   |
+| name                       | json tr       | "Interno" / "Indoor"                                    |
+| brand_name                 | string        | "Franccino Casa" / "Franccino Giardini"                 |
+| description                | json tr, null | texto da página da área; ausente até edição pelo painel |
+| sort_order                 | int           |                                                         |
+| seo_title, seo_description | json tr       |                                                         |
 
 Mídia: `cover` (1).
 
 ### categories
+
 Tipos de peça, compartilhados entre áreas (no WordPress existiam duplicados "Sofás Casa" / "Sofás Giardini").
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | json tr | plural: "Cadeiras" |
-| singular_name | json tr | "Cadeira" (rótulo acima do nome do produto) |
-| slug | json tr | |
-| description | json tr, null | |
-| is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                     | Tipo          | Notas                                       |
+| -------------------------- | ------------- | ------------------------------------------- |
+| name                       | json tr       | plural: "Cadeiras"                          |
+| singular_name              | json tr       | "Cadeira" (rótulo acima do nome do produto) |
+| slug                       | json tr       |                                             |
+| description                | json tr, null |                                             |
+| is_published, sort_order   |               |                                             |
+| seo_title, seo_description | json tr       |                                             |
+| legacy_wp_id, legacy_url   |               |                                             |
 
 Mídia: `cover` (1).
 
 ### lines
+
 Famílias de produto (no WP, taxonomia `linhas`: agrupa variantes, ex. "Cadeira Marcela com/sem braço",
 linha Pinot, linha Bloco). Sem página própria no site; usadas em "outras peças da linha" e filtros.
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | string | nome próprio, não traduzido |
-| slug | string, único | |
-| designer_id | fk designers, null | autor da linha |
-| description | json tr, null | |
-| sort_order | int | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                   | Tipo               | Notas                       |
+| ------------------------ | ------------------ | --------------------------- |
+| name                     | string             | nome próprio, não traduzido |
+| slug                     | string, único      |                             |
+| designer_id              | fk designers, null | autor da linha              |
+| description              | json tr, null      |                             |
+| sort_order               | int                |                             |
+| legacy_wp_id, legacy_url |                    |                             |
 
 ### designers
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | string | |
-| slug | string, único | igual nos dois idiomas |
-| short_bio | json tr | uma ou duas frases (cards) |
-| bio | json tr | HTML (rich text) |
-| location | string, null | "Belo Horizonte, MG", "Espanha" |
-| website_url, instagram_url | string, null | |
-| is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                     | Tipo          | Notas                           |
+| -------------------------- | ------------- | ------------------------------- |
+| name                       | string        |                                 |
+| slug                       | string, único | igual nos dois idiomas          |
+| short_bio                  | json tr       | uma ou duas frases (cards)      |
+| bio                        | json tr       | HTML (rich text)                |
+| location                   | string, null  | "Belo Horizonte, MG", "Espanha" |
+| website_url, instagram_url | string, null  |                                 |
+| is_published, sort_order   |               |                                 |
+| seo_title, seo_description | json tr       |                                 |
+| legacy_wp_id, legacy_url   |               |                                 |
 
 Mídia: `portrait` (1).
 
 ### collections
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | json tr | |
-| slug | json tr | |
-| year | smallint, null | |
-| summary | json tr | texto curto |
-| description | json tr | HTML |
-| is_featured, is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                                | Tipo           | Notas       |
+| ------------------------------------- | -------------- | ----------- |
+| name                                  | json tr        |             |
+| slug                                  | json tr        |             |
+| year                                  | smallint, null |             |
+| summary                               | json tr        | texto curto |
+| description                           | json tr        | HTML        |
+| is_featured, is_published, sort_order |                |             |
+| seo_title, seo_description            | json tr        |             |
+| legacy_wp_id, legacy_url              |                |             |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`, `product_id`, `sort_order`).
 
 ### products
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | json tr | "Cadeira Aura" |
-| slug | json tr | |
-| sku | string, null | código interno Franccino |
-| tagline | json tr, null | frase curta sob o nome |
-| description | json tr | HTML |
-| area_id | fk areas | obrigatório |
-| category_id | fk categories | obrigatório |
-| line_id | fk lines, null | |
-| designer_id | fk designers, null | |
-| dimensions | json | lista de variantes, ver abaixo |
-| materials | json tr, null | texto livre ("Tabela técnica > Material") |
-| finishes_note | json tr, null | texto livre ("Tabela técnica > Acabamento") |
-| is_3d_enabled | bool, default `true` | chave do visualizador 3D |
-| is_featured, is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
-| legacy_wp_id, legacy_url | | |
-| deleted_at | timestamp, null | soft delete |
+| Coluna                                | Tipo                 | Notas                                                             |
+| ------------------------------------- | -------------------- | ----------------------------------------------------------------- |
+| name                                  | json tr              | "Cadeira Aura"                                                    |
+| slug                                  | json tr              |                                                                   |
+| sku                                   | string, null         | código interno Franccino                                          |
+| tagline                               | json tr, null        | frase curta sob o nome                                            |
+| description                           | json tr              | HTML                                                              |
+| area_id                               | fk areas             | obrigatório                                                       |
+| category_id                           | fk categories        | obrigatório                                                       |
+| line_id                               | fk lines, null       |                                                                   |
+| designer_id                           | fk designers, null   |                                                                   |
+| dimensions                            | json                 | lista de variantes, ver abaixo                                    |
+| materials                             | json tr, null        | texto livre ("Tabela técnica > Material")                         |
+| finishes_note                         | json tr, null        | texto livre ("Tabela técnica > Acabamento")                       |
+| is_3d_enabled                         | bool, default `true` | chave do visualizador 3D                                          |
+| is_featured, is_published, sort_order |                      |                                                                   |
+| seo_title, seo_description            | json tr              |                                                                   |
+| legacy_wp_id, legacy_url              |                      |                                                                   |
+| search_text                           | text, null           | busca normalizada: nomes pt/en, sku, designer; mantido pelo model |
+| deleted_at                            | timestamp, null      | soft delete                                                       |
 
 `dimensions`:
 
 ```json
 [
-  { "label": {"pt": "2 lugares", "en": "2 seats"}, "width": 1800, "depth": 950, "height": 780,
-    "seat_height": 420, "diameter": null }
+  {
+    "label": { "pt": "2 lugares", "en": "2 seats" },
+    "width": 1800,
+    "depth": 950,
+    "height": 780,
+    "seat_height": 420,
+    "diameter": null
+  }
 ]
 ```
 
@@ -149,174 +159,184 @@ Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem 
 Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`.
 
 ### finish_groups / finishes
+
 O WordPress não tem cartela estruturada (acabamento é texto livre). A cartela nasce aqui.
 
 `finish_groups`: `name` (tr), `sort_order`. Ex.: Madeiras, Tecidos, Couros, Cordas, Metais, Pedras.
 
 `finishes`:
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| finish_group_id | fk | |
-| name | json tr | |
-| code | string, null | código do fornecedor/fábrica |
-| description | json tr, null | |
-| is_published, sort_order | | |
+| Coluna                   | Tipo          | Notas                        |
+| ------------------------ | ------------- | ---------------------------- |
+| finish_group_id          | fk            |                              |
+| name                     | json tr       |                              |
+| code                     | string, null  | código do fornecedor/fábrica |
+| description              | json tr, null |                              |
+| is_published, sort_order |               |                              |
 
 Mídia: `swatch` (1).
 
 ### product_files
+
 Arquivos técnicos para download (ficha técnica, blocos 2D/3D). Ficam em disco **privado**; só saem por
 URL assinada temporária.
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| product_id | fk products | |
-| type | string enum | `technical_sheet` \| `block_2d` \| `block_3d` \| `manual` \| `other` |
-| title | json tr | "Ficha técnica" |
-| format | string | "PDF", "DWG", "SKP", "3DS"... (derivado da extensão, editável) |
-| disk | string | default `downloads` |
-| path | string | caminho no disco |
-| original_name | string | |
-| mime_type | string, null | |
-| size | bigint, null | bytes |
-| is_published, sort_order | | |
-| legacy_wp_id | | |
+| Coluna                   | Tipo         | Notas                                                                |
+| ------------------------ | ------------ | -------------------------------------------------------------------- |
+| product_id               | fk products  |                                                                      |
+| type                     | string enum  | `technical_sheet` \| `block_2d` \| `block_3d` \| `manual` \| `other` |
+| title                    | json tr      | "Ficha técnica"                                                      |
+| format                   | string       | "PDF", "DWG", "SKP", "3DS"... (derivado da extensão, editável)       |
+| disk                     | string       | default `downloads`                                                  |
+| path                     | string       | caminho no disco                                                     |
+| original_name            | string       |                                                                      |
+| mime_type                | string, null |                                                                      |
+| size                     | bigint, null | bytes                                                                |
+| is_published, sort_order |              |                                                                      |
+| legacy_wp_id             |              |                                                                      |
 
 ### download_logs
+
 Um registro por link gerado. Sem dado pessoal em claro (LGPD).
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| product_file_id | fk | |
-| product_id | fk | desnormalizado para relatório |
-| locale | string(2) | |
-| ip_hash | string(64) | `sha256(ip + APP_KEY)` |
-| user_agent | string(512), null | |
-| referer | string(512), null | |
-| created_at | timestamp | sem `updated_at` |
+| Coluna          | Tipo              | Notas                         |
+| --------------- | ----------------- | ----------------------------- |
+| product_file_id | fk                |                               |
+| product_id      | fk                | desnormalizado para relatório |
+| locale          | string(2)         |                               |
+| ip_hash         | string(64)        | `sha256(ip + APP_KEY)`        |
+| user_agent      | string(512), null |                               |
+| referer         | string(512), null |                               |
+| created_at      | timestamp         | sem `updated_at`              |
 
 ## Conteúdo editorial
 
 ### launches
+
 Edições de lançamento (ex.: "Lançamentos 2026").
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| title | json tr | |
-| slug | json tr | |
-| year | smallint | |
-| summary | json tr | |
-| description | json tr | HTML |
-| is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
+| Coluna                     | Tipo     | Notas |
+| -------------------------- | -------- | ----- |
+| title                      | json tr  |       |
+| slug                       | json tr  |       |
+| year                       | smallint |       |
+| summary                    | json tr  |       |
+| description                | json tr  | HTML  |
+| is_published, sort_order   |          |       |
+| seo_title, seo_description | json tr  |       |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `launch_product` (`sort_order`).
 Um produto é "novo" (`is_new` na API) quando pertence a um lançamento publicado do ano corrente ou anterior.
 
 ### projects
+
 Projetos residenciais e cases corporativos (no WP eram `projetos` e `cases`).
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| type | string enum | `residential` \| `corporate` |
-| title | json tr | |
-| slug | json tr | |
-| client_name | string, null | "JHSF", "Clara Resorts" |
-| location | string, null | "Inhotim, MG" |
-| architect | string, null | escritório/autor |
-| year | smallint, null | |
-| summary | json tr | |
-| description | json tr | HTML |
-| is_featured, is_published, sort_order | | |
-| seo_title, seo_description | json tr | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                                | Tipo           | Notas                        |
+| ------------------------------------- | -------------- | ---------------------------- |
+| type                                  | string enum    | `residential` \| `corporate` |
+| title                                 | json tr        |                              |
+| slug                                  | json tr        |                              |
+| client_name                           | string, null   | "JHSF", "Clara Resorts"      |
+| location                              | string, null   | "Inhotim, MG"                |
+| architect                             | string, null   | escritório/autor             |
+| year                                  | smallint, null |                              |
+| summary                               | json tr        |                              |
+| description                           | json tr        | HTML                         |
+| is_featured, is_published, sort_order |                |                              |
+| seo_title, seo_description            | json tr        |                              |
+| legacy_wp_id, legacy_url              |                |                              |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `product_project`.
 
 ### clients
+
 Logos da página corporativa.
 
 `name`, `url` (null), `is_published`, `sort_order`, `legacy_wp_id`, `legacy_url`. Mídia: `logo` (1).
 
 ### stores
+
 Lojas exclusivas e revendas (página "Lojas" com mapa e filtro por estado e tipo).
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name | string | |
-| type | string enum | `exclusive` \| `reseller` |
-| address | string | logradouro e número |
-| address_complement | string, null | |
-| district | string, null | bairro |
-| city | string | |
-| state | char(2) | UF |
-| postal_code | string, null | |
-| country | char(2) | default `BR` |
-| latitude, longitude | decimal(10,7), null | |
-| phone, whatsapp, email, website_url, instagram_url | string, null | |
-| opening_hours | json tr, null | texto livre |
-| is_published, sort_order | | |
-| legacy_wp_id, legacy_url | | |
+| Coluna                                             | Tipo                | Notas                     |
+| -------------------------------------------------- | ------------------- | ------------------------- |
+| name                                               | string              |                           |
+| type                                               | string enum         | `exclusive` \| `reseller` |
+| address                                            | string              | logradouro e número       |
+| address_complement                                 | string, null        |                           |
+| district                                           | string, null        | bairro                    |
+| city                                               | string              |                           |
+| state                                              | char(2)             | UF                        |
+| postal_code                                        | string, null        |                           |
+| country                                            | char(2)             | default `BR`              |
+| latitude, longitude                                | decimal(10,7), null |                           |
+| phone, whatsapp, email, website_url, instagram_url | string, null        |                           |
+| opening_hours                                      | json tr, null       | texto livre               |
+| is_published, sort_order                           |                     |                           |
+| legacy_wp_id, legacy_url                           |                     |                           |
 
 ### banners
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| placement | string enum | `home_hero` (extensível) |
-| title, subtitle | json tr, null | |
-| cta_label | json tr, null | |
-| cta_url | json tr, null | link por idioma |
-| starts_at, ends_at | timestamp, null | janela de exibição |
-| is_published, sort_order | | |
+| Coluna                   | Tipo            | Notas                    |
+| ------------------------ | --------------- | ------------------------ |
+| placement                | string enum     | `home_hero` (extensível) |
+| title, subtitle          | json tr, null   |                          |
+| cta_label                | json tr, null   |                          |
+| cta_url                  | json tr, null   | link por idioma          |
+| starts_at, ends_at       | timestamp, null | janela de exibição       |
+| is_published, sort_order |                 |                          |
 
 Mídia: `image` (1, desktop), `image_mobile` (1, opcional).
 
 ### pages
+
 Conteúdo e SEO das páginas fixas do site. Cada página corresponde a uma rota do front, identificada por `key`.
 Chaves semeadas: `home`, `indoor`, `outdoor`, `products`, `launches`, `collections`, `designers`,
 `projects`, `corporate`, `factory`, `stores`, `finishes`, `downloads`, `contact`, `privacy`, `terms`.
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| key | string, único | |
-| title | json tr | |
-| intro | json tr, null | |
-| content | json | lista de blocos (abaixo) |
-| is_published | bool | |
-| seo_title, seo_description | json tr | |
+| Coluna                     | Tipo          | Notas                    |
+| -------------------------- | ------------- | ------------------------ |
+| key                        | string, único |                          |
+| title                      | json tr       |                          |
+| intro                      | json tr, null |                          |
+| content                    | json          | lista de blocos (abaixo) |
+| is_published               | bool          |                          |
+| seo_title, seo_description | json tr       |                          |
 
 Mídia: `cover` (1), `og_image` (1).
 
 `content` é uma lista **não traduzível** de blocos; os textos dentro de cada bloco é que são `{pt, en}`.
 Assim a estrutura e as imagens são únicas e os dois idiomas são editados lado a lado.
 
-| Bloco | Dados |
-|---|---|
-| `rich_text` | `body` (tr, HTML) |
-| `image` | `image` (path), `caption` (tr) |
+| Bloco        | Dados                                                                          |
+| ------------ | ------------------------------------------------------------------------------ |
+| `rich_text`  | `body` (tr, HTML)                                                              |
+| `image`      | `image` (path), `caption` (tr)                                                 |
 | `image_text` | `image`, `heading` (tr), `body` (tr, HTML), `image_position` (`left`\|`right`) |
-| `timeline` | `items[]`: `year`, `title` (tr), `text` (tr) |
-| `faq` | `items[]`: `question` (tr), `answer` (tr) |
-| `stats` | `items[]`: `value`, `label` (tr) |
-| `quote` | `text` (tr), `author` |
-| `cta` | `heading` (tr), `body` (tr), `label` (tr), `url` (tr) |
-| `gallery` | `images[]` (paths), `caption` (tr) |
+| `timeline`   | `items[]`: `year`, `title` (tr), `text` (tr)                                   |
+| `faq`        | `items[]`: `question` (tr), `answer` (tr)                                      |
+| `stats`      | `items[]`: `value`, `label` (tr)                                               |
+| `quote`      | `text` (tr), `author`                                                          |
+| `cta`        | `heading` (tr), `body` (tr), `label` (tr), `url` (tr)                          |
+| `gallery`    | `images[]` (paths), `caption` (tr)                                             |
 
 Imagens de blocos ficam no disco `media` (sem conversões automáticas).
 
 ### redirects
+
 Mapa de redirecionamento do site antigo e regras manuais. O front consome via API.
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| from_path | string, único | caminho normalizado, pode incluir query (`/?taxonomy=linhas&term=pinot`) |
-| to_path | string, null | null quando `status_code = 410` |
-| status_code | smallint | 301 \| 302 \| 410 |
-| is_active | bool | |
-| notes | string, null | |
+| Coluna      | Tipo          | Notas                                                                    |
+| ----------- | ------------- | ------------------------------------------------------------------------ |
+| from_path   | string, único | caminho normalizado, pode incluir query (`/?taxonomy=linhas&term=pinot`) |
+| to_path     | string, null  | null quando `status_code = 410`                                          |
+| status_code | smallint      | 301 \| 302 \| 410                                                        |
+| is_active   | bool          |                                                                          |
+| notes       | string, null  |                                                                          |
 
 ### settings
+
 Configurações globais via `spatie/laravel-settings` (grupo `general`), editadas numa página do painel:
 nome da empresa, e-mail e telefone de contato, endereço da fábrica, WhatsApp de orçamentos, WhatsApp e
 telefone de assistência técnica, redes sociais (Instagram, Facebook, Pinterest, LinkedIn, YouTube),
@@ -327,23 +347,23 @@ destinatários do formulário de contato (lista de e-mails, não exposta na API)
 
 ### contact_messages
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| type | string enum | `quote` \| `assistance` \| `partnership` \| `press` \| `other` |
-| name, email | string | |
-| phone | string, null | |
-| company | string, null | |
-| profession | string enum, null | `architect` \| `interior_designer` \| `retailer` \| `end_customer` \| `other` |
-| city | string, null | |
-| state | char(2), null | |
-| message | text | |
-| product_id | fk products, null | quando enviado da página de produto |
-| locale | string(2) | |
-| source_url | string, null | |
-| consent_at | timestamp | aceite da política de privacidade |
-| ip_hash | string(64) | |
-| user_agent | string(512), null | |
-| read_at | timestamp, null | |
+| Coluna      | Tipo              | Notas                                                                         |
+| ----------- | ----------------- | ----------------------------------------------------------------------------- |
+| type        | string enum       | `quote` \| `assistance` \| `partnership` \| `press` \| `other`                |
+| name, email | string            |                                                                               |
+| phone       | string, null      |                                                                               |
+| company     | string, null      |                                                                               |
+| profession  | string enum, null | `architect` \| `interior_designer` \| `retailer` \| `end_customer` \| `other` |
+| city        | string, null      |                                                                               |
+| state       | char(2), null     |                                                                               |
+| message     | text              |                                                                               |
+| product_id  | fk products, null | quando enviado da página de produto                                           |
+| locale      | string(2)         |                                                                               |
+| source_url  | string, null      |                                                                               |
+| consent_at  | timestamp         | aceite da política de privacidade                                             |
+| ip_hash     | string(64)        |                                                                               |
+| user_agent  | string(512), null |                                                                               |
+| read_at     | timestamp, null   |                                                                               |
 
 ### newsletter_subscribers
 
@@ -354,21 +374,21 @@ destinatários do formulário de contato (lista de e-mails, não exposta na API)
 
 ### users
 
-| Coluna | Tipo | Notas |
-|---|---|---|
-| name, email, password | | |
-| role | string enum | `admin` \| `editor` |
-| is_active | bool | usuário inativo não entra no painel |
-| app_authentication_secret, app_authentication_recovery_codes | text, null, criptografado | 2FA do Filament |
+| Coluna                                                       | Tipo                      | Notas                               |
+| ------------------------------------------------------------ | ------------------------- | ----------------------------------- |
+| name, email, password                                        |                           |                                     |
+| role                                                         | string enum               | `admin` \| `editor`                 |
+| is_active                                                    | bool                      | usuário inativo não entra no painel |
+| app_authentication_secret, app_authentication_recovery_codes | text, null, criptografado | 2FA do Filament                     |
 
-| Permissão | admin | editor |
-|---|---|---|
-| Catálogo e conteúdo editorial (CRUD) | sim | sim |
-| Mensagens de contato e newsletter (ver, exportar CSV) | sim | sim |
-| Logs de download (ver) | sim | sim |
-| Redirects | sim | não |
-| Configurações | sim | não |
-| Usuários | sim | não |
+| Permissão                                             | admin | editor |
+| ----------------------------------------------------- | ----- | ------ |
+| Catálogo e conteúdo editorial (CRUD)                  | sim   | sim    |
+| Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    |
+| Logs de download (ver)                                | sim   | sim    |
+| Redirects                                             | sim   | não    |
+| Configurações                                         | sim   | não    |
+| Usuários                                              | sim   | não    |
 
 ## Mídia
 

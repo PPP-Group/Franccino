@@ -241,5 +241,12 @@
     "Web Server is Down": "Servidor Web Está Inativo",
     "Whoops!": "Ops!",
     "Yes": "Sim",
-    "You are receiving this email because we received a password reset request for your account.": "Você está recebendo este e-mail porque foi solicitada a redefinição da senha da sua conta."
+    "You are receiving this email because we received a password reset request for your account.": "Você está recebendo este e-mail porque foi solicitada a redefinição da senha da sua conta.",
+    "2D block": "Bloco 2D",
+    "3D block": "Bloco 3D",
+    "Indoor": "Interno",
+    "Manual": "Manual",
+    "Other": "Outro",
+    "Outdoor": "Externo",
+    "Technical sheet": "Ficha técnica"
 }
