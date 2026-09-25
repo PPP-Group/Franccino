@@ -6,7 +6,10 @@
     "readMore": "Saiba mais",
     "close": "Fechar",
     "viewAll": "Ver tudo",
-    "mainNavigation": "Menu principal"
+    "mainNavigation": "Menu principal",
+    "breadcrumb": "Você está em",
+    "home": "Início",
+    "opensInNewWindow": "(abre em nova janela)"
   },
   "nav": {
     "indoor": "Indoor",

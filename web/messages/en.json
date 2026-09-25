@@ -6,7 +6,10 @@
     "readMore": "Read more",
     "close": "Close",
     "viewAll": "View all",
-    "mainNavigation": "Main menu"
+    "mainNavigation": "Main menu",
+    "breadcrumb": "You are here",
+    "home": "Home",
+    "opensInNewWindow": "(opens in a new window)"
   },
   "nav": {
     "indoor": "Indoor",

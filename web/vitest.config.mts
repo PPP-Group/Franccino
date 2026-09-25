@@ -23,7 +23,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     env: {
       API_URL: 'http://localhost:8000',
       SITE_URL: 'http://localhost:3000',

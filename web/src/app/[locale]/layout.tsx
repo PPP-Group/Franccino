@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { archivo } from '@/app/fonts';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -41,7 +42,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const settings = await getSettings(locale as Locale);
 
   return (
-    <html lang={htmlLang(locale as Locale)}>
+    <html lang={htmlLang(locale as Locale)} className={archivo.variable}>
       <body>
         <JsonLd data={organizationJsonLd(settings)} />
         <NextIntlClientProvider>

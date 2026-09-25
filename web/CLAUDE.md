@@ -80,5 +80,13 @@ Alias `@/*` aponta para `src/*`.
   montar `Metadata` manualmente em cada rota.
 - Server Components por padrão; `"use client"` só quando há estado, evento de
   navegador ou biblioteca client-only.
-- Nada de design elaborado neste plano: HTML semântico, classes Tailwind
-  mínimas de estrutura. Sem sistema de design.
+- Design system: `DESIGN.md` (nesta pasta). Valores só por token (`src/styles/tokens.css`; hex só
+  ali); utilitários Tailwind usam os tokens (`bg-stone`, `text-ink-muted`…), a paleta padrão do
+  Tailwind está desligada. Classes de componente por área em `src/styles/*.css`, portadas do
+  protótipo aprovado (`design/prototype/`).
+- Cantos retos, sem sombra em repouso (só no hover do card de produto), madeira = Casa,
+  verde = Giardini/sucesso, metadado nunca acima do título.
+- Fonte provisória em `src/app/fonts.ts` (troca pelo manual de marca só ali).
+- Lógica de estado (lista de orçamento, planta, acabamentos) em módulos puros de `src/lib/*`
+  com testes; componentes só ligam estado a markup.
+- Nunca inventar preço, prazo, contagem ou especificação: sem dado da API, a seção some.
