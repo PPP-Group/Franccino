@@ -18,6 +18,14 @@ const eslintConfig = defineConfig([
     files: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     rules: { 'react/jsx-no-literals': 'off' },
   },
+  {
+    // The one deliberate exception to "zero literal text in JSX": this file
+    // replaces the root layout for errors thrown above `[locale]/layout.tsx`,
+    // where next-intl's provider and the current locale are both
+    // unavailable — see the comment in `global-error.tsx`.
+    files: ['src/app/global-error.tsx'],
+    rules: { 'react/jsx-no-literals': 'off' },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

@@ -11,7 +11,7 @@ export default function LocaleError({ reset }: LocaleErrorProps) {
   const t = useTranslations('errors.serverError');
 
   return (
-    <main>
+    <main id="main-content">
       <h1>{t('title')}</h1>
       <p>{t('description')}</p>
       <button type="button" onClick={reset}>

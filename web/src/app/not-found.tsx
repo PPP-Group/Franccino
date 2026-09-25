@@ -14,7 +14,7 @@ export default async function GlobalNotFound() {
   return (
     <html lang={htmlLang(locale)}>
       <body>
-        <main>
+        <main id="main-content">
           <h1>{t('title')}</h1>
           <p>{t('description')}</p>
         </main>

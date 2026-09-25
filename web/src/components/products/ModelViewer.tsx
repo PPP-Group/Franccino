@@ -15,9 +15,11 @@ type ModelViewerProps = {
   alt: string;
 };
 
+type Status = 'idle' | 'loading' | 'ready' | 'error';
+
 export function ModelViewer({ model3d, alt }: ModelViewerProps) {
   const t = useTranslations('products');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
+  const [status, setStatus] = useState<Status>('idle');
 
   if (!model3d) {
     return null;
@@ -25,8 +27,12 @@ export function ModelViewer({ model3d, alt }: ModelViewerProps) {
 
   async function handleClick() {
     setStatus('loading');
-    await import('@google/model-viewer');
-    setStatus('ready');
+    try {
+      await import('@google/model-viewer');
+      setStatus('ready');
+    } catch {
+      setStatus('error');
+    }
   }
 
   if (status === 'ready') {
@@ -44,8 +50,11 @@ export function ModelViewer({ model3d, alt }: ModelViewerProps) {
   }
 
   return (
-    <button type="button" onClick={handleClick} disabled={status === 'loading'}>
-      {status === 'loading' ? t('model3dLoading') : t('model3d')}
-    </button>
+    <>
+      <button type="button" onClick={handleClick} disabled={status === 'loading'}>
+        {status === 'loading' ? t('model3dLoading') : t('model3d')}
+      </button>
+      {status === 'error' && <span role="alert">{t('model3dError')}</span>}
+    </>
   );
 }

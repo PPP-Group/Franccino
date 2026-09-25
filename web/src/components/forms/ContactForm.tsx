@@ -1,13 +1,13 @@
 'use client';
 
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import type { ContactPayload, FormResult } from '@/lib/api/forms';
 import { submitContact } from '@/lib/api/forms';
 import { getPublicEnv } from '@/lib/env';
-import { Turnstile } from './Turnstile';
+import { Turnstile, type TurnstileHandle } from './Turnstile';
 
 type ContactFormProps = {
   /** Presets `product_id` and hides the subject field, forcing `type: 'quote'` (product page's budget form). */
@@ -19,6 +19,8 @@ type Status = 'idle' | 'sending' | 'success' | 'error' | 'rateLimited';
 
 const CONTACT_TYPES: ContactPayload['type'][] = ['quote', 'assistance', 'partnership', 'press', 'other'];
 
+const STATUS_ID = 'contact-form-status';
+
 function fieldValue(formData: FormData, name: string): string | null {
   const value = formData.get(name);
   return typeof value === 'string' && value.trim().length > 0 ? value : null;
@@ -28,6 +30,7 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
   const t = useTranslations('forms');
   const locale = useLocale() as Locale;
   const turnstileSiteKey = getPublicEnv().NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   const [status, setStatus] = useState<Status>('idle');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -57,16 +60,27 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
       turnstile_token: fieldValue(formData, 'cf-turnstile-response') ?? undefined,
     };
 
-    const result: FormResult = await submitContact(payload);
+    try {
+      const result: FormResult = await submitContact(payload);
 
-    if (result.ok) {
-      setStatus('success');
-      form.reset();
-      return;
+      if (result.ok) {
+        setStatus('success');
+        form.reset();
+        return;
+      }
+
+      setStatus(result.status === 429 ? 'rateLimited' : 'error');
+      setFieldErrors(result.fieldErrors);
+    } catch {
+      // Network failure (offline, DNS, CORS, etc.): `submitContact` only
+      // resolves with `{ ok: false }` for a completed HTTP response, so
+      // anything that throws here never reached the API.
+      setStatus('error');
+    } finally {
+      // Turnstile tokens are single-use; get a fresh one for the next
+      // attempt regardless of how this one ended.
+      turnstileRef.current?.reset();
     }
-
-    setStatus(result.status === 429 ? 'rateLimited' : 'error');
-    setFieldErrors(result.fieldErrors);
   }
 
   return (
@@ -74,7 +88,14 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
       {!fixedType && (
         <p>
           <label htmlFor="contact-type">{t('fields.type')}</label>
-          <select id="contact-type" name="type" required defaultValue="">
+          <select
+            id="contact-type"
+            name="type"
+            required
+            defaultValue=""
+            aria-invalid={Boolean(fieldErrors.type)}
+            aria-describedby={fieldErrors.type ? STATUS_ID : undefined}
+          >
             <option value="" disabled>
               {t('fields.type')}
             </option>
@@ -89,20 +110,55 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
 
       <p>
         <label htmlFor="contact-name">{t('fields.name')}</label>
-        <input id="contact-name" name="name" type="text" required autoComplete="name" />
-        {fieldErrors.name && <span role="alert">{fieldErrors.name}</span>}
+        <input
+          id="contact-name"
+          name="name"
+          type="text"
+          required
+          autoComplete="name"
+          aria-invalid={Boolean(fieldErrors.name)}
+          aria-describedby={fieldErrors.name ? 'contact-name-error' : undefined}
+        />
+        {fieldErrors.name && (
+          <span id="contact-name-error" role="alert">
+            {fieldErrors.name}
+          </span>
+        )}
       </p>
 
       <p>
         <label htmlFor="contact-email">{t('fields.email')}</label>
-        <input id="contact-email" name="email" type="email" required autoComplete="email" />
-        {fieldErrors.email && <span role="alert">{fieldErrors.email}</span>}
+        <input
+          id="contact-email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          aria-invalid={Boolean(fieldErrors.email)}
+          aria-describedby={fieldErrors.email ? 'contact-email-error' : undefined}
+        />
+        {fieldErrors.email && (
+          <span id="contact-email-error" role="alert">
+            {fieldErrors.email}
+          </span>
+        )}
       </p>
 
       <p>
         <label htmlFor="contact-phone">{t('fields.phone')}</label>
-        <input id="contact-phone" name="phone" type="tel" autoComplete="tel" />
-        {fieldErrors.phone && <span role="alert">{fieldErrors.phone}</span>}
+        <input
+          id="contact-phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          aria-invalid={Boolean(fieldErrors.phone)}
+          aria-describedby={fieldErrors.phone ? 'contact-phone-error' : undefined}
+        />
+        {fieldErrors.phone && (
+          <span id="contact-phone-error" role="alert">
+            {fieldErrors.phone}
+          </span>
+        )}
       </p>
 
       <p>
@@ -127,29 +183,49 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
 
       <p>
         <label htmlFor="contact-message">{t('fields.message')}</label>
-        <textarea id="contact-message" name="message" required />
-        {fieldErrors.message && <span role="alert">{fieldErrors.message}</span>}
+        <textarea
+          id="contact-message"
+          name="message"
+          required
+          aria-invalid={Boolean(fieldErrors.message)}
+          aria-describedby={fieldErrors.message ? 'contact-message-error' : undefined}
+        />
+        {fieldErrors.message && (
+          <span id="contact-message-error" role="alert">
+            {fieldErrors.message}
+          </span>
+        )}
       </p>
 
       <p>
         <label>
-          <input type="checkbox" name="consent" required />
+          <input
+            type="checkbox"
+            name="consent"
+            required
+            aria-invalid={Boolean(fieldErrors.consent)}
+            aria-describedby={fieldErrors.consent ? 'contact-consent-error' : undefined}
+          />
           {t.rich('consent', {
             link: (chunks) => <Link href="/privacy">{chunks}</Link>,
           })}
         </label>
-        {fieldErrors.consent && <span role="alert">{fieldErrors.consent}</span>}
+        {fieldErrors.consent && (
+          <span id="contact-consent-error" role="alert">
+            {fieldErrors.consent}
+          </span>
+        )}
       </p>
 
-      {turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} />}
+      {turnstileSiteKey && <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} />}
 
       <button type="submit" disabled={status === 'sending'}>
         {status === 'sending' ? t('sending') : t('submit')}
       </button>
 
-      <p role="status">
+      <p id={STATUS_ID} role="status">
         {status === 'success' && t('success')}
-        {status === 'error' && t('error')}
+        {status === 'error' && (fieldErrors.type ?? fieldErrors.turnstile_token ?? t('error'))}
         {status === 'rateLimited' && t('rateLimited')}
       </p>
     </form>

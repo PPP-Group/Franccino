@@ -84,6 +84,7 @@
     "download": "Download file",
     "model3d": "View in 3D",
     "model3dLoading": "Loading 3D view…",
+    "model3dError": "We couldn't load the 3D view. Please try again.",
     "relatedProducts": "Related products",
     "dimensionsHeading": "Dimensions",
     "materialsHeading": "Materials",

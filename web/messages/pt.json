@@ -84,6 +84,7 @@
     "download": "Baixar arquivo",
     "model3d": "Visualizar em 3D",
     "model3dLoading": "Carregando visualização 3D…",
+    "model3dError": "Não foi possível carregar a visualização 3D. Tente novamente.",
     "relatedProducts": "Produtos relacionados",
     "dimensionsHeading": "Dimensões",
     "materialsHeading": "Materiais",

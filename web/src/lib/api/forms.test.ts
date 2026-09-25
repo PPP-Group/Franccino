@@ -87,6 +87,14 @@ describe('submitContact', () => {
       message: 'Too Many Requests',
     });
   });
+
+  it('rejects (does not resolve to a FormResult) on a network failure', async () => {
+    // `submitContact` only maps *completed* HTTP responses to a `FormResult`
+    // — a `fetch` rejection (offline, DNS, CORS) propagates instead, which is
+    // exactly what `ContactForm`'s `try/catch` around this call now handles.
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('Failed to fetch'));
+    await expect(submitContact(contactPayload)).rejects.toThrow();
+  });
 });
 
 describe('subscribeNewsletter', () => {
@@ -118,5 +126,10 @@ describe('subscribeNewsletter', () => {
       fieldErrors: { consent: 'obrigatório' },
       message: 'The given data was invalid.',
     });
+  });
+
+  it('rejects (does not resolve to a FormResult) on a network failure', async () => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('Failed to fetch'));
+    await expect(subscribeNewsletter(newsletterPayload)).rejects.toThrow();
   });
 });
