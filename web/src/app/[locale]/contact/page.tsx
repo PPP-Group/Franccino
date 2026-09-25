@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ContactForm } from '@/components/forms/ContactForm';
-import { RichText } from '@/components/content/RichText';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -34,7 +33,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
   return (
     <main id="main-content">
       <h1>{page?.title ?? t('title')}</h1>
-      {page?.intro && <RichText html={page.intro} />}
+      {page?.intro && <p>{page.intro}</p>}
       <ContactForm />
     </main>
   );

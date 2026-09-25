@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Blocks } from '@/components/content/Blocks';
-import { RichText } from '@/components/content/RichText';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -37,7 +36,7 @@ export default async function CorporatePage({ params }: CorporatePageProps) {
   return (
     <main id="main-content">
       <h1>{page.title}</h1>
-      {page.intro && <RichText html={page.intro} />}
+      {page.intro && <p>{page.intro}</p>}
       <Blocks blocks={page.content} />
     </main>
   );

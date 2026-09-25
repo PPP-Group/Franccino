@@ -41,6 +41,12 @@ describe('organizationJsonLd', () => {
     expect(jsonLd.name).toBe('Franccino');
     expect(jsonLd.sameAs).toEqual(['https://instagram.com/franccino']);
   });
+
+  it('does not crash when a real /settings response omits social_links', () => {
+    const incompleteSettings = { ...settings, social_links: undefined } as unknown as Settings;
+    expect(() => organizationJsonLd(incompleteSettings)).not.toThrow();
+    expect(organizationJsonLd(incompleteSettings).sameAs).toBeUndefined();
+  });
 });
 
 describe('productJsonLd', () => {

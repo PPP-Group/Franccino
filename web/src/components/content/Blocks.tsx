@@ -1,171 +1,143 @@
 /**
  * Renders a `PageContent.content` array (see `@/lib/api/types`, `Block`).
- * The contract only names the block kinds, not their internal shape (see the
- * comment on `Block` in `lib/api/types.ts`), so each renderer below reads
- * `data` defensively — an unexpected/missing field skips that block instead
- * of throwing, since this is content coming from a CMS.
+ * Shapes mirror `docs/data-model.md` ("pages" → block table) exactly: every
+ * block's images are plain URL strings (rendered as a plain `<img>`, not
+ * `ApiImage`, since the API applies no conversions to block media), and only
+ * `rich_text.body` / `image_text.body` are HTML — everything else is plain
+ * text, rendered as-is rather than through `RichText`.
  */
 
 import { Fragment } from 'react';
-import type { ReactNode } from 'react';
-import type { Block, Image as ApiImageType } from '@/lib/api/types';
-import { ApiImage } from '@/components/media/ApiImage';
+import type {
+  Block,
+  CtaBlockData,
+  FaqBlockData,
+  GalleryBlockData,
+  ImageBlockData,
+  ImageTextBlockData,
+  QuoteBlockData,
+  RichTextBlockData,
+  StatsBlockData,
+  TimelineBlockData,
+} from '@/lib/api/types';
 import { RichText } from './RichText';
 
-function asString(value: unknown): string | null {
-  return typeof value === 'string' && value.length > 0 ? value : null;
+/** Plain `<img>` for a block's media (a bare URL, not an `Image` object — see the module comment). */
+function BlockImage({ src, alt }: { src: string; alt: string }) {
+  // eslint-disable-next-line @next/next/no-img-element -- block media has no API-side conversions to hand to next/image.
+  return <img src={src} alt={alt} loading="lazy" />;
 }
 
-function asImage(value: unknown): ApiImageType | null {
-  return value && typeof value === 'object' && 'src' in value ? (value as ApiImageType) : null;
+function RichTextBlock({ data }: { data: RichTextBlockData }) {
+  return <RichText html={data.body} />;
 }
 
-function asArray(value: unknown): unknown[] {
-  return Array.isArray(value) ? value : [];
-}
-
-function RichTextBlock({ data }: { data: Record<string, unknown> }) {
-  const html = asString(data.html);
-  return html ? <RichText html={html} /> : null;
-}
-
-function ImageBlock({ data }: { data: Record<string, unknown> }) {
-  const image = asImage(data.image);
-  if (!image) {
-    return null;
-  }
-  const caption = asString(data.caption);
+function ImageBlock({ data }: { data: ImageBlockData }) {
   return (
     <figure>
-      <ApiImage image={image} sizes="100vw" />
-      {caption && <figcaption>{caption}</figcaption>}
+      <BlockImage src={data.image} alt={data.caption ?? ''} />
+      {data.caption && <figcaption>{data.caption}</figcaption>}
     </figure>
   );
 }
 
-function ImageTextBlock({ data }: { data: Record<string, unknown> }) {
-  const image = asImage(data.image);
-  const html = asString(data.html);
-  const title = asString(data.title);
+function ImageTextBlock({ data }: { data: ImageTextBlockData }) {
   return (
-    <section>
-      {image && <ApiImage image={image} sizes="(min-width: 768px) 50vw, 100vw" />}
-      {title && <h2>{title}</h2>}
-      {html && <RichText html={html} />}
+    <section data-image-position={data.image_position}>
+      <BlockImage src={data.image} alt="" />
+      <div>
+        {data.heading && <h2>{data.heading}</h2>}
+        <RichText html={data.body} />
+      </div>
     </section>
   );
 }
 
-function TimelineBlock({ data }: { data: Record<string, unknown> }) {
-  const items = asArray(data.items) as { date?: string; title?: string; description?: string }[];
-  if (items.length === 0) {
+function TimelineBlock({ data }: { data: TimelineBlockData }) {
+  if (data.items.length === 0) {
     return null;
   }
   return (
     <ol>
-      {items.map((item, index) => (
+      {data.items.map((item, index) => (
         <li key={index}>
-          {item.date && <span>{item.date}</span>}
-          {item.title && <h3>{item.title}</h3>}
-          {item.description && <p>{item.description}</p>}
+          <span>{item.year}</span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
         </li>
       ))}
     </ol>
   );
 }
 
-function FaqBlock({ data }: { data: Record<string, unknown> }) {
-  const items = asArray(data.items) as { question?: string; answer?: string }[];
-  if (items.length === 0) {
+function FaqBlock({ data }: { data: FaqBlockData }) {
+  if (data.items.length === 0) {
     return null;
   }
   return (
     <dl>
-      {items.map((item, index) => (
+      {data.items.map((item, index) => (
         <Fragment key={index}>
-          {item.question && <dt>{item.question}</dt>}
-          {item.answer && <dd>{item.answer}</dd>}
+          <dt>{item.question}</dt>
+          <dd>{item.answer}</dd>
         </Fragment>
       ))}
     </dl>
   );
 }
 
-function StatsBlock({ data }: { data: Record<string, unknown> }) {
-  const items = asArray(data.items) as { value?: string; label?: string }[];
-  if (items.length === 0) {
+function StatsBlock({ data }: { data: StatsBlockData }) {
+  if (data.items.length === 0) {
     return null;
   }
   return (
     <dl>
-      {items.map((item, index) => (
+      {data.items.map((item, index) => (
         <Fragment key={index}>
-          {item.value && <dt>{item.value}</dt>}
-          {item.label && <dd>{item.label}</dd>}
+          <dt>{item.value}</dt>
+          <dd>{item.label}</dd>
         </Fragment>
       ))}
     </dl>
   );
 }
 
-function QuoteBlock({ data }: { data: Record<string, unknown> }) {
-  const text = asString(data.text);
-  if (!text) {
-    return null;
-  }
-  const author = asString(data.author);
+function QuoteBlock({ data }: { data: QuoteBlockData }) {
   return (
     <blockquote>
-      <p>{text}</p>
-      {author && <cite>{author}</cite>}
+      <p>{data.text}</p>
+      {data.author && <cite>{data.author}</cite>}
     </blockquote>
   );
 }
 
-function CtaBlock({ data }: { data: Record<string, unknown> }) {
-  const label = asString(data.label);
-  const url = asString(data.url);
-  if (!label || !url) {
-    return null;
-  }
-  const title = asString(data.title);
+function CtaBlock({ data }: { data: CtaBlockData }) {
   return (
     <p>
-      {title && <strong>{title}</strong>}
-      <a href={url}>{label}</a>
+      {data.heading && <strong>{data.heading}</strong>}
+      {data.body && <span>{data.body}</span>}
+      <a href={data.url}>{data.label}</a>
     </p>
   );
 }
 
-function GalleryBlock({ data }: { data: Record<string, unknown> }) {
-  const images = asArray(data.images)
-    .map(asImage)
-    .filter((image): image is ApiImageType => image !== null);
-  if (images.length === 0) {
+function GalleryBlock({ data }: { data: GalleryBlockData }) {
+  if (data.images.length === 0) {
     return null;
   }
   return (
-    <ul>
-      {images.map((image) => (
-        <li key={image.id}>
-          <ApiImage image={image} sizes="(min-width: 768px) 33vw, 100vw" />
-        </li>
-      ))}
-    </ul>
+    <figure>
+      <ul>
+        {data.images.map((src, index) => (
+          <li key={index}>
+            <BlockImage src={src} alt="" />
+          </li>
+        ))}
+      </ul>
+      {data.caption && <figcaption>{data.caption}</figcaption>}
+    </figure>
   );
 }
-
-const BLOCK_COMPONENTS: Record<string, (props: { data: Record<string, unknown> }) => ReactNode> = {
-  rich_text: RichTextBlock,
-  image: ImageBlock,
-  image_text: ImageTextBlock,
-  timeline: TimelineBlock,
-  faq: FaqBlock,
-  stats: StatsBlock,
-  quote: QuoteBlock,
-  cta: CtaBlock,
-  gallery: GalleryBlock,
-};
 
 type BlocksProps = {
   blocks: Block[];
@@ -175,8 +147,28 @@ export function Blocks({ blocks }: BlocksProps) {
   return (
     <>
       {blocks.map((block, index) => {
-        const BlockComponent = BLOCK_COMPONENTS[block.type];
-        return BlockComponent ? <BlockComponent key={index} data={block.data} /> : null;
+        switch (block.type) {
+          case 'rich_text':
+            return <RichTextBlock key={index} data={block.data} />;
+          case 'image':
+            return <ImageBlock key={index} data={block.data} />;
+          case 'image_text':
+            return <ImageTextBlock key={index} data={block.data} />;
+          case 'timeline':
+            return <TimelineBlock key={index} data={block.data} />;
+          case 'faq':
+            return <FaqBlock key={index} data={block.data} />;
+          case 'stats':
+            return <StatsBlock key={index} data={block.data} />;
+          case 'quote':
+            return <QuoteBlock key={index} data={block.data} />;
+          case 'cta':
+            return <CtaBlock key={index} data={block.data} />;
+          case 'gallery':
+            return <GalleryBlock key={index} data={block.data} />;
+          default:
+            return null;
+        }
       })}
     </>
   );

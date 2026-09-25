@@ -217,14 +217,45 @@ export type Banner = {
 };
 
 /**
- * A content block inside `PageContent.content`. The contract names the type
- * but never documents its internal shape (block kinds/fields), so it is kept
- * as a minimal, discriminated-by-`type` bag until the API defines it further.
+ * A content block inside `PageContent.content`. Shapes mirror
+ * `docs/data-model.md` ("pages" → "content é uma lista ... de blocos"):
+ * translatable fields arrive already resolved to the requested locale (plain
+ * strings, not `{pt, en}`), and only `rich_text.body` / `image_text.body` are
+ * HTML — every other text field is plain text.
  */
-export type Block = {
-  type: string;
-  data: Record<string, unknown>;
+export type RichTextBlockData = { body: string };
+
+export type ImageBlockData = { image: string; caption: string | null };
+
+export type ImageTextBlockData = {
+  image: string;
+  heading: string | null;
+  body: string;
+  image_position: 'left' | 'right';
 };
+
+export type TimelineBlockData = { items: { year: string; title: string; text: string }[] };
+
+export type FaqBlockData = { items: { question: string; answer: string }[] };
+
+export type StatsBlockData = { items: { value: string; label: string }[] };
+
+export type QuoteBlockData = { text: string; author: string | null };
+
+export type CtaBlockData = { heading: string | null; body: string | null; label: string; url: string };
+
+export type GalleryBlockData = { images: string[]; caption: string | null };
+
+export type Block =
+  | { type: 'rich_text'; data: RichTextBlockData }
+  | { type: 'image'; data: ImageBlockData }
+  | { type: 'image_text'; data: ImageTextBlockData }
+  | { type: 'timeline'; data: TimelineBlockData }
+  | { type: 'faq'; data: FaqBlockData }
+  | { type: 'stats'; data: StatsBlockData }
+  | { type: 'quote'; data: QuoteBlockData }
+  | { type: 'cta'; data: CtaBlockData }
+  | { type: 'gallery'; data: GalleryBlockData };
 
 export type PageContent = {
   key: string;

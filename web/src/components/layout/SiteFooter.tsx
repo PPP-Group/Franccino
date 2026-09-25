@@ -12,11 +12,16 @@ export async function SiteFooter({ settings }: SiteFooterProps) {
   const tCommon = await getTranslations('common');
   const year = new Date().getFullYear();
 
+  // `Settings` is a best-effort shape from a contract only described in
+  // prose (see `lib/api/types.ts`) — guard every array field defensively so
+  // a real `/settings` response that omits one can't crash the layout.
+  const socialLinks = settings.social_links ?? [];
+  const footerDocuments = settings.footer_documents ?? [];
   const hasContact = settings.contact_email || settings.contact_phone || settings.whatsapp;
 
   return (
     <footer>
-      {(hasContact || settings.social_links.length > 0) && (
+      {(hasContact || socialLinks.length > 0) && (
         <section aria-labelledby="footer-contact-heading">
           <h2 id="footer-contact-heading">{t('contactHeading')}</h2>
           <ul>
@@ -35,7 +40,7 @@ export async function SiteFooter({ settings }: SiteFooterProps) {
                 <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}>{settings.whatsapp}</a>
               </li>
             )}
-            {settings.social_links.map((link) => (
+            {socialLinks.map((link) => (
               <li key={link.url}>
                 <a href={link.url}>{link.platform}</a>
               </li>
@@ -44,11 +49,11 @@ export async function SiteFooter({ settings }: SiteFooterProps) {
         </section>
       )}
 
-      {settings.footer_documents.length > 0 && (
+      {footerDocuments.length > 0 && (
         <section aria-labelledby="footer-documents-heading">
           <h2 id="footer-documents-heading">{t('documentsHeading')}</h2>
           <ul>
-            {settings.footer_documents.map((document) => (
+            {footerDocuments.map((document) => (
               <li key={document.url}>
                 <a href={document.url}>{document.title}</a>
               </li>

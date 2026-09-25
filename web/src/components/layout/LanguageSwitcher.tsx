@@ -6,12 +6,19 @@
  * for the current page — so it lands on the equivalent page in the other
  * locale, not just its home. Falls back to that locale's home when there is
  * no alternate (e.g. a page that doesn't exist in the target locale).
+ *
+ * The alternate is read from `document.head` at click time, not via an
+ * effect keyed on `usePathname()`: that pathname is the route *template*
+ * (e.g. `/products/[slug]`), so a client-side navigation between two pages
+ * sharing a template (two different products) doesn't change it — the
+ * effect wouldn't re-run and the switcher would keep pointing at the
+ * previous product. Reading the DOM synchronously on activation is always
+ * current, regardless of when Next last updated the head tags.
  */
 
-import { useEffect, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { htmlLang, locales, type Locale } from '@/i18n/config';
-import { usePathname } from '@/i18n/navigation';
 
 type AlternateLink = { hreflang: string; href: string };
 
@@ -44,30 +51,30 @@ function readAlternateLinks(): AlternateLink[] {
 export function LanguageSwitcher() {
   const t = useTranslations('language');
   const currentLocale = useLocale() as Locale;
-  const pathname = usePathname();
-  const [links, setLinks] = useState<AlternateLink[]>([]);
-
-  // Read from `document.head` only after mount, so the server-rendered and
-  // first client render stay in sync (both start from an empty list) and
-  // the "real" alternates arrive right after hydration — then again on every
-  // client-side navigation (`pathname` changes), since `buildMetadata`
-  // rewrites those `<link>` tags per page but this component doesn't remount.
-  useEffect(() => {
-    // Syncing from `document.head`, an external system only readable after
-    // mount; there is no way to derive it during render (no DOM during SSR).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLinks(readAlternateLinks());
-  }, [pathname]);
-
   const otherLocales = locales.filter((locale) => locale !== currentLocale);
+
+  function handleClick(event: MouseEvent<HTMLAnchorElement>, target: Locale) {
+    const href = resolveAlternateHref(readAlternateLinks(), target);
+    if (!href) {
+      // No alternate for this page in the target locale: let the anchor's
+      // own `href` (that locale's home) navigate normally.
+      return;
+    }
+    event.preventDefault();
+    window.location.assign(href);
+  }
 
   return (
     <nav aria-label={t('label')}>
       <ul>
         {otherLocales.map((locale) => (
           <li key={locale}>
-            <a href={resolveAlternateHref(links, locale) ?? `/${locale}`} hrefLang={htmlLang(locale)}>
-              {t(locale)}
+            <a
+              href={`/${locale}`}
+              hrefLang={htmlLang(locale)}
+              onClick={(event) => handleClick(event, locale)}
+            >
+              <span lang={htmlLang(locale)}>{t(locale)}</span>
             </a>
           </li>
         ))}
