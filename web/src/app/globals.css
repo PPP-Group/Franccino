@@ -2,6 +2,7 @@
 @import '../styles/tokens.css';
 @import '../styles/base.css' layer(base);
 @import '../styles/components.css' layer(components);
+@import '../styles/forms.css' layer(components);
 
 @theme inline {
   --color-*: initial;

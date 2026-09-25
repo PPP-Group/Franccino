@@ -34,7 +34,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
     <main id="main-content">
       <h1>{page?.title ?? t('title')}</h1>
       {page?.intro && <p>{page.intro}</p>}
-      <ContactForm />
+      <ContactForm typeSelectable />
     </main>
   );
 }

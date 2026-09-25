@@ -163,7 +163,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section>
         <h2>{t('quoteHeading')}</h2>
-        <ContactForm productId={product.id} fixedType="quote" />
+        <ContactForm type="quote" productId={product.id} />
       </section>
     </main>
   );

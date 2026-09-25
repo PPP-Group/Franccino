@@ -82,6 +82,62 @@
       "other": "Other"
     }
   },
+  "contactForm": {
+    "requiredHint": "Fields marked * are required.",
+    "requiredMark": "*",
+    "type": "Subject",
+    "types": {
+      "quote": "Quote",
+      "assistance": "Technical assistance",
+      "partnership": "Become a partner",
+      "press": "Press",
+      "other": "Something else"
+    },
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "city": "City",
+    "state": "State (Brazil)",
+    "statePlaceholder": "Select",
+    "profession": "You are",
+    "professionPlaceholder": "Select",
+    "professions": {
+      "architect": "Architect",
+      "interior_designer": "Interior designer",
+      "retailer": "Retailer",
+      "end_customer": "Home owner",
+      "other": "Other"
+    },
+    "message": "Message",
+    "consent": "I agree to the <privacy>privacy policy</privacy> and to being contacted by Franccino about this message.",
+    "submit": "Send",
+    "sending": "Sending…",
+    "success": "Message received. The Franccino team will reply to the email you provided.",
+    "errorSummary": "Please check the highlighted fields.",
+    "failed": "We could not send it right now. Please try again shortly.",
+    "rateLimited": "Too many attempts in a row. Wait a minute and try again.",
+    "errors": {
+      "required": "This field is required.",
+      "invalidEmail": "Enter a valid email address.",
+      "tooLong": "This text is longer than allowed.",
+      "consent": "You need to accept the privacy policy."
+    }
+  },
+  "newsletter": {
+    "intro": "Get Franccino launches by email.",
+    "emailLabel": "Your email",
+    "placeholder": "Your email",
+    "submit": "Subscribe",
+    "consent": "I accept the <privacy>privacy policy</privacy>.",
+    "status": {
+      "sending": "Sending…",
+      "success": "Subscription received.",
+      "invalid": "Enter a valid email and accept the privacy policy.",
+      "failed": "We could not subscribe you right now. Please try again.",
+      "rateLimited": "Too many attempts in a row. Wait a minute."
+    }
+  },
   "products": {
     "viewDetails": "View details",
     "download": "Download file",

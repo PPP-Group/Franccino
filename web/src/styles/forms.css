@@ -1,0 +1,53 @@
+/*
+  Formulários (ContactForm, NewsletterForm). `.consent`, `.consent input` e
+  `.form-status` portados de design/prototype/assets/styles.css (bloco
+  "quote list page", ~1733-1756), trocando var(--ink-2) por var(--ink-muted)
+  e #f2f5f2 por var(--status-ok-bg). `.field`, `.field .error`, `.pair` e
+  `.btn`/`.btn--block` já vêm de components.css.
+*/
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.req {
+  margin-left: 2px;
+  color: var(--alert);
+}
+
+.form-error {
+  font-size: 0.875rem;
+  color: var(--alert);
+  border: 1px solid var(--alert);
+  background: var(--paper);
+  padding: 10px 12px;
+}
+
+.consent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  align-items: start;
+}
+
+.consent input {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+}
+
+.consent a {
+  color: var(--ink);
+}
+
+.form-status {
+  font-size: 0.9375rem;
+  padding: 14px 16px;
+  border: 1px solid var(--garden);
+  color: var(--garden);
+  background: var(--status-ok-bg);
+}

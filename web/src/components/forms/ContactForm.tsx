@@ -1,81 +1,170 @@
 'use client';
 
-import { type FormEvent, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import type { ContactPayload, FormResult } from '@/lib/api/forms';
-import { submitContact } from '@/lib/api/forms';
+import { submitContact, type ContactItem } from '@/lib/api/forms';
 import { getPublicEnv } from '@/lib/env';
+import {
+  BRAZIL_STATES,
+  buildContactPayload,
+  CONTACT_TYPES,
+  fieldFromServer,
+  firstInvalidField,
+  PROFESSIONS,
+  readContactForm,
+  validateContact,
+  type ContactField,
+  type ContactFieldError,
+  type ContactType,
+} from '@/lib/forms/contact';
 import { Turnstile, type TurnstileHandle } from './Turnstile';
 
-type ContactFormProps = {
-  /** Presets `product_id` and hides the subject field, forcing `type: 'quote'` (product page's budget form). */
+type Status = 'idle' | 'sending' | 'success' | 'failed' | 'rateLimited';
+
+export type ContactFormProps = {
+  type?: ContactType;
+  typeSelectable?: boolean;
   productId?: number;
-  fixedType?: ContactPayload['type'];
+  items?: ContactItem[];
+  composeMessage?: (typed: string) => string;
+  messageRequired?: boolean;
+  messageLabel?: string;
+  messagePlaceholder?: string;
+  submitLabel?: string;
+  successMessage?: string;
+  onSuccess?: () => void;
 };
 
-type Status = 'idle' | 'sending' | 'success' | 'error' | 'rateLimited';
-
-const CONTACT_TYPES: ContactPayload['type'][] = ['quote', 'assistance', 'partnership', 'press', 'other'];
-
-const STATUS_ID = 'contact-form-status';
-
-function fieldValue(formData: FormData, name: string): string | null {
-  const value = formData.get(name);
-  return typeof value === 'string' && value.trim().length > 0 ? value : null;
+function FieldShell(props: {
+  id: string;
+  label: string;
+  required?: boolean;
+  error?: string;
+  errorId: string;
+  children: ReactNode;
+}) {
+  const t = useTranslations('contactForm');
+  return (
+    <div className="field">
+      <label htmlFor={props.id}>
+        {props.label}
+        {props.required ? (
+          <span className="req" aria-hidden="true">
+            {t('requiredMark')}
+          </span>
+        ) : null}
+      </label>
+      {props.children}
+      {props.error ? (
+        <p className="error" id={props.errorId}>
+          {props.error}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
-export function ContactForm({ productId, fixedType }: ContactFormProps) {
-  const t = useTranslations('forms');
+export function ContactForm({
+  type = 'other',
+  typeSelectable = false,
+  productId,
+  items,
+  composeMessage,
+  messageRequired = true,
+  messageLabel,
+  messagePlaceholder,
+  submitLabel,
+  successMessage,
+  onSuccess,
+}: ContactFormProps) {
+  const t = useTranslations('contactForm');
   const locale = useLocale() as Locale;
-  const turnstileSiteKey = getPublicEnv().NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const baseId = useId();
+  const siteKey = getPublicEnv().NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const turnstileRef = useRef<TurnstileHandle>(null);
-
   const [status, setStatus] = useState<Status>('idle');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<ContactField, string>>>({});
+  const [serverMessage, setServerMessage] = useState<string | null>(null);
+
+  const fieldId = (field: ContactField) => `${baseId}-${field}`;
+  const errorId = (field: ContactField) => `${baseId}-${field}-error`;
+  const aria = (field: ContactField) => ({
+    'aria-invalid': errors[field] ? true : undefined,
+    'aria-describedby': errors[field] ? errorId(field) : undefined,
+  });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const formData = new FormData(form);
+    const data = new FormData(form);
+    const values = readContactForm(data, type);
+    const found = validateContact(values, { messageRequired });
+
+    const messages: Partial<Record<ContactField, string>> = {};
+    for (const [field, code] of Object.entries(found) as [ContactField, ContactFieldError][]) {
+      messages[field] = t(`errors.${code}`);
+    }
+    setErrors(messages);
+    setServerMessage(null);
+
+    const first = firstInvalidField(found);
+    if (first) {
+      form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+      return;
+    }
 
     setStatus('sending');
-    setFieldErrors({});
-
-    const payload: ContactPayload = {
-      type: fixedType ?? ((formData.get('type') as ContactPayload['type']) || 'other'),
-      name: String(formData.get('name') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      phone: fieldValue(formData, 'phone'),
-      company: fieldValue(formData, 'company'),
-      profession: fieldValue(formData, 'profession'),
-      city: fieldValue(formData, 'city'),
-      state: fieldValue(formData, 'state'),
-      message: String(formData.get('message') ?? ''),
-      product_id: productId,
-      locale,
-      source_url: typeof window === 'undefined' ? '' : window.location.href,
-      consent: formData.get('consent') === 'on',
-      turnstile_token: fieldValue(formData, 'cf-turnstile-response') ?? undefined,
-    };
-
     try {
-      const result: FormResult = await submitContact(payload);
+      const token = data.get('cf-turnstile-response');
+      const result = await submitContact(
+        buildContactPayload(values, {
+          locale,
+          sourceUrl: window.location.href,
+          productId,
+          items,
+          composeMessage,
+          turnstileToken: typeof token === 'string' ? token : null,
+        }),
+      );
 
       if (result.ok) {
-        setStatus('success');
         form.reset();
+        setStatus('success');
+        onSuccess?.();
         return;
       }
-
-      setStatus(result.status === 429 ? 'rateLimited' : 'error');
-      setFieldErrors(result.fieldErrors);
+      if (result.status === 429) {
+        setStatus('rateLimited');
+        return;
+      }
+      // `turnstile_token` and `type` errors have no dedicated field to land on
+      // (the challenge widget has no visible input; the subject select is
+      // hidden when `typeSelectable` is false) — they surface in the alert
+      // instead of a per-field message.
+      const mapped: Partial<Record<ContactField, string>> = {};
+      for (const [key, message] of Object.entries(result.fieldErrors)) {
+        if (key === 'turnstile_token' || key === 'type') {
+          continue;
+        }
+        const field = fieldFromServer(key);
+        if (field) {
+          mapped[field] = message;
+        }
+      }
+      setErrors(mapped);
+      setServerMessage(
+        Object.keys(mapped).length === 0
+          ? (result.fieldErrors.turnstile_token ?? result.message ?? null)
+          : null,
+      );
+      setStatus('failed');
     } catch {
       // Network failure (offline, DNS, CORS, etc.): `submitContact` only
       // resolves with `{ ok: false }` for a completed HTTP response, so
       // anything that throws here never reached the API.
-      setStatus('error');
+      setStatus('failed');
     } finally {
       // Turnstile tokens are single-use; get a fresh one for the next
       // attempt regardless of how this one ended.
@@ -83,151 +172,192 @@ export function ContactForm({ productId, fixedType }: ContactFormProps) {
     }
   }
 
+  if (status === 'success') {
+    return (
+      <div className="form-status" role="status">
+        <strong>{successMessage ?? t('success')}</strong>
+      </div>
+    );
+  }
+
+  const hasFieldErrors = Object.keys(errors).length > 0;
+  const alert =
+    status === 'rateLimited'
+      ? t('rateLimited')
+      : hasFieldErrors
+        ? t('errorSummary')
+        : status === 'failed'
+          ? (serverMessage ?? t('failed'))
+          : null;
+
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      {!fixedType && (
-        <p>
-          <label htmlFor="contact-type">{t('fields.type')}</label>
-          <select
-            id="contact-type"
-            name="type"
-            required
-            defaultValue=""
-            aria-invalid={Boolean(fieldErrors.type)}
-            aria-describedby={fieldErrors.type ? STATUS_ID : undefined}
-          >
-            <option value="" disabled>
-              {t('fields.type')}
-            </option>
-            {CONTACT_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {t(`contactTypes.${type}`)}
+    <form className="form" noValidate onSubmit={handleSubmit}>
+      <p className="meta">{t('requiredHint')}</p>
+
+      {typeSelectable ? (
+        <FieldShell id={fieldId('type')} label={t('type')} errorId={errorId('type')}>
+          <select id={fieldId('type')} name="type" defaultValue={type}>
+            {CONTACT_TYPES.map((value) => (
+              <option key={value} value={value}>
+                {t(`types.${value}`)}
               </option>
             ))}
           </select>
-        </p>
-      )}
+        </FieldShell>
+      ) : null}
 
-      <p>
-        <label htmlFor="contact-name">{t('fields.name')}</label>
+      <FieldShell
+        id={fieldId('name')}
+        label={t('name')}
+        required
+        error={errors.name}
+        errorId={errorId('name')}
+      >
         <input
-          id="contact-name"
+          id={fieldId('name')}
           name="name"
-          type="text"
-          required
           autoComplete="name"
-          aria-invalid={Boolean(fieldErrors.name)}
-          aria-describedby={fieldErrors.name ? 'contact-name-error' : undefined}
-        />
-        {fieldErrors.name && (
-          <span id="contact-name-error" role="alert">
-            {fieldErrors.name}
-          </span>
-        )}
-      </p>
-
-      <p>
-        <label htmlFor="contact-email">{t('fields.email')}</label>
-        <input
-          id="contact-email"
-          name="email"
-          type="email"
           required
-          autoComplete="email"
-          aria-invalid={Boolean(fieldErrors.email)}
-          aria-describedby={fieldErrors.email ? 'contact-email-error' : undefined}
+          maxLength={120}
+          {...aria('name')}
         />
-        {fieldErrors.email && (
-          <span id="contact-email-error" role="alert">
-            {fieldErrors.email}
-          </span>
-        )}
-      </p>
+      </FieldShell>
 
-      <p>
-        <label htmlFor="contact-phone">{t('fields.phone')}</label>
-        <input
-          id="contact-phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          aria-invalid={Boolean(fieldErrors.phone)}
-          aria-describedby={fieldErrors.phone ? 'contact-phone-error' : undefined}
-        />
-        {fieldErrors.phone && (
-          <span id="contact-phone-error" role="alert">
-            {fieldErrors.phone}
-          </span>
-        )}
-      </p>
-
-      <p>
-        <label htmlFor="contact-company">{t('fields.company')}</label>
-        <input id="contact-company" name="company" type="text" autoComplete="organization" />
-      </p>
-
-      <p>
-        <label htmlFor="contact-profession">{t('fields.profession')}</label>
-        <input id="contact-profession" name="profession" type="text" />
-      </p>
-
-      <p>
-        <label htmlFor="contact-city">{t('fields.city')}</label>
-        <input id="contact-city" name="city" type="text" autoComplete="address-level2" />
-      </p>
-
-      <p>
-        <label htmlFor="contact-state">{t('fields.state')}</label>
-        <input id="contact-state" name="state" type="text" autoComplete="address-level1" />
-      </p>
-
-      <p>
-        <label htmlFor="contact-message">{t('fields.message')}</label>
-        <textarea
-          id="contact-message"
-          name="message"
+      <div className="pair">
+        <FieldShell
+          id={fieldId('email')}
+          label={t('email')}
           required
-          aria-invalid={Boolean(fieldErrors.message)}
-          aria-describedby={fieldErrors.message ? 'contact-message-error' : undefined}
-        />
-        {fieldErrors.message && (
-          <span id="contact-message-error" role="alert">
-            {fieldErrors.message}
-          </span>
-        )}
-      </p>
-
-      <p>
-        <label>
+          error={errors.email}
+          errorId={errorId('email')}
+        >
           <input
-            type="checkbox"
-            name="consent"
+            id={fieldId('email')}
+            name="email"
+            type="email"
+            autoComplete="email"
             required
-            aria-invalid={Boolean(fieldErrors.consent)}
-            aria-describedby={fieldErrors.consent ? 'contact-consent-error' : undefined}
+            maxLength={190}
+            {...aria('email')}
           />
-          {t.rich('consent', {
-            link: (chunks) => <Link href="/privacy">{chunks}</Link>,
-          })}
+        </FieldShell>
+        <FieldShell id={fieldId('phone')} label={t('phone')} error={errors.phone} errorId={errorId('phone')}>
+          <input
+            id={fieldId('phone')}
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            maxLength={40}
+            {...aria('phone')}
+          />
+        </FieldShell>
+      </div>
+
+      <FieldShell
+        id={fieldId('company')}
+        label={t('company')}
+        error={errors.company}
+        errorId={errorId('company')}
+      >
+        <input
+          id={fieldId('company')}
+          name="company"
+          autoComplete="organization"
+          maxLength={120}
+          {...aria('company')}
+        />
+      </FieldShell>
+
+      <div className="pair">
+        <FieldShell id={fieldId('city')} label={t('city')} error={errors.city} errorId={errorId('city')}>
+          <input
+            id={fieldId('city')}
+            name="city"
+            autoComplete="address-level2"
+            maxLength={120}
+            {...aria('city')}
+          />
+        </FieldShell>
+        <FieldShell id={fieldId('state')} label={t('state')} error={errors.state} errorId={errorId('state')}>
+          <select
+            id={fieldId('state')}
+            name="state"
+            autoComplete="address-level1"
+            defaultValue=""
+            {...aria('state')}
+          >
+            <option value="">{t('statePlaceholder')}</option>
+            {BRAZIL_STATES.map((uf) => (
+              <option key={uf} value={uf}>
+                {uf}
+              </option>
+            ))}
+          </select>
+        </FieldShell>
+      </div>
+
+      <FieldShell
+        id={fieldId('profession')}
+        label={t('profession')}
+        error={errors.profession}
+        errorId={errorId('profession')}
+      >
+        <select id={fieldId('profession')} name="profession" defaultValue="" {...aria('profession')}>
+          <option value="">{t('professionPlaceholder')}</option>
+          {PROFESSIONS.map((value) => (
+            <option key={value} value={value}>
+              {t(`professions.${value}`)}
+            </option>
+          ))}
+        </select>
+      </FieldShell>
+
+      <FieldShell
+        id={fieldId('message')}
+        label={messageLabel ?? t('message')}
+        required={messageRequired}
+        error={errors.message}
+        errorId={errorId('message')}
+      >
+        <textarea
+          id={fieldId('message')}
+          name="message"
+          rows={4}
+          maxLength={5000}
+          required={messageRequired}
+          placeholder={messagePlaceholder}
+          {...aria('message')}
+        />
+      </FieldShell>
+
+      <div className="field">
+        <label className="consent">
+          <input type="checkbox" name="consent" required {...aria('consent')} />
+          <span>{t.rich('consent', { privacy: (chunks) => <Link href="/privacy">{chunks}</Link> })}</span>
         </label>
-        {fieldErrors.consent && (
-          <span id="contact-consent-error" role="alert">
-            {fieldErrors.consent}
-          </span>
-        )}
-      </p>
+        {errors.consent ? (
+          <p className="error" id={errorId('consent')}>
+            {errors.consent}
+          </p>
+        ) : null}
+      </div>
 
-      {turnstileSiteKey && <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} />}
+      {siteKey ? <Turnstile ref={turnstileRef} siteKey={siteKey} /> : null}
 
-      <button type="submit" disabled={status === 'sending'}>
-        {status === 'sending' ? t('sending') : t('submit')}
+      {alert ? (
+        <p className="form-error" role="alert">
+          {alert}
+        </p>
+      ) : null}
+
+      <button
+        className="btn btn--block"
+        type="submit"
+        disabled={status === 'sending'}
+        aria-busy={status === 'sending'}
+      >
+        {status === 'sending' ? t('sending') : (submitLabel ?? t('submit'))}
       </button>
-
-      <p id={STATUS_ID} role="status">
-        {status === 'success' && t('success')}
-        {status === 'error' && (fieldErrors.type ?? fieldErrors.turnstile_token ?? t('error'))}
-        {status === 'rateLimited' && t('rateLimited')}
-      </p>
     </form>
   );
 }

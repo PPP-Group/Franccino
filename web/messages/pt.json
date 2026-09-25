@@ -82,6 +82,62 @@
       "other": "Outro"
     }
   },
+  "contactForm": {
+    "requiredHint": "Campos com * são obrigatórios.",
+    "requiredMark": "*",
+    "type": "Assunto",
+    "types": {
+      "quote": "Orçamento",
+      "assistance": "Assistência técnica",
+      "partnership": "Seja um parceiro",
+      "press": "Imprensa",
+      "other": "Outro assunto"
+    },
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "company": "Empresa",
+    "city": "Cidade",
+    "state": "UF",
+    "statePlaceholder": "Selecione",
+    "profession": "Você é",
+    "professionPlaceholder": "Selecione",
+    "professions": {
+      "architect": "Arquiteto(a)",
+      "interior_designer": "Designer de interiores",
+      "retailer": "Lojista",
+      "end_customer": "Cliente final",
+      "other": "Outro"
+    },
+    "message": "Mensagem",
+    "consent": "Concordo com a <privacy>política de privacidade</privacy> e com o contato da Franccino sobre esta mensagem.",
+    "submit": "Enviar",
+    "sending": "Enviando…",
+    "success": "Mensagem recebida. A equipe da Franccino responde pelo e-mail informado.",
+    "errorSummary": "Confira os campos destacados.",
+    "failed": "Não foi possível enviar agora. Tente novamente em instantes.",
+    "rateLimited": "Muitos envios seguidos. Aguarde um minuto e tente de novo.",
+    "errors": {
+      "required": "Campo obrigatório.",
+      "invalidEmail": "Informe um e-mail válido.",
+      "tooLong": "Texto maior que o permitido.",
+      "consent": "É preciso aceitar a política de privacidade."
+    }
+  },
+  "newsletter": {
+    "intro": "Receba os lançamentos da Franccino por e-mail.",
+    "emailLabel": "Seu e-mail",
+    "placeholder": "Seu e-mail",
+    "submit": "Inscrever",
+    "consent": "Aceito a <privacy>política de privacidade</privacy>.",
+    "status": {
+      "sending": "Enviando…",
+      "success": "Inscrição recebida.",
+      "invalid": "Informe um e-mail válido e aceite a política de privacidade.",
+      "failed": "Não foi possível inscrever agora. Tente novamente.",
+      "rateLimited": "Muitas tentativas seguidas. Aguarde um minuto."
+    }
+  },
   "products": {
     "viewDetails": "Ver detalhes",
     "download": "Baixar arquivo",
