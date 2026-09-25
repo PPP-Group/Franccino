@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Stone,
             ])
+            ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make(fn () => __('Catalog')),
                 NavigationGroup::make(fn () => __('Content')),
