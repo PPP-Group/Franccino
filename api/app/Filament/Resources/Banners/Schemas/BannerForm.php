@@ -9,6 +9,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class BannerForm
@@ -40,9 +41,14 @@ class BannerForm
                         ->maxLength(255),
                 ]),
                 DateTimePicker::make('starts_at')
-                    ->label(__('Starts at')),
+                    ->label(__('Starts at'))
+                    ->live(),
                 DateTimePicker::make('ends_at')
-                    ->label(__('Ends at')),
+                    ->label(__('Ends at'))
+                    // Only enforced once both dates are filled: the comparison date comes
+                    // from `starts_at`'s own live value, so the rule is skipped entirely
+                    // (via Filament's `dateComparisonRule` condition) when it is empty.
+                    ->after(fn (Get $get): ?string => $get('starts_at')),
                 ...CommonFields::publication(),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label(__('Image'))

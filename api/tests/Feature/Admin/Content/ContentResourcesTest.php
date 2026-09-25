@@ -215,3 +215,16 @@ it('creates a banner in both languages', function () {
 
     expect($banner->getTranslation('title', 'en'))->toBe('What is new');
 });
+
+it('requires the banner window to end after it starts', function () {
+    livewire(CreateBanner::class)
+        ->fillForm([
+            'placement' => 'home_hero',
+            'title' => ['pt' => 'Novidades', 'en' => 'What is new'],
+            'image' => UploadedFile::fake()->image('banner.jpg', 1600, 900),
+            'starts_at' => now()->addDay(),
+            'ends_at' => now(),
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['ends_at']);
+});

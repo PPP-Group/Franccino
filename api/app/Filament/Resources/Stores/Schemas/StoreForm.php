@@ -55,10 +55,14 @@ class StoreForm
                     ->maxLength(2),
                 TextInput::make('latitude')
                     ->label(__('Latitude'))
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(-90)
+                    ->maxValue(90),
                 TextInput::make('longitude')
                     ->label(__('Longitude'))
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(-180)
+                    ->maxValue(180),
                 TextInput::make('phone')
                     ->label(__('Phone'))
                     ->tel()
