@@ -17,3 +17,13 @@ export class ApiError extends Error {
     this.body = body;
   }
 }
+
+/**
+ * `422 Unprocessable Content` from a *listing* endpoint (search, stores,
+ * downloads, projects) means the filters sent don't validate (e.g. malformed
+ * query params) — the page should treat that as an empty result, not a
+ * crash. Other statuses (500, network errors, etc.) still propagate.
+ */
+export function isValidationError(error: unknown): error is ApiError {
+  return error instanceof ApiError && error.status === 422;
+}

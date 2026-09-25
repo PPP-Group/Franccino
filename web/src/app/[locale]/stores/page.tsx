@@ -2,12 +2,16 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import { getStores } from '@/lib/api/content';
+import { getStores, type StoreList } from '@/lib/api/content';
+import { isValidationError } from '@/lib/api/errors';
+import { firstValue, type RawSearchParams } from '@/lib/api/listing-params';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+const EMPTY_STORE_LIST: StoreList = { stores: [], states: [] };
 
 type StoresPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ state?: string }>;
+  searchParams: Promise<RawSearchParams>;
 };
 
 export async function generateMetadata({ params }: StoresPageProps): Promise<Metadata> {
@@ -23,8 +27,18 @@ export default async function StoresPage({ params, searchParams }: StoresPagePro
 
   const t = await getTranslations('pages.stores');
   const tStores = await getTranslations('stores');
-  const { state } = await searchParams;
-  const { stores, states } = await getStores(locale as Locale, { state });
+  const state = firstValue((await searchParams).state);
+
+  let storeList: StoreList;
+  try {
+    storeList = await getStores(locale as Locale, { state });
+  } catch (error) {
+    if (!isValidationError(error)) {
+      throw error;
+    }
+    storeList = EMPTY_STORE_LIST;
+  }
+  const { stores, states } = storeList;
 
   return (
     <main id="main-content">

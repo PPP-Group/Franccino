@@ -5,9 +5,8 @@ import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { RichText } from '@/components/content/RichText';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
-import { locales } from '@/i18n/config';
 import { getLaunch, getLaunches } from '@/lib/api/content';
-import { buildMetadata, type Href } from '@/lib/seo/metadata';
+import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type LaunchPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -16,15 +15,6 @@ type LaunchPageProps = {
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const launches = await getLaunches(params.locale as Locale);
   return launches.map((launch) => ({ slug: launch.slug }));
-}
-
-function alternateHrefs(slugs: Record<Locale, string | null>): Partial<Record<Locale, Href | null>> {
-  const alternates: Partial<Record<Locale, Href | null>> = {};
-  for (const locale of locales) {
-    const slug = slugs[locale];
-    alternates[locale] = slug ? { pathname: '/launches/[slug]', params: { slug } } : null;
-  }
-  return alternates;
 }
 
 export async function generateMetadata({ params }: LaunchPageProps): Promise<Metadata> {
@@ -46,7 +36,7 @@ export async function generateMetadata({ params }: LaunchPageProps): Promise<Met
     title: launch.seo.title ?? launch.title,
     description: launch.seo.description ?? launch.summary,
     image: launch.seo.image ?? launch.cover,
-    alternates: alternateHrefs(launch.slugs),
+    alternates: alternateHrefs(launch.slugs, (slug) => ({ pathname: '/launches/[slug]', params: { slug } })),
   });
 }
 

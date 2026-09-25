@@ -42,6 +42,26 @@ export type BuildMetadataInput = {
   noindex?: boolean;
 };
 
+/**
+ * Builds the `alternates` map `buildMetadata` expects from a resource's
+ * per-locale `slugs` (e.g. `ProductDetail.slugs`), given a way to turn one
+ * locale's slug into that route's `Href`. A `null` slug means the page
+ * doesn't exist in that locale, so it's omitted from `alternates.languages`.
+ * Shared by every detail route whose slug can differ by locale, instead of
+ * each page redefining the same loop.
+ */
+export function alternateHrefs(
+  slugs: Record<Locale, string | null>,
+  toHref: (slug: string) => Href,
+): Partial<Record<Locale, Href | null>> {
+  const alternates: Partial<Record<Locale, Href | null>> = {};
+  for (const locale of locales) {
+    const slug = slugs[locale];
+    alternates[locale] = slug ? toHref(slug) : null;
+  }
+  return alternates;
+}
+
 /** The `Href` to use for `locale`, honoring an explicit `alternates` override. */
 function resolveHref(locale: Locale, input: BuildMetadataInput): Href | null {
   if (input.alternates && locale in input.alternates) {

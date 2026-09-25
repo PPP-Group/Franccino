@@ -3,12 +3,23 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ApiImage } from '@/components/media/ApiImage';
 import { DownloadButton } from '@/components/products/DownloadButton';
 import type { Locale } from '@/i18n/config';
+import type { DownloadFile, Paginated, ProductCard } from '@/lib/api/types';
 import { getDownloads } from '@/lib/api/catalog';
+import { isValidationError } from '@/lib/api/errors';
+import { firstValue, parsePositiveInteger, type RawSearchParams } from '@/lib/api/listing-params';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+type DownloadCard = ProductCard & { files: DownloadFile[] };
+
+const EMPTY_DOWNLOADS: Paginated<DownloadCard> = {
+  data: [],
+  links: { first: null, last: null, prev: null, next: null },
+  meta: { current_page: 1, last_page: 1, per_page: 24, total: 0 },
+};
 
 type DownloadsPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ area?: string; category?: string; q?: string; page?: string }>;
+  searchParams: Promise<RawSearchParams>;
 };
 
 export async function generateMetadata({ params }: DownloadsPageProps): Promise<Metadata> {
@@ -25,15 +36,21 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
   const t = await getTranslations('pages.downloads');
   const tCatalog = await getTranslations('catalog');
   const tSearch = await getTranslations('search');
-  const { area, category, q, page: pageParam } = await searchParams;
-  const page = Number(pageParam);
+  const rawSearchParams = await searchParams;
+  const area = firstValue(rawSearchParams.area);
+  const category = firstValue(rawSearchParams.category);
+  const q = firstValue(rawSearchParams.q);
+  const page = parsePositiveInteger(firstValue(rawSearchParams.page));
 
-  const downloads = await getDownloads(locale as Locale, {
-    area,
-    category,
-    q,
-    page: Number.isInteger(page) && page > 0 ? page : undefined,
-  });
+  let downloads: Paginated<DownloadCard>;
+  try {
+    downloads = await getDownloads(locale as Locale, { area, category, q, page });
+  } catch (error) {
+    if (!isValidationError(error)) {
+      throw error;
+    }
+    downloads = EMPTY_DOWNLOADS;
+  }
 
   return (
     <main id="main-content">

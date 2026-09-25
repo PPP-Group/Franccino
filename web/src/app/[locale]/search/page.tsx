@@ -4,11 +4,16 @@ import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { search } from '@/lib/api/catalog';
+import { isValidationError } from '@/lib/api/errors';
+import { firstValue, type RawSearchParams } from '@/lib/api/listing-params';
+import type { SearchResult } from '@/lib/api/types';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+const EMPTY_RESULT: SearchResult = { products: [], designers: [], collections: [] };
 
 type SearchPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<RawSearchParams>;
 };
 
 export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
@@ -25,9 +30,19 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
   const t = await getTranslations('pages.search');
   const tSearch = await getTranslations('search');
   const tSections = await getTranslations('sections');
-  const { q } = await searchParams;
-  const query = q?.trim() ?? '';
-  const results = query.length >= 2 ? await search(locale as Locale, query) : null;
+  const query = (firstValue((await searchParams).q) ?? '').trim();
+
+  let results: SearchResult | null = null;
+  if (query.length >= 2) {
+    try {
+      results = await search(locale as Locale, query);
+    } catch (error) {
+      if (!isValidationError(error)) {
+        throw error;
+      }
+      results = EMPTY_RESULT;
+    }
+  }
 
   return (
     <main id="main-content">

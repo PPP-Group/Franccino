@@ -9,11 +9,10 @@ import { DownloadButton } from '@/components/products/DownloadButton';
 import { ModelViewer } from '@/components/products/ModelViewer';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Locale } from '@/i18n/config';
-import { locales } from '@/i18n/config';
 import { getPathname } from '@/i18n/navigation';
 import { getProduct, getProducts } from '@/lib/api/catalog';
 import { formatDimension } from '@/lib/format/dimensions';
-import { absoluteUrl, buildMetadata, type Href } from '@/lib/seo/metadata';
+import { absoluteUrl, alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld';
 
 type ProductPageProps = {
@@ -23,15 +22,6 @@ type ProductPageProps = {
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const products = await getProducts(params.locale as Locale, { per_page: 48 });
   return products.data.map((product) => ({ slug: product.slug }));
-}
-
-function alternateHrefs(slugs: Record<Locale, string | null>): Partial<Record<Locale, Href | null>> {
-  const alternates: Partial<Record<Locale, Href | null>> = {};
-  for (const locale of locales) {
-    const slug = slugs[locale];
-    alternates[locale] = slug ? { pathname: '/products/[slug]', params: { slug } } : null;
-  }
-  return alternates;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -53,7 +43,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     title: product.seo.title ?? product.name,
     description: product.seo.description ?? product.tagline,
     image: product.seo.image ?? product.cover,
-    alternates: alternateHrefs(product.slugs),
+    alternates: alternateHrefs(product.slugs, (slug) => ({
+      pathname: '/products/[slug]',
+      params: { slug },
+    })),
   });
 }
 

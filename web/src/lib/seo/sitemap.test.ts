@@ -108,6 +108,44 @@ describe('sitemapEntries', () => {
     vi.unstubAllEnvs();
   });
 
+  it('keeps a "page" entry with a null slug in every locale, routing by key alone (home)', () => {
+    vi.stubEnv('SITE_URL', 'https://franccino.com.br');
+
+    const entries: SitemapEntry[] = [
+      { type: 'page', key: 'home', slugs: { pt: null, en: null }, updated_at: '2026-01-01T00:00:00Z' },
+    ];
+
+    const result = sitemapEntries(entries, ['pt', 'en']);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.url).toBe('https://franccino.com.br/pt');
+    expect(result[0]?.alternates?.languages).toEqual({
+      'pt-BR': 'https://franccino.com.br/pt',
+      en: 'https://franccino.com.br/en',
+    });
+
+    vi.unstubAllEnvs();
+  });
+
+  it('keeps a "page" entry with a null slug in every locale, routing by key alone (privacy)', () => {
+    vi.stubEnv('SITE_URL', 'https://franccino.com.br');
+
+    const entries: SitemapEntry[] = [
+      { type: 'page', key: 'privacy', slugs: { pt: null, en: null }, updated_at: '2026-01-01T00:00:00Z' },
+    ];
+
+    const result = sitemapEntries(entries, ['pt', 'en']);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.url).toBe('https://franccino.com.br/pt/privacidade');
+    expect(result[0]?.alternates?.languages).toEqual({
+      'pt-BR': 'https://franccino.com.br/pt/privacidade',
+      en: 'https://franccino.com.br/en/privacy',
+    });
+
+    vi.unstubAllEnvs();
+  });
+
   it('drops a "page" entry whose key has no fixed route', () => {
     vi.stubEnv('SITE_URL', 'https://franccino.com.br');
 

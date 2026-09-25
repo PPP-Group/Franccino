@@ -5,9 +5,8 @@ import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { RichText } from '@/components/content/RichText';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
-import { locales } from '@/i18n/config';
 import { getProject, getProjects } from '@/lib/api/content';
-import { buildMetadata, type Href } from '@/lib/seo/metadata';
+import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type ProjectPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -16,15 +15,6 @@ type ProjectPageProps = {
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const projects = await getProjects(params.locale as Locale, { per_page: 48 });
   return projects.data.map((project) => ({ slug: project.slug }));
-}
-
-function alternateHrefs(slugs: Record<Locale, string | null>): Partial<Record<Locale, Href | null>> {
-  const alternates: Partial<Record<Locale, Href | null>> = {};
-  for (const locale of locales) {
-    const slug = slugs[locale];
-    alternates[locale] = slug ? { pathname: '/projects/[slug]', params: { slug } } : null;
-  }
-  return alternates;
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
@@ -46,7 +36,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     title: project.seo.title ?? project.title,
     description: project.seo.description ?? project.summary,
     image: project.seo.image ?? project.cover,
-    alternates: alternateHrefs(project.slugs),
+    alternates: alternateHrefs(project.slugs, (slug) => ({ pathname: '/projects/[slug]', params: { slug } })),
   });
 }
 

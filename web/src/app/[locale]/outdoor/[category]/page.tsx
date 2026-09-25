@@ -6,7 +6,7 @@ import type { Locale } from '@/i18n/config';
 import { getCategories, getCategory, getProducts } from '@/lib/api/catalog';
 import type { RawSearchParams } from '@/lib/api/listing-params';
 import { parseListingParams } from '@/lib/api/listing-params';
-import { buildMetadata } from '@/lib/seo/metadata';
+import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type OutdoorCategoryPageProps = {
   params: Promise<{ locale: string; category: string }>;
@@ -29,6 +29,12 @@ export async function generateMetadata({ params }: OutdoorCategoryPageProps): Pr
     title: category?.seo.title ?? category?.name ?? t('title'),
     description: category?.seo.description,
     image: category?.seo.image ?? category?.cover,
+    alternates: category
+      ? alternateHrefs(category.slugs, (slug) => ({
+          pathname: '/outdoor/[category]',
+          params: { category: slug },
+        }))
+      : undefined,
   });
 }
 
@@ -44,8 +50,8 @@ export default async function OutdoorCategoryPage({ params, searchParams }: Outd
   const listingParams = parseListingParams(await searchParams);
   const products = await getProducts(locale as Locale, {
     area: 'outdoor',
-    category: categorySlug,
     ...listingParams,
+    category: categorySlug,
   });
 
   return (

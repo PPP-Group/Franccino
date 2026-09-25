@@ -14,11 +14,17 @@ const SORTS: ProductSort[] = ['featured', 'name', 'newest'];
 
 export type RawSearchParams = Record<string, string | string[] | undefined>;
 
-function firstValue(value: string | string[] | undefined): string | undefined {
+/**
+ * Next passes a repeated query key (`?q=a&q=b`) as `string[]` instead of
+ * `string`. Every page reading `searchParams` directly (not through
+ * `parseListingParams`) should normalize through this first, so a repeated
+ * key doesn't reach the API as an array/object.
+ */
+export function firstValue(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-function parsePositiveInteger(value: string | undefined): number | undefined {
+export function parsePositiveInteger(value: string | undefined): number | undefined {
   if (value === undefined) {
     return undefined;
   }

@@ -33,6 +33,15 @@ const PAGE_ROUTES: Record<string, Href> = {
 
 /** The `Href` for `entry` in a given locale's `slug`, or `null` when the type/slug can't be routed. */
 function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
+  // Pages are identified by their stable `key`, not by the (possibly
+  // per-locale, possibly absent) `slug` — see `SitemapEntry.key` in
+  // `lib/api/types.ts`. Checked before the null-slug guard below, so a page
+  // with no slug in a given locale (e.g. `home`, which has no slug at all)
+  // still gets its fixed route instead of being dropped.
+  if (entry.type === 'page') {
+    return entry.key !== undefined ? (PAGE_ROUTES[entry.key] ?? null) : null;
+  }
+
   if (slug === null) {
     return null;
   }
@@ -57,10 +66,6 @@ function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
       return { pathname: '/launches/[slug]', params: { slug } };
     case 'project':
       return { pathname: '/projects/[slug]', params: { slug } };
-    case 'page':
-      // Pages are identified by their stable `key`, not by the (possibly
-      // per-locale) `slug` — see `SitemapEntry.key` in `lib/api/types.ts`.
-      return entry.key !== undefined ? (PAGE_ROUTES[entry.key] ?? null) : null;
     default:
       return null;
   }

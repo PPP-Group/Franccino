@@ -4,11 +4,20 @@ import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getProjects } from '@/lib/api/content';
+import { isValidationError } from '@/lib/api/errors';
+import { firstValue, parsePositiveInteger, type RawSearchParams } from '@/lib/api/listing-params';
+import type { Paginated, ProjectCard } from '@/lib/api/types';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+const EMPTY_PROJECTS: Paginated<ProjectCard> = {
+  data: [],
+  links: { first: null, last: null, prev: null, next: null },
+  meta: { current_page: 1, last_page: 1, per_page: 24, total: 0 },
+};
 
 type ProjectsPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ type?: string; page?: string }>;
+  searchParams: Promise<RawSearchParams>;
 };
 
 export async function generateMetadata({ params }: ProjectsPageProps): Promise<Metadata> {
@@ -24,13 +33,19 @@ export default async function ProjectsPage({ params, searchParams }: ProjectsPag
 
   const t = await getTranslations('pages.projects');
   const tCatalog = await getTranslations('catalog');
-  const { type, page: pageParam } = await searchParams;
-  const page = Number(pageParam);
+  const rawSearchParams = await searchParams;
+  const type = firstValue(rawSearchParams.type);
+  const page = parsePositiveInteger(firstValue(rawSearchParams.page));
 
-  const projects = await getProjects(locale as Locale, {
-    type,
-    page: Number.isInteger(page) && page > 0 ? page : undefined,
-  });
+  let projects: Paginated<ProjectCard>;
+  try {
+    projects = await getProjects(locale as Locale, { type, page });
+  } catch (error) {
+    if (!isValidationError(error)) {
+      throw error;
+    }
+    projects = EMPTY_PROJECTS;
+  }
 
   return (
     <main id="main-content">

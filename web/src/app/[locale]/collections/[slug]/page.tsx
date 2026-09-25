@@ -5,10 +5,9 @@ import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { RichText } from '@/components/content/RichText';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
-import { locales } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getCollection, getCollections } from '@/lib/api/content';
-import { buildMetadata, type Href } from '@/lib/seo/metadata';
+import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type CollectionPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -17,15 +16,6 @@ type CollectionPageProps = {
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const collections = await getCollections(params.locale as Locale);
   return collections.map((collection) => ({ slug: collection.slug }));
-}
-
-function alternateHrefs(slugs: Record<Locale, string | null>): Partial<Record<Locale, Href | null>> {
-  const alternates: Partial<Record<Locale, Href | null>> = {};
-  for (const locale of locales) {
-    const slug = slugs[locale];
-    alternates[locale] = slug ? { pathname: '/collections/[slug]', params: { slug } } : null;
-  }
-  return alternates;
 }
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
@@ -47,7 +37,10 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
     title: collection.seo.title ?? collection.name,
     description: collection.seo.description ?? collection.summary,
     image: collection.seo.image ?? collection.cover,
-    alternates: alternateHrefs(collection.slugs),
+    alternates: alternateHrefs(collection.slugs, (slug) => ({
+      pathname: '/collections/[slug]',
+      params: { slug },
+    })),
   });
 }
 
