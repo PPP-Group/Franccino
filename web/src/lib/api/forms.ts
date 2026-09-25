@@ -14,6 +14,17 @@ import { getPublicEnv } from '@/lib/env';
 // bundle that "use client" components importing from this file pull in.
 import { ApiError } from './errors';
 
+/** Item da lista de orçamento (`docs/api.md`, POST /contact, `items`: até 50). */
+export type ContactItem = {
+  product_id: number;
+  /** 1–99. */
+  quantity: number;
+  /** Ids de acabamentos existentes, até 10. */
+  finish_ids?: number[];
+  /** Até 500 caracteres. */
+  note?: string;
+};
+
 export type ContactPayload = {
   type: 'quote' | 'assistance' | 'partnership' | 'press' | 'other';
   name: string;
@@ -25,6 +36,7 @@ export type ContactPayload = {
   state?: string | null;
   message: string;
   product_id?: number;
+  items?: ContactItem[];
   locale: Locale;
   source_url: string;
   consent: boolean;
