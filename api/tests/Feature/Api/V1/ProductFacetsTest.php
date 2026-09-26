@@ -47,3 +47,17 @@ it('returns the expected facet groups', function () {
 it('rejects an invalid area filter', function () {
     $this->getJson('/api/v1/products/facets?area=bogus')->assertStatus(422);
 });
+
+it('treats % in the q filter as a literal character, not a SQL wildcard', function () {
+    $indoor = area('indoor');
+    $category = Category::factory()->create();
+
+    Product::factory()->for($indoor)->for($category)->create(['name' => ['pt' => 'Sofa 50% Off', 'en' => 'Sofa 50% Off']]);
+    Product::factory()->for($indoor)->for($category)->create(['name' => ['pt' => 'Sofa 50X Off', 'en' => 'Sofa 50X Off']]);
+
+    $response = $this->getJson('/api/v1/products/facets?'.http_build_query(['q' => '50% off']))->assertOk();
+
+    $payload = collect($response->json('data.categories'))->firstWhere('slug', $category->getTranslation('slug', 'pt', false));
+
+    expect($payload['count'])->toBe(1);
+});

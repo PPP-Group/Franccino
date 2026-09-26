@@ -10,6 +10,7 @@ use App\Models\FinishGroup;
 use App\Models\Line;
 use App\Models\Product;
 use App\Support\ContentLocale;
+use App\Support\LikeSearch;
 use App\Support\Localized;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -101,7 +102,7 @@ final class ProductFacets
 
         if (filled($filters['q'] ?? null)) {
             $normalized = Str::of((string) $filters['q'])->ascii()->lower()->squish()->toString();
-            $query->where('search_text', 'like', '%'.$normalized.'%');
+            $query->whereRaw('search_text LIKE ? ESCAPE ?', [LikeSearch::contains($normalized), LikeSearch::ESCAPE_CHARACTER]);
         }
 
         return $query;

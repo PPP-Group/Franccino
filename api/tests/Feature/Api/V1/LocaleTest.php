@@ -13,9 +13,11 @@ it('defaults to portuguese when no locale is given', function () {
 });
 
 it('rejects an unsupported locale with a 422 validation error', function () {
-    $this->getJson('/api/v1/areas?locale=fr')
+    $response = $this->getJson('/api/v1/areas?locale=fr')
         ->assertStatus(422)
         ->assertJsonStructure(['message', 'errors' => ['locale']]);
+
+    expect($response->headers->get('Cache-Control'))->toContain('no-store');
 });
 
 it('accepts each supported locale', function () {

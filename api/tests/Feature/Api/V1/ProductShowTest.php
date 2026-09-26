@@ -35,8 +35,15 @@ it('flags fallback when english is missing', function () {
         ->assertJsonPath('data.locale_fallback', true);
 });
 
-it('hides unpublished and trashed products', function () {
+it('hides unpublished products', function () {
     publishedProduct(['is_published' => false]);
+    $this->getJson('/api/v1/products/cadeira-aura')->assertNotFound();
+});
+
+it('hides soft-deleted products', function () {
+    $product = publishedProduct();
+    $product->delete();
+
     $this->getJson('/api/v1/products/cadeira-aura')->assertNotFound();
 });
 

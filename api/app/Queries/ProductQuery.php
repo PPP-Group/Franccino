@@ -4,6 +4,7 @@ namespace App\Queries;
 
 use App\Models\Product;
 use App\Support\ContentLocale;
+use App\Support\LikeSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -67,7 +68,7 @@ final class ProductQuery
 
         if (filled($filters['q'] ?? null)) {
             $normalized = Str::of((string) $filters['q'])->ascii()->lower()->squish()->toString();
-            $query->where('search_text', 'like', '%'.$normalized.'%');
+            $query->whereRaw('search_text LIKE ? ESCAPE ?', [LikeSearch::contains($normalized), LikeSearch::ESCAPE_CHARACTER]);
         }
 
         return match ($filters['sort'] ?? 'featured') {

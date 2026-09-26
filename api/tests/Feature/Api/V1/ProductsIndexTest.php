@@ -84,6 +84,23 @@ it('searches ignoring accents and case', function () {
     $this->getJson('/api/v1/products?q=SOFA')->assertJsonPath('meta.total', 1);
 });
 
+it('treats % and _ in the search term as literal characters, not SQL wildcards', function () {
+    $indoor = area('indoor');
+    Product::factory()->for($indoor)->create(['name' => ['pt' => 'Sofa 50% Off', 'en' => 'Sofa 50% Off']]);
+    Product::factory()->for($indoor)->create(['name' => ['pt' => 'Sofa 50X Off', 'en' => 'Sofa 50X Off']]);
+
+    // Unescaped, `%` in the term would act as "any characters" and match both
+    // products above (since "50" + anything + " off" matches either name).
+    $this->getJson('/api/v1/products?'.http_build_query(['q' => '50% off']))->assertJsonPath('meta.total', 1);
+
+    Product::factory()->for($indoor)->create(['name' => ['pt' => 'Mesa Art_Deco', 'en' => 'Table Art_Deco']]);
+    Product::factory()->for($indoor)->create(['name' => ['pt' => 'Mesa ArtXDeco', 'en' => 'Table ArtXDeco']]);
+
+    // Unescaped, `_` in the term would match any single character, so
+    // "art_deco" would also match "artxdeco".
+    $this->getJson('/api/v1/products?'.http_build_query(['q' => 'art_deco']))->assertJsonPath('meta.total', 1);
+});
+
 it('sorts by name in the requested locale', function () {
     $indoor = area('indoor');
     Product::factory()->for($indoor)->create(['name' => ['pt' => 'Zebra', 'en' => 'Alpha']]);

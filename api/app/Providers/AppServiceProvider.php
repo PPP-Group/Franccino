@@ -97,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api-read', function (Request $request) {
             $key = config('franccino.frontend.api_key');
 
-            if (filled($key) && $request->header('X-Frontend-Key') === $key) {
+            if (filled($key) && hash_equals((string) $key, (string) $request->header('X-Frontend-Key'))) {
                 return Limit::none();
             }
 

@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\V1;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->name('api.v1.')->middleware(['content.locale', 'no-store'])->group(function () {
+// `no-store` must be outermost so it also catches errors from `content.locale`
+// (422 on a bad `locale`) and `throttle:api-read` (429) — see NoStoreCache.
+Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])->group(function () {
     Route::middleware('throttle:api-read')->group(function () {
         Route::get('areas', [V1\AreaController::class, 'index'])->name('areas.index');
         Route::get('areas/{key}', [V1\AreaController::class, 'show'])->name('areas.show');

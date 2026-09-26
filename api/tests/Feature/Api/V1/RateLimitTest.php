@@ -5,7 +5,9 @@ it('returns 429 on the 301st read within a minute for the same ip', function () 
         $this->getJson('/api/v1/areas')->assertOk();
     }
 
-    $this->getJson('/api/v1/areas')->assertStatus(429);
+    $response = $this->getJson('/api/v1/areas')->assertStatus(429);
+
+    expect($response->headers->get('Cache-Control'))->toContain('no-store');
 });
 
 it('does not limit reads carrying a valid X-Frontend-Key', function () {
