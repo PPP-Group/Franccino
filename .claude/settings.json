@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm lint)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:api)",
+      "Bash(pnpm test:web)",
+      "Bash(pnpm --filter web lint)",
+      "Bash(pnpm --filter web typecheck)",
+      "Bash(pnpm --filter web test)",
+      "Bash(pnpm --filter web test *)",
+      "Bash(pnpm --filter web build)",
+      "Bash(php artisan test)",
+      "Bash(php artisan test *)",
+      "Bash(php artisan route:list *)",
+      "Bash(composer lint)",
+      "Bash(composer analyse)",
+      "Bash(composer test)",
+      "Bash(vendor/bin/pint *)",
+      "Bash(vendor/bin/phpstan *)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.production)",
+      "Read(**/.env.staging)",
+      "Read(**/.env.backup)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push --force-with-lease *)"
+    ]
+  }
+}

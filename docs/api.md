@@ -1,0 +1,195 @@
+# API pública v1
+
+Status: contrato v1 (2026-09-23). Back-end e front implementam contra este documento. Mudança de contrato
+exige atualizar este arquivo no mesmo PR.
+
+- Base: `{API_URL}/api/v1` (local: `http://localhost:8000/api/v1`).
+- Formato: JSON UTF-8. Datas em ISO 8601 (UTC).
+- Idioma: parâmetro `locale=pt|en` em toda rota (default `pt`). Valor inválido: `422`.
+  Campos traduzíveis sem valor em `en` voltam em `pt` e o recurso traz `locale_fallback: true`.
+- Só conteúdo publicado (`is_published = true`) aparece. Item inexistente ou não publicado: `404`.
+- Texto rico vem como HTML já sanitizado no back-end (allowlist: `p h2 h3 h4 strong em a ul ol li
+  blockquote br`; `a` só com `href` http(s)/mailto/tel).
+
+## Envelopes
+
+```jsonc
+// item
+{ "data": { /* recurso */ } }
+
+// lista paginada
+{
+  "data": [ /* recursos */ ],
+  "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
+  "meta": { "current_page": 1, "last_page": 9, "per_page": 24, "total": 205 }
+}
+
+// erro
+{ "message": "The given data was invalid.", "errors": { "email": ["..."] } }
+```
+
+Paginação: `page` (default 1) e `per_page` (default 24, máximo 48). Listas curtas (áreas, categorias,
+designers, lojas, acabamentos, clientes, banners) não são paginadas.
+
+## Tipos comuns
+
+```ts
+type Locale = 'pt' | 'en';
+
+type Image = {
+  id: number;
+  alt: string;
+  width: number | null;          // dimensões da original
+  height: number | null;
+  src: string;                   // maior conversão disponível
+  srcset: { width: number; url: string }[];  // conversões em ordem crescente
+  blur_data_url: string | null;  // placeholder minúsculo em data URL
+};
+
+type Seo = { title: string | null; description: string | null; image: Image | null };
+
+type AreaRef = { key: 'indoor' | 'outdoor'; name: string; brand_name: string };
+type CategoryRef = { id: number; slug: string; name: string; singular_name: string };
+type DesignerRef = { id: number; slug: string; name: string };
+type LineRef = { id: number; slug: string; name: string };
+type CollectionRef = { id: number; slug: string; name: string; year: number | null };
+
+type Dimension = {
+  label: string | null;
+  width: number | null;   // mm
+  depth: number | null;
+  height: number | null;
+  seat_height: number | null;
+  diameter: number | null;
+};
+
+type DownloadFile = {
+  id: number;
+  type: 'technical_sheet' | 'block_2d' | 'block_3d' | 'manual' | 'other';
+  title: string;
+  format: string;          // "PDF", "DWG", "SKP"...
+  size: number | null;     // bytes
+};
+
+type ProductCard = {
+  id: number;
+  slug: string;
+  name: string;
+  area: AreaRef;
+  category: CategoryRef;
+  designer: DesignerRef | null;
+  cover: Image | null;
+  is_new: boolean;
+};
+
+type ProductDetail = ProductCard & {
+  slugs: Record<Locale, string | null>;   // para o seletor de idioma e hreflang
+  sku: string | null;
+  tagline: string | null;
+  description: string | null;             // HTML
+  line: LineRef | null;
+  collections: CollectionRef[];
+  dimensions: Dimension[];
+  materials: string | null;
+  finishes_note: string | null;
+  finishes: { group: string; items: { id: number; name: string; code: string | null; swatch: Image | null }[] }[];
+  gallery: Image[];
+  model_3d: { url: string; size: number | null } | null;   // null se não houver GLB ou 3D desligado
+  files: DownloadFile[];
+  line_products: ProductCard[];   // outras peças da mesma linha (até 8)
+  related: ProductCard[];         // mesma área e categoria (até 8)
+  seo: Seo;
+  locale_fallback: boolean;
+};
+```
+
+## Leitura
+
+| Método e rota | Parâmetros | Resposta `data` |
+|---|---|---|
+| `GET /home` | | `{ banners: Banner[], featured_products: ProductCard[], featured_collections: CollectionCard[], current_launch: LaunchCard \| null, designers: DesignerCard[] }` |
+| `GET /areas` | | `Area[]` (`AreaRef` + `description`, `cover`, `product_count`, `seo`) |
+| `GET /areas/{key}` | | `Area` + `categories: (CategoryRef & { product_count, cover })[]` (só categorias com produto na área) |
+| `GET /categories` | `area?` | `(CategoryRef & { cover, product_count })[]` |
+| `GET /categories/{slug}` | | `CategoryRef` + `description`, `cover`, `seo`, `slugs` |
+| `GET /products` | `area?` `category?` `designer?` `collection?` `line?` `finish?` `launch?` `q?` `sort?` `page` `per_page` | paginado `ProductCard[]` |
+| `GET /products/facets` | `area?` `category?` `q?` | `{ categories, designers, collections, lines, finish_groups }`, cada opção `{ slug \| id, name, count }` |
+| `GET /products/{slug}` | | `ProductDetail` |
+| `GET /collections` | | `CollectionCard[]` (`CollectionRef` + `summary`, `cover`, `product_count`) |
+| `GET /collections/{slug}` | | `CollectionCard` + `description`, `gallery`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs` |
+| `GET /designers` | | `DesignerCard[]` (`DesignerRef` + `short_bio`, `portrait`, `location`) |
+| `GET /designers/{slug}` | | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `seo` |
+| `GET /launches` | | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`) |
+| `GET /launches/{slug}` | | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs` |
+| `GET /projects` | `type?` | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`) |
+| `GET /projects/{slug}` | | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs` |
+| `GET /clients` | | `{ id, name, url, logo }[]` |
+| `GET /stores` | `state?` `type?` | `Store[]` + `meta.states: string[]` (UFs com loja) |
+| `GET /finishes` | | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo) |
+| `GET /banners` | `placement` (default `home_hero`) | `Banner[]` (`title`, `subtitle`, `cta_label`, `cta_url`, `image`, `image_mobile`) dentro da janela de exibição |
+| `GET /pages/{key}` | | `{ key, title, intro, content: Block[], cover, seo }` (blocos com textos já no idioma pedido) |
+| `GET /settings` | | configurações públicas (contatos, WhatsApp, redes, documentos do rodapé com URL) |
+| `GET /downloads` | `area?` `category?` `q?` `page` | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado) |
+| `GET /search` | `q` (mín. 2 caracteres) | `{ products: ProductCard[], designers: DesignerCard[], collections: CollectionCard[] }` (até 12, 6, 6) |
+| `GET /sitemap` | | `{ type, slugs: Record<Locale, string \| null>, updated_at }[]` de tudo que é público (para `sitemap.xml`) |
+| `GET /redirects` | | `{ from, to, status }[]` ativos |
+
+`sort` em `/products`: `featured` (default: destaque, `sort_order`, nome), `name`, `newest`.
+Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `designer` e `line` usam o slug
+único; `finish` usa o id; `area` usa a key.
+
+`Store`: `id`, `name`, `type`, `address`, `address_complement`, `district`, `city`, `state`, `postal_code`,
+`country`, `latitude`, `longitude`, `phone`, `whatsapp`, `email`, `website_url`, `instagram_url`,
+`opening_hours`.
+
+## Escrita
+
+Rotas chamadas direto do navegador (CORS liberado só para `FRONTEND_URL`), para que limite de taxa e
+Turnstile vejam o IP real do visitante.
+
+### `POST /contact`
+
+```jsonc
+{
+  "type": "quote",              // quote | assistance | partnership | press | other
+  "name": "Ana", "email": "ana@exemplo.com", "phone": "+55 11 99999-0000",
+  "company": null, "profession": "architect",
+  "city": "São Paulo", "state": "SP",
+  "message": "Gostaria de um orçamento...",
+  "product_id": 12,             // opcional
+  "locale": "pt",
+  "source_url": "https://franccino.com.br/pt/produtos/cadeira-aura",
+  "consent": true,              // obrigatório
+  "turnstile_token": "..."      // obrigatório quando TURNSTILE_SECRET_KEY estiver configurada
+}
+```
+
+`201 { "data": { "received": true } }`. Envia e-mail para os destinatários das configurações (fila).
+Limite: 5 por minuto por IP (`429`).
+
+### `POST /newsletter`
+
+`{ "email", "name"?, "locale", "source"?, "consent": true, "turnstile_token"? }`.
+`201` na primeira inscrição e `200` se o e-mail já existir (resposta idêntica, sem revelar cadastro).
+Limite: 5 por minuto por IP.
+
+### `POST /downloads/{file}/link`
+
+Sem corpo. Gera URL temporária (10 minutos) para o arquivo e grava `download_logs`.
+`201 { "data": { "url": "...", "expires_at": "..." } }`. Arquivo inexistente ou não publicado: `404`.
+Limite: 30 por minuto por IP.
+
+## Limites e cabeçalhos
+
+- Leitura: 300 requisições por minuto por IP. Requisições com `X-Frontend-Key` válido (servidor do Next)
+  não têm limite.
+- Toda resposta de leitura envia `Cache-Control: no-store`; o cache fica no Next (tags + revalidação).
+- `OPTIONS` (preflight) liberado para as rotas de escrita.
+
+## Revalidação do front
+
+Ao salvar ou excluir conteúdo no painel, o back-end enfileira um POST para
+`{FRONTEND_REVALIDATE_URL}` com cabeçalho `x-revalidate-secret` e corpo `{ "tags": ["products", "home"] }`.
+Tags são por tipo de recurso: `home`, `areas`, `categories`, `products`, `lines`, `designers`,
+`collections`, `launches`, `projects`, `clients`, `stores`, `finishes`, `banners`, `pages`, `settings`,
+`redirects`. Sem URL configurada, nada é enviado.
