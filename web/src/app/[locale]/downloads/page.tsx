@@ -74,7 +74,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
                 {product.files.map((file) => (
                   <li key={file.id}>
                     <span>{file.title}</span>
-                    <DownloadButton fileId={file.id} />
+                    <DownloadButton file={file} />
                   </li>
                 ))}
               </ul>
