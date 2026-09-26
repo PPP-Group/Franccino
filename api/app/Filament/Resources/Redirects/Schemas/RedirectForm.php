@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Redirects\Schemas;
 
 use App\Enums\RedirectStatus;
+use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -33,7 +34,16 @@ class RedirectForm
                 TextInput::make('to_path')
                     ->label(__('To path'))
                     ->maxLength(2048)
-                    ->required(fn (Get $get): bool => (int) $get('status_code') !== RedirectStatus::Gone->value),
+                    ->required(fn (Get $get): bool => (int) $get('status_code') !== RedirectStatus::Gone->value)
+                    // A redirect to itself is a loop; irrelevant for 410 Gone, which has no destination.
+                    ->rule(
+                        fn (Get $get): Closure => function (string $attribute, ?string $value, Closure $fail) use ($get): void {
+                            if ($value !== null && $value === $get('from_path')) {
+                                $fail(__('The to path must be different from the from path.'));
+                            }
+                        },
+                        fn (Get $get): bool => (int) $get('status_code') !== RedirectStatus::Gone->value,
+                    ),
                 Toggle::make('is_active')
                     ->label(__('Active'))
                     ->default(true),
