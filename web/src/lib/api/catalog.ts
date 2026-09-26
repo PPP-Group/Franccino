@@ -5,6 +5,7 @@
 
 import type { Locale } from '@/i18n/config';
 import { apiGet, apiGetOrNull } from './client';
+import { emptyPage } from './empty';
 import type {
   Area,
   Category,
@@ -54,15 +55,6 @@ export type DownloadsParams = {
   q?: string;
   page?: number;
 };
-
-/** Empty `Paginated`, used as the `ALLOW_BUILD_WITHOUT_API` fallback for listing endpoints below. */
-function emptyPaginated<T>(): Paginated<T> {
-  return {
-    data: [],
-    links: { first: null, last: null, prev: null, next: null },
-    meta: { current_page: 1, last_page: 1, per_page: 24, total: 0 },
-  };
-}
 
 export async function getAreas(locale: Locale): Promise<Area[]> {
   // `Area.product_count` is derived from products, so this also revalidates
@@ -121,7 +113,7 @@ export async function getProducts(
     query: { ...params },
     tags: ['products', 'areas', 'categories', 'designers'],
     revalidate: params.q ? 0 : undefined,
-    fallback: emptyPaginated<ProductCard>(),
+    fallback: emptyPage<ProductCard>(),
   });
 }
 
@@ -171,7 +163,7 @@ export async function getDownloads(
     query: { ...params },
     tags: ['products', 'areas', 'categories', 'designers'],
     revalidate: params.q ? 0 : undefined,
-    fallback: emptyPaginated<ProductCard & { files: DownloadFile[] }>(),
+    fallback: emptyPage<ProductCard & { files: DownloadFile[] }>(),
   });
 }
 

@@ -267,16 +267,27 @@ export type PageContent = {
 };
 
 /**
- * Public settings. The contract only describes this in prose ("contatos,
- * WhatsApp, redes, documentos do rodapé com URL") without listing fields, so
- * this shape is a best-effort guess pending confirmation from the API team.
+ * Configurações públicas (`GET /settings`): espelha `GeneralSettings` do P2
+ * sem `contact_recipients`. Documentado em `docs/api.md` pelo lado da API
+ * (P2 T11, ver ruling R4/R10 do pre-flight do P4 — evita conflito de merge
+ * em `docs/api.md` entre as branches `web` e `api`).
  */
 export type Settings = {
+  company_name: string;
   contact_email: string | null;
   contact_phone: string | null;
-  whatsapp: string | null;
-  social_links: { platform: string; url: string }[];
-  footer_documents: { title: string; url: string }[];
+  factory_address: string | null;
+  /** Só dígitos, com DDI (ex.: "5511942900080"). */
+  quotes_whatsapp: string | null;
+  assistance_whatsapp: string | null;
+  assistance_phone: string | null;
+  instagram_url: string | null;
+  facebook_url: string | null;
+  pinterest_url: string | null;
+  linkedin_url: string | null;
+  youtube_url: string | null;
+  /** Rótulo no idioma pedido e URL absoluta. */
+  footer_documents: { label: string; url: string }[];
 };
 
 export type Home = {

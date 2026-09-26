@@ -12,8 +12,8 @@
     "opensInNewWindow": "(abre em nova janela)"
   },
   "nav": {
-    "indoor": "Indoor",
-    "outdoor": "Outdoor",
+    "indoor": "Casa",
+    "outdoor": "Giardini",
     "products": "Produtos",
     "launches": "Lançamentos",
     "collections": "Coleções",
@@ -25,7 +25,9 @@
     "downloads": "Downloads",
     "blocks3d": "Blocos 3D",
     "stores": "Lojas",
-    "contact": "Contato"
+    "contact": "Contato",
+    "planner": "Sala para montar",
+    "technical": "Área técnica"
   },
   "footer": {
     "rightsReserved": "Todos os direitos reservados.",
@@ -34,12 +36,46 @@
     "contactHeading": "Contato",
     "documentsHeading": "Documentos",
     "newsletterHeading": "Receba novidades",
-    "legalNavigation": "Institucional"
+    "legalNavigation": "Institucional",
+    "wordmark": "Franccino",
+    "factory": "Fábrica: {address}",
+    "catalog": "Catálogo",
+    "service": "Atendimento",
+    "newsletter": "Novidades por e-mail",
+    "quotesWhatsapp": "WhatsApp de orçamentos",
+    "assistanceWhatsapp": "Assistência técnica",
+    "whereToFind": "Onde encontrar",
+    "copyright": "© {year} {company}.",
+    "legal": "Informações legais",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "pinterest": "Pinterest",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    }
   },
   "language": {
     "label": "Idioma",
     "pt": "Português",
-    "en": "English"
+    "en": "English",
+    "short": {
+      "pt": "PT",
+      "en": "EN"
+    }
+  },
+  "header": {
+    "homeLabel": "Franccino, página inicial",
+    "wordmark": "Franccino",
+    "navLabel": "Principal",
+    "search": "Buscar",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
+    "quoteListShort": "Lista"
+  },
+  "quote": {
+    "viewList": "Ver lista"
   },
   "errors": {
     "notFound": {

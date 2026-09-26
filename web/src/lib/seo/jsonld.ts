@@ -4,21 +4,22 @@
  */
 
 import type { ProductDetail, Settings } from '@/lib/api/types';
+import { socialLinks } from '@/lib/settings';
+import { absoluteUrl } from './metadata';
 
 const SITE_NAME = 'Franccino';
 
 export function organizationJsonLd(settings: Settings) {
-  // `Settings` is a best-effort shape (see `lib/api/types.ts`) — guard
-  // against a real `/settings` response omitting `social_links`.
-  const socialLinks = settings.social_links ?? [];
+  const links = socialLinks(settings).map((link) => link.url);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: SITE_NAME,
+    name: settings.company_name,
+    url: absoluteUrl('/'),
     ...(settings.contact_email ? { email: settings.contact_email } : {}),
     ...(settings.contact_phone ? { telephone: settings.contact_phone } : {}),
-    ...(socialLinks.length > 0 ? { sameAs: socialLinks.map((link) => link.url) } : {}),
+    ...(links.length > 0 ? { sameAs: links } : {}),
   };
 }
 

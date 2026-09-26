@@ -5,7 +5,9 @@
  */
 
 import type { Locale } from '@/i18n/config';
+import { EMPTY_SETTINGS } from '@/lib/settings';
 import { apiGet, apiGetOrNull } from './client';
+import { emptyPage, EMPTY_HOME } from './empty';
 import type {
   Banner,
   CacheTag,
@@ -64,24 +66,6 @@ export type StoreList = {
   /** UFs (Brazilian states) with at least one store. */
   states: string[];
 };
-
-/** Empty `Home`, used as the `ALLOW_BUILD_WITHOUT_API` fallback below. */
-const EMPTY_HOME: Home = {
-  banners: [],
-  featured_products: [],
-  featured_collections: [],
-  current_launch: null,
-  designers: [],
-};
-
-/** Empty `Paginated`, used as the `ALLOW_BUILD_WITHOUT_API` fallback for listing endpoints below. */
-function emptyPaginated<T>(): Paginated<T> {
-  return {
-    data: [],
-    links: { first: null, last: null, prev: null, next: null },
-    meta: { current_page: 1, last_page: 1, per_page: 24, total: 0 },
-  };
-}
 
 export async function getHome(locale: Locale): Promise<Home> {
   // Embeds banners, featured products, featured collections, the current
@@ -160,7 +144,7 @@ export async function getProjects(
     locale,
     query: { ...params },
     tags: ['projects'],
-    fallback: emptyPaginated<ProjectCard>(),
+    fallback: emptyPage<ProjectCard>(),
   });
 }
 
@@ -211,15 +195,6 @@ export async function getPage(locale: Locale, key: string): Promise<PageContent 
   return result?.data ?? null;
 }
 
-/** Empty `Settings`, used as the `ALLOW_BUILD_WITHOUT_API` fallback below. */
-const EMPTY_SETTINGS: Settings = {
-  contact_email: null,
-  contact_phone: null,
-  whatsapp: null,
-  social_links: [],
-  footer_documents: [],
-};
-
 export async function getSettings(locale: Locale): Promise<Settings> {
   // Read by every page (via the root layout's Organization JSON-LD), so a
   // fallback keeps `ALLOW_BUILD_WITHOUT_API` builds working end to end.
@@ -228,7 +203,10 @@ export async function getSettings(locale: Locale): Promise<Settings> {
     tags: ['settings'],
     fallback: { data: EMPTY_SETTINGS },
   });
-  return data;
+  // Normalizes a real response: a crash guard against a `/settings` payload
+  // that omits a field (e.g. `footer_documents`) lives here, once, instead
+  // of at every place that reads `Settings`.
+  return { ...EMPTY_SETTINGS, ...data, footer_documents: data.footer_documents ?? [] };
 }
 
 export async function getSitemap(locale: Locale): Promise<SitemapEntry[]> {

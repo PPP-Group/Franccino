@@ -11,14 +11,17 @@
  * The anchor always carries a real, navigable `href` (never `preventDefault`
  * + `location.assign`), so middle-click, ctrl/cmd-click, "copy link
  * address", and crawlers/assistive tech that don't run the click handler all
- * get a correct destination. That `href` is kept in state, refreshed twice:
- * on mount and after every client-side navigation (an effect keyed on the
- * *real* current URL — `next/navigation`'s `usePathname()` + `useSearchParams()`,
- * not next-intl's `usePathname()`, which returns the route *template* like
- * `/products/[slug]` and doesn't change between two pages sharing one, e.g.
- * two different products), and again right before the user is about to
- * interact with a specific link (`onPointerEnter`/`onFocus`/`onPointerDown`/
- * `onContextMenu`), as a last-moment correctness check.
+ * get a correct destination. That `href` is kept in state, initialized with
+ * each locale's home (matching the pre-hydration/no-JS markup and avoiding a
+ * synchronous DOM read during render) and resolved for real in an effect,
+ * refreshed twice: on mount and after every client-side navigation (an
+ * effect keyed on the *real* current URL — `next/navigation`'s
+ * `usePathname()` + `useSearchParams()`, not next-intl's `usePathname()`,
+ * which returns the route *template* like `/products/[slug]` and doesn't
+ * change between two pages sharing one, e.g. two different products), and
+ * again right before the user is about to interact with a specific link
+ * (`onPointerEnter`/`onFocus`/`onPointerDown`/`onContextMenu`), as a
+ * last-moment correctness check.
  *
  * `useSearchParams()` opts the component that calls it into client-only
  * rendering up to the nearest Suspense boundary, so the actual links live in
@@ -27,6 +30,12 @@
  * otherwise lose static generation, since this component is rendered from
  * the shared `[locale]/layout.tsx`). The fallback renders the same markup
  * pointing at each locale's home, matching the pre-hydration/no-JS case.
+ *
+ * Visible text is the short code (`language.short.pt`/`.en`, e.g. "PT"), and
+ * the full language name is a `visually-hidden` sibling span, never
+ * `aria-label` — an `aria-label` would replace the accessible name outright
+ * and drop the visible text from it (WCAG 2.5.3, "label in name"); a hidden
+ * sibling keeps both.
  */
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
@@ -62,6 +71,15 @@ function readAlternateLinks(): AlternateLink[] {
   }));
 }
 
+/** Each of `otherLocales` pointing at its own home — the initial/pre-hydration state. */
+function homeHrefs(otherLocales: Locale[]): Record<Locale, string> {
+  const result = {} as Record<Locale, string>;
+  for (const locale of otherLocales) {
+    result[locale] = `/${locale}`;
+  }
+  return result;
+}
+
 /** The `href` to use for each of `otherLocales`, read from the DOM right now. */
 function resolveHrefs(otherLocales: Locale[]): Record<Locale, string> {
   const links = readAlternateLinks();
@@ -72,28 +90,38 @@ function resolveHrefs(otherLocales: Locale[]): Record<Locale, string> {
   return result;
 }
 
-function StaticLanguageLinks({ otherLocales }: { otherLocales: Locale[] }) {
+function CurrentLocale({ locale }: { locale: Locale }) {
   const t = useTranslations('language');
-
   return (
-    <ul>
-      {otherLocales.map((locale) => (
-        <li key={locale}>
-          <a href={`/${locale}`} hrefLang={htmlLang(locale)}>
-            <span lang={htmlLang(locale)}>{t(locale)}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <strong aria-current="true" lang={htmlLang(locale)}>
+      {t(`short.${locale}`)}
+      <span className="visually-hidden">{t(locale)}</span>
+    </strong>
   );
 }
 
-function LanguageLinks({ otherLocales }: { otherLocales: Locale[] }) {
+function StaticLanguageLinks({ current, otherLocales }: { current: Locale; otherLocales: Locale[] }) {
+  const t = useTranslations('language');
+
+  return (
+    <>
+      <CurrentLocale locale={current} />
+      {otherLocales.map((locale) => (
+        <a key={locale} href={`/${locale}`} hrefLang={htmlLang(locale)} lang={htmlLang(locale)}>
+          {t(`short.${locale}`)}
+          <span className="visually-hidden">{t(locale)}</span>
+        </a>
+      ))}
+    </>
+  );
+}
+
+function LanguageLinks({ current, otherLocales }: { current: Locale; otherLocales: Locale[] }) {
   const t = useTranslations('language');
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [hrefs, setHrefs] = useState<Record<Locale, string>>(() => resolveHrefs(otherLocales));
+  const [hrefs, setHrefs] = useState<Record<Locale, string>>(() => homeHrefs(otherLocales));
 
   useEffect(() => {
     // Syncing from `document.head`, an external system only readable after
@@ -107,22 +135,24 @@ function LanguageLinks({ otherLocales }: { otherLocales: Locale[] }) {
   }
 
   return (
-    <ul>
+    <>
+      <CurrentLocale locale={current} />
       {otherLocales.map((locale) => (
-        <li key={locale}>
-          <a
-            href={hrefs[locale]}
-            hrefLang={htmlLang(locale)}
-            onPointerEnter={refresh}
-            onFocus={refresh}
-            onPointerDown={refresh}
-            onContextMenu={refresh}
-          >
-            <span lang={htmlLang(locale)}>{t(locale)}</span>
-          </a>
-        </li>
+        <a
+          key={locale}
+          href={hrefs[locale]}
+          hrefLang={htmlLang(locale)}
+          lang={htmlLang(locale)}
+          onPointerEnter={refresh}
+          onFocus={refresh}
+          onPointerDown={refresh}
+          onContextMenu={refresh}
+        >
+          {t(`short.${locale}`)}
+          <span className="visually-hidden">{t(locale)}</span>
+        </a>
       ))}
-    </ul>
+    </>
   );
 }
 
@@ -131,10 +161,14 @@ export function LanguageSwitcher() {
   const currentLocale = useLocale() as Locale;
   const otherLocales = useMemo(() => locales.filter((locale) => locale !== currentLocale), [currentLocale]);
 
+  if (locales.length < 2) {
+    return null;
+  }
+
   return (
-    <nav aria-label={t('label')}>
-      <Suspense fallback={<StaticLanguageLinks otherLocales={otherLocales} />}>
-        <LanguageLinks otherLocales={otherLocales} />
+    <nav className="lang" aria-label={t('label')}>
+      <Suspense fallback={<StaticLanguageLinks current={currentLocale} otherLocales={otherLocales} />}>
+        <LanguageLinks current={currentLocale} otherLocales={otherLocales} />
       </Suspense>
     </nav>
   );

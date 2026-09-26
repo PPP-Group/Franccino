@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { ProductDetail, Settings } from '@/lib/api/types';
+import { EMPTY_SETTINGS } from '@/lib/settings';
 import { breadcrumbJsonLd, organizationJsonLd, productJsonLd } from './jsonld';
 
 // `JsonLd` is a Server Component (a plain function), so calling it directly
@@ -26,11 +27,11 @@ describe('JsonLd', () => {
 
 describe('organizationJsonLd', () => {
   const settings: Settings = {
+    ...EMPTY_SETTINGS,
+    company_name: 'Franccino',
     contact_email: 'contato@franccino.com.br',
     contact_phone: '+55 11 5555-0000',
-    whatsapp: null,
-    social_links: [{ platform: 'instagram', url: 'https://instagram.com/franccino' }],
-    footer_documents: [],
+    instagram_url: 'https://instagram.com/franccino',
   };
 
   it('describes Franccino as a schema.org Organization', () => {
@@ -42,10 +43,8 @@ describe('organizationJsonLd', () => {
     expect(jsonLd.sameAs).toEqual(['https://instagram.com/franccino']);
   });
 
-  it('does not crash when a real /settings response omits social_links', () => {
-    const incompleteSettings = { ...settings, social_links: undefined } as unknown as Settings;
-    expect(() => organizationJsonLd(incompleteSettings)).not.toThrow();
-    expect(organizationJsonLd(incompleteSettings).sameAs).toBeUndefined();
+  it('omits sameAs when there is no social link', () => {
+    expect(organizationJsonLd(EMPTY_SETTINGS).sameAs).toBeUndefined();
   });
 });
 

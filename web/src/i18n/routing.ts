@@ -31,6 +31,8 @@ export const pathnames = {
   '/search': { pt: '/busca', en: '/search' },
   '/privacy': { pt: '/privacidade', en: '/privacy' },
   '/terms': { pt: '/termos', en: '/terms' },
+  '/quote-list': { pt: '/lista-de-orcamento', en: '/quote-list' },
+  '/room-planner': { pt: '/sala-para-montar', en: '/room-planner' },
 } as const;
 
 export const routing = defineRouting({

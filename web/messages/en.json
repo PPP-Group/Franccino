@@ -12,8 +12,8 @@
     "opensInNewWindow": "(opens in a new window)"
   },
   "nav": {
-    "indoor": "Indoor",
-    "outdoor": "Outdoor",
+    "indoor": "Casa",
+    "outdoor": "Giardini",
     "products": "Products",
     "launches": "Novelties",
     "collections": "Collections",
@@ -25,7 +25,9 @@
     "downloads": "Downloads",
     "blocks3d": "3D blocks",
     "stores": "Stores",
-    "contact": "Contact"
+    "contact": "Contact",
+    "planner": "Room planner",
+    "technical": "Technical area"
   },
   "footer": {
     "rightsReserved": "All rights reserved.",
@@ -34,12 +36,46 @@
     "contactHeading": "Contact",
     "documentsHeading": "Documents",
     "newsletterHeading": "Get updates",
-    "legalNavigation": "Legal"
+    "legalNavigation": "Legal",
+    "wordmark": "Franccino",
+    "factory": "Factory: {address}",
+    "catalog": "Catalogue",
+    "service": "Customer care",
+    "newsletter": "News by email",
+    "quotesWhatsapp": "WhatsApp for quotes",
+    "assistanceWhatsapp": "Technical assistance",
+    "whereToFind": "Where to find us",
+    "copyright": "© {year} {company}.",
+    "legal": "Legal information",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "pinterest": "Pinterest",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    }
   },
   "language": {
     "label": "Language",
     "pt": "Português",
-    "en": "English"
+    "en": "English",
+    "short": {
+      "pt": "PT",
+      "en": "EN"
+    }
+  },
+  "header": {
+    "homeLabel": "Franccino, home page",
+    "wordmark": "Franccino",
+    "navLabel": "Main",
+    "search": "Search",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "quoteList": "Quote list, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
+    "quoteListShort": "List"
+  },
+  "quote": {
+    "viewList": "View list"
   },
   "errors": {
     "notFound": {
