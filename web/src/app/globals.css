@@ -5,6 +5,7 @@
 @import '../styles/forms.css' layer(components);
 @import '../styles/chrome.css' layer(components);
 @import '../styles/plates.css' layer(components);
+@import '../styles/catalog.css' layer(components);
 
 @theme inline {
   --color-*: initial;

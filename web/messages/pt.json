@@ -205,8 +205,12 @@
       "finish": "Acabamento",
       "sort": "Ordenar por",
       "search": "Buscar",
-      "apply": "Aplicar",
-      "clear": "Limpar filtros"
+      "apply": "Filtrar",
+      "clear": "Limpar filtros",
+      "categories": "Categorias",
+      "all": "Todas",
+      "allDesigners": "Todos os designers",
+      "facetOption": "{name} ({count})"
     },
     "sort": {
       "featured": "Destaques",
@@ -214,13 +218,44 @@
       "newest": "Novidades"
     },
     "pagination": {
-      "label": "Paginação",
+      "label": "Páginas",
       "previous": "Anterior",
-      "next": "Próxima"
+      "next": "Próxima",
+      "status": "Página {current} de {last}"
     },
     "empty": "Nenhum produto encontrado.",
+    "emptyState": {
+      "title": "Nenhuma peça com esses filtros.",
+      "body": "Tire um filtro ou fale com a equipe.",
+      "clear": "Limpar filtros"
+    },
     "categoriesHeading": "Categorias",
-    "newTag": "Novo"
+    "newTag": "Novo",
+    "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
+    "resultsLabel": "Resultados",
+    "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
+    "products": { "title": "Todas as peças", "intro": "O catálogo completo das linhas Casa e Giardini." },
+    "technical": {
+      "title": "Área técnica",
+      "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
+    },
+    "launches": {
+      "title": "Lançamentos",
+      "intro": "As coleções e peças lançadas pela Franccino.",
+      "empty": "Nenhum lançamento publicado no momento."
+    },
+    "table": {
+      "label": "Tabela técnica",
+      "caption": "Peças com linha, designer, medidas e arquivos técnicos",
+      "image": "Imagem",
+      "piece": "Peça",
+      "area": "Linha",
+      "designer": "Designer",
+      "dimensions": "Medidas",
+      "files": "Arquivos",
+      "list": "Lista de orçamento",
+      "empty": "—"
+    }
   },
   "sections": {
     "products": "Produtos",
@@ -272,5 +307,12 @@
     "height": "A",
     "seatHeight": "Assento",
     "diameter": "Ø"
+  },
+  "downloads": {
+    "linkLabel": "Baixar {title} ({format})",
+    "formatAndSize": "{format} · {size}",
+    "failed": "Não foi possível gerar o link agora. Tente de novo.",
+    "rateLimited": "Muitos downloads seguidos. Aguarde um minuto.",
+    "unavailable": "Arquivo indisponível no momento."
   }
 }

@@ -205,8 +205,12 @@
       "finish": "Finish",
       "sort": "Sort by",
       "search": "Search",
-      "apply": "Apply",
-      "clear": "Clear filters"
+      "apply": "Filter",
+      "clear": "Clear filters",
+      "categories": "Categories",
+      "all": "All",
+      "allDesigners": "All designers",
+      "facetOption": "{name} ({count})"
     },
     "sort": {
       "featured": "Featured",
@@ -214,13 +218,44 @@
       "newest": "Newest"
     },
     "pagination": {
-      "label": "Pagination",
+      "label": "Pages",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "status": "Page {current} of {last}"
     },
     "empty": "No products found.",
+    "emptyState": {
+      "title": "No pieces match these filters.",
+      "body": "Remove a filter or talk to the team.",
+      "clear": "Clear filters"
+    },
     "categoriesHeading": "Categories",
-    "newTag": "New"
+    "newTag": "New",
+    "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
+    "resultsLabel": "Results",
+    "view": { "label": "View", "grid": "Grid", "table": "Technical table" },
+    "products": { "title": "All pieces", "intro": "The complete Casa and Giardini catalogue." },
+    "technical": {
+      "title": "Technical area",
+      "intro": "Pieces with dimensions and files for specification. Open a piece to see its finishes."
+    },
+    "launches": {
+      "title": "Novelties",
+      "intro": "Collections and pieces launched by Franccino.",
+      "empty": "No novelties published right now."
+    },
+    "table": {
+      "label": "Technical table",
+      "caption": "Pieces with line, designer, dimensions and technical files",
+      "image": "Image",
+      "piece": "Piece",
+      "area": "Line",
+      "designer": "Designer",
+      "dimensions": "Dimensions",
+      "files": "Files",
+      "list": "Quote list",
+      "empty": "—"
+    }
   },
   "sections": {
     "products": "Products",
@@ -272,5 +307,12 @@
     "height": "H",
     "seatHeight": "Seat",
     "diameter": "Ø"
+  },
+  "downloads": {
+    "linkLabel": "Download {title} ({format})",
+    "formatAndSize": "{format} · {size}",
+    "failed": "We could not create the link right now. Please try again.",
+    "rateLimited": "Too many downloads in a row. Wait a minute.",
+    "unavailable": "File unavailable right now."
   }
 }
