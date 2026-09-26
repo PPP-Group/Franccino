@@ -29,8 +29,11 @@ use App\Policies\ContentPolicy;
 use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Conversions\Events\ConversionHasBeenCompletedEvent;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
@@ -80,5 +83,29 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(MediaHasBeenAddedEvent::class, StoreImageMetadata::class);
         Event::listen(ConversionHasBeenCompletedEvent::class, StoreBlurPlaceholder::class);
+
+        $this->configureRateLimiters();
+    }
+
+    /**
+     * Public API rate limiters (see docs/api.md "Limites e cabeçalhos"). The
+     * Next.js server sends `X-Frontend-Key` and is not rate limited; every
+     * other caller is limited by IP.
+     */
+    private function configureRateLimiters(): void
+    {
+        RateLimiter::for('api-read', function (Request $request) {
+            $key = config('franccino.frontend.api_key');
+
+            if (filled($key) && $request->header('X-Frontend-Key') === $key) {
+                return Limit::none();
+            }
+
+            return Limit::perMinute(300)->by($request->ip());
+        });
+
+        RateLimiter::for('api-forms', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
+
+        RateLimiter::for('api-downloads', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
     }
 }
