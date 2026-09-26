@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -14,21 +14,54 @@ export function HeaderNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
   const active = activeNavKey(pathname);
+
+  // O botão fica depois do <nav> no DOM (dentro de `.tools`, ao lado da busca
+  // e do idioma) — mover o <nav> para antes dele mudaria a grade de 3
+  // colunas do cabeçalho (`site-header__bar`) e a seleção `.tools
+  // .menu-toggle` do CSS. Em vez de reordenar o DOM, o Esc é ouvido no
+  // `document` (funciona mesmo com o foco ainda no botão que abriu o menu) e
+  // a abertura leva o foco para o primeiro link do menu.
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    navRef.current?.querySelector('a')?.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
 
   return (
     <>
-      <nav
-        id="site-nav"
-        className={open ? 'nav is-open' : 'nav'}
-        aria-label={t('navLabel')}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape' && open) {
-            setOpen(false);
-            toggleRef.current?.focus();
-          }
-        }}
-      >
+      <nav ref={navRef} id="site-nav" className={open ? 'nav is-open' : 'nav'} aria-label={t('navLabel')}>
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.key}
