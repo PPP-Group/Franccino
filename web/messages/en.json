@@ -1,0 +1,269 @@
+{
+  "common": {
+    "siteName": "Franccino",
+    "skipToContent": "Skip to content",
+    "loading": "Loading…",
+    "readMore": "Read more",
+    "close": "Close",
+    "viewAll": "View all",
+    "mainNavigation": "Main menu",
+    "breadcrumb": "You are here",
+    "home": "Home",
+    "opensInNewWindow": "(opens in a new window)"
+  },
+  "nav": {
+    "indoor": "Casa",
+    "outdoor": "Giardini",
+    "products": "Products",
+    "launches": "Novelties",
+    "collections": "Collections",
+    "designers": "Designers",
+    "projects": "Projects",
+    "corporate": "Corporate projects",
+    "factory": "Factory",
+    "finishes": "Finishes",
+    "downloads": "Downloads",
+    "blocks3d": "3D blocks",
+    "stores": "Stores",
+    "contact": "Contact",
+    "planner": "Room planner",
+    "technical": "Technical area"
+  },
+  "footer": {
+    "rightsReserved": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms of use",
+    "contactHeading": "Contact",
+    "documentsHeading": "Documents",
+    "newsletterHeading": "Get updates",
+    "legalNavigation": "Legal",
+    "wordmark": "Franccino",
+    "factory": "Factory: {address}",
+    "catalog": "Catalogue",
+    "service": "Customer care",
+    "newsletter": "News by email",
+    "quotesWhatsapp": "WhatsApp for quotes",
+    "assistanceWhatsapp": "Technical assistance",
+    "whereToFind": "Where to find us",
+    "copyright": "© {year} {company}.",
+    "legal": "Legal information",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "pinterest": "Pinterest",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    }
+  },
+  "language": {
+    "label": "Language",
+    "pt": "Português",
+    "en": "English",
+    "short": {
+      "pt": "PT",
+      "en": "EN"
+    }
+  },
+  "header": {
+    "homeLabel": "Franccino, home page",
+    "wordmark": "Franccino",
+    "navLabel": "Main",
+    "search": "Search",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "quoteList": "Quote list, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
+    "quoteListShort": "List"
+  },
+  "quote": {
+    "viewList": "View list"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "The content you are looking for doesn't exist or has moved.",
+      "backHome": "Back to the homepage"
+    },
+    "serverError": {
+      "title": "Something went wrong",
+      "description": "We couldn't complete this action. Please try again.",
+      "retry": "Try again"
+    }
+  },
+  "forms": {
+    "requiredField": "Required field",
+    "invalidEmail": "Invalid email address",
+    "submit": "Submit",
+    "sending": "Sending…",
+    "success": "Sent successfully.",
+    "error": "We couldn't send this. Please try again.",
+    "rateLimited": "Too many attempts. Please try again shortly.",
+    "consent": "I have read and agree to the <link>privacy policy</link>.",
+    "turnstileLabel": "Security check",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "profession": "Profession",
+      "city": "City",
+      "state": "State",
+      "message": "Message",
+      "type": "Subject"
+    },
+    "contactTypes": {
+      "quote": "Quote",
+      "assistance": "Technical support",
+      "partnership": "Partnership",
+      "press": "Press",
+      "other": "Other"
+    }
+  },
+  "contactForm": {
+    "requiredHint": "Fields marked * are required.",
+    "requiredMark": "*",
+    "type": "Subject",
+    "types": {
+      "quote": "Quote",
+      "assistance": "Technical assistance",
+      "partnership": "Become a partner",
+      "press": "Press",
+      "other": "Something else"
+    },
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "city": "City",
+    "state": "State (Brazil)",
+    "statePlaceholder": "Select",
+    "profession": "You are",
+    "professionPlaceholder": "Select",
+    "professions": {
+      "architect": "Architect",
+      "interior_designer": "Interior designer",
+      "retailer": "Retailer",
+      "end_customer": "Home owner",
+      "other": "Other"
+    },
+    "message": "Message",
+    "consent": "I agree to the <privacy>privacy policy</privacy> and to being contacted by Franccino about this message.",
+    "submit": "Send",
+    "sending": "Sending…",
+    "success": "Message received. The Franccino team will reply to the email you provided.",
+    "errorSummary": "Please check the highlighted fields.",
+    "failed": "We could not send it right now. Please try again shortly.",
+    "rateLimited": "Too many attempts in a row. Wait a minute and try again.",
+    "errors": {
+      "required": "This field is required.",
+      "invalidEmail": "Enter a valid email address.",
+      "tooLong": "This text is longer than allowed.",
+      "consent": "You need to accept the privacy policy."
+    }
+  },
+  "newsletter": {
+    "intro": "Get Franccino launches by email.",
+    "emailLabel": "Your email",
+    "placeholder": "Your email",
+    "submit": "Subscribe",
+    "consent": "I accept the <privacy>privacy policy</privacy>.",
+    "status": {
+      "sending": "Sending…",
+      "success": "Subscription received.",
+      "invalid": "Enter a valid email and accept the privacy policy.",
+      "failed": "We could not subscribe you right now. Please try again.",
+      "rateLimited": "Too many attempts in a row. Wait a minute."
+    }
+  },
+  "products": {
+    "viewDetails": "View details",
+    "download": "Download file",
+    "model3d": "View in 3D",
+    "model3dLoading": "Loading 3D view…",
+    "model3dError": "We couldn't load the 3D view. Please try again.",
+    "relatedProducts": "Related products",
+    "dimensionsHeading": "Dimensions",
+    "materialsHeading": "Materials",
+    "finishesHeading": "Finishes",
+    "filesHeading": "Downloadable files",
+    "lineProductsHeading": "More from this line",
+    "quoteHeading": "Request a quote",
+    "downloadPreparing": "Preparing file…",
+    "downloadError": "We couldn't generate the link. Please try again."
+  },
+  "catalog": {
+    "filters": {
+      "category": "Category",
+      "designer": "Designer",
+      "collection": "Collection",
+      "line": "Line",
+      "finish": "Finish",
+      "sort": "Sort by",
+      "search": "Search",
+      "apply": "Apply",
+      "clear": "Clear filters"
+    },
+    "sort": {
+      "featured": "Featured",
+      "name": "Name",
+      "newest": "Newest"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "empty": "No products found.",
+    "categoriesHeading": "Categories"
+  },
+  "sections": {
+    "products": "Products",
+    "collections": "Collections",
+    "designers": "Designers",
+    "gallery": "Gallery"
+  },
+  "stores": {
+    "stateFilter": "State",
+    "allStates": "All states",
+    "empty": "No stores found."
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "What are you looking for?",
+    "submit": "Search",
+    "noResults": "No results found.",
+    "resultsFor": "Results for “{query}”"
+  },
+  "pages": {
+    "home": { "title": "Home" },
+    "indoor": { "title": "Indoor" },
+    "indoorCategory": { "title": "Indoor" },
+    "outdoor": { "title": "Outdoor" },
+    "outdoorCategory": { "title": "Outdoor" },
+    "products": { "title": "Products" },
+    "productDetail": { "title": "Product" },
+    "launches": { "title": "Novelties" },
+    "launchDetail": { "title": "Novelty" },
+    "collections": { "title": "Collections" },
+    "collectionDetail": { "title": "Collection" },
+    "designers": { "title": "Designers" },
+    "designerDetail": { "title": "Designer" },
+    "projects": { "title": "Projects" },
+    "projectDetail": { "title": "Project" },
+    "corporate": { "title": "Corporate" },
+    "factory": { "title": "Factory" },
+    "finishes": { "title": "Finishes" },
+    "downloads": { "title": "Downloads" },
+    "stores": { "title": "Stores" },
+    "contact": { "title": "Contact" },
+    "search": { "title": "Search" },
+    "privacy": { "title": "Privacy policy" },
+    "terms": { "title": "Terms of use" }
+  },
+  "dimensions": {
+    "width": "W",
+    "depth": "D",
+    "height": "H",
+    "seatHeight": "Seat",
+    "diameter": "Ø"
+  }
+}
