@@ -57,14 +57,7 @@ export default async function IndoorCategoryPage({ params, searchParams }: Indoo
   return (
     <main id="main-content">
       <h1>{category.name}</h1>
-      <ProductGrid
-        products={products.data}
-        pagination={{
-          meta: products.meta,
-          href: { pathname: '/indoor/[category]', params: { category: categorySlug } },
-          params: listingParams,
-        }}
-      />
+      <ProductGrid products={products.data} />
     </main>
   );
 }

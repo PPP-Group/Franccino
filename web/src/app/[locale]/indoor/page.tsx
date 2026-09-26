@@ -45,10 +45,7 @@ export default async function IndoorPage({ params, searchParams }: IndoorPagePro
     <main id="main-content">
       <h1>{area.name || t('title')}</h1>
       <AreaListing area={area} categories={area.categories} />
-      <ProductGrid
-        products={products.data}
-        pagination={{ meta: products.meta, href: '/indoor', params: listingParams }}
-      />
+      <ProductGrid products={products.data} />
     </main>
   );
 }

@@ -30,10 +30,7 @@ export default async function ProductsPage({ params, searchParams }: ProductsPag
   return (
     <main id="main-content">
       <h1>{t('title')}</h1>
-      <ProductGrid
-        products={products.data}
-        pagination={{ meta: products.meta, href: '/products', params: listingParams }}
-      />
+      <ProductGrid products={products.data} />
     </main>
   );
 }

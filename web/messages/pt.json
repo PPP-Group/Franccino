@@ -75,7 +75,12 @@
     "quoteListShort": "Lista"
   },
   "quote": {
-    "viewList": "Ver lista"
+    "viewList": "Ver lista",
+    "quickAdd": "Adicionar {name} à lista de orçamento",
+    "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
+    "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
+    "inList": "Na lista",
+    "addShort": "Pôr na lista"
   },
   "errors": {
     "notFound": {
@@ -213,7 +218,8 @@
       "next": "Próxima"
     },
     "empty": "Nenhum produto encontrado.",
-    "categoriesHeading": "Categorias"
+    "categoriesHeading": "Categorias",
+    "newTag": "Novo"
   },
   "sections": {
     "products": "Produtos",

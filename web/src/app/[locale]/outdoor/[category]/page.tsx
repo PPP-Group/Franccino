@@ -57,14 +57,7 @@ export default async function OutdoorCategoryPage({ params, searchParams }: Outd
   return (
     <main id="main-content">
       <h1>{category.name}</h1>
-      <ProductGrid
-        products={products.data}
-        pagination={{
-          meta: products.meta,
-          href: { pathname: '/outdoor/[category]', params: { category: categorySlug } },
-          params: listingParams,
-        }}
-      />
+      <ProductGrid products={products.data} />
     </main>
   );
 }

@@ -75,7 +75,12 @@
     "quoteListShort": "List"
   },
   "quote": {
-    "viewList": "View list"
+    "viewList": "View list",
+    "quickAdd": "Add {name} to the quote list",
+    "addedPendingFinish": "{name} is on your list; finish to be defined.",
+    "listFull": "The list reached its 50-item limit. Send this list before starting another.",
+    "inList": "On the list",
+    "addShort": "Add to list"
   },
   "errors": {
     "notFound": {
@@ -213,7 +218,8 @@
       "next": "Next"
     },
     "empty": "No products found.",
-    "categoriesHeading": "Categories"
+    "categoriesHeading": "Categories",
+    "newTag": "New"
   },
   "sections": {
     "products": "Products",
