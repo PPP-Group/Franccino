@@ -167,6 +167,15 @@ export async function getDownloads(
   });
 }
 
+/**
+ * Detalhe de várias peças (tabela técnica e sala: o `ProductCard` não traz medidas nem
+ * arquivos — proposta A4 do plano P4). Cada busca usa o cache por tag de `getProduct`.
+ */
+export async function getProductDetails(locale: Locale, slugs: string[]): Promise<ProductDetail[]> {
+  const details = await Promise.all(slugs.map((slug) => getProduct(locale, slug)));
+  return details.filter((detail): detail is ProductDetail => detail !== null);
+}
+
 export async function search(locale: Locale, q: string): Promise<SearchResult> {
   const { data } = await apiGet<Item<SearchResult>>('/search', {
     locale,

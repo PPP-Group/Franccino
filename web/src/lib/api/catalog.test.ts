@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getArea, getCategories, getProduct, getProducts } from './catalog';
+import { productDetail } from '@/test/fixtures';
+import { getArea, getCategories, getProduct, getProductDetails, getProducts } from './catalog';
 
-const okJson = (body: unknown) =>
-  new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
+const okJson = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 /** Reads the `next.tags` array off the single `fetch` call the mock recorded. */
 function tagsFromLastCall(fetchMock: ReturnType<typeof vi.spyOn>): unknown {
@@ -76,5 +77,27 @@ describe('catalog cache tags', () => {
     await getProduct('pt', 'cadeira/aura?x');
     const [url] = fetchMock.mock.calls[0] as [string];
     expect(String(url)).toContain('/products/cadeira%2Faura%3Fx');
+  });
+});
+
+describe('getProductDetails', () => {
+  beforeEach(() => {
+    vi.stubEnv('API_URL', 'http://api.test');
+    vi.stubEnv('SITE_URL', 'http://site.test');
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  it('fetches each slug, keeps the order and drops the missing ones', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const slug = /\/products\/([^?]+)/.exec(String(input))?.[1] ?? '';
+      return slug === 'sumida'
+        ? okJson({ message: 'Not found.' }, 404)
+        : okJson({ data: productDetail({ slug, name: slug }) });
+    });
+    const details = await getProductDetails('pt', ['b', 'sumida', 'a']);
+    expect(details.map((detail) => detail.slug)).toEqual(['b', 'a']);
   });
 });
