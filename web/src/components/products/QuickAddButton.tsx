@@ -44,7 +44,13 @@ export function QuickAddButton({
     <button
       type="button"
       className={added ? `${base} is-added` : base}
-      aria-label={variant === 'button' ? undefined : t('quickAdd', { name: product.name })}
+      aria-label={
+        variant === 'button'
+          ? undefined
+          : added
+            ? t('inListNamed', { name: product.name })
+            : t('quickAdd', { name: product.name })
+      }
       onClick={handleClick}
     >
       <Icon name={added ? 'check' : 'plus'} />

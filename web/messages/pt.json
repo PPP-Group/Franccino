@@ -80,6 +80,7 @@
     "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
     "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
     "inList": "Na lista",
+    "inListNamed": "{name} está na lista de orçamento.",
     "addShort": "Pôr na lista"
   },
   "errors": {

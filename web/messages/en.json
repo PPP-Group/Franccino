@@ -80,6 +80,7 @@
     "addedPendingFinish": "{name} is on your list; finish to be defined.",
     "listFull": "The list reached its 50-item limit. Send this list before starting another.",
     "inList": "On the list",
+    "inListNamed": "{name} is on the quote list.",
     "addShort": "Add to list"
   },
   "errors": {
