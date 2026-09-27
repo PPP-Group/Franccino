@@ -34,4 +34,13 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('sitemap', V1\SitemapController::class)->name('sitemap');
         Route::get('redirects', [V1\RedirectController::class, 'index'])->name('redirects.index');
     });
+
+    Route::middleware('throttle:api-forms')->group(function () {
+        Route::post('contact', V1\ContactController::class)->name('contact');
+        Route::post('newsletter', V1\NewsletterController::class)->name('newsletter');
+    });
+
+    Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])
+        ->middleware('throttle:api-downloads')
+        ->name('downloads.link');
 });

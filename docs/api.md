@@ -244,6 +244,10 @@ Turnstile vejam o IP real do visitante.
   "state": "SP",
   "message": "Gostaria de um orçamento...",
   "product_id": 12, // opcional
+  "items": [
+    // opcional, até 50 — lista de orçamento ("Sala para montar")
+    { "product_id": 12, "quantity": 2, "finish_ids": [3, 7], "note": "Cor mais clara, por favor." },
+  ],
   "locale": "pt",
   "source_url": "https://franccino.com.br/pt/produtos/cadeira-aura",
   "consent": true, // obrigatório
@@ -251,19 +255,30 @@ Turnstile vejam o IP real do visitante.
 }
 ```
 
+Limites de campo: `name` até 120, `email` até 190 (formato válido), `phone` até 40, `company` até 120,
+`city` até 120, `state` exatamente 2 caracteres, `message` obrigatório até 5000. `product_id` (quando
+enviado) precisa ser de um produto publicado. `type` e `profession` seguem os enums acima.
+
+`items` (opcional, até 50 linhas): cada item tem `product_id` (obrigatório, de um produto publicado),
+`quantity` (obrigatório, inteiro 1–99), `finish_ids` (opcional, até 10 ids de acabamentos existentes) e
+`note` (opcional, até 500 caracteres). É gravado como está em `contact_messages.items`; o e-mail de
+notificação lista cada item com o nome do produto, quantidade, nome e código dos acabamentos e a nota.
+
 `201 { "data": { "received": true } }`. Envia e-mail para os destinatários das configurações (fila).
 Limite: 5 por minuto por IP (`429`).
 
 ### `POST /newsletter`
 
 `{ "email", "name"?, "locale", "source"?, "consent": true, "turnstile_token"? }`.
-`201` na primeira inscrição e `200` se o e-mail já existir (resposta idêntica, sem revelar cadastro).
-Limite: 5 por minuto por IP.
+`201 { "data": { "subscribed": true } }` na primeira inscrição; `200` com o **mesmo corpo**
+(`{ "data": { "subscribed": true } }`) se o e-mail já existir e for reativado — a resposta nunca revela
+se o cadastro já existia. Limite: 5 por minuto por IP.
 
 ### `POST /downloads/{file}/link`
 
 Sem corpo. Gera URL temporária (10 minutos) para o arquivo e grava `download_logs`.
-`201 { "data": { "url": "...", "expires_at": "..." } }`. Arquivo inexistente ou não publicado: `404`.
+`201 { "data": { "url": "...", "expires_at": "..." } }`. Arquivo inexistente, não publicado, ou de
+produto não publicado: `404`.
 Limite: 30 por minuto por IP.
 
 ## Limites e cabeçalhos
@@ -271,7 +286,9 @@ Limite: 30 por minuto por IP.
 - Leitura: 300 requisições por minuto por IP. Requisições com `X-Frontend-Key` válido (servidor do Next)
   não têm limite.
 - Toda resposta de leitura envia `Cache-Control: no-store`; o cache fica no Next (tags + revalidação).
-- `OPTIONS` (preflight) liberado para as rotas de escrita.
+- CORS (`config/cors.php`): liberado só para `api/*`, métodos `GET, POST, OPTIONS`, cabeçalhos
+  `Content-Type, Accept, X-Requested-With`, origens = `FRONTEND_URL` (separado por vírgula para múltiplos
+  ambientes). `OPTIONS` (preflight) é respondido antes de chegar nas rotas.
 
 ## Revalidação do front
 

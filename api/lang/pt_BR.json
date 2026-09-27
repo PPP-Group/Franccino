@@ -252,6 +252,7 @@
     "The response is not a streamed response.": "A resposta não é uma resposta transmitida.",
     "The response is not a view.": "A resposta não é uma visão.",
     "The to path must be different from the from path.": "O caminho de destino deve ser diferente do caminho de origem.",
+    "The Turnstile verification failed.": "A verificação do Turnstile falhou.",
     "This action is unauthorized.": "Esta ação não é autorizada.",
     "This password reset link will expire in :count minutes.": "O link para redefinir a senha vai expirar em :count minutos.",
     "to": "até",

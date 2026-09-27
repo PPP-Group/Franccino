@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\CreateDownloadLink;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\DownloadProductResource;
+use App\Models\ProductFile;
 use App\Queries\ProductQuery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,5 +50,18 @@ class DownloadController extends Controller
                 'total' => $paginator->total(),
             ],
         ]);
+    }
+
+    /**
+     * `POST /downloads/{file}/link` (`docs/api.md`, "Escrita"). Only files of
+     * published products may be linked; anything else (missing file,
+     * unpublished file, unpublished/deleted product) is a `404`, never
+     * exposing whether the file exists.
+     */
+    public function link(ProductFile $file, Request $request, CreateDownloadLink $action): JsonResponse
+    {
+        abort_unless($file->is_published && $file->product?->is_published, 404);
+
+        return response()->json(['data' => $action->handle($file, $request)], 201);
     }
 }
