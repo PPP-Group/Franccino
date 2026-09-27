@@ -7,6 +7,20 @@
 
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
+type ModelViewerAttributes = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
+  src: string;
+  alt?: string;
+  ar?: boolean;
+  'ar-modes'?: string;
+  'camera-controls'?: boolean;
+  'touch-action'?: string;
+  'shadow-intensity'?: string;
+  exposure?: string;
+  loading?: 'auto' | 'lazy' | 'eager';
+  reveal?: 'auto' | 'manual';
+  poster?: string;
+};
+
 // React 19's automatic JSX runtime type-checks elements against the `JSX`
 // namespace re-exported from the `react` module itself (`react/jsx-runtime`
 // does `export { JSX } from '.'`), not a bare ambient global `JSX` namespace
@@ -15,15 +29,7 @@ import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
-      'model-viewer': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
-        src?: string;
-        alt?: string;
-        ar?: boolean;
-        'camera-controls'?: boolean;
-        'auto-rotate'?: boolean;
-        loading?: 'auto' | 'lazy' | 'eager';
-        reveal?: 'auto' | 'interaction' | 'manual';
-      };
+      'model-viewer': ModelViewerAttributes;
     }
   }
 }
