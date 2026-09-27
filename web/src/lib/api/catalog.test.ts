@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { productDetail } from '@/test/fixtures';
-import { getArea, getCategories, getProduct, getProductDetails, getProducts } from './catalog';
+import { productCard, productDetail } from '@/test/fixtures';
+import {
+  getAllProductSlugs,
+  getArea,
+  getCategories,
+  getProduct,
+  getProductDetails,
+  getProducts,
+} from './catalog';
 
 const okJson = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -99,5 +106,28 @@ describe('getProductDetails', () => {
     });
     const details = await getProductDetails('pt', ['b', 'sumida', 'a']);
     expect(details.map((detail) => detail.slug)).toEqual(['b', 'a']);
+  });
+});
+
+describe('getAllProductSlugs', () => {
+  beforeEach(() => {
+    vi.stubEnv('API_URL', 'http://api.test');
+    vi.stubEnv('SITE_URL', 'http://site.test');
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  it('walks every page of the listing', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const page = Number(new URL(String(input)).searchParams.get('page') ?? '1');
+      return okJson({
+        data: [productCard({ slug: `p${page}` })],
+        links: { first: null, last: null, prev: null, next: null },
+        meta: { current_page: page, last_page: 3, per_page: 48, total: 3 },
+      });
+    });
+    await expect(getAllProductSlugs('pt')).resolves.toEqual(['p1', 'p2', 'p3']);
   });
 });

@@ -9,7 +9,7 @@
  * and pass them through the optional `labels` parameter instead.
  */
 
-import type { Locale } from '@/i18n/config';
+import { htmlLang, type Locale } from '@/i18n/config';
 import type { Dimension } from '@/lib/api/types';
 
 export type DimensionLabels = {
@@ -25,17 +25,17 @@ export const DEFAULT_DIMENSION_LABELS: Record<Locale, DimensionLabels> = {
   en: { width: 'W', depth: 'D', height: 'H', seatHeight: 'Seat', diameter: 'Ø' },
 };
 
-const DECIMAL_SEPARATOR: Record<Locale, string> = { pt: ',', en: '.' };
-
-/** mm → cm, up to one decimal, using the locale's decimal separator. */
-function formatMillimeters(mm: number, locale: Locale): string {
-  const [wholePart, decimalPart] = (mm / 10).toFixed(1).split('.');
-
-  if (decimalPart === '0') {
-    return wholePart!;
-  }
-
-  return `${wholePart}${DECIMAL_SEPARATOR[locale]}${decimalPart}`;
+/**
+ * mm → cm, até uma casa decimal, no separador do idioma (`Intl.NumberFormat`
+ * via `htmlLang`). Formatador único de milímetro→centímetro: usado tanto pela
+ * lista compacta de `formatDimension` quanto pelas medidas cheias em
+ * `DimensionsBlock`/`DimensionDrawing` (Task 8). Sem agrupamento de milhar
+ * (`useGrouping: false`): "1200" vira "1200", não "1.200".
+ */
+export function formatCentimeters(mm: number, locale: Locale): string {
+  return new Intl.NumberFormat(htmlLang(locale), { maximumFractionDigits: 1, useGrouping: false }).format(
+    mm / 10,
+  );
 }
 
 export function formatDimension(
@@ -47,16 +47,16 @@ export function formatDimension(
 
   const mainParts: string[] = [];
   if (diameter !== null) {
-    mainParts.push(`${labels.diameter} ${formatMillimeters(diameter, locale)}`);
+    mainParts.push(`${labels.diameter} ${formatCentimeters(diameter, locale)}`);
   }
   if (width !== null) {
-    mainParts.push(`${labels.width} ${formatMillimeters(width, locale)}`);
+    mainParts.push(`${labels.width} ${formatCentimeters(width, locale)}`);
   }
   if (depth !== null) {
-    mainParts.push(`${labels.depth} ${formatMillimeters(depth, locale)}`);
+    mainParts.push(`${labels.depth} ${formatCentimeters(depth, locale)}`);
   }
   if (height !== null) {
-    mainParts.push(`${labels.height} ${formatMillimeters(height, locale)}`);
+    mainParts.push(`${labels.height} ${formatCentimeters(height, locale)}`);
   }
 
   const segments: string[] = [];
@@ -64,7 +64,7 @@ export function formatDimension(
     segments.push(`${mainParts.join(' × ')} cm`);
   }
   if (seatHeight !== null) {
-    segments.push(`${labels.seatHeight} ${formatMillimeters(seatHeight, locale)} cm`);
+    segments.push(`${labels.seatHeight} ${formatCentimeters(seatHeight, locale)} cm`);
   }
 
   return segments.join(' · ');

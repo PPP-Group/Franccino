@@ -176,6 +176,19 @@ export async function getProductDetails(locale: Locale, slugs: string[]): Promis
   return details.filter((detail): detail is ProductDetail => detail !== null);
 }
 
+const SLUGS_PER_PAGE = 48;
+
+/** Todos os slugs publicados no idioma (para `generateStaticParams` da página de produto). */
+export async function getAllProductSlugs(locale: Locale): Promise<string[]> {
+  const first = await getProducts(locale, { per_page: SLUGS_PER_PAGE });
+  const rest = await Promise.all(
+    Array.from({ length: Math.max(0, first.meta.last_page - 1) }, (_, index) =>
+      getProducts(locale, { per_page: SLUGS_PER_PAGE, page: index + 2 }),
+    ),
+  );
+  return [first, ...rest].flatMap((page) => page.data.map((product) => product.slug));
+}
+
 export async function search(locale: Locale, q: string): Promise<SearchResult> {
   const { data } = await apiGet<Item<SearchResult>>('/search', {
     locale,

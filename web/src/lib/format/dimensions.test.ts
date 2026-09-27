@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDimension } from './dimensions';
+import { formatCentimeters, formatDimension } from './dimensions';
 
 const base = { label: null, width: 600, depth: 600, height: 750, seat_height: null, diameter: null };
 
@@ -37,5 +37,13 @@ describe('formatDimension', () => {
         'pt',
       ),
     ).toBe('');
+  });
+});
+
+describe('formatCentimeters', () => {
+  it('converts millimetres with the locale separator', () => {
+    expect(formatCentimeters(605, 'pt')).toBe('60,5');
+    expect(formatCentimeters(605, 'en')).toBe('60.5');
+    expect(formatCentimeters(5200, 'pt')).toBe('520');
   });
 });
