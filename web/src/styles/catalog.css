@@ -65,7 +65,10 @@
 .file-link {
   background: none;
   border: 0;
-  padding: 4px 0;
+  min-height: 44px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   font-size: 0.8125rem;
   text-decoration: underline;
@@ -76,6 +79,46 @@
   display: block;
   font-size: 0.8125rem;
   color: var(--alert);
+}
+
+.download > button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-field);
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.download > button .icon {
+  grid-row: 1 / span 2;
+  width: 20px;
+  height: 20px;
+}
+
+.download > button strong {
+  font-weight: 600;
+}
+
+.download > button small {
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+}
+
+.download > button:hover {
+  border-color: var(--ink);
+}
+
+.download > button[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.7;
 }
 
 /* ---------- catalog ---------- */
@@ -158,7 +201,8 @@
 .view-toggle a {
   border: 0;
   background: transparent;
-  padding: 8px 14px;
+  min-height: 44px;
+  padding: 0 14px;
   font-size: 0.8125rem;
   cursor: pointer;
   display: inline-flex;
@@ -179,4 +223,15 @@
   align-items: center;
   gap: 16px;
   padding-block: 24px 96px;
+}
+
+/* Alvo de toque de 44 px sem mudar o sublinhado do link. */
+.pagination .link-arrow {
+  position: relative;
+}
+
+.pagination .link-arrow::after {
+  content: '';
+  position: absolute;
+  inset: -12px -8px;
 }
