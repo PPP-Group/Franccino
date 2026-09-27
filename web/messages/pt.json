@@ -75,7 +75,17 @@
     "quoteListShort": "Lista"
   },
   "quote": {
-    "viewList": "Ver lista"
+    "viewList": "Ver lista",
+    "quickAdd": "Adicionar {name} à lista de orçamento",
+    "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
+    "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
+    "inList": "Na lista",
+    "inListNamed": "{name} está na lista de orçamento.",
+    "addShort": "Pôr na lista",
+    "pendingFinish": "acabamento a definir",
+    "viewListCount": "Ver lista ({count})",
+    "decrease": "Diminuir",
+    "increase": "Aumentar"
   },
   "errors": {
     "notFound": {
@@ -190,6 +200,25 @@
     "downloadPreparing": "Preparando arquivo…",
     "downloadError": "Não foi possível gerar o link. Tente novamente."
   },
+  "product": {
+    "finishes": {
+      "title": "Acabamentos",
+      "groups": "Grupos de acabamento",
+      "groupLabel": "Acabamentos de {group}",
+      "swatchLabel": "{name}, código {code}",
+      "code": "Código {code}",
+      "choose": "Escolha um acabamento de {group}."
+    },
+    "buyLabel": "Orçamento",
+    "pendingHint": "Acabamento a definir: {groups}. Escolha agora ou combine com a equipe.",
+    "quantity": "Quantidade",
+    "addToList": "Adicionar à lista de orçamento",
+    "inList": "Na lista",
+    "whatsapp": "WhatsApp",
+    "whereToBuy": "Onde comprar",
+    "added": "{quantity} × {name} · {finishes}.",
+    "whatsappText": "Olá! Tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?"
+  },
   "catalog": {
     "filters": {
       "category": "Categoria",
@@ -199,8 +228,12 @@
       "finish": "Acabamento",
       "sort": "Ordenar por",
       "search": "Buscar",
-      "apply": "Aplicar",
-      "clear": "Limpar filtros"
+      "apply": "Filtrar",
+      "clear": "Limpar filtros",
+      "categories": "Categorias",
+      "all": "Todas",
+      "allDesigners": "Todos os designers",
+      "facetOption": "{name} ({count})"
     },
     "sort": {
       "featured": "Destaques",
@@ -208,12 +241,44 @@
       "newest": "Novidades"
     },
     "pagination": {
-      "label": "Paginação",
+      "label": "Páginas",
       "previous": "Anterior",
-      "next": "Próxima"
+      "next": "Próxima",
+      "status": "Página {current} de {last}"
     },
     "empty": "Nenhum produto encontrado.",
-    "categoriesHeading": "Categorias"
+    "emptyState": {
+      "title": "Nenhuma peça com esses filtros.",
+      "body": "Tire um filtro ou fale com a equipe.",
+      "clear": "Limpar filtros"
+    },
+    "categoriesHeading": "Categorias",
+    "newTag": "Novo",
+    "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
+    "resultsLabel": "Resultados",
+    "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
+    "products": { "title": "Todas as peças", "intro": "O catálogo completo das linhas Casa e Giardini." },
+    "technical": {
+      "title": "Área técnica",
+      "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
+    },
+    "launches": {
+      "title": "Lançamentos",
+      "intro": "As coleções e peças lançadas pela Franccino.",
+      "empty": "Nenhum lançamento publicado no momento."
+    },
+    "table": {
+      "label": "Tabela técnica",
+      "caption": "Peças com linha, designer, medidas e arquivos técnicos",
+      "image": "Imagem",
+      "piece": "Peça",
+      "area": "Linha",
+      "designer": "Designer",
+      "dimensions": "Medidas",
+      "files": "Arquivos",
+      "list": "Lista de orçamento",
+      "empty": "—"
+    }
   },
   "sections": {
     "products": "Produtos",
@@ -265,5 +330,12 @@
     "height": "A",
     "seatHeight": "Assento",
     "diameter": "Ø"
+  },
+  "downloads": {
+    "linkLabel": "Baixar {title} ({format})",
+    "formatAndSize": "{format} · {size}",
+    "failed": "Não foi possível gerar o link agora. Tente de novo.",
+    "rateLimited": "Muitos downloads seguidos. Aguarde um minuto.",
+    "unavailable": "Arquivo indisponível no momento."
   }
 }

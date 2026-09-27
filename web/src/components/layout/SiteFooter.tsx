@@ -35,8 +35,10 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             </p>
           </div>
 
-          <div>
-            <h2 className="footer-title">{t('catalog')}</h2>
+          <section aria-labelledby="footer-catalog-heading">
+            <h2 id="footer-catalog-heading" className="footer-title">
+              {t('catalog')}
+            </h2>
             <ul>
               <li>
                 <Link href="/indoor">{nav('indoor')}</Link>
@@ -54,10 +56,12 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/room-planner">{nav('planner')}</Link>
               </li>
             </ul>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="footer-title">{t('service')}</h2>
+          <section aria-labelledby="footer-service-heading">
+            <h2 id="footer-service-heading" className="footer-title">
+              {t('service')}
+            </h2>
             <ul>
               {quotes ? (
                 <li>
@@ -91,12 +95,14 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/contact">{nav('contact')}</Link>
               </li>
             </ul>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="footer-title">{t('newsletter')}</h2>
+          <section aria-labelledby="footer-newsletter-heading">
+            <h2 id="footer-newsletter-heading" className="footer-title">
+              {t('newsletter')}
+            </h2>
             <NewsletterForm />
-          </div>
+          </section>
         </div>
 
         <div className="footer-base">

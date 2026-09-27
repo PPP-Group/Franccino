@@ -1,0 +1,237 @@
+/*
+  Catálogo: tabela técnica e barra de ferramentas/paginação, portados de
+  design/prototype/assets/styles.css (blocos "technical table" 836-887 e
+  "catalog" 1390-1442, até `.view-toggle button[aria-pressed='true']`), com
+  os ajustes do plano P4 (Task 6, Step 5). `.chips`/`.chip`/`.empty` já vêm
+  de `components.css` (Task 1).
+*/
+
+.tech-table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  background: var(--paper);
+}
+
+.tech-table th,
+.tech-table td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.tech-table th {
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink-muted);
+  background: var(--stone);
+}
+
+.tech-table tr:hover td {
+  background: var(--row-hover);
+}
+
+.tech-table .thumb {
+  width: 64px;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: var(--paper);
+}
+
+.tech-table th[scope='row'] {
+  font-weight: 400;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  white-space: normal;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+
+.file-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.file-link {
+  background: none;
+  border: 0;
+  min-height: 44px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  color: var(--ink);
+}
+
+.download-error {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--alert);
+}
+
+.download > button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-field);
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.download > button .icon {
+  grid-row: 1 / span 2;
+  width: 20px;
+  height: 20px;
+}
+
+.download > button strong {
+  font-weight: 600;
+}
+
+.download > button small {
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+}
+
+.download > button:hover {
+  border-color: var(--ink);
+}
+
+.download > button[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+/* ---------- catalog ---------- */
+
+.catalog {
+  padding-bottom: 32px;
+}
+
+.catalog-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding-block: clamp(32px, 4vw, 56px) 24px;
+}
+
+.catalog-head__copy {
+  display: grid;
+  gap: 12px;
+}
+
+.catalog-head--tight {
+  padding-top: 8px;
+}
+
+.catalog-description {
+  max-width: 68ch;
+  margin-bottom: 24px;
+}
+
+.catalog-results {
+  padding-bottom: 32px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-block: 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+  position: sticky;
+  top: var(--header);
+  background: var(--stone);
+  z-index: 10;
+}
+
+.toolbar--end {
+  justify-content: flex-end;
+}
+
+.toolbar__end {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-form select {
+  border: 1px solid var(--line-field);
+  background: var(--paper);
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+
+.view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--ink);
+}
+
+.view-toggle a {
+  border: 0;
+  background: transparent;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.view-toggle a[aria-current='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-block: 24px 96px;
+}
+
+/* Alvo de toque de 44 px sem mudar o sublinhado do link. */
+.pagination .link-arrow {
+  position: relative;
+}
+
+.pagination .link-arrow::after {
+  content: '';
+  position: absolute;
+  inset: -12px -8px;
+}

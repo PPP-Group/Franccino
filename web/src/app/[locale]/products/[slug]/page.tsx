@@ -140,7 +140,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {product.files.map((file) => (
               <li key={file.id}>
                 <span>{file.title}</span>
-                <DownloadButton fileId={file.id} />
+                <DownloadButton file={file} />
               </li>
             ))}
           </ul>

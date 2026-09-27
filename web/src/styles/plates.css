@@ -1,0 +1,135 @@
+/* ---------- product plates (portado de design/prototype/assets/styles.css:508-631) ---------- */
+
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(250px, 24vw, 340px);
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.grid-plates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.plate {
+  scroll-snap-align: start;
+  background: var(--paper);
+  display: grid;
+  grid-template-rows: 1fr;
+  position: relative;
+  text-decoration: none;
+  transition: box-shadow var(--t-mid) var(--ease-out);
+}
+
+.plate:hover {
+  box-shadow: var(--shadow-plate);
+}
+
+.plate__link {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  color: inherit;
+  text-decoration: none;
+}
+
+.plate:focus-within {
+  box-shadow: var(--shadow-plate);
+}
+
+.plate__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.plate__media--empty {
+  background: var(--stone);
+}
+
+.plate__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 900ms var(--ease-out);
+}
+
+.plate__media--cover img {
+  object-fit: cover;
+}
+
+.plate:hover .plate__media img {
+  transform: scale(1.035);
+}
+
+.plate__body {
+  padding: 16px 18px 20px;
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid var(--stone);
+}
+
+.plate__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.plate__name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.plate__tags {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.quick-add {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-field);
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--t-fast) ease,
+    background var(--t-fast) ease;
+}
+
+.quick-add .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.plate:hover .quick-add,
+.plate:focus-within .quick-add,
+.quick-add.is-added {
+  opacity: 1;
+}
+
+.quick-add.is-added {
+  background: var(--garden);
+  border-color: var(--garden);
+  color: var(--paper);
+}
+
+@media (hover: none) {
+  .quick-add {
+    opacity: 1;
+  }
+}

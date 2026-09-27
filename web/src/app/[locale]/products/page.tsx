@@ -1,39 +1,53 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { CatalogListing } from '@/components/catalog/CatalogListing';
+import type { SearchParams } from '@/components/catalog/area-pages';
 import type { Locale } from '@/i18n/config';
-import { getProducts } from '@/lib/api/catalog';
-import type { RawSearchParams } from '@/lib/api/listing-params';
+import { getPathname } from '@/i18n/navigation';
 import { parseListingParams } from '@/lib/api/listing-params';
+import { productsListingHref } from '@/lib/catalog/area-href';
+import { parseCatalogView } from '@/lib/catalog/view';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-type ProductsPageProps = {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<RawSearchParams>;
-};
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
 
-export async function generateMetadata({ params }: ProductsPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.products' });
-
-  return buildMetadata({ locale: locale as Locale, href: '/products', title: t('title') });
+  const view = parseCatalogView((await searchParams).view);
+  const t = await getTranslations({ locale, namespace: 'catalog' });
+  const key = view === 'table' ? 'technical' : 'products';
+  return buildMetadata({
+    locale: locale as Locale,
+    href: { pathname: '/products' },
+    title: t(`${key}.title`),
+    description: t(`${key}.intro`),
+  });
 }
 
-export default async function ProductsPage({ params, searchParams }: ProductsPageProps) {
-  const { locale } = await params;
+export default async function ProductsPage({ params, searchParams }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const t = await getTranslations('pages.products');
-  const listingParams = parseListingParams(await searchParams);
-  const products = await getProducts(locale as Locale, listingParams);
-
+  const search = await searchParams;
+  const listing = parseListingParams(search);
+  const view = parseCatalogView(search.view);
+  const [t, common] = await Promise.all([
+    getTranslations({ locale, namespace: 'catalog' }),
+    getTranslations({ locale, namespace: 'common' }),
+  ]);
+  const key = view === 'table' ? 'technical' : 'products';
   return (
-    <main id="main-content">
-      <h1>{t('title')}</h1>
-      <ProductGrid
-        products={products.data}
-        pagination={{ meta: products.meta, href: '/products', params: listingParams }}
-      />
-    </main>
+    <CatalogListing
+      locale={locale}
+      title={t(`${key}.title`)}
+      intro={<p className="lead">{t(`${key}.intro`)}</p>}
+      crumbs={[{ label: common('home'), href: '/' }, { label: t(`${key}.title`) }]}
+      apiParams={{}}
+      params={listing}
+      view={view}
+      hrefFor={productsListingHref(listing, view)}
+      formAction={getPathname({ href: '/products', locale })}
+      facetsParams={{ q: listing.q }}
+    />
   );
 }

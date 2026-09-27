@@ -75,7 +75,17 @@
     "quoteListShort": "List"
   },
   "quote": {
-    "viewList": "View list"
+    "viewList": "View list",
+    "quickAdd": "Add {name} to the quote list",
+    "addedPendingFinish": "{name} is on your list; finish to be defined.",
+    "listFull": "The list reached its 50-item limit. Send this list before starting another.",
+    "inList": "On the list",
+    "inListNamed": "{name} is on the quote list.",
+    "addShort": "Add to list",
+    "pendingFinish": "finish to be defined",
+    "viewListCount": "View list ({count})",
+    "decrease": "Decrease",
+    "increase": "Increase"
   },
   "errors": {
     "notFound": {
@@ -190,6 +200,25 @@
     "downloadPreparing": "Preparing file…",
     "downloadError": "We couldn't generate the link. Please try again."
   },
+  "product": {
+    "finishes": {
+      "title": "Finishes",
+      "groups": "Finish groups",
+      "groupLabel": "{group} finishes",
+      "swatchLabel": "{name}, code {code}",
+      "code": "Code {code}",
+      "choose": "Choose a {group} finish."
+    },
+    "buyLabel": "Quote",
+    "pendingHint": "Finish to be defined: {groups}. Choose now or agree it with the team.",
+    "quantity": "Quantity",
+    "addToList": "Add to quote list",
+    "inList": "On the list",
+    "whatsapp": "WhatsApp",
+    "whereToBuy": "Where to buy",
+    "added": "{quantity} × {name} · {finishes}.",
+    "whatsappText": "Hello! I am interested in {quantity} × {name} ({finishes}). Could you help me with a quote?"
+  },
   "catalog": {
     "filters": {
       "category": "Category",
@@ -199,8 +228,12 @@
       "finish": "Finish",
       "sort": "Sort by",
       "search": "Search",
-      "apply": "Apply",
-      "clear": "Clear filters"
+      "apply": "Filter",
+      "clear": "Clear filters",
+      "categories": "Categories",
+      "all": "All",
+      "allDesigners": "All designers",
+      "facetOption": "{name} ({count})"
     },
     "sort": {
       "featured": "Featured",
@@ -208,12 +241,44 @@
       "newest": "Newest"
     },
     "pagination": {
-      "label": "Pagination",
+      "label": "Pages",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "status": "Page {current} of {last}"
     },
     "empty": "No products found.",
-    "categoriesHeading": "Categories"
+    "emptyState": {
+      "title": "No pieces match these filters.",
+      "body": "Remove a filter or talk to the team.",
+      "clear": "Clear filters"
+    },
+    "categoriesHeading": "Categories",
+    "newTag": "New",
+    "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
+    "resultsLabel": "Results",
+    "view": { "label": "View", "grid": "Grid", "table": "Technical table" },
+    "products": { "title": "All pieces", "intro": "The complete Casa and Giardini catalogue." },
+    "technical": {
+      "title": "Technical area",
+      "intro": "Pieces with dimensions and files for specification. Open a piece to see its finishes."
+    },
+    "launches": {
+      "title": "Novelties",
+      "intro": "Collections and pieces launched by Franccino.",
+      "empty": "No novelties published right now."
+    },
+    "table": {
+      "label": "Technical table",
+      "caption": "Pieces with line, designer, dimensions and technical files",
+      "image": "Image",
+      "piece": "Piece",
+      "area": "Line",
+      "designer": "Designer",
+      "dimensions": "Dimensions",
+      "files": "Files",
+      "list": "Quote list",
+      "empty": "—"
+    }
   },
   "sections": {
     "products": "Products",
@@ -265,5 +330,12 @@
     "height": "H",
     "seatHeight": "Seat",
     "diameter": "Ø"
+  },
+  "downloads": {
+    "linkLabel": "Download {title} ({format})",
+    "formatAndSize": "{format} · {size}",
+    "failed": "We could not create the link right now. Please try again.",
+    "rateLimited": "Too many downloads in a row. Wait a minute.",
+    "unavailable": "File unavailable right now."
   }
 }

@@ -28,4 +28,12 @@ describe('SiteFooter', () => {
   it('omits whatsapp links when there is no number', () => {
     expect(renderWithIntl(<SiteFooter settings={EMPTY_SETTINGS} />)).not.toContain('wa.me');
   });
+
+  it('labels each footer group as a section tied to its heading', () => {
+    const html = renderWithIntl(<SiteFooter settings={EMPTY_SETTINGS} />);
+    for (const id of ['footer-catalog-heading', 'footer-service-heading', 'footer-newsletter-heading']) {
+      expect(html).toContain(`aria-labelledby="${id}"`);
+      expect(html).toContain(`id="${id}"`);
+    }
+  });
 });
