@@ -11,8 +11,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * `CollectionCard` from docs/api.md (`CollectionRef` + `summary`, `cover`,
  * `product_count`). `product_count` reads `products_count` when the caller
- * pre-loaded it with `withCount()` (see `CollectionController`), falling
- * back to a query otherwise.
+ * pre-loaded it with `withCount()` (see `CollectionController::index()`);
+ * otherwise, when `products` is already eager loaded with the `published()`
+ * constraint (see `CollectionController::show()`), it counts the loaded
+ * collection instead of issuing a new query; only falls back to a fresh
+ * query when neither is available.
  *
  * @property-read CollectionModel $resource
  */
@@ -28,7 +31,10 @@ class CollectionCardResource extends JsonResource
             ...$ref,
             'summary' => Localized::value($collection, 'summary'),
             'cover' => ImagePresenter::present($collection->getFirstMedia('cover'), $ref['name']),
-            'product_count' => $collection->products_count ?? $collection->products()->published()->count(),
+            'product_count' => $collection->products_count
+                ?? ($collection->relationLoaded('products')
+                    ? $collection->products->count()
+                    : $collection->products()->published()->count()),
         ];
     }
 }

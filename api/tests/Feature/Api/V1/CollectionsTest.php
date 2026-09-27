@@ -37,13 +37,17 @@ it('shows a collection by its localized slug with description, gallery, designer
     $product = Product::factory()->for($indoor)->for($designer)->create(['is_published' => true]);
     $collection->products()->attach($product);
 
+    $unpublishedProduct = Product::factory()->for($indoor)->create(['is_published' => false]);
+    $collection->products()->attach($unpublishedProduct);
+
     $response = $this->getJson('/api/v1/collections/summer-line?locale=en')->assertOk();
 
     $response->assertJsonPath('data.name', 'Summer Line')
         ->assertJsonPath('data.description', '<p>Description</p>')
         ->assertJsonPath('data.slugs', ['pt' => 'linha-verao', 'en' => 'summer-line'])
         ->assertJsonPath('data.designers.0.slug', 'marcela')
-        ->assertJsonCount(1, 'data.products');
+        ->assertJsonCount(1, 'data.products')
+        ->assertJsonPath('data.product_count', 1);
 });
 
 it('returns 404 for an unpublished collection', function () {

@@ -128,11 +128,11 @@ type ProductDetail = ProductCard & {
 | `GET /projects/{slug}`    |                                                                                                          | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                 |
 | `GET /clients`            |                                                                                                          | `{ id, name, url, logo }[]`                                                                                                                                      |
 | `GET /stores`             | `state?` `type?`                                                                                         | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                               |
-| `GET /finishes`           |                                                                                                          | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo)                                                                                   |
-| `GET /banners`            | `placement` (default `home_hero`)                                                                        | `Banner[]` (`title`, `subtitle`, `cta_label`, `cta_url`, `image`, `image_mobile`) dentro da janela de exibição                                                   |
+| `GET /finishes`           |                                                                                                          | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                 |
+| `GET /banners`            | `placement` (default `home_hero`)                                                                        | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                      |
 | `GET /pages/{key}`        |                                                                                                          | `{ key, title, intro, content: Block[], cover, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo)                                                |
 | `GET /settings`           |                                                                                                          | configurações públicas (ver shape completo abaixo)                                                                                                               |
-| `GET /downloads`          | `area?` `category?` `q?` `page`                                                                          | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado)                                                                           |
+| `GET /downloads`          | `area?` `category?` `q?` `page` `per_page`                                                               | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado)                                                                           |
 | `GET /search`             | `q` (mín. 2 caracteres)                                                                                  | `{ products: ProductCard[], designers: DesignerCard[], collections: CollectionCard[] }` (até 12, 6, 6)                                                           |
 | `GET /sitemap`            |                                                                                                          | `{ type, key?, slugs: Record<Locale, string \| null>, updated_at }[]` de tudo que é público (para `sitemap.xml`)                                                 |
 | `GET /redirects`          |                                                                                                          | `{ from, to, status }[]` ativos                                                                                                                                  |
@@ -155,6 +155,25 @@ Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `d
 
 Nos demais tipos (`product`, `collection`, `designer`, `launch`, `project`) `key` não aparece.
 `designer` usa slug único (não traduzível): `slugs.pt` e `slugs.en` trazem o mesmo valor.
+
+### `Banner` (`GET /banners`)
+
+`title`, `subtitle`, `cta_label` e `cta_url` são campos traduzíveis opcionais no painel
+(`docs/data-model.md`), então todos podem vir `null` — a API nunca inventa conteúdo para
+preencher um banner incompleto. `image` e `image_mobile` vêm como estão cadastrados (`image_mobile`
+é opcional; `image` normalmente é obrigatória no cadastro, mas também pode ser `null` se o banner
+ainda não tiver a imagem de desktop).
+
+```ts
+type Banner = {
+  title: string | null;
+  subtitle: string | null;
+  cta_label: string | null;
+  cta_url: string | null;
+  image: Image | null;
+  image_mobile: Image | null;
+};
+```
 
 ### `Block` (conteúdo de `GET /pages/{key}`)
 
