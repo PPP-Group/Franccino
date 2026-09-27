@@ -81,7 +81,11 @@
     "listFull": "The list reached its 50-item limit. Send this list before starting another.",
     "inList": "On the list",
     "inListNamed": "{name} is on the quote list.",
-    "addShort": "Add to list"
+    "addShort": "Add to list",
+    "pendingFinish": "finish to be defined",
+    "viewListCount": "View list ({count})",
+    "decrease": "Decrease",
+    "increase": "Increase"
   },
   "errors": {
     "notFound": {
@@ -195,6 +199,25 @@
     "quoteHeading": "Request a quote",
     "downloadPreparing": "Preparing file…",
     "downloadError": "We couldn't generate the link. Please try again."
+  },
+  "product": {
+    "finishes": {
+      "title": "Finishes",
+      "groups": "Finish groups",
+      "groupLabel": "{group} finishes",
+      "swatchLabel": "{name}, code {code}",
+      "code": "Code {code}",
+      "choose": "Choose a {group} finish."
+    },
+    "buyLabel": "Quote",
+    "pendingHint": "Finish to be defined: {groups}. Choose now or agree it with the team.",
+    "quantity": "Quantity",
+    "addToList": "Add to quote list",
+    "inList": "On the list",
+    "whatsapp": "WhatsApp",
+    "whereToBuy": "Where to buy",
+    "added": "{quantity} × {name} · {finishes}.",
+    "whatsappText": "Hello! I am interested in {quantity} × {name} ({finishes}). Could you help me with a quote?"
   },
   "catalog": {
     "filters": {

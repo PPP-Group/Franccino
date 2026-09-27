@@ -81,7 +81,11 @@
     "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
     "inList": "Na lista",
     "inListNamed": "{name} está na lista de orçamento.",
-    "addShort": "Pôr na lista"
+    "addShort": "Pôr na lista",
+    "pendingFinish": "acabamento a definir",
+    "viewListCount": "Ver lista ({count})",
+    "decrease": "Diminuir",
+    "increase": "Aumentar"
   },
   "errors": {
     "notFound": {
@@ -195,6 +199,25 @@
     "quoteHeading": "Solicitar orçamento",
     "downloadPreparing": "Preparando arquivo…",
     "downloadError": "Não foi possível gerar o link. Tente novamente."
+  },
+  "product": {
+    "finishes": {
+      "title": "Acabamentos",
+      "groups": "Grupos de acabamento",
+      "groupLabel": "Acabamentos de {group}",
+      "swatchLabel": "{name}, código {code}",
+      "code": "Código {code}",
+      "choose": "Escolha um acabamento de {group}."
+    },
+    "buyLabel": "Orçamento",
+    "pendingHint": "Acabamento a definir: {groups}. Escolha agora ou combine com a equipe.",
+    "quantity": "Quantidade",
+    "addToList": "Adicionar à lista de orçamento",
+    "inList": "Na lista",
+    "whatsapp": "WhatsApp",
+    "whereToBuy": "Onde comprar",
+    "added": "{quantity} × {name} · {finishes}.",
+    "whatsappText": "Olá! Tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?"
   },
   "catalog": {
     "filters": {
