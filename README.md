@@ -53,6 +53,7 @@ http://localhost:8025. `pnpm setup` é um comando nativo do pnpm, não confunda.
 
 ## Documentação
 
+- **[Documento de continuidade (estado atual, próximos passos, impedimentos)](docs/HANDOFF.md)** — comece por aqui
 - [Spec da fundação](docs/specs/2026-09-23-fundacao-design.md)
 - [Modelo de dados](docs/data-model.md)
 - [Contrato da API](docs/api.md)
