@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, useTransition } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { SnapshotImage } from '@/components/ui/SnapshotImage';
+import { htmlLang, type Locale } from '@/i18n/config';
 import { searchPlannerPieces } from '@/lib/planner/actions';
 import { parsePlannerQuery } from '@/lib/planner/query';
 import type { PlannerProduct } from '@/lib/planner/types';
@@ -18,14 +19,14 @@ export function PlannerLibrary({
   onAdd: (product: PlannerProduct) => void;
 }) {
   const t = useTranslations('planner.library');
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const baseId = useId();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PlannerProduct[] | null>(null);
   const [pending, startTransition] = useTransition();
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const ticket = useRef(0);
-  const numberFormat = new Intl.NumberFormat(locale === 'pt' ? 'pt-BR' : 'en', { maximumFractionDigits: 1 });
+  const numberFormat = new Intl.NumberFormat(htmlLang(locale), { maximumFractionDigits: 1 });
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
