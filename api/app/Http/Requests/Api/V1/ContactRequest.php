@@ -47,7 +47,10 @@ class ContactRequest extends FormRequest
             'source_url' => ['nullable', 'url', 'max:512'],
             'consent' => ['accepted'],
             'turnstile_token' => [
+                'bail',
                 Rule::requiredIf(fn () => filled(config('franccino.turnstile.secret_key'))),
+                'nullable',
+                'string',
                 $this->turnstileRule(),
             ],
         ];

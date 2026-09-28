@@ -7,6 +7,8 @@ exige atualizar este arquivo no mesmo PR.
 - Formato: JSON UTF-8. Datas em ISO 8601 (UTC).
 - Idioma: parâmetro `locale=pt|en` em toda rota (default `pt`). Valor inválido: `422`.
   Campos traduzíveis sem valor em `en` voltam em `pt` e o recurso traz `locale_fallback: true`.
+  Nas rotas de escrita, o `locale` do corpo JSON vale como o parâmetro e define o idioma das mensagens
+  de validação (`422`).
 - Só conteúdo publicado (`is_published = true`) aparece. Item inexistente ou não publicado: `404`.
 - Texto rico vem como HTML já sanitizado no back-end (allowlist: `p h2 h3 h4 strong em a ul ol li
 blockquote br`; `a` só com `href` http(s)/mailto/tel).
@@ -264,8 +266,9 @@ enviado) precisa ser de um produto publicado. `type` e `profession` seguem os en
 `note` (opcional, até 500 caracteres). É gravado como está em `contact_messages.items`; o e-mail de
 notificação lista cada item com o nome do produto, quantidade, nome e código dos acabamentos e a nota.
 
-`201 { "data": { "received": true } }`. Envia e-mail para os destinatários das configurações (fila).
-Limite: 5 por minuto por IP (`429`).
+`201 { "data": { "received": true } }`. Envia e-mail para os destinatários das configurações (fila),
+sempre em português (é lido pela equipe), com todos os campos, o produto de interesse, o idioma do
+visitante e o link da mensagem no painel. Limite: 5 por minuto por IP (`429`).
 
 ### `POST /newsletter`
 
