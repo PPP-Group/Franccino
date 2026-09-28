@@ -9,6 +9,7 @@
 @import '../styles/product.css' layer(components);
 @import '../styles/planner.css' layer(components);
 @import '../styles/home.css' layer(components);
+@import '../styles/quote.css' layer(components);
 
 @theme inline {
   --color-*: initial;

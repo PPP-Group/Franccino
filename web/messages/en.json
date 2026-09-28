@@ -1,12 +1,9 @@
 {
   "common": {
-    "siteName": "Franccino",
     "skipToContent": "Skip to content",
     "loading": "Loading…",
-    "readMore": "Read more",
     "close": "Close",
     "viewAll": "View all",
-    "mainNavigation": "Main menu",
     "breadcrumb": "You are here",
     "home": "Home",
     "opensInNewWindow": "(opens in a new window)"
@@ -23,20 +20,14 @@
     "factory": "Factory",
     "finishes": "Finishes",
     "downloads": "Downloads",
-    "blocks3d": "3D blocks",
     "stores": "Stores",
     "contact": "Contact",
     "planner": "Room planner",
     "technical": "Technical area"
   },
   "footer": {
-    "rightsReserved": "All rights reserved.",
     "privacy": "Privacy",
     "terms": "Terms of use",
-    "contactHeading": "Contact",
-    "documentsHeading": "Documents",
-    "newsletterHeading": "Get updates",
-    "legalNavigation": "Legal",
     "wordmark": "Franccino",
     "factory": "Factory: {address}",
     "catalog": "Catalogue",
@@ -85,7 +76,32 @@
     "pendingFinish": "finish to be defined",
     "viewListCount": "View list ({count})",
     "decrease": "Decrease",
-    "increase": "Increase"
+    "increase": "Increase",
+    "title": "Quote list",
+    "intro": "Check finishes and quantities. The Franccino team replies with the quote.",
+    "pieces": "{count, plural, one {# piece} other {# pieces}}",
+    "remove": "Remove",
+    "removed": "{name} was removed from the list.",
+    "quantityOf": "Quantity of {name}",
+    "messageHeading": "Pieces on the quote list:",
+    "whatsappIntro": "Hello! I would like a quote for these pieces:",
+    "form": {
+      "title": "Your details",
+      "notes": "Notes",
+      "notesPlaceholder": "Timing, delivery address, custom sizes…",
+      "submit": "Send quote request",
+      "whatsapp": "Send the list by WhatsApp"
+    },
+    "empty": {
+      "title": "Your quote list is empty",
+      "body": "Gather the pieces you like, with finish and quantity, and send them to the team at once.",
+      "catalog": "See the catalogue",
+      "planner": "Plan a room"
+    },
+    "sent": {
+      "title": "Request sent",
+      "body": "We received your list. The Franccino team will reply to the email you provided."
+    }
   },
   "errors": {
     "notFound": {
@@ -100,7 +116,6 @@
     }
   },
   "forms": {
-    "requiredField": "Required field",
     "invalidEmail": "Invalid email address",
     "submit": "Submit",
     "sending": "Sending…",
@@ -185,20 +200,7 @@
     }
   },
   "products": {
-    "viewDetails": "View details",
-    "download": "Download file",
-    "model3d": "View in 3D",
-    "model3dLoading": "Loading 3D view…",
-    "model3dError": "We couldn't load the 3D view. Please try again.",
-    "relatedProducts": "Related products",
-    "dimensionsHeading": "Dimensions",
-    "materialsHeading": "Materials",
-    "finishesHeading": "Finishes",
-    "filesHeading": "Downloadable files",
-    "lineProductsHeading": "More from this line",
-    "quoteHeading": "Request a quote",
-    "downloadPreparing": "Preparing file…",
-    "downloadError": "We couldn't generate the link. Please try again."
+    "download": "Download file"
   },
   "product": {
     "finishes": {
@@ -275,7 +277,6 @@
       "sort": "Sort by",
       "search": "Search",
       "apply": "Filter",
-      "clear": "Clear filters",
       "categories": "Categories",
       "all": "All",
       "allDesigners": "All designers",
@@ -298,7 +299,6 @@
       "body": "Remove a filter or talk to the team.",
       "clear": "Clear filters"
     },
-    "categoriesHeading": "Categories",
     "newTag": "New",
     "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
     "resultsLabel": "Results",
@@ -350,7 +350,6 @@
     "resultsFor": "Results for “{query}”"
   },
   "pages": {
-    "home": { "title": "Home" },
     "indoor": { "title": "Indoor" },
     "indoorCategory": { "title": "Indoor" },
     "outdoor": { "title": "Outdoor" },

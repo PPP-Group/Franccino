@@ -1,0 +1,144 @@
+/*
+  Lista de orçamento: portado de design/prototype/assets/styles.css (bloco
+  "quote list page" 1683-1732 e 1757-1779, sem `.consent`, `.consent input` e
+  `.form-status`, que já estão em forms.css, e de "ajustes da revisão" as
+  regras de `.quote` e `.quote-item` 1962-1976), com os ajustes do plano P4
+  (Task 12, Step 4):
+  - `var(--ink-2)` → `var(--ink-muted)`.
+  - `.quote-item img` → `.quote-item img, .quote-item__blank` (o `__blank` com
+    `background: var(--stone)`).
+  - `.quote-item > :last-child` → `.quote-item__actions`.
+  - R17: o botão "Remover" com alvo de 44px.
+*/
+
+.quote {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+  padding-bottom: 96px;
+}
+
+.quote-items {
+  display: grid;
+  gap: 12px;
+}
+
+.quote-item {
+  background: var(--paper);
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 20px;
+  padding: 14px;
+  align-items: center;
+}
+
+.quote-item img,
+.quote-item__blank {
+  width: 140px;
+  aspect-ratio: 4/3;
+  object-fit: contain;
+}
+
+.quote-item__blank {
+  background: var(--stone);
+}
+
+.quote-item .remove {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-muted);
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.8125rem;
+}
+
+.quote-form {
+  background: var(--paper);
+  padding: clamp(20px, 3vw, 32px);
+  display: grid;
+  gap: 16px;
+  position: sticky;
+  top: calc(var(--header) + 20px);
+}
+
+@media (max-width: 980px) {
+  .quote {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-form {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .quote-item {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .quote-item img,
+  .quote-item__blank {
+    width: 96px;
+  }
+
+  .quote-item__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- ajustes da revisão ---------- */
+
+@media (max-width: 980px) {
+  .quote {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .quote-form .pair {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-item__actions {
+    justify-items: start !important;
+  }
+}
+
+/* ---------- acréscimos do plano (Task 12) ---------- */
+
+.quote-page {
+  padding-block: 64px 120px;
+}
+
+.quote-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.quote-item__copy {
+  display: grid;
+  gap: 6px;
+}
+
+.quote-item__name {
+  font-size: 1.1rem;
+}
+
+.quote-item__name a {
+  text-decoration: none;
+}
+
+.quote-item__actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+.quote-form h2 {
+  font-size: 1.25rem;
+}
