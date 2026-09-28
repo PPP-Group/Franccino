@@ -20,7 +20,7 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                        |
 | P4 Páginas web  | **T1–T7 concluídas e revisadas**; T8 implementada com ajustes pedidos; T9–T12 a fazer              |
 | P5 Go-live      | Sem plano escrito (migração do WordPress, redirects, deploy, analytics, QA)                        |
-| Testes          | API: 176+ testes Pest verdes · Web: 203 testes Vitest verdes                                       |
+| Testes          | API: 200 testes Pest verdes · Web: 203 testes Vitest verdes                                        |
 | Rodando         | `develop` sobe com banco vazio; rotas principais respondem 200                                     |
 
 ---
@@ -89,17 +89,18 @@ quebradas.
 
 ## 3. Branches
 
-| Branch                     | Conteúdo                                                                                 |
-| -------------------------- | ---------------------------------------------------------------------------------------- |
-| `main`                     | Base inicial. Produção; só recebe merge por PR aprovado pelo tech lead                   |
-| `develop`                  | Integração: fundação + API até T11 + web até P4 T7 + esta documentação. **Comece daqui** |
-| `feature/fundacao-projeto` | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                              |
-| `feature/fundacao-api`     | P2. Topo: T12 (`cd70445`), ainda sem revisão                                             |
-| `feature/fundacao-web`     | P3 + P4. Topo: P4 T8 (`e50aa2d`, `7de8f52`), com ajustes de revisão pendentes            |
+| Branch                     | Conteúdo                                                                              |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `main`                     | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado |
+| `develop`                  | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**   |
+| `feature/fundacao-projeto` | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                           |
+| `feature/fundacao-api`     | P2. Topo: T12 (`cd70445`), ainda sem revisão                                          |
+| `feature/fundacao-web`     | P3 + P4. Topo: P4 T8 (`e50aa2d`, `7de8f52`), com ajustes de revisão pendentes         |
 
-Regra adotada: `develop` só recebe tarefas **revisadas e aprovadas**; por isso T12 (API) e T8 (web) ainda estão só
-nas branches de fase. O histórico inicial do repositório antigo (`PPP-Group/Francciono-Website`) foi mantido de
-propósito.
+Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
+direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
+200 testes da API e 203 do site passaram e o typecheck ficou verde. O histórico inicial do repositório antigo
+(`PPP-Group/Francciono-Website`) foi mantido de propósito.
 
 ---
 
