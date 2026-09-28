@@ -68,3 +68,8 @@ Task 8: finding (outside T8): media CORS. model-viewer fetches the GLB cross-ori
 Task 8: manual browser check (Chrome headless, local QA product later removed): 320/390/1440 px sizes above; 3D error → alert with button → click remounts `<model-viewer>` and refetches the GLB; no page errors besides the CORS failure.
 Task 8: minor (deferred): retry path has no automated test (no DOM env); success after retry not observable locally until media CORS exists.
 Task 8: complete (commits 4917c3a..e4bbcac, review clean) — next: T9.
+Scope note (2026-09-28): the user confirmed to follow the plan order T9 → T12; per A1 the scope additions (room planner, quote list, finishes, technical view, 3D) need tech-lead approval before release, not before implementation. Work now in worktree .worktrees/web (main checkout stays on feature/fundacao-api to run the API with the P2 T14 demo data).
+Task 9: implemented inline (BASE 7b3e509, commit ac4dc75; 222 tests, lint, typecheck, build green). Code as in the plan; `planner/plan-store.ts` is a thin wrapper over `createLocalStore` (R11) keeping the plan's exported names.
+Ruling (R21, T9): planner.css applies R17 to the planner's primary controls (`.piece-option button` 34 → 44px, `.canvas-bar button` min-height 44px) and maps the prototype's `var(--ok)` (no such token) to `var(--garden)`, as T7 did — cost if wrong: small CSS.
+Task 9: review (controller inline) → Spec ✅ (R11, R21), quality Approved.
+Task 9: complete (commits 7b3e509..ac4dc75, review clean) — next: T10.
