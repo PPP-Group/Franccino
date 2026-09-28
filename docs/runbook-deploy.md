@@ -62,6 +62,12 @@ Serviços permanentes: worker da fila (`php artisan queue:work --tries=3`) e age
 schedule:run`). PHP com `upload_max_filesize` e `post_max_size` de pelo menos 64M (GLB e PDFs) e o limite
 equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 
+CORS da mídia: o visualizador 3D (`@google/model-viewer`) baixa o GLB com `fetch` a partir do domínio do site, então
+o bucket de mídia do R2 (ou o servidor que entrega `/storage` no disco local) precisa responder
+`Access-Control-Allow-Origin` para as origens de `FRONTEND_URL` em `GET`/`HEAD`. O `config/cors.php` da API cobre só
+`api/*`; arquivos estáticos não passam por ele. Sem isso o 3D falha com erro de CORS (inclusive no ambiente local,
+onde a mídia vem de `http://localhost:8000/storage`).
+
 ## Deploy do site
 
 - Build com `pnpm install --frozen-lockfile && pnpm --filter web build`, com a API do ambiente no ar (o build
@@ -79,6 +85,7 @@ equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 - [ ] Analytics e Tag Manager disparando
 - [ ] Formulário de contato e newsletter testados com envio real
 - [ ] Downloads técnicos entregando arquivo por URL assinada
+- [ ] CORS do bucket de mídia liberado para o domínio do site (GLB do 3D)
 - [ ] Visualizador 3D testado em iOS e Android reais
 - [ ] Banner de cookies e política de privacidade publicados
 - [ ] Backup automatizado rodando e restauração testada uma vez
