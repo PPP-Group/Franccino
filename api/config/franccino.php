@@ -27,4 +27,8 @@ return [
     'uploads' => [
         'model_3d_max_kb' => 20480,
     ],
+
+    'demo' => [
+        'image_cache' => storage_path('app/demo-cache'),
+    ],
 ];

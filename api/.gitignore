@@ -22,6 +22,7 @@
 /public/js/filament
 /public/storage
 /storage/*.key
+/storage/app/demo-cache/
 /storage/pail
 /storage/phpstan
 /vendor

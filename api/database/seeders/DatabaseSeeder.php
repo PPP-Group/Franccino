@@ -18,5 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(FinishGroupSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(AdminUserSeeder::class);
+
+        if (app()->environment('local')) {
+            $this->call(DemoContentSeeder::class);
+        }
     }
 }
