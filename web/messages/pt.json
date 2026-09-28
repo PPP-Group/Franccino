@@ -335,7 +335,12 @@
   "stores": {
     "stateFilter": "Estado",
     "allStates": "Todos os estados",
-    "empty": "Nenhuma loja encontrada."
+    "empty": "Nenhuma loja encontrada.",
+    "cityState": "{city} — {state}",
+    "types": {
+      "exclusive": "Loja exclusiva",
+      "reseller": "Revenda"
+    }
   },
   "search": {
     "label": "Buscar",
@@ -434,5 +439,54 @@
     "needPieces": "Adicione ao menos uma peça à sala.",
     "sent": "Sala enviada para a lista ({count, plural, one {# peça} other {# peças}}).",
     "roomNote": "Sala {width} × {depth} m"
+  },
+  "home": {
+    "meta": {
+      "title": "Móveis de design autoral",
+      "description": "Catálogo da Franccino: móveis de design autoral das linhas Casa e Giardini, com medidas, acabamentos e arquivos técnicos."
+    },
+    "hero": {
+      "fallbackTitle": "Móveis de design autoral",
+      "catalog": "Ver o catálogo",
+      "planner": "Montar uma sala",
+      "designers": "{count, plural, one {# designer} other {# designers}}"
+    },
+    "launches": {
+      "title": "Lançamentos",
+      "viewAll": "Ver o lançamento"
+    },
+    "lines": {
+      "label": "Linhas",
+      "viewPieces": "Ver peças"
+    },
+    "feature": {
+      "dimensions": "Medidas",
+      "materials": "Materiais",
+      "designer": "Design",
+      "view": "Ver a peça"
+    },
+    "teaser": {
+      "title": "Monte a sua sala em escala antes de pedir o orçamento.",
+      "body": "Informe as medidas do ambiente, posicione as peças com as dimensões reais e veja o que cabe. A sala vira uma lista de orçamento.",
+      "cta": "Abrir a Sala para montar"
+    },
+    "designers": {
+      "title": "Quem desenha",
+      "lead": "Designers e estúdios que assinam peças com a fábrica.",
+      "all": "Todos os designers"
+    },
+    "factory": {
+      "cta": "Conhecer a fábrica"
+    },
+    "technical": {
+      "title": "Para quem especifica",
+      "lead": "Medidas e arquivos técnicos de cada peça, numa tabela só.",
+      "cta": "Abrir a área técnica"
+    },
+    "stores": {
+      "title": "Veja as peças nas lojas",
+      "lead": "Lojas exclusivas e revendas. Escolha o estado.",
+      "consultant": "Falar com um consultor"
+    }
   }
 }
