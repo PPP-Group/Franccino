@@ -1,0 +1,386 @@
+{
+  "common": {
+    "siteName": "Franccino",
+    "skipToContent": "Pular para o conteúdo",
+    "loading": "Carregando…",
+    "readMore": "Saiba mais",
+    "close": "Fechar",
+    "viewAll": "Ver tudo",
+    "mainNavigation": "Menu principal",
+    "breadcrumb": "Você está em",
+    "home": "Início",
+    "opensInNewWindow": "(abre em nova janela)"
+  },
+  "nav": {
+    "indoor": "Casa",
+    "outdoor": "Giardini",
+    "products": "Produtos",
+    "launches": "Lançamentos",
+    "collections": "Coleções",
+    "designers": "Designers",
+    "projects": "Projetos",
+    "corporate": "Projetos corporativos",
+    "factory": "Fábrica",
+    "finishes": "Acabamentos",
+    "downloads": "Downloads",
+    "blocks3d": "Blocos 3D",
+    "stores": "Lojas",
+    "contact": "Contato",
+    "planner": "Sala para montar",
+    "technical": "Área técnica"
+  },
+  "footer": {
+    "rightsReserved": "Todos os direitos reservados.",
+    "privacy": "Privacidade",
+    "terms": "Termos de uso",
+    "contactHeading": "Contato",
+    "documentsHeading": "Documentos",
+    "newsletterHeading": "Receba novidades",
+    "legalNavigation": "Institucional",
+    "wordmark": "Franccino",
+    "factory": "Fábrica: {address}",
+    "catalog": "Catálogo",
+    "service": "Atendimento",
+    "newsletter": "Novidades por e-mail",
+    "quotesWhatsapp": "WhatsApp de orçamentos",
+    "assistanceWhatsapp": "Assistência técnica",
+    "whereToFind": "Onde encontrar",
+    "copyright": "© {year} {company}.",
+    "legal": "Informações legais",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "pinterest": "Pinterest",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    }
+  },
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "English",
+    "short": {
+      "pt": "PT",
+      "en": "EN"
+    }
+  },
+  "header": {
+    "homeLabel": "Franccino, página inicial",
+    "wordmark": "Franccino",
+    "navLabel": "Principal",
+    "search": "Buscar",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
+    "quoteListShort": "Lista"
+  },
+  "quote": {
+    "viewList": "Ver lista",
+    "quickAdd": "Adicionar {name} à lista de orçamento",
+    "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
+    "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
+    "inList": "Na lista",
+    "inListNamed": "{name} está na lista de orçamento.",
+    "addShort": "Pôr na lista",
+    "pendingFinish": "acabamento a definir",
+    "viewListCount": "Ver lista ({count})",
+    "decrease": "Diminuir",
+    "increase": "Aumentar"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Página não encontrada",
+      "description": "O conteúdo que você procura não existe ou foi movido.",
+      "backHome": "Voltar para a página inicial"
+    },
+    "serverError": {
+      "title": "Algo deu errado",
+      "description": "Não foi possível concluir esta ação. Tente novamente.",
+      "retry": "Tentar novamente"
+    }
+  },
+  "forms": {
+    "requiredField": "Campo obrigatório",
+    "invalidEmail": "E-mail inválido",
+    "submit": "Enviar",
+    "sending": "Enviando…",
+    "success": "Enviado com sucesso.",
+    "error": "Não foi possível enviar. Tente novamente.",
+    "rateLimited": "Muitas tentativas. Tente novamente em alguns instantes.",
+    "consent": "Li e concordo com a <link>política de privacidade</link>.",
+    "turnstileLabel": "Verificação de segurança",
+    "fields": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "company": "Empresa",
+      "profession": "Profissão",
+      "city": "Cidade",
+      "state": "Estado",
+      "message": "Mensagem",
+      "type": "Assunto"
+    },
+    "contactTypes": {
+      "quote": "Orçamento",
+      "assistance": "Assistência técnica",
+      "partnership": "Parceria",
+      "press": "Imprensa",
+      "other": "Outro"
+    }
+  },
+  "contactForm": {
+    "requiredHint": "Campos com * são obrigatórios.",
+    "requiredMark": "*",
+    "type": "Assunto",
+    "types": {
+      "quote": "Orçamento",
+      "assistance": "Assistência técnica",
+      "partnership": "Seja um parceiro",
+      "press": "Imprensa",
+      "other": "Outro assunto"
+    },
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "company": "Empresa",
+    "city": "Cidade",
+    "state": "UF",
+    "statePlaceholder": "Selecione",
+    "profession": "Você é",
+    "professionPlaceholder": "Selecione",
+    "professions": {
+      "architect": "Arquiteto(a)",
+      "interior_designer": "Designer de interiores",
+      "retailer": "Lojista",
+      "end_customer": "Cliente final",
+      "other": "Outro"
+    },
+    "message": "Mensagem",
+    "consent": "Concordo com a <privacy>política de privacidade</privacy> e com o contato da Franccino sobre esta mensagem.",
+    "submit": "Enviar",
+    "sending": "Enviando…",
+    "success": "Mensagem recebida. A equipe da Franccino responde pelo e-mail informado.",
+    "errorSummary": "Confira os campos destacados.",
+    "failed": "Não foi possível enviar agora. Tente novamente em instantes.",
+    "rateLimited": "Muitos envios seguidos. Aguarde um minuto e tente de novo.",
+    "errors": {
+      "required": "Campo obrigatório.",
+      "invalidEmail": "Informe um e-mail válido.",
+      "tooLong": "Texto maior que o permitido.",
+      "consent": "É preciso aceitar a política de privacidade."
+    }
+  },
+  "newsletter": {
+    "intro": "Receba os lançamentos da Franccino por e-mail.",
+    "emailLabel": "Seu e-mail",
+    "placeholder": "Seu e-mail",
+    "submit": "Inscrever",
+    "consent": "Aceito a <privacy>política de privacidade</privacy>.",
+    "status": {
+      "sending": "Enviando…",
+      "success": "Inscrição recebida.",
+      "invalid": "Informe um e-mail válido e aceite a política de privacidade.",
+      "failed": "Não foi possível inscrever agora. Tente novamente.",
+      "rateLimited": "Muitas tentativas seguidas. Aguarde um minuto."
+    }
+  },
+  "products": {
+    "viewDetails": "Ver detalhes",
+    "download": "Baixar arquivo",
+    "model3d": "Visualizar em 3D",
+    "model3dLoading": "Carregando visualização 3D…",
+    "model3dError": "Não foi possível carregar a visualização 3D. Tente novamente.",
+    "relatedProducts": "Produtos relacionados",
+    "dimensionsHeading": "Dimensões",
+    "materialsHeading": "Materiais",
+    "finishesHeading": "Acabamentos",
+    "filesHeading": "Arquivos para download",
+    "lineProductsHeading": "Outras peças da linha",
+    "quoteHeading": "Solicitar orçamento",
+    "downloadPreparing": "Preparando arquivo…",
+    "downloadError": "Não foi possível gerar o link. Tente novamente."
+  },
+  "product": {
+    "finishes": {
+      "title": "Acabamentos",
+      "groups": "Grupos de acabamento",
+      "groupLabel": "Acabamentos de {group}",
+      "swatchLabel": "{name}, código {code}",
+      "code": "Código {code}",
+      "choose": "Escolha um acabamento de {group}."
+    },
+    "buyLabel": "Orçamento",
+    "pendingHint": "Acabamento a definir: {groups}. Escolha agora ou combine com a equipe.",
+    "quantity": "Quantidade",
+    "addToList": "Adicionar à lista de orçamento",
+    "inList": "Na lista",
+    "whatsapp": "WhatsApp",
+    "whereToBuy": "Onde comprar",
+    "added": "{quantity} × {name} · {finishes}.",
+    "whatsappText": "Olá! Tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?",
+    "designBy": "Design <designer>{name}</designer>",
+    "sku": "Ref. {sku}",
+    "materials": "Materiais: {materials}",
+    "fallbackNotice": "Conteúdo disponível só em português.",
+    "quoteOnlyThis": "Pedir orçamento só desta peça",
+    "sendQuote": "Enviar pedido de orçamento",
+    "sameLine": "Da linha {line}",
+    "sameLineFallback": "Da mesma linha",
+    "related": "Mais em {category}",
+    "seeArea": "Ver {area}",
+    "dimensions": {
+      "title": "Medidas (cm)",
+      "variants": "Variações de medida",
+      "variant": "Variação {number}",
+      "front": "frente",
+      "side": "lateral",
+      "drawing": "Desenho técnico com as medidas: {facts}",
+      "diameterValue": "Ø {value}",
+      "facts": {
+        "width": "Largura",
+        "depth": "Profundidade",
+        "height": "Altura",
+        "diameter": "Diâmetro",
+        "seatHeight": "Altura do assento"
+      },
+      "inline": {
+        "width": "largura {value} cm",
+        "depth": "profundidade {value} cm",
+        "height": "altura {value} cm",
+        "diameter": "diâmetro {value} cm",
+        "seatHeight": "altura do assento {value} cm"
+      }
+    },
+    "stage": {
+      "viewLabel": "Visualização",
+      "photos": "Fotos",
+      "model": "3D",
+      "modelAlt": "Modelo 3D de {name}",
+      "modelLoading": "Carregando o modelo 3D…",
+      "modelError": "Não foi possível carregar o 3D agora. Veja as fotos ou tente de novo.",
+      "thumbsLabel": "Fotos da peça",
+      "showImage": "Foto {index} de {total}"
+    },
+    "downloads": { "title": "Arquivos técnicos", "secureLink": "Link seguro por 10 min" },
+    "designer": { "piecesBy": "Peças de {name}" }
+  },
+  "catalog": {
+    "filters": {
+      "category": "Categoria",
+      "designer": "Designer",
+      "collection": "Coleção",
+      "line": "Linha",
+      "finish": "Acabamento",
+      "sort": "Ordenar por",
+      "search": "Buscar",
+      "apply": "Filtrar",
+      "clear": "Limpar filtros",
+      "categories": "Categorias",
+      "all": "Todas",
+      "allDesigners": "Todos os designers",
+      "facetOption": "{name} ({count})"
+    },
+    "sort": {
+      "featured": "Destaques",
+      "name": "Nome",
+      "newest": "Novidades"
+    },
+    "pagination": {
+      "label": "Páginas",
+      "previous": "Anterior",
+      "next": "Próxima",
+      "status": "Página {current} de {last}"
+    },
+    "empty": "Nenhum produto encontrado.",
+    "emptyState": {
+      "title": "Nenhuma peça com esses filtros.",
+      "body": "Tire um filtro ou fale com a equipe.",
+      "clear": "Limpar filtros"
+    },
+    "categoriesHeading": "Categorias",
+    "newTag": "Novo",
+    "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
+    "resultsLabel": "Resultados",
+    "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
+    "products": { "title": "Todas as peças", "intro": "O catálogo completo das linhas Casa e Giardini." },
+    "technical": {
+      "title": "Área técnica",
+      "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
+    },
+    "launches": {
+      "title": "Lançamentos",
+      "intro": "As coleções e peças lançadas pela Franccino.",
+      "empty": "Nenhum lançamento publicado no momento."
+    },
+    "table": {
+      "label": "Tabela técnica",
+      "caption": "Peças com linha, designer, medidas e arquivos técnicos",
+      "image": "Imagem",
+      "piece": "Peça",
+      "area": "Linha",
+      "designer": "Designer",
+      "dimensions": "Medidas",
+      "files": "Arquivos",
+      "list": "Lista de orçamento",
+      "empty": "—"
+    }
+  },
+  "sections": {
+    "products": "Produtos",
+    "collections": "Coleções",
+    "designers": "Designers",
+    "gallery": "Galeria"
+  },
+  "stores": {
+    "stateFilter": "Estado",
+    "allStates": "Todos os estados",
+    "empty": "Nenhuma loja encontrada."
+  },
+  "search": {
+    "label": "Buscar",
+    "placeholder": "O que você procura?",
+    "submit": "Buscar",
+    "noResults": "Nenhum resultado encontrado.",
+    "resultsFor": "Resultados para “{query}”"
+  },
+  "pages": {
+    "home": { "title": "Início" },
+    "indoor": { "title": "Indoor" },
+    "indoorCategory": { "title": "Indoor" },
+    "outdoor": { "title": "Outdoor" },
+    "outdoorCategory": { "title": "Outdoor" },
+    "products": { "title": "Produtos" },
+    "productDetail": { "title": "Produto" },
+    "launches": { "title": "Lançamentos" },
+    "launchDetail": { "title": "Lançamento" },
+    "collections": { "title": "Coleções" },
+    "collectionDetail": { "title": "Coleção" },
+    "designers": { "title": "Designers" },
+    "designerDetail": { "title": "Designer" },
+    "projects": { "title": "Projetos" },
+    "projectDetail": { "title": "Projeto" },
+    "corporate": { "title": "Corporativo" },
+    "factory": { "title": "Fábrica" },
+    "finishes": { "title": "Acabamentos" },
+    "downloads": { "title": "Downloads" },
+    "stores": { "title": "Lojas" },
+    "contact": { "title": "Contato" },
+    "search": { "title": "Busca" },
+    "privacy": { "title": "Política de privacidade" },
+    "terms": { "title": "Termos de uso" }
+  },
+  "dimensions": {
+    "width": "L",
+    "depth": "P",
+    "height": "A",
+    "seatHeight": "Assento",
+    "diameter": "Ø"
+  },
+  "downloads": {
+    "linkLabel": "Baixar {title} ({format})",
+    "formatAndSize": "{format} · {size}",
+    "failed": "Não foi possível gerar o link agora. Tente de novo.",
+    "rateLimited": "Muitos downloads seguidos. Aguarde um minuto.",
+    "unavailable": "Arquivo indisponível no momento."
+  }
+}

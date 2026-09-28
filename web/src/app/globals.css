@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+@import '../styles/base.css' layer(base);
+@import '../styles/components.css' layer(components);
+@import '../styles/forms.css' layer(components);
+@import '../styles/chrome.css' layer(components);
+@import '../styles/plates.css' layer(components);
+@import '../styles/catalog.css' layer(components);
+@import '../styles/product.css' layer(components);
+
+@theme inline {
+  --color-*: initial;
+  --color-stone: var(--stone);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-field: var(--line-field);
+  --color-wood: var(--wood);
+  --color-garden: var(--garden);
+  --color-alert: var(--alert);
+  --font-sans: var(--font);
+  --breakpoint-*: initial;
+  --breakpoint-sm: 35rem;
+  --breakpoint-md: 56.25rem;
+  --breakpoint-lg: 73.75rem;
+  --breakpoint-xl: 75rem;
+}
