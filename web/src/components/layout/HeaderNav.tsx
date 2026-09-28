@@ -8,6 +8,9 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { activeNavKey, NAV_ITEMS } from './nav';
 import { QuoteListLink } from './QuoteListLink';
 
+// Mesmo corte do menu recolhido em `styles/chrome.css` (`@media (max-width: 1180px)`).
+const COLLAPSED_NAV_QUERY = '(max-width: 1180px)';
+
 export function HeaderNav() {
   const t = useTranslations('header');
   const nav = useTranslations('nav');
@@ -56,6 +59,24 @@ export function HeaderNav() {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  // Ao passar para a largura de desktop (girar o tablet, redimensionar) o botão
+  // some; fechar o menu libera a rolagem que o bloqueio acima prendeu.
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const collapsed = window.matchMedia(COLLAPSED_NAV_QUERY);
+    function handleChange(event: MediaQueryListEvent) {
+      if (!event.matches) {
+        setOpen(false);
+      }
+    }
+    collapsed.addEventListener('change', handleChange);
+    return () => {
+      collapsed.removeEventListener('change', handleChange);
     };
   }, [open]);
 
