@@ -1,0 +1,254 @@
+/*
+  Sala para montar: portado de design/prototype/assets/styles.css (bloco
+  "planner" 1453-1472 e 1522-1681, sem `.field*` e `.pair`, e de "ajustes da
+  revisão" `.library*` e `@media (max-width: 1200px) .planner__canvas`
+  1940-1960), com os ajustes do plano P4 (Task 9, Step 5):
+  - `var(--ink-2)` → `var(--ink-muted)`; `var(--ok)` → `var(--garden)`.
+  - `#canvas > svg` → `.plan-svg`.
+  - Cores fixas das peças → `--plan-piece`, `--plan-selected`, `--plan-conflict`.
+  - `.canvas-bar button` com `border-color: var(--line-field)`.
+  - R17: botões de adicionar peça e da barra da planta com alvo de 44px.
+*/
+
+.planner {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: start;
+  padding-bottom: 64px;
+}
+
+.planner__side {
+  background: var(--paper);
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+  position: sticky;
+  top: calc(var(--header) + 16px);
+  max-height: calc(100vh - var(--header) - 32px);
+  overflow: auto;
+}
+
+.piece-list {
+  display: grid;
+  gap: 8px;
+}
+
+.piece-option {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 6px 8px 6px 6px;
+  background: var(--paper);
+}
+
+.piece-option img {
+  width: 56px;
+  aspect-ratio: 4/3;
+  object-fit: contain;
+}
+
+.piece-option button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.piece-option button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.planner__canvas {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  position: relative;
+}
+
+.plan-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.canvas-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.canvas-bar button {
+  background: none;
+  border: 1px solid var(--line-field);
+  padding: 6px 10px;
+  min-height: 44px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.8125rem;
+}
+
+.canvas-bar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.piece {
+  cursor: grab;
+}
+
+.piece.is-dragging {
+  cursor: grabbing;
+}
+
+.piece rect,
+.piece ellipse {
+  fill: var(--plan-piece);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  transition: fill var(--t-fast) ease;
+}
+
+.piece.is-selected rect,
+.piece.is-selected ellipse {
+  fill: var(--plan-selected);
+  stroke: var(--garden);
+  stroke-width: 2.4;
+}
+
+.piece.is-conflict rect,
+.piece.is-conflict ellipse {
+  fill: var(--plan-conflict);
+  stroke: var(--alert);
+}
+
+.piece text {
+  font-size: 11px;
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+.checks {
+  display: grid;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+.checks li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.checks .bad {
+  color: var(--alert);
+}
+
+.checks .good {
+  color: var(--garden);
+}
+
+.summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 0.875rem;
+}
+
+.summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+.library {
+  display: grid;
+  gap: 14px;
+}
+
+.library summary {
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding-block: 4px;
+}
+
+.library[open] summary {
+  margin-bottom: 12px;
+}
+
+.plan-floor {
+  fill: var(--plan-floor);
+  stroke: var(--ink);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.plan-grid {
+  stroke: var(--plan-grid-minor);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.plan-grid--major {
+  stroke: var(--plan-grid-major);
+}
+
+.plan-measure line {
+  stroke: var(--ink-muted);
+  vector-effect: non-scaling-stroke;
+}
+
+.plan-measure text {
+  fill: var(--ink-muted);
+  font-family: var(--font);
+  font-size: 13px;
+}
+
+.piece__size {
+  fill: var(--ink-muted);
+}
+
+.piece:focus-visible {
+  outline: none;
+}
+
+.piece:focus-visible rect,
+.piece:focus-visible ellipse {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+@media (max-width: 1200px) {
+  .planner {
+    grid-template-columns: 1fr;
+  }
+
+  .planner__side {
+    position: static;
+    max-height: none;
+  }
+
+  .planner__canvas {
+    order: -1;
+  }
+}
