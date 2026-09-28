@@ -73,3 +73,8 @@ Task 9: implemented inline (BASE 7b3e509, commit ac4dc75; 222 tests, lint, typec
 Ruling (R21, T9): planner.css applies R17 to the planner's primary controls (`.piece-option button` 34 → 44px, `.canvas-bar button` min-height 44px) and maps the prototype's `var(--ok)` (no such token) to `var(--garden)`, as T7 did — cost if wrong: small CSS.
 Task 9: review (controller inline) → Spec ✅ (R11, R21), quality Approved.
 Task 9: complete (commits 7b3e509..ac4dc75, review clean) — next: T10.
+Task 10: implemented inline (BASE cd71f48, commit 677b258; 226 tests, lint, typecheck, build green). Code as in the plan except the page: loaders called directly, no `withBuildFallback` (R3), and no `alternates` (R5); `planner` messages appended textually (existing keys untouched); runbook rate-limit bullet for the planner Server Action POST (R16).
+Task 10: manual browser check (Chrome headless, API with the P2 T14 demo data): library 13 pieces with footprint; 3 pieces → overlap warning; mouse drag and touch drag (390px, hasTouch) move the piece; keyboard only (focus piece, arrows, Shift+arrows, R, Delete → focus back on the canvas) with live announcement; room 3,2 × 2,8 (comma accepted) → "3,20 por 2,80 metros"; reload keeps the plan; "Enviar sala para a lista" → header Lista 0 → 2 with toast; Server Action search "sofá" returns sofas; no page errors.
+Task 10: review (controller inline) → Spec ✅ (R3, R5, R16), quality Approved.
+Task 10: minor (deferred): the route builds as dynamic (ƒ), not static with revalidation — same for every top-level `[locale]` page (cause predates T10), for the final review; drag and keyboard have no automated test (no DOM env).
+Task 10: complete (commits cd71f48..677b258, review clean) — next: T11.
