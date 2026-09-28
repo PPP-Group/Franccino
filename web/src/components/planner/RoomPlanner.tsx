@@ -12,7 +12,7 @@ import {
   type SVGProps,
 } from 'react';
 import { Icon } from '@/components/ui/Icon';
-import type { Locale } from '@/i18n/config';
+import { htmlLang, type Locale } from '@/i18n/config';
 import {
   countByProduct,
   findConflicts,
@@ -58,7 +58,7 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
   const [announcement, setAnnouncement] = useState('');
   const svgRef = useRef<SVGSVGElement | null>(null);
   const canvasRef = useRef<HTMLDivElement | null>(null);
-  const tag = locale === 'pt' ? 'pt-BR' : 'en';
+  const tag = htmlLang(locale);
   const cmFormat = useMemo(() => new Intl.NumberFormat(tag, { maximumFractionDigits: 1 }), [tag]);
   const metersFormat = useMemo(
     () => new Intl.NumberFormat(tag, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
