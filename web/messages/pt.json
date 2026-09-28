@@ -383,5 +383,56 @@
     "failed": "Não foi possível gerar o link agora. Tente de novo.",
     "rateLimited": "Muitos downloads seguidos. Aguarde um minuto.",
     "unavailable": "Arquivo indisponível no momento."
+  },
+  "planner": {
+    "meta": {
+      "title": "Sala para montar",
+      "description": "Desenhe o ambiente com as medidas reais, posicione peças da Franccino em escala e envie para a lista de orçamento."
+    },
+    "title": "Sala para montar",
+    "intro": "Desenhe o ambiente com as medidas reais, arraste as peças e veja o que cabe. Tudo em escala.",
+    "sideLabel": "Ambiente e peças",
+    "roomSize": "Medidas do ambiente (m)",
+    "roomWidth": "Largura",
+    "roomDepth": "Profundidade",
+    "library": {
+      "title": "Peças do catálogo",
+      "search": "Buscar peça",
+      "placeholder": "Sofá, poltrona, mesa…",
+      "searching": "Buscando…",
+      "noResults": "Nenhuma peça com medidas para esta busca.",
+      "add": "Pôr {name} na sala",
+      "sizeRect": "{width} × {depth} cm",
+      "sizeRound": "Ø {diameter} cm"
+    },
+    "hint": "Arraste para mover. Com a peça selecionada, use as setas (Shift move 1 cm), R para girar e Delete para remover.",
+    "rotate": "Girar",
+    "remove": "Remover",
+    "canvasLabel": "Planta do ambiente, {width} por {depth} metros",
+    "planLabel": "Planta de exemplo de um ambiente de {width} por {depth} metros",
+    "meters": "{value} m",
+    "pieceLabel": "{name}, {width} por {depth} cm",
+    "pieceSize": "{width} × {depth}",
+    "moved": "{name} em {x}, {y} cm.",
+    "added": "{name} entrou na sala.",
+    "removed": "Peça removida.",
+    "maxPieces": "A sala chegou ao limite de peças.",
+    "checks": {
+      "title": "Conferência",
+      "ok": "Todas as peças cabem sem sobreposição.",
+      "conflicts": "{count, plural, one {# peça sobreposta ou fora do ambiente.} other {# peças sobrepostas ou fora do ambiente.}}",
+      "usage": "Piso ocupado: {percent}%",
+      "usageTight": "Piso ocupado: {percent}%, pouca área de circulação"
+    },
+    "summary": {
+      "title": "Peças na sala",
+      "empty": "Nenhuma peça ainda.",
+      "count": "{count}×"
+    },
+    "sendToList": "Enviar sala para a lista",
+    "sendHint": "Vai para a lista de orçamento com as medidas do ambiente anotadas.",
+    "needPieces": "Adicione ao menos uma peça à sala.",
+    "sent": "Sala enviada para a lista ({count, plural, one {# peça} other {# peças}}).",
+    "roomNote": "Sala {width} × {depth} m"
   }
 }

@@ -383,5 +383,56 @@
     "failed": "We could not create the link right now. Please try again.",
     "rateLimited": "Too many downloads in a row. Wait a minute.",
     "unavailable": "File unavailable right now."
+  },
+  "planner": {
+    "meta": {
+      "title": "Room planner",
+      "description": "Draw your room with its real measures, place Franccino pieces to scale and send them to the quote list."
+    },
+    "title": "Room planner",
+    "intro": "Draw the room with its real measures, drag the pieces and see what fits. Everything to scale.",
+    "sideLabel": "Room and pieces",
+    "roomSize": "Room size (m)",
+    "roomWidth": "Width",
+    "roomDepth": "Depth",
+    "library": {
+      "title": "Catalogue pieces",
+      "search": "Find a piece",
+      "placeholder": "Sofa, armchair, table…",
+      "searching": "Searching…",
+      "noResults": "No pieces with dimensions for this search.",
+      "add": "Place {name} in the room",
+      "sizeRect": "{width} × {depth} cm",
+      "sizeRound": "Ø {diameter} cm"
+    },
+    "hint": "Drag to move. With a piece selected, use the arrow keys (Shift moves 1 cm), R to rotate and Delete to remove.",
+    "rotate": "Rotate",
+    "remove": "Remove",
+    "canvasLabel": "Room plan, {width} by {depth} metres",
+    "planLabel": "Sample plan of a {width} by {depth} metre room",
+    "meters": "{value} m",
+    "pieceLabel": "{name}, {width} by {depth} cm",
+    "pieceSize": "{width} × {depth}",
+    "moved": "{name} at {x}, {y} cm.",
+    "added": "{name} is in the room.",
+    "removed": "Piece removed.",
+    "maxPieces": "The room reached its piece limit.",
+    "checks": {
+      "title": "Check",
+      "ok": "Every piece fits without overlapping.",
+      "conflicts": "{count, plural, one {# piece overlaps or is outside the room.} other {# pieces overlap or are outside the room.}}",
+      "usage": "Floor used: {percent}%",
+      "usageTight": "Floor used: {percent}%, little room to move around"
+    },
+    "summary": {
+      "title": "Pieces in the room",
+      "empty": "No pieces yet.",
+      "count": "{count}×"
+    },
+    "sendToList": "Send room to the list",
+    "sendHint": "Goes to the quote list with the room size noted.",
+    "needPieces": "Add at least one piece to the room.",
+    "sent": "Room sent to the list ({count, plural, one {# piece} other {# pieces}}).",
+    "roomNote": "Room {width} × {depth} m"
   }
 }
