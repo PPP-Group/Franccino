@@ -217,7 +217,52 @@
     "whatsapp": "WhatsApp",
     "whereToBuy": "Where to buy",
     "added": "{quantity} × {name} · {finishes}.",
-    "whatsappText": "Hello! I am interested in {quantity} × {name} ({finishes}). Could you help me with a quote?"
+    "whatsappText": "Hello! I am interested in {quantity} × {name} ({finishes}). Could you help me with a quote?",
+    "designBy": "Design <designer>{name}</designer>",
+    "sku": "Ref. {sku}",
+    "materials": "Materials: {materials}",
+    "fallbackNotice": "This content is only available in Portuguese.",
+    "quoteOnlyThis": "Ask for a quote for this piece only",
+    "sendQuote": "Send quote request",
+    "sameLine": "From the {line} line",
+    "sameLineFallback": "From the same line",
+    "related": "More {category}",
+    "seeArea": "See {area}",
+    "dimensions": {
+      "title": "Dimensions (cm)",
+      "variants": "Size variations",
+      "variant": "Variation {number}",
+      "front": "front",
+      "side": "side",
+      "drawing": "Technical drawing with dimensions: {facts}",
+      "diameterValue": "Ø {value}",
+      "facts": {
+        "width": "Width",
+        "depth": "Depth",
+        "height": "Height",
+        "diameter": "Diameter",
+        "seatHeight": "Seat height"
+      },
+      "inline": {
+        "width": "width {value} cm",
+        "depth": "depth {value} cm",
+        "height": "height {value} cm",
+        "diameter": "diameter {value} cm",
+        "seatHeight": "seat height {value} cm"
+      }
+    },
+    "stage": {
+      "viewLabel": "View",
+      "photos": "Photos",
+      "model": "3D",
+      "modelAlt": "3D model of {name}",
+      "modelLoading": "Loading the 3D model…",
+      "modelError": "We could not load the 3D model now. See the photos or try again.",
+      "thumbsLabel": "Photos of the piece",
+      "showImage": "Photo {index} of {total}"
+    },
+    "downloads": { "title": "Technical files", "secureLink": "Secure link valid for 10 min" },
+    "designer": { "piecesBy": "Pieces by {name}" }
   },
   "catalog": {
     "filters": {

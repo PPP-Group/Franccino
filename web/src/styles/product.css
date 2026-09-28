@@ -52,7 +52,8 @@
   top: 16px;
   left: 16px;
   display: inline-flex;
-  border: 1px solid var(--line);
+  /* R17: borda de controle >= 3:1 (`--line` sozinho fica abaixo disso). */
+  border: 1px solid var(--line-field);
   background: var(--paper);
 }
 
@@ -60,6 +61,7 @@
   border: 0;
   background: transparent;
   padding: 8px 14px;
+  min-height: 44px;
   font-size: 0.8125rem;
   cursor: pointer;
   display: inline-flex;
@@ -138,6 +140,11 @@
 
 .panel__head .meta a {
   color: var(--ink);
+}
+
+.panel__copy {
+  display: grid;
+  gap: 12px;
 }
 
 .block {
@@ -226,6 +233,31 @@
   height: auto;
   background: var(--paper);
   border: 1px solid var(--line);
+}
+
+.dim-shape {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.dim-line {
+  stroke: var(--ink-muted);
+}
+
+.dim-seat {
+  stroke: var(--ink);
+  stroke-dasharray: 3 3;
+}
+
+.dim-ground {
+  stroke: var(--line-strong);
+}
+
+.dims svg text {
+  fill: var(--ink-muted);
+  font-family: var(--font);
+  font-size: 11px;
 }
 
 .dims dl {
@@ -362,6 +394,23 @@
 
 .designer-strip--text {
   grid-template-columns: 1fr;
+}
+
+.designer-strip__copy {
+  display: grid;
+  gap: 14px;
+}
+
+.quote-inline summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.quote-inline[open] summary {
+  margin-bottom: 8px;
 }
 
 @media (max-width: 980px) {
