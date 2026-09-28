@@ -110,3 +110,6 @@ docker-compose.override.yml
 
 # Worktrees locais (execucao paralela de planos)
 /.worktrees/
+
+# Estado local da ferramenta de design (Impeccable)
+/web/.impeccable/questions/
