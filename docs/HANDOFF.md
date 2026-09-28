@@ -16,12 +16,12 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                   |
 | Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4 |
 | P1 Fundação     | **Concluída**                                                                                      |
-| P2 API + painel | **T1–T11 concluídas e revisadas**; T12 implementada (sem revisão); T13–T15 a fazer                 |
+| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)         |
 | P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                        |
-| P4 Páginas web  | **T1–T7 concluídas e revisadas**; T8 implementada com ajustes pedidos; T9–T12 a fazer              |
+| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                         |
 | P5 Go-live      | Sem plano escrito (migração do WordPress, redirects, deploy, analytics, QA)                        |
-| Testes          | API: 200 testes Pest verdes · Web: 203 testes Vitest verdes                                        |
-| Rodando         | `develop` sobe com banco vazio; rotas principais respondem 200                                     |
+| Testes          | API: 215 testes Pest verdes · Web: 231 testes Vitest verdes                                        |
+| Rodando         | `develop` sobe com banco vazio; nas branches de feature o `db:seed` local traz a demonstração      |
 
 ---
 
@@ -48,8 +48,9 @@ pnpm dev          # API http://localhost:8000 · fila · site http://localhost:3
 
 - Painel: http://localhost:8000/admin. O bootstrap gera e mostra a senha do admin; e-mail e senha ficam em
   `ADMIN_EMAIL` / `ADMIN_PASSWORD` no `api/.env`. Mudou? `cd api && php artisan db:seed --class=AdminUserSeeder`.
-- Site: http://localhost:3000/pt (ou `/en`). Com banco vazio as páginas mostram estados vazios; cadastre conteúdo
-  pelo painel (o conteúdo de demonstração é a P2 T14, ainda não feita).
+- Site: http://localhost:3000/pt (ou `/en`). Com banco vazio as páginas mostram estados vazios. Com a P2 T14
+  (`feature/fundacao-api`), o `db:seed` em `APP_ENV=local` traz o conteúdo de demonstração com dados públicos do
+  site atual; as imagens são baixadas de franccino.com.br na primeira vez e ficam em `api/storage/app/demo-cache`.
 - `pnpm bootstrap --sqlite` força SQLite. Com Docker, e-mails de teste no Mailpit: http://localhost:8025.
 - `pnpm setup` é um comando nativo do pnpm, não o bootstrap.
 
@@ -77,13 +78,14 @@ quebradas.
 
 ### 2.5 Problemas comuns
 
-| Sintoma                               | Solução                                                                            |
-| ------------------------------------- | ---------------------------------------------------------------------------------- |
-| `php` não reconhecido                 | PHP fora do PATH: adicione a pasta ao PATH do usuário e reabra o terminal          |
-| `Could not open input file: artisan`  | Rode dentro de `api/` ou use `php api/artisan ...` a partir da raiz                |
-| Site com erro 500                     | API fora do ar ou `FRONTEND_API_KEY` diferente entre `api/.env` e `web/.env.local` |
-| Porta 8000/3000 ocupada após `Ctrl+C` | Processo `php`/`node` órfão: finalize no Gerenciador de Tarefas e rode `pnpm dev`  |
-| Commit recusado                       | Mensagem fora de Conventional Commits (ex.: `feat(web): ...`)                      |
+| Sintoma                               | Solução                                                                                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `php` não reconhecido                 | PHP fora do PATH: adicione a pasta ao PATH do usuário e reabra o terminal                                                                                                             |
+| `Could not open input file: artisan`  | Rode dentro de `api/` ou use `php api/artisan ...` a partir da raiz                                                                                                                   |
+| Site com erro 500                     | API fora do ar ou `FRONTEND_API_KEY` diferente entre `api/.env` e `web/.env.local`                                                                                                    |
+| Porta 8000/3000 ocupada após `Ctrl+C` | Processo `php`/`node` órfão: finalize no Gerenciador de Tarefas e rode `pnpm dev`                                                                                                     |
+| Commit recusado                       | Mensagem fora de Conventional Commits (ex.: `feat(web): ...`)                                                                                                                         |
+| `pnpm dev` cai sozinho no Windows     | `queue:listen` estoura 60 s (`ProcessTimedOutException`) e o `concurrently -k` derruba tudo; suba a fila com `php api/artisan queue:listen --tries=1 --timeout=0` (ledger da P4, T11) |
 
 ---
 
@@ -94,13 +96,16 @@ quebradas.
 | `main`                     | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado |
 | `develop`                  | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**   |
 | `feature/fundacao-projeto` | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                           |
-| `feature/fundacao-api`     | P2. Topo: T12 (`cd70445`), ainda sem revisão                                          |
-| `feature/fundacao-web`     | P3 + P4. Topo: P4 T8 (`e50aa2d`, `7de8f52`), com ajustes de revisão pendentes         |
+| `feature/fundacao-api`     | P2 até a T14 (`77412ed`). PR para `develop` pendente                                  |
+| `feature/fundacao-web`     | P3 + P4 completas, com a revisão final. PR para `develop` pendente                    |
 
 Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
 direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
 200 testes da API e 203 do site passaram e o typecheck ficou verde. O histórico inicial do repositório antigo
 (`PPP-Group/Francciono-Website`) foi mantido de propósito.
+
+Depois disso (ainda em 2026-09-28) o trabalho continuou só nas branches de feature, que entram em `develop` por PR:
+as duas estão à frente de `develop`, sem nenhum commit atrás, e mergeiam sem conflito (sozinhas e juntas).
 
 ---
 
@@ -119,7 +124,7 @@ Plano: [`plans/2026-09-23-p1-fundacao.md`](plans/2026-09-23-p1-fundacao.md)
   [contrato da API](api.md), [inventário do WordPress](content-inventory.md), [runbook](runbook-deploy.md)
 - Protótipo aprovado (`design/prototype/`) e sistema visual ([`web/DESIGN.md`](../web/DESIGN.md))
 
-### 4.2 P2 — API Laravel e painel Filament (T1–T11)
+### 4.2 P2 — API Laravel e painel Filament (T1–T14)
 
 Plano: [`plans/2026-09-23-p2-api.md`](plans/2026-09-23-p2-api.md) · Ledger:
 [`handoff/p2-api-ledger.md`](handoff/p2-api-ledger.md)
@@ -137,6 +142,9 @@ Plano: [`plans/2026-09-23-p2-api.md`](plans/2026-09-23-p2-api.md) · Ledger:
 | T9     | Painel — mensagens (com itens), newsletter, logs, redirects, configurações                          |
 | T10    | API pública — infraestrutura (idioma, `no-store`, rate limit, chave do front) e catálogo            |
 | T11    | API pública — conteúdo editorial, `/settings`, sitemap, redirects                                   |
+| T12    | API de escrita: contato (com `items`), newsletter, link temporário de download, Turnstile, e-mail   |
+| T13    | Revalidação do site: observers juntam as tags e um job faz `POST /api/revalidate`                   |
+| T14    | Conteúdo de demonstração com dados públicos do site atual (só em `APP_ENV=local`)                   |
 
 ### 4.3 P3 — Base do site Next.js (concluída)
 
@@ -148,44 +156,40 @@ Plano: [`plans/2026-09-23-p3-web-base.md`](plans/2026-09-23-p3-web-base.md) · L
 - SEO técnico (metadata, hreflang, sitemap, JSON-LD) e cabeçalhos de segurança
 - Esqueleto de todas as rotas, formulários com Turnstile, 3D sob demanda
 
-### 4.4 P4 — Páginas do site (T1–T7)
+### 4.4 P4 — Páginas do site (concluída)
 
 Plano: [`plans/2026-09-24-p4-web-paginas.md`](plans/2026-09-24-p4-web-paginas.md) · Ledger:
 [`handoff/p4-web-paginas-ledger.md`](handoff/p4-web-paginas-ledger.md) · Pré-execução:
 [`handoff/p4-preflight.md`](handoff/p4-preflight.md)
 
-| Tarefa | Entrega                                                                 |
-| ------ | ----------------------------------------------------------------------- |
-| T1     | Tokens de design, fonte provisória, estilos base, componentes de UI     |
-| T2     | Lista de orçamento no navegador (lógica pura, `localStorage`)           |
-| T3     | Formulários no design system (contato com `items`, newsletter)          |
-| T4     | Cabeçalho, rodapé, layout, "pular para o conteúdo", rotas novas         |
-| T5     | Card de produto, adicionar à lista, trilho de produtos                  |
-| T6     | Catálogo com filtros, tabela técnica, paginação, lançamentos, downloads |
-| T7     | Seletor de acabamentos, quantidade, ações de orçamento                  |
+| Tarefa | Entrega                                                                          |
+| ------ | -------------------------------------------------------------------------------- |
+| T1     | Tokens de design, fonte provisória, estilos base, componentes de UI              |
+| T2     | Lista de orçamento no navegador (lógica pura, `localStorage`)                    |
+| T3     | Formulários no design system (contato com `items`, newsletter)                   |
+| T4     | Cabeçalho, rodapé, layout, "pular para o conteúdo", rotas novas                  |
+| T5     | Card de produto, adicionar à lista, trilho de produtos                           |
+| T6     | Catálogo com filtros, tabela técnica, paginação, lançamentos, downloads          |
+| T7     | Seletor de acabamentos, quantidade, ações de orçamento                           |
+| T8     | Página de produto: galeria, 3D com "tentar de novo", medidas, downloads          |
+| T9     | Sala para montar: geometria, planta salva no navegador, desenho em escala        |
+| T10    | Sala para montar: página interativa (mouse, toque, teclado) e envio para a lista |
+| T11    | Home com seções alimentadas pela API (cada uma some sem dado)                    |
+| T12    | Página da lista de orçamento e verificação final                                 |
+| Final  | Revisão da branch: páginas voltaram a ser estáticas (R24), menu no tablet        |
 
 ---
 
 ## 5. Em andamento
 
-### 5.1 P2 T12 — API de escrita (contato, newsletter, link de download)
+Nada em andamento. Aguardando o tech lead:
 
-- `feature/fundacao-api`, commit `cd70445`. Implementada com testes verdes.
-- **Falta:** revisão de especificação e qualidade (brief: plano P2, "Task 12") e correções que surgirem.
-- Depois: teste manual de envio real do contato com o Mailpit (decisão R13 do P4).
-
-### 5.2 P4 T8 — Página de produto
-
-`feature/fundacao-web`, commits `e50aa2d` e `7de8f52`. Ajustes pedidos na revisão (não feitos):
-
-1. **Importante:** `.thumbs button` abaixo de 44px entre 320 e 390px de largura
-   (`web/src/styles/product.css:107-119`, `ProductStage.tsx:54`): reduzir colunas em telas estreitas ou retirar
-   o piso de proporção.
-2. **Importante (exigido pelo plano):** `ModelViewer` sem botão "tentar de novo" após falha do 3D (`useEffect` com
-   `[]`). Adicionar botão que refaz o import, como no P3.
-3. **Menor:** `.tabs button` abaixo de 44px.
-
-Depois: revisão curta e merge em `develop`.
+- PRs de `feature/fundacao-api` e `feature/fundacao-web` para `develop`.
+- As aprovações da seção 7 (a P2 T15 depende de `laravel/boost` e Scramble).
+- Decisões registradas nos ledgers como "finding": CORS da mídia para o 3D no ambiente local (o runbook já cobre
+  produção), `pnpm bootstrap` sem gerar `FRONTEND_REVALIDATE_SECRET`/`REVALIDATE_SECRET`, o `queue:listen` do
+  `pnpm dev` no Windows (seção 2.5).
+- Números oficiais do Lighthouse para o PR da P4 (a verificação final mediu só uma aproximação; ledger da P4, T12).
 
 ---
 
@@ -193,22 +197,15 @@ Depois: revisão curta e merge em `develop`.
 
 ### 6.1 P2 — API
 
-| Tarefa | O que é                                                                                          |
-| ------ | ------------------------------------------------------------------------------------------------ |
-| T13    | Revalidação do front: observer nos models dispara `POST /api/revalidate` com as tags de cache    |
-| T14    | Conteúdo de demonstração com dados públicos do site atual (16 designers, 12 lojas, ~40 produtos) |
-| T15    | Laravel Boost (MCP), OpenAPI (Scramble), revisão de `docs/api.md`, verificação final             |
-| Final  | Revisão da branch inteira da P2 e uma rodada de correção                                         |
+| Tarefa | O que é                                                                              |
+| ------ | ------------------------------------------------------------------------------------ |
+| T15    | Laravel Boost (MCP), OpenAPI (Scramble), revisão de `docs/api.md`, verificação final |
+| Final  | Revisão da branch inteira da P2 e uma rodada de correção                             |
 
 ### 6.2 P4 — Web
 
-| Tarefa | O que é                                                                                       |
-| ------ | --------------------------------------------------------------------------------------------- |
-| T9     | Sala para montar — geometria, planta salva, desenho em escala (lógica + SVG)                  |
-| T10    | Sala para montar — página interativa                                                          |
-| T11    | Home. **Aplicar R19:** `Banner` com `title`, `subtitle`, `cta` anuláveis, sem texto inventado |
-| T12    | Página da lista de orçamento e verificação final (checagem manual no navegador e Mailpit)     |
-| Final  | Revisão da branch inteira da P4 e uma rodada de correção                                      |
+Concluída. O que o plano deixou para a P5 está em "Próximo plano (P5)", no fim do
+[plano da P4](plans/2026-09-24-p4-web-paginas.md).
 
 ### 6.3 P5 — Go-live (escrever o plano)
 
@@ -225,8 +222,11 @@ Base: checklist do [runbook](runbook-deploy.md).
 
 Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tarefa. Principais:
 
-- Web sem ambiente DOM nos testes: teclado, foco e menus precisam de checagem manual (P4 T12).
+- Web sem ambiente DOM nos testes: teclado, foco e menus foram conferidos no navegador na P4 T12, mas não têm
+  teste automatizado.
 - `local-store`: `dispatchEvent` sem guarda fora do navegador; fallback permanente em memória após falha.
+- Lista de orçamento: CLS ≈ 0,3 quando o "Carregando…" (exigido pelo plano) dá lugar à lista ou ao estado vazio.
+- 404 global sempre em português (R24 da P4).
 - Painel: limite de upload 50MB fixo no `FilesRelationManager`; faltam testes de publicação em massa.
 - Textos provisórios em `web/messages/{pt,en}.json` precisam de revisão de copy.
 
@@ -241,6 +241,7 @@ Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tare
 | Dump do banco do WordPress                                                                                                        | Cliente / hospedagem | Migração completa (P5)                                       |
 | Contas: Cloudflare (DNS, R2, Turnstile), hospedagem, e-mail, Sentry, GA/GTM/Search Console                                        | Cliente / tech lead  | Staging e produção                                           |
 | Aprovação de dependências novas (ex.: `filament/spatie-laravel-media-library-plugin`, `spatie/laravel-settings`, `laravel/boost`) | Tech lead            | Citar no PR                                                  |
+| Aprovação de `laravel/boost` e Scramble (`dedoc/scramble`)                                                                        | Tech lead            | Bloqueia a P2 T15                                            |
 | Aprovação de escopo: lista de orçamento e sala para montar                                                                        | Tech lead / cliente  | Adicionadas a pedido do product owner; passar por orçamento  |
 | Fonte definitiva                                                                                                                  | Design / cliente     | Archivo (Google Fonts) é provisória                          |
 | Proteção de branch no GitHub                                                                                                      | Tech lead            | Org no plano Free: regras não são aplicadas em repo privado  |
@@ -252,7 +253,8 @@ Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tare
 ### 8.1 Fluxo
 
 1. `git checkout develop && git pull`
-2. Trabalho em andamento: `feature/fundacao-api` (T12 → T15) ou `feature/fundacao-web` (ajustes T8 → T12).
+2. Próximos passos: PRs das duas branches de feature; depois a P2 T15 (quando as dependências forem aprovadas), a
+   revisão final da P2 e o plano da P5.
 3. Siga a tarefa do plano: cada uma tem arquivos, interfaces, testes e mensagem de commit.
 4. Antes do commit: `pnpm test`, `pnpm lint`, `cd api && composer analyse`, `pnpm --filter web typecheck`.
 5. PR para `develop` com aprovação do tech lead.
@@ -275,6 +277,9 @@ ledger. As decisões ("Rulings") estão nos ledgers; as que mais afetam quem con
 - **P4 R12:** não inventar texto de marketing (preço, prazo, garantia, "sob medida").
 - **P4 R17:** controles principais com área de toque ≥ 44px; bordas de controle com contraste ≥ 3:1.
 - **P4 R19:** `Banner` com `title/subtitle/cta` anuláveis (Home, T11).
+- **P4 R7:** mensagens: mesclar no namespace existente, nunca substituir; apagar só chave sem referência.
+- **P4 R24:** fora de `[locale]`, chamar next-intl sempre com `locale` explícito. O `getLocale()` no not-found da
+  raiz lia `headers()` e deixava o site inteiro dinâmico; hoje as páginas são estáticas com revalidação por tag.
 
 ### 8.3 Onde está cada coisa
 
