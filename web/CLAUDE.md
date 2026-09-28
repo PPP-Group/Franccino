@@ -40,21 +40,36 @@ src/
     [locale]/(rotas internas em inglês)/.../page.tsx
     api/revalidate/route.ts
     sitemap.ts, robots.ts, not-found.tsx (global)
+    fonts.ts, globals.css
   components/
-    layout/{SiteHeader,SiteFooter,LanguageSwitcher}.tsx
+    layout/{SiteHeader,HeaderNav,SiteFooter,LanguageSwitcher,QuoteListLink}.tsx, nav.ts
+    ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
     media/ApiImage.tsx
     content/{RichText,Blocks}.tsx
     forms/{ContactForm,NewsletterForm,Turnstile}.tsx
-    products/{DownloadButton,ModelViewer}.tsx
+    catalog/{CatalogListing,CatalogToolbar,ProductGrid,TechTable,ViewToggle,Pagination,LaunchTile}.tsx, area-pages.tsx
+    products/{ProductPlate,ProductRail,QuickAddButton,ProductStage,ModelViewer,ProductConfigurator,...}.tsx
+    planner/{RoomPlanner,PlannerLibrary,PlanSvg}.tsx
+    quote/QuoteListView.tsx
+    home/{HeroSection,LaunchesSection,LinesSection,FeatureSection,PlannerTeaser,...}.tsx
+    stores/StoreFinder.tsx
     seo/JsonLd.tsx
   i18n/{config,routing,navigation,request}.ts
   lib/
-    api/{types,client,catalog,content,forms}.ts
-    env.ts
-    format/dimensions.ts
+    api/{types,client,catalog,content,forms,empty,errors,listing-params}.ts
+    catalog/{area,area-href,card,technical,view}.ts
+    product/{finish-selection,gallery,dimension-drawing,model-source}.ts
+    quote/{types,list,store,hooks,message,snapshot}.ts
+    planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
+    forms/contact.ts
+    ui/{local-store,toast,roving,use-is-client}.ts
+    contact-links.ts, settings.ts, env.ts
+    format/{dimensions,file-size}.ts
     images/srcset.ts
     seo/{metadata,jsonld,sitemap}.ts
     security/basic-auth.ts
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote}.css
+  test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts
 ```
@@ -89,4 +104,6 @@ Alias `@/*` aponta para `src/*`.
 - Fonte provisória em `src/app/fonts.ts` (troca pelo manual de marca só ali).
 - Lógica de estado (lista de orçamento, planta, acabamentos) em módulos puros de `src/lib/*`
   com testes; componentes só ligam estado a markup.
+- Estado do navegador (lista e planta) só por `src/lib/quote/store.ts` e
+  `src/lib/planner/plan-store.ts`; componentes leem com os hooks, nunca direto do `localStorage`.
 - Nunca inventar preço, prazo, contagem ou especificação: sem dado da API, a seção some.

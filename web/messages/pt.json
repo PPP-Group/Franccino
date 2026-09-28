@@ -1,12 +1,9 @@
 {
   "common": {
-    "siteName": "Franccino",
     "skipToContent": "Pular para o conteúdo",
     "loading": "Carregando…",
-    "readMore": "Saiba mais",
     "close": "Fechar",
     "viewAll": "Ver tudo",
-    "mainNavigation": "Menu principal",
     "breadcrumb": "Você está em",
     "home": "Início",
     "opensInNewWindow": "(abre em nova janela)"
@@ -23,20 +20,14 @@
     "factory": "Fábrica",
     "finishes": "Acabamentos",
     "downloads": "Downloads",
-    "blocks3d": "Blocos 3D",
     "stores": "Lojas",
     "contact": "Contato",
     "planner": "Sala para montar",
     "technical": "Área técnica"
   },
   "footer": {
-    "rightsReserved": "Todos os direitos reservados.",
     "privacy": "Privacidade",
     "terms": "Termos de uso",
-    "contactHeading": "Contato",
-    "documentsHeading": "Documentos",
-    "newsletterHeading": "Receba novidades",
-    "legalNavigation": "Institucional",
     "wordmark": "Franccino",
     "factory": "Fábrica: {address}",
     "catalog": "Catálogo",
@@ -85,7 +76,32 @@
     "pendingFinish": "acabamento a definir",
     "viewListCount": "Ver lista ({count})",
     "decrease": "Diminuir",
-    "increase": "Aumentar"
+    "increase": "Aumentar",
+    "title": "Lista de orçamento",
+    "intro": "Confira acabamentos e quantidades. A equipe da Franccino responde com o orçamento.",
+    "pieces": "{count, plural, one {# peça} other {# peças}}",
+    "remove": "Remover",
+    "removed": "{name} saiu da lista.",
+    "quantityOf": "Quantidade de {name}",
+    "messageHeading": "Peças da lista de orçamento:",
+    "whatsappIntro": "Olá! Quero um orçamento destas peças:",
+    "form": {
+      "title": "Seus dados",
+      "notes": "Observações",
+      "notesPlaceholder": "Prazo, endereço de entrega, medidas especiais…",
+      "submit": "Enviar pedido de orçamento",
+      "whatsapp": "Enviar a lista pelo WhatsApp"
+    },
+    "empty": {
+      "title": "Sua lista de orçamento está vazia",
+      "body": "Junte as peças que interessam, com acabamento e quantidade, e mande tudo de uma vez para a equipe.",
+      "catalog": "Ver o catálogo",
+      "planner": "Montar uma sala"
+    },
+    "sent": {
+      "title": "Pedido enviado",
+      "body": "Recebemos a sua lista. A equipe da Franccino responde pelo e-mail informado."
+    }
   },
   "errors": {
     "notFound": {
@@ -100,7 +116,6 @@
     }
   },
   "forms": {
-    "requiredField": "Campo obrigatório",
     "invalidEmail": "E-mail inválido",
     "submit": "Enviar",
     "sending": "Enviando…",
@@ -185,20 +200,7 @@
     }
   },
   "products": {
-    "viewDetails": "Ver detalhes",
-    "download": "Baixar arquivo",
-    "model3d": "Visualizar em 3D",
-    "model3dLoading": "Carregando visualização 3D…",
-    "model3dError": "Não foi possível carregar a visualização 3D. Tente novamente.",
-    "relatedProducts": "Produtos relacionados",
-    "dimensionsHeading": "Dimensões",
-    "materialsHeading": "Materiais",
-    "finishesHeading": "Acabamentos",
-    "filesHeading": "Arquivos para download",
-    "lineProductsHeading": "Outras peças da linha",
-    "quoteHeading": "Solicitar orçamento",
-    "downloadPreparing": "Preparando arquivo…",
-    "downloadError": "Não foi possível gerar o link. Tente novamente."
+    "download": "Baixar arquivo"
   },
   "product": {
     "finishes": {
@@ -275,7 +277,6 @@
       "sort": "Ordenar por",
       "search": "Buscar",
       "apply": "Filtrar",
-      "clear": "Limpar filtros",
       "categories": "Categorias",
       "all": "Todas",
       "allDesigners": "Todos os designers",
@@ -298,7 +299,6 @@
       "body": "Tire um filtro ou fale com a equipe.",
       "clear": "Limpar filtros"
     },
-    "categoriesHeading": "Categorias",
     "newTag": "Novo",
     "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
     "resultsLabel": "Resultados",
@@ -350,7 +350,6 @@
     "resultsFor": "Resultados para “{query}”"
   },
   "pages": {
-    "home": { "title": "Início" },
     "indoor": { "title": "Indoor" },
     "indoorCategory": { "title": "Indoor" },
     "outdoor": { "title": "Outdoor" },
