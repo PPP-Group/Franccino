@@ -17,34 +17,43 @@ use Illuminate\Support\Collection;
 
 /**
  * Internal notification sent to `GeneralSettings::contact_recipients` when a
- * visitor submits `POST /contact` (`docs/api.md`). Always in Portuguese —
- * this mailbox is read by the Franccino team, not by site visitors, so it is
- * not part of the pt/en interface that must go through translation files.
+ * visitor submits `POST /contact` (`docs/api.md`). Read by the Franccino team,
+ * so it is always rendered in the panel language (`pt_BR`), whatever locale
+ * the visitor used.
  */
 class ContactMessageReceived extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly ContactMessage $contactMessage) {}
+    private const LOCALE = 'pt_BR';
+
+    public function __construct(public readonly ContactMessage $contactMessage)
+    {
+        $this->locale(self::LOCALE);
+    }
 
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: sprintf(
-                '[Site] Nova mensagem: %s — %s',
-                $this->contactMessage->type->label(),
-                $this->contactMessage->name
-            ),
+        // Laravel builds the envelope outside `withLocale()` for assertions, so
+        // the subject pins its locale itself.
+        return $this->withLocale(self::LOCALE, fn () => new Envelope(
+            subject: __('[Site] New message: :type — :name', [
+                'type' => $this->contactMessage->type->label(),
+                'name' => $this->contactMessage->name,
+            ]),
             replyTo: [new Address($this->contactMessage->email, $this->contactMessage->name)],
-        );
+        ));
     }
 
     public function content(): Content
     {
+        $productId = $this->contactMessage->product_id;
+
         return new Content(
             markdown: 'mail.contact-message-received',
             with: [
                 'contactMessage' => $this->contactMessage,
+                'product' => $productId ? $this->productLabel(Product::find($productId), $productId) : null,
                 'items' => $this->resolveItems(),
                 'panelUrl' => url('/admin/contact-messages/'.$this->contactMessage->id),
             ],
@@ -53,7 +62,7 @@ class ContactMessageReceived extends Mailable implements ShouldQueue
 
     /**
      * @return list<array{
-     *     product: string|null,
+     *     product: string,
      *     quantity: int,
      *     finishes: list<array{name: string, code: string|null}>,
      *     note: string|null,
@@ -82,7 +91,7 @@ class ContactMessageReceived extends Mailable implements ShouldQueue
             $product = $products->get($item['product_id'] ?? null);
 
             return [
-                'product' => $product ? Localized::value($product, 'name', 'pt') : null,
+                'product' => $this->productLabel($product, $item['product_id'] ?? null),
                 'quantity' => $item['quantity'] ?? 1,
                 'finishes' => Collection::make($item['finish_ids'] ?? [])
                     ->map(fn (int $id) => $finishes->get($id))
@@ -96,5 +105,12 @@ class ContactMessageReceived extends Mailable implements ShouldQueue
                 'note' => $item['note'] ?? null,
             ];
         }, $items);
+    }
+
+    private function productLabel(?Product $product, ?int $id): string
+    {
+        return $product
+            ? Localized::value($product, 'name', 'pt')
+            : __('Removed product (:id)', ['id' => $id]);
     }
 }

@@ -42,6 +42,20 @@ it('requires consent and a valid email', function () {
         ->assertJsonValidationErrors(['consent', 'email']);
 });
 
+it('answers validation errors in the locale sent in the body', function () {
+    $this->postJson('/api/v1/newsletter', validNewsletter(['locale' => 'en', 'email' => '']))
+        ->assertStatus(422)
+        ->assertJsonPath('errors.email.0', 'The email field is required.');
+});
+
+it('rejects a non-string turnstile_token with a 422 instead of a server error', function () {
+    config(['franccino.turnstile.secret_key' => 'secret']);
+
+    $this->postJson('/api/v1/newsletter', validNewsletter(['turnstile_token' => ['x']]))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('turnstile_token');
+});
+
 it('limits submissions per ip', function () {
     foreach (range(1, 5) as $i) {
         $this->postJson('/api/v1/newsletter', validNewsletter(['email' => "assine{$i}@exemplo.com"]))->assertCreated();

@@ -11,9 +11,10 @@ use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Reads `locale` from the query string, validates it against the supported
- * locales (missing means the default locale, an unsupported value is a 422),
- * and makes it available for the rest of the request via `ContentLocale`.
+ * Reads `locale` from the query string or, on the write routes, from the JSON
+ * body (`docs/api.md`), validates it against the supported locales (missing
+ * means the default locale, an unsupported value is a 422), and makes it
+ * available for the rest of the request via `ContentLocale`.
  */
 class SetContentLocale
 {
@@ -23,7 +24,7 @@ class SetContentLocale
             'locale' => ['sometimes', Rule::in(Locales::all())],
         ]);
 
-        $locale = $request->query('locale', Locales::default());
+        $locale = $request->input('locale', Locales::default());
 
         app(ContentLocale::class)->set($locale);
         App::setLocale($locale === 'pt' ? 'pt_BR' : 'en');

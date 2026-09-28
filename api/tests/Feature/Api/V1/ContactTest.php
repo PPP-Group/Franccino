@@ -75,6 +75,27 @@ it('requires turnstile_token when turnstile is configured', function () {
     Http::assertNothingSent();
 });
 
+it('rejects a non-string turnstile_token with a 422 instead of a server error', function () {
+    config(['franccino.turnstile.secret_key' => 'secret']);
+    Http::fake();
+
+    $this->postJson('/api/v1/contact', validContact(['turnstile_token' => ['not', 'a', 'string']]))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('turnstile_token');
+
+    Http::assertNothingSent();
+});
+
+it('answers validation errors in the locale sent in the body', function () {
+    $this->postJson('/api/v1/contact', validContact(['locale' => 'en', 'name' => '']))
+        ->assertStatus(422)
+        ->assertJsonPath('errors.name.0', 'The name field is required.');
+
+    $this->postJson('/api/v1/contact', validContact(['locale' => 'pt', 'name' => '']))
+        ->assertStatus(422)
+        ->assertJsonPath('errors.name.0', fn (string $message) => str_contains($message, 'obrigatória'));
+});
+
 it('accepts the message without turnstile_token when turnstile is not configured', function () {
     Mail::fake();
 

@@ -28,7 +28,10 @@ class NewsletterRequest extends FormRequest
             'source' => ['nullable', 'string', 'max:60'],
             'consent' => ['accepted'],
             'turnstile_token' => [
+                'bail',
                 Rule::requiredIf(fn () => filled(config('franccino.turnstile.secret_key'))),
+                'nullable',
+                'string',
                 $this->turnstileRule(),
             ],
         ];
