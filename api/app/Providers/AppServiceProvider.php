@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Jobs\RevalidateFrontend;
 use App\Listeners\StoreBlurPlaceholder;
 use App\Listeners\StoreImageMetadata;
 use App\Models\Area;
@@ -24,19 +25,24 @@ use App\Models\Project;
 use App\Models\Redirect;
 use App\Models\Store;
 use App\Models\User;
+use App\Observers\RevalidatesFrontend;
 use App\Policies\AdminOnlyPolicy;
 use App\Policies\ContentPolicy;
 use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
+use App\Support\FrontendRevalidator;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelSettings\Events\SettingsSaved;
 use Spatie\MediaLibrary\Conversions\Events\ConversionHasBeenCompletedEvent;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(ContentLocale::class);
+        $this->app->singleton(FrontendRevalidator::class);
     }
 
     /**
@@ -85,6 +92,30 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ConversionHasBeenCompletedEvent::class, StoreBlurPlaceholder::class);
 
         $this->configureRateLimiters();
+        $this->configureFrontendRevalidation();
+    }
+
+    /**
+     * Content changes queue cache tags; one `RevalidateFrontend` per request,
+     * command or queued job (`docs/api.md`, "Revalidação do front"). Sync jobs
+     * run inside the request, so they leave the flush to its end.
+     */
+    private function configureFrontendRevalidation(): void
+    {
+        foreach (array_keys(RevalidatesFrontend::TAGS) as $model) {
+            $model::observe(RevalidatesFrontend::class);
+        }
+        Media::observe(RevalidatesFrontend::class);
+
+        Event::listen(SettingsSaved::class, fn () => $this->app->make(FrontendRevalidator::class)->queue('settings'));
+
+        Event::listen(JobProcessed::class, function (JobProcessed $event): void {
+            if ($event->connectionName !== 'sync' && $event->job->resolveName() !== RevalidateFrontend::class) {
+                $this->app->make(FrontendRevalidator::class)->flush();
+            }
+        });
+
+        $this->app->terminating(fn () => $this->app->make(FrontendRevalidator::class)->flush());
     }
 
     /**
