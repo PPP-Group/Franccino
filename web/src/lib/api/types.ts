@@ -207,12 +207,13 @@ export type FinishGroup = {
   }[];
 };
 
+/** Todos os campos são opcionais no painel; a API não preenche banner incompleto (docs/api.md). */
 export type Banner = {
-  title: string;
+  title: string | null;
   subtitle: string | null;
   cta_label: string | null;
   cta_url: string | null;
-  image: Image;
+  image: Image | null;
   image_mobile: Image | null;
 };
 

@@ -335,7 +335,12 @@
   "stores": {
     "stateFilter": "State",
     "allStates": "All states",
-    "empty": "No stores found."
+    "empty": "No stores found.",
+    "cityState": "{city} — {state}",
+    "types": {
+      "exclusive": "Exclusive store",
+      "reseller": "Reseller"
+    }
   },
   "search": {
     "label": "Search",
@@ -434,5 +439,54 @@
     "needPieces": "Add at least one piece to the room.",
     "sent": "Room sent to the list ({count, plural, one {# piece} other {# pieces}}).",
     "roomNote": "Room {width} × {depth} m"
+  },
+  "home": {
+    "meta": {
+      "title": "Authorial design furniture",
+      "description": "Franccino catalogue: authorial design furniture from the Casa and Giardini lines, with dimensions, finishes and technical files."
+    },
+    "hero": {
+      "fallbackTitle": "Authorial design furniture",
+      "catalog": "See the catalogue",
+      "planner": "Plan a room",
+      "designers": "{count, plural, one {# designer} other {# designers}}"
+    },
+    "launches": {
+      "title": "Novelties",
+      "viewAll": "See the launch"
+    },
+    "lines": {
+      "label": "Lines",
+      "viewPieces": "See pieces"
+    },
+    "feature": {
+      "dimensions": "Dimensions",
+      "materials": "Materials",
+      "designer": "Design",
+      "view": "See the piece"
+    },
+    "teaser": {
+      "title": "Plan your room to scale before asking for a quote.",
+      "body": "Enter the room size, place the pieces with their real dimensions and see what fits. The room becomes a quote list.",
+      "cta": "Open the room planner"
+    },
+    "designers": {
+      "title": "Who designs",
+      "lead": "Designers and studios who sign pieces with the factory.",
+      "all": "All designers"
+    },
+    "factory": {
+      "cta": "Visit the factory"
+    },
+    "technical": {
+      "title": "For specifiers",
+      "lead": "Dimensions and technical files for every piece, in one table.",
+      "cta": "Open the technical area"
+    },
+    "stores": {
+      "title": "See the pieces in store",
+      "lead": "Exclusive stores and resellers. Choose a state.",
+      "consultant": "Talk to a consultant"
+    }
   }
 }
