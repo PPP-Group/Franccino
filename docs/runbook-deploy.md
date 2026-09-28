@@ -73,6 +73,10 @@ onde a mídia vem de `http://localhost:8000/storage`).
 - Build com `pnpm install --frozen-lockfile && pnpm --filter web build`, com a API do ambiente no ar (o build
   gera as páginas estáticas a partir dela).
 - Depois do deploy, as páginas se atualizam sozinhas pela revalidação disparada pelo painel.
+- Limite de requisições na borda (CDN/proxy do site): o servidor do Next fala com a API usando `X-Frontend-Key`,
+  que a API não limita. Por isso o limite fica na frente do site e cobre a busca e as listagens com `q` (sem cache
+  de dados) e o POST da Server Action de busca da sala para montar (`/pt/sala-para-montar`, `/en/room-planner`),
+  que faz até 13 chamadas à API por requisição.
 
 ## Checklist de go-live (roadmap, seção 7)
 

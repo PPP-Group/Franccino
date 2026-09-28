@@ -238,6 +238,45 @@
   stroke-width: 3;
 }
 
+.room-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.planner__heading {
+  font-size: 1.1rem;
+}
+
+.piece-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.piece-option__name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.piece-option__blank {
+  width: 56px;
+  aspect-ratio: 4 / 3;
+  background: var(--stone);
+}
+
+.canvas-bar__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.planner__canvas:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 @media (max-width: 1200px) {
   .planner {
     grid-template-columns: 1fr;
