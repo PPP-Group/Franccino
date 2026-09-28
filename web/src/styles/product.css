@@ -94,6 +94,10 @@
   inset: 0;
   display: grid;
   place-items: center;
+  align-content: center;
+  gap: 16px;
+  padding: 0 24px;
+  text-align: center;
 }
 
 .gallery__stage.is-3d .stage-3d {
@@ -116,6 +120,8 @@
   padding: 0;
   cursor: pointer;
   aspect-ratio: 4/3;
+  /* R17: a proporção sozinha fica abaixo de 44px entre 320 e 390px de largura. */
+  min-height: 44px;
 }
 
 .thumbs button[aria-pressed='true'] {
@@ -175,6 +181,7 @@
 }
 
 .tabs button {
+  min-height: 44px;
   background: none;
   border: 0;
   padding: 4px 0;
@@ -434,6 +441,10 @@
 }
 
 @media (max-width: 560px) {
+  .thumbs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .dims {
     grid-template-columns: 1fr;
   }

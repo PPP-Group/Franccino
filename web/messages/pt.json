@@ -258,6 +258,7 @@
       "modelAlt": "Modelo 3D de {name}",
       "modelLoading": "Carregando o modelo 3D…",
       "modelError": "Não foi possível carregar o 3D agora. Veja as fotos ou tente de novo.",
+      "modelRetry": "Tentar de novo",
       "thumbsLabel": "Fotos da peça",
       "showImage": "Foto {index} de {total}"
     },
