@@ -32,7 +32,7 @@ it('saves blocks with texts in both languages', function () {
     $block = $page->refresh()->content[0];
 
     expect($block['type'])->toBe('timeline')
-        ->and($block['data']['items'][0]['title'])->toBe(['pt' => 'Fundação', 'en' => 'Foundation']);
+        ->and($block['data']['items'][0]['title'])->toEqual(['pt' => 'Fundação', 'en' => 'Foundation']);
 });
 
 it('saves image_text and cta blocks with texts in both languages', function () {
@@ -68,11 +68,11 @@ it('saves image_text and cta blocks with texts in both languages', function () {
 
     expect($content[0]['type'])->toBe('image_text')
         ->and($content[0]['data']['image_position'])->toBe('right')
-        ->and($content[0]['data']['heading'])->toBe(['pt' => 'Nossa fábrica', 'en' => 'Our factory'])
+        ->and($content[0]['data']['heading'])->toEqual(['pt' => 'Nossa fábrica', 'en' => 'Our factory'])
         ->and($content[0]['data']['image'])->toBeString()
         ->and($content[1]['type'])->toBe('cta')
-        ->and($content[1]['data']['label'])->toBe(['pt' => 'Contato', 'en' => 'Contact'])
-        ->and($content[1]['data']['url'])->toBe(['pt' => 'https://franccino.com.br/contato', 'en' => 'https://franccino.com/contact']);
+        ->and($content[1]['data']['label'])->toEqual(['pt' => 'Contato', 'en' => 'Contact'])
+        ->and($content[1]['data']['url'])->toEqual(['pt' => 'https://franccino.com.br/contato', 'en' => 'https://franccino.com/contact']);
 });
 
 it('does not allow creating or deleting pages', function () {

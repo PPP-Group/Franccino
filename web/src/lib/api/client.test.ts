@@ -42,6 +42,7 @@ describe('apiGet', () => {
 
   it('uses the fallback on network errors only when allowed', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('fetch failed'));
+    vi.stubEnv('ALLOW_BUILD_WITHOUT_API', '');
 
     await expect(
       apiGet('/home', { locale: 'pt', tags: ['home'], fallback: { data: null } }),
