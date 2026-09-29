@@ -19,9 +19,9 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)         |
 | P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                        |
 | P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                         |
-| P5a Páginas     | Plano escrito, em revisão (PR #11); execução depende da aprovação do plano e do design             |
+| P5a Páginas     | Plano em revisão (PR #11); Task 1 (telas no protótipo) pronta no PR #13, aguardando aprovação B1   |
 | P5b Go-live     | Plano escrito, em revisão (PR #12): migração, redirects, cookies/analytics, infra, QA, go-live     |
-| PRs abertos     | #9 (API), #10 (site), #11 (plano da P5a), #12 (plano da P5b), todos aguardando o tech lead         |
+| PRs abertos     | #9 (API), #10 (site), #11 e #12 (planos), #13 (telas, rascunho), todos aguardando o tech lead      |
 | Testes          | API: 215 testes Pest verdes · Web: 231 testes Vitest verdes                                        |
 | Rodando         | `develop` sobe com banco vazio; nas branches de feature o `db:seed` local traz a demonstração      |
 
@@ -102,6 +102,7 @@ quebradas.
 | `feature/fundacao-web`     | P3 + P4 completas, com a revisão final. PR #10 para `develop`                         |
 | `feature/p5a-plano`        | Plano da P5a e ledger da fase (só documentação). PR #11 para `develop`                |
 | `feature/p5b-plano`        | Plano da P5b e ledger da fase (só documentação). PR #12 para `develop`                |
+| `feature/p5a-prototipo`    | P5a Task 1: telas no protótipo. PR #13 (rascunho) sobre `feature/p5a-plano`           |
 
 Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
 direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
@@ -190,14 +191,15 @@ Nada em andamento: o trabalho que dá para fazer sem aprovação está feito. Tu
 
 ### 5.1 PRs abertos para `develop`
 
-| PR                                                    | Branch                 | Conteúdo                                                                    | CI                     |
-| ----------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------- | ---------------------- |
-| [#9](https://github.com/PPP-Group/Franccino/pull/9)   | `feature/fundacao-api` | P2 T12 (revisão e correções), T13 (revalidação do site), T14 (demonstração) | `api / test` verde     |
-| [#10](https://github.com/PPP-Group/Franccino/pull/10) | `feature/fundacao-web` | P4 T8–T12 e revisão final (inclui este documento)                           | `web / build` verde    |
-| [#11](https://github.com/PPP-Group/Franccino/pull/11) | `feature/p5a-plano`    | Plano da P5a (páginas restantes) e ledger da fase; só documentação          | sem CI (só documentos) |
-| [#12](https://github.com/PPP-Group/Franccino/pull/12) | `feature/p5b-plano`    | Plano da P5b (migração, infraestrutura e go-live) e ledger; só documentação | sem CI (só documentos) |
+| PR                                                    | Branch                  | Conteúdo                                                                    | CI                     |
+| ----------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------- | ---------------------- |
+| [#9](https://github.com/PPP-Group/Franccino/pull/9)   | `feature/fundacao-api`  | P2 T12 (revisão e correções), T13 (revalidação do site), T14 (demonstração) | `api / test` verde     |
+| [#10](https://github.com/PPP-Group/Franccino/pull/10) | `feature/fundacao-web`  | P4 T8–T12 e revisão final (inclui este documento)                           | `web / build` verde    |
+| [#11](https://github.com/PPP-Group/Franccino/pull/11) | `feature/p5a-plano`     | Plano da P5a (páginas restantes) e ledger da fase; só documentação          | sem CI (só documentos) |
+| [#12](https://github.com/PPP-Group/Franccino/pull/12) | `feature/p5b-plano`     | Plano da P5b (migração, infraestrutura e go-live) e ledger; só documentação | sem CI (só documentos) |
+| [#13](https://github.com/PPP-Group/Franccino/pull/13) | `feature/p5a-prototipo` | Rascunho, base `feature/p5a-plano`: P5a Task 1, telas no protótipo para B1  | sem CI (só protótipo)  |
 
-Os quatro mergeiam sem conflito. O `develop` exige histórico linear: merge por **rebase**. A execução da P5a e da
+Os quatro primeiros mergeiam sem conflito. O #13 é empilhado sobre o #11: depois do merge do #11, trocar a base para `develop`. O `develop` exige histórico linear: merge por **rebase**. A execução da P5a e da
 P5b depende de #9 e #10.
 
 ### 5.2 O que precisa ser aprovado ou providenciado
@@ -240,6 +242,10 @@ Plano: [`plans/2026-09-29-p5a-web-paginas-restantes.md`](plans/2026-09-29-p5a-we
 Coleções, designers, projetos, corporativo, fábrica, acabamentos, lojas, downloads, contato com FAQ, busca,
 privacidade, termos e páginas de erro, hoje com o esqueleto da P3, sem estilo. A Task 1 desenha essas telas no
 protótipo para aprovação por escrito; as Tasks 2–11 só começam depois dela.
+
+A Task 1 foi adiantada em 2026-09-29 (PR #13, rascunho): 11 telas em `design/prototype/`, com o `pages.css` da Task 2.
+O desvio de base (B4 ainda não cumprido) está registrado no ledger. Falta o Step 4: o tech lead envia as telas à
+Franccino e registra a aprovação no ledger.
 
 ### 6.4 P5b — Migração, infraestrutura e go-live (plano em revisão, PR #12)
 
@@ -286,7 +292,7 @@ Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tare
 ### 8.1 Fluxo
 
 1. `git checkout develop && git pull`
-2. Próximos passos: merge dos PRs #9–#12; depois a P5a Task 1 (telas no protótipo para aprovação) e as tarefas da
+2. Próximos passos: merge dos PRs #9–#12; aprovação das telas do PR #13 (P5a Task 1, B1) e as tarefas da
    P5b que não dependem de conta (T1–T4, T7), a P2 T15 (quando as dependências forem aprovadas) e a revisão final da P2.
 3. Siga a tarefa do plano: cada uma tem arquivos, interfaces, testes e mensagem de commit.
 4. Antes do commit: `pnpm test`, `pnpm lint`, `cd api && composer analyse`, `pnpm --filter web typecheck`.
