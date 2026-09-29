@@ -74,5 +74,14 @@ window.FRANCCINO = (() => {
     address: 'Rod. MG 260, KM 36, 1254 — Sobrado, Cláudio — MG, 35530-000',
   };
 
-  return { products, designers, stores, contact };
+  // Coleções ILUSTRATIVAS, montadas a partir das notas dos designers acima (o site novo recebe as coleções da API).
+  const collections = [
+    { slug: 'arp', name: 'ARP', designers: ['Andrea Zanocchi'], summary: 'Inspirada na Pedra do Arpoador.', img: 'arp-mesa', match: 'ARP' },
+    { slug: 'bloco', name: 'Bloco', designers: ['Vinícius Siega'], match: 'Bloco' },
+    { slug: 'pinot', name: 'Pinot', designers: ['La Mamba'], match: 'Pinot' },
+    { slug: 'sambura', name: 'Sambura', designers: ['Sérgio J. Matos'], match: 'Sambura' },
+    { slug: 'sambaqui', name: 'Sambaqui', designers: ['Sérgio J. Matos'], match: 'Sambaqui' },
+  ];
+
+  return { products, designers, stores, contact, collections };
 })();

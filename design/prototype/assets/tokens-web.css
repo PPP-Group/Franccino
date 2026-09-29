@@ -1,0 +1,46 @@
+/*
+  Tokens do design system (web/DESIGN.md). Único arquivo com valores de cor.
+  Fonte, logo e imagens definitivas chegam com o manual de marca: troque aqui.
+*/
+:root {
+  --stone: #f2f1ed;
+  --paper: #ffffff;
+  --ink: #171717;
+  --ink-muted: #57564f;
+  --line: #dcd9d1;
+  --line-strong: #bdb9ae;
+  /* Borda de controle com 3:1 (WCAG 1.4.11) no papel e no ink. */
+  --line-field: #8a887f;
+  --wood: #7b4b2a;
+  --garden: #2e4a37;
+  --alert: #9b2c1f;
+
+  --footer-text: #d8d6cf;
+  --footer-muted: #a6a49b;
+  --footer-rule: #34342f;
+  --hero-ground: #d9d3c7;
+  --portrait-ground: #e4e1da;
+  --row-hover: #fafaf8;
+  --status-ok-bg: #f2f5f2;
+
+  --plan-floor: #fdfcf9;
+  --plan-grid-minor: #efece5;
+  --plan-grid-major: #e1ddd3;
+  --plan-piece: #fbfaf7;
+  --plan-selected: #eef2ee;
+  --plan-conflict: #f7e9e6;
+
+  --font: var(--font-brand), 'Helvetica Neue', Arial, sans-serif;
+  --wide: 118;
+  --wordmark-wide: 125;
+  --text: 100;
+
+  --gutter: clamp(20px, 4vw, 56px);
+  --max: 1560px;
+  --header: 72px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 180ms;
+  --t-mid: 420ms;
+  --shadow-plate: 0 18px 40px -28px rgba(23, 23, 23, 0.35);
+}
