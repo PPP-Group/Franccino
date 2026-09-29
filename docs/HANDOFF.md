@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-09-28. Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-09-29. Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -19,7 +19,9 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)         |
 | P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                        |
 | P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                         |
-| P5 Go-live      | Sem plano escrito (migração do WordPress, redirects, deploy, analytics, QA)                        |
+| P5a Páginas     | Plano escrito, em revisão (PR #11); execução depende da aprovação do plano e do design             |
+| P5b Go-live     | Sem plano escrito (migração do WordPress, redirects, deploy, analytics, QA)                        |
+| PRs abertos     | #9 (API), #10 (site), #11 (plano da P5a), todos aguardando o tech lead (seção 5)                   |
 | Testes          | API: 215 testes Pest verdes · Web: 231 testes Vitest verdes                                        |
 | Rodando         | `develop` sobe com banco vazio; nas branches de feature o `db:seed` local traz a demonstração      |
 
@@ -96,8 +98,9 @@ quebradas.
 | `main`                     | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado |
 | `develop`                  | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**   |
 | `feature/fundacao-projeto` | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                           |
-| `feature/fundacao-api`     | P2 até a T14 (`77412ed`). PR para `develop` pendente                                  |
-| `feature/fundacao-web`     | P3 + P4 completas, com a revisão final. PR para `develop` pendente                    |
+| `feature/fundacao-api`     | P2 até a T14 (`77412ed`). PR #9 para `develop`                                        |
+| `feature/fundacao-web`     | P3 + P4 completas, com a revisão final. PR #10 para `develop`                         |
+| `feature/p5a-plano`        | Plano da P5a e ledger da fase (só documentação). PR #11 para `develop`                |
 
 Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
 direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
@@ -182,14 +185,34 @@ Plano: [`plans/2026-09-24-p4-web-paginas.md`](plans/2026-09-24-p4-web-paginas.md
 
 ## 5. Em andamento
 
-Nada em andamento. Aguardando o tech lead:
+Nada em andamento: o trabalho que dá para fazer sem aprovação está feito. Tudo abaixo espera decisão.
 
-- PRs de `feature/fundacao-api` e `feature/fundacao-web` para `develop`.
-- As aprovações da seção 7 (a P2 T15 depende de `laravel/boost` e Scramble).
-- Decisões registradas nos ledgers como "finding": CORS da mídia para o 3D no ambiente local (o runbook já cobre
-  produção), `pnpm bootstrap` sem gerar `FRONTEND_REVALIDATE_SECRET`/`REVALIDATE_SECRET`, o `queue:listen` do
-  `pnpm dev` no Windows (seção 2.5).
-- Números oficiais do Lighthouse para o PR da P4 (a verificação final mediu só uma aproximação; ledger da P4, T12).
+### 5.1 PRs abertos para `develop`
+
+| PR                                                    | Branch                 | Conteúdo                                                                    | CI                     |
+| ----------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------- | ---------------------- |
+| [#9](https://github.com/PPP-Group/Franccino/pull/9)   | `feature/fundacao-api` | P2 T12 (revisão e correções), T13 (revalidação do site), T14 (demonstração) | `api / test` verde     |
+| [#10](https://github.com/PPP-Group/Franccino/pull/10) | `feature/fundacao-web` | P4 T8–T12 e revisão final (inclui este documento)                           | `web / build` verde    |
+| [#11](https://github.com/PPP-Group/Franccino/pull/11) | `feature/p5a-plano`    | Plano da P5a (páginas restantes) e ledger da fase; só documentação          | sem CI (só documentos) |
+
+Os três mergeiam sem conflito. O `develop` exige histórico linear: merge por **rebase**. A execução da P5a depende de
+#9 e #10 (pré-requisito B4 do plano).
+
+### 5.2 O que precisa ser aprovado ou providenciado
+
+| #   | Item                                                                                        | Quem                  | O que destrava                                                                                             |
+| --- | ------------------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 1   | Revisar e mergear os PRs #9, #10 e #11                                                      | Tech lead             | Todo o resto; a P5a só começa com os três no `develop`                                                     |
+| 2   | Dependências `laravel/boost` e `dedoc/scramble`                                             | Tech lead             | P2 T15 e a revisão final da P2                                                                             |
+| 3   | Layout das telas restantes (P5a, Task 1)                                                    | Tech lead + Franccino | P5a Tasks 2–11 (construção das páginas)                                                                    |
+| 4   | Escopo da sala para montar e da lista de orçamento (A1 da P4)                               | Tech lead / cliente   | Lançamento dessas funções                                                                                  |
+| 5   | Fonte definitiva e manual de marca (logo em SVG)                                            | Cliente / design      | Troca da fonte provisória e do logo em texto                                                               |
+| 6   | Números oficiais do Lighthouse para o PR #10                                                | Quem revisa           | Critério de performance da P4 (a medição aproximada ficou acima)                                           |
+| 7   | Decisões registradas como "finding" nos ledgers                                             | Tech lead             | `queue:listen` no Windows (2.5), segredo de revalidação no `pnpm bootstrap`, CORS da mídia local para o 3D |
+| 8   | Proteção de branch no GitHub (plano Team)                                                   | Tech lead             | Regra de PR aplicada pelo GitHub                                                                           |
+| 9   | Contas: hospedagem, Cloudflare (DNS, R2, Turnstile), e-mail, Sentry, GA/GTM/Search Console  | Tech lead / cliente   | P5b (staging, produção, go-live)                                                                           |
+| 10  | Material: fotos em alta, textos pt/en, fichas técnicas, GLB, acabamentos, dump do WordPress | Cliente               | Carga do catálogo real e migração (P5b)                                                                    |
+| 11  | Importador de planilha do catálogo (decisão do roadmap, semana 2)                           | Tech lead             | Forma da carga do catálogo (P5b)                                                                           |
 
 ---
 
@@ -207,7 +230,16 @@ Nada em andamento. Aguardando o tech lead:
 Concluída. O que o plano deixou para a P5 está em "Próximo plano (P5)", no fim do
 [plano da P4](plans/2026-09-24-p4-web-paginas.md).
 
-### 6.3 P5 — Go-live (escrever o plano)
+### 6.3 P5a — Páginas restantes (plano em revisão, PR #11)
+
+Plano: [`plans/2026-09-29-p5a-web-paginas-restantes.md`](plans/2026-09-29-p5a-web-paginas-restantes.md) · Ledger:
+[`handoff/p5a-ledger.md`](handoff/p5a-ledger.md) (os dois chegam ao `develop` com o PR #11).
+
+Coleções, designers, projetos, corporativo, fábrica, acabamentos, lojas, downloads, contato com FAQ, busca,
+privacidade, termos e páginas de erro, hoje com o esqueleto da P3, sem estilo. A Task 1 desenha essas telas no
+protótipo para aprovação por escrito; as Tasks 2–11 só começam depois dela.
+
+### 6.4 P5b — Go-live (escrever o plano)
 
 Base: checklist do [runbook](runbook-deploy.md).
 
@@ -218,7 +250,7 @@ Base: checklist do [runbook](runbook-deploy.md).
 - Analytics / Tag Manager / Search Console, cookies e política de privacidade
 - QA em iOS/Android reais (3D), treinamento do CMS, aceite formal
 
-### 6.4 Pendências menores
+### 6.5 Pendências menores
 
 Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tarefa. Principais:
 
@@ -253,8 +285,8 @@ Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tare
 ### 8.1 Fluxo
 
 1. `git checkout develop && git pull`
-2. Próximos passos: PRs das duas branches de feature; depois a P2 T15 (quando as dependências forem aprovadas), a
-   revisão final da P2 e o plano da P5.
+2. Próximos passos: merge dos PRs #9, #10 e #11; depois a P5a Task 1 (telas no protótipo para aprovação), a P2 T15
+   (quando as dependências forem aprovadas), a revisão final da P2 e o plano da P5b.
 3. Siga a tarefa do plano: cada uma tem arquivos, interfaces, testes e mensagem de commit.
 4. Antes do commit: `pnpm test`, `pnpm lint`, `cd api && composer analyse`, `pnpm --filter web typecheck`.
 5. PR para `develop` com aprovação do tech lead.
