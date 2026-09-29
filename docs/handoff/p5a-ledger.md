@@ -13,3 +13,10 @@ Registrar para cada rodada: data, quem aprovou (tech lead e Franccino), telas co
 ## Progress
 
 Plano escrito em 2026-09-29; aguardando aprovação do tech lead.
+
+- **Task 1 (telas no protótipo), 2026-09-29, branch `feature/p5a-prototipo`:** adiantada enquanto #9–#11 aguardam revisão, a pedido do Pedro Silva, porque só mexe em `design/prototype/` e o que ela produz é justamente o material da aprovação B1. **Desvio registrado:** o plano pede B4 (#9 e #10 mergeados) para todas as tasks; aqui a base é `feature/p5a-plano`, e `tokens-web.css` foi copiado de `feature/fundacao-web` (#10). Se #10 mudar `tokens.css` antes do merge, recopiar.
+  - Entregue: `assets/tokens-web.css`, `assets/pages.css` (idêntico ao CSS da Task 2, Step 3), 11 telas (`colecoes`, `designers`, `projetos` com corporativo, `fabrica`, `acabamentos`, `lojas`, `downloads`, `contato`, `busca`, `legal`, `erro`), com os renderizadores no `app.js`, como as telas já aprovadas. Coleções ilustrativas em `data.js`. Header e rodapé apontam para as telas novas. `.pagination` copiada de `web/src/styles/catalog.css` para `styles.css`. README com a lista das telas.
+  - Textos fixos = mensagens pt previstas no plano. Conteúdo do painel aparece como espaço reservado entre colchetes (nada inventado).
+  - Conferido no navegador em 375 e 1440 px: sem rolagem horizontal nas 11 telas; filtros (projetos, lojas, downloads), formulário de contato, busca com e sem resultado e FAQ funcionando, sem erro de JS. Links de texto nas tabelas e o checkbox de aceite ficam abaixo de 44 px, igual às telas já aprovadas.
+  - Achado fora do escopo: a home do protótipo (`index.html`) passa de 375 px (820 px). É o mesmo problema da `.table-scroll` que o P4 corrigiu no site; não foi mexido aqui.
+  - **Falta:** Step 4 (aprovação por escrito do tech lead + Franccino). As Tasks 2–11 continuam bloqueadas até lá.

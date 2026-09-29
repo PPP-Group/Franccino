@@ -1978,3 +1978,24 @@ p {
 .nowrap {
   white-space: nowrap;
 }
+
+/* ---------- paginação (igual a web/src/styles/catalog.css) ---------- */
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-block: 24px 96px;
+}
+
+/* Alvo de toque de 44 px sem mudar o sublinhado do link. */
+.pagination .link-arrow {
+  position: relative;
+}
+
+.pagination .link-arrow::after {
+  content: '';
+  position: absolute;
+  inset: -12px -8px;
+}

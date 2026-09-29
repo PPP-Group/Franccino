@@ -1,6 +1,6 @@
 /* Franccino — protótipo navegável (vanilla JS, sem build). */
 (() => {
-  const { products, designers, stores, contact } = window.FRANCCINO;
+  const { products, designers, stores, contact, collections } = window.FRANCCINO;
   const page = document.body.dataset.page;
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -90,18 +90,18 @@
     ['Indoor', 'catalogo.html?area=casa', 'casa'],
     ['Outdoor', 'catalogo.html?area=giardini', 'giardini'],
     ['Lançamentos', 'catalogo.html?novos=1', 'novos'],
-    ['Coleções', '#', ''],
-    ['Designers', 'index.html#designers', ''],
-    ['Projetos', '#', ''],
-    ['Fábrica', 'index.html#fabrica', ''],
-    ['Lojas', 'index.html#lojas', ''],
+    ['Coleções', 'colecoes.html', 'colecoes'],
+    ['Designers', 'designers.html', 'designers'],
+    ['Projetos', 'projetos.html', 'projetos'],
+    ['Fábrica', 'fabrica.html', 'fabrica'],
+    ['Lojas', 'lojas.html', 'lojas'],
     ['Sala para montar', 'sala.html', 'sala'],
     ['Área técnica', 'catalogo.html?view=tabela', 'tabela'],
   ];
 
   function currentNavKey() {
     const q = new URLSearchParams(location.search);
-    if (page === 'sala') return 'sala';
+    if (['sala', 'colecoes', 'designers', 'projetos', 'fabrica', 'lojas'].includes(page)) return page;
     if (page === 'catalogo') return q.get('view') === 'tabela' ? 'tabela' : q.get('novos') ? 'novos' : q.get('area') ?? 'casa';
     return '';
   }
@@ -118,7 +118,7 @@
             ${nav.map(([label, href, key]) => `<a href="${href}"${key && key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
           </nav>
           <div class="tools">
-            <button type="button" aria-label="Buscar">${icon('search')}</button>
+            <a href="busca.html" aria-label="Buscar">${icon('search')}</a>
             <span class="lang"><strong>PT</strong> / EN</span>
             <a href="lista.html" aria-label="Lista de orçamento">${icon('list')}<span class="label-optional">Lista</span><span class="list-count num" id="list-count">0</span></a>
             <button type="button" class="menu-toggle" aria-controls="nav" aria-expanded="false" aria-label="Abrir menu">${icon('menu')}</button>
@@ -143,6 +143,8 @@
                 <li><a href="catalogo.html?area=giardini">Franccino Giardini</a></li>
                 <li><a href="catalogo.html?novos=1">Lançamentos</a></li>
                 <li><a href="sala.html">Sala para montar</a></li>
+                <li><a href="acabamentos.html">Acabamentos</a></li>
+                <li><a href="downloads.html">Downloads</a></li>
               </ul>
             </div>
             <div>
@@ -150,7 +152,8 @@
               <ul>
                 <li><a href="https://wa.me/${contact.quotesWhatsapp}">WhatsApp de orçamentos</a></li>
                 <li><a href="https://wa.me/${contact.assistanceWhatsapp}">Assistência técnica</a></li>
-                <li><a href="index.html#lojas">Onde encontrar</a></li>
+                <li><a href="lojas.html">Onde encontrar</a></li>
+                <li><a href="contato.html">Contato</a></li>
                 <li><a href="catalogo.html?view=tabela">Área técnica</a></li>
               </ul>
             </div>
@@ -166,7 +169,7 @@
           </div>
           <div class="footer-base">
             <span>© 2026 Franccino. Design brasileiro autoral.</span>
-            <span><a href="#">Privacidade</a> · <a href="#">Termos</a> · <a href="#">Relatórios de transparência salarial</a></span>
+            <span><a href="legal.html">Privacidade</a> · <a href="legal.html#termos">Termos</a> · <a href="#">Relatórios de transparência salarial</a></span>
           </div>
         </div>
       </footer>
@@ -363,10 +366,10 @@
         <div class="wrap">
           <div class="section-head">
             <div><h2 id="designers-title">Quem desenha</h2><p class="lead">Designers e estúdios que assinam peças com a fábrica.</p></div>
-            <a class="link-arrow" href="#">Todos os 16 designers ${icon('arrow')}</a>
+            <a class="link-arrow" href="designers.html">Todos os 16 designers ${icon('arrow')}</a>
           </div>
           <div class="designers">
-            ${designers.map((d) => `<a class="designer" href="#"><div class="designer__photo"><img src="${img(d.img)}" alt="Retrato de ${esc(d.name)}" loading="lazy"></div><h3>${esc(d.name)}</h3><p class="meta">${esc(d.note)}</p></a>`).join('')}
+            ${designers.map((d) => `<a class="designer" href="designers.html"><div class="designer__photo"><img src="${img(d.img)}" alt="Retrato de ${esc(d.name)}" loading="lazy"></div><h3>${esc(d.name)}</h3><p class="meta">${esc(d.note)}</p></a>`).join('')}
           </div>
         </div>
       </section>
@@ -382,7 +385,7 @@
               <div><dt>Sob medida</dt><dd>Dimensões, madeiras e tecidos</dd></div>
               <div><dt>Atendimento</dt><dd>Assistência técnica própria</dd></div>
             </dl>
-            <div><a class="link-arrow" href="#">Conhecer a fábrica ${icon('arrow')}</a></div>
+            <div><a class="link-arrow" href="fabrica.html">Conhecer a fábrica ${icon('arrow')}</a></div>
           </div>
         </div>
       </section>
@@ -1130,6 +1133,474 @@
     draw();
   }
 
+  /* ---------- telas restantes (plano P5a, Task 1) ----------
+     Estrutura igual à que as Tasks 3–11 implementam em web/, com as classes de pages.css.
+     Texto entre colchetes é espaço reservado: no site ele vem do painel. Nada aqui é conteúdo final. */
+  const slot = (label) => `[${label}]`;
+  const unique = (list) => [...new Set(list)];
+  const plural = (n, one, other) => `${n} ${n === 1 ? one : other}`;
+  const fold = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const rule = '<hr style="border:0;border-top:1px solid var(--line);margin:0 0 40px">';
+  const route = (path) => `<p class="meta" style="padding-top:8px">Tela de detalhe · ${path}</p>`;
+  const photoOf = (name) => designers.find((d) => d.name === name);
+  const piecesOfCollection = (c) => products.filter((p) => p.name.includes(c.match));
+
+  function crumbs(items) {
+    return `<nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a>${items
+      .map(([label, href]) => `<span>/</span>${href ? `<a href="${href}">${esc(label)}</a>` : `<span aria-current="page">${esc(label)}</span>`}`)
+      .join('')}</nav>`;
+  }
+
+  function pageHead({ title, lead = '', meta = '', level = 1 }) {
+    return `<div class="catalog-head"><div style="display:grid;gap:12px"><h${level}>${esc(title)}</h${level}>${lead ? `<p class="lead">${esc(lead)}</p>` : ''}</div>${meta ? `<p class="meta num">${meta}</p>` : ''}</div>`;
+  }
+
+  function tile({ href, image = '', title, meta = '', text = '', portrait = false, attrs = '' }) {
+    return `<a class="tile${portrait ? ' tile--portrait' : ''}" href="${href}"${attrs}>
+      <div class="tile__media">${image ? `<img src="${img(image)}" alt="" loading="lazy" width="1024" height="768">` : ''}</div>
+      <div class="tile__copy"><h2 class="tile__title">${esc(title)}</h2>${meta ? `<p class="meta">${meta}</p>` : ''}${text ? `<p class="tile__text">${esc(text)}</p>` : ''}</div>
+    </a>`;
+  }
+
+  function pagination(label) {
+    return `<nav class="pagination" aria-label="${label}"><span></span><span class="meta num">Página 1 de 2</span><a class="link-arrow" href="#">Próxima ${icon('arrow')}</a></nav>`;
+  }
+
+  const frame = '<div class="tile__media"></div>';
+
+  function collectionTile(c) {
+    const n = piecesOfCollection(c).length;
+    return tile({
+      href: 'colecoes.html#detalhe',
+      image: c.img,
+      title: c.name,
+      meta: n ? plural(n, 'peça', 'peças') : 'sem peças',
+      text: c.summary ?? '',
+    });
+  }
+
+  function designerTile(name) {
+    const d = photoOf(name);
+    return tile({ href: 'designers.html#detalhe', image: d?.img ?? '', title: name, text: d?.note ?? '', portrait: true });
+  }
+
+  function renderCollectionsPage() {
+    const c = collections[0];
+    const pieces = piecesOfCollection(c);
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Coleções']])}
+        ${pageHead({ title: 'Coleções', lead: 'Coleções da Franccino e as peças de cada uma.', meta: plural(collections.length, 'coleção', 'coleções') })}
+        <div class="tiles">${collections.map(collectionTile).join('')}</div>
+        ${rule}
+        <section id="detalhe">
+          ${route('/colecoes/arp')}
+          ${pageHead({ title: c.name, level: 2 })}
+          <div class="detail-hero">
+            <div class="detail-hero__media"><img src="${img(c.img)}" alt="" width="1024" height="768"></div>
+            <div class="detail-hero__copy">
+              <div class="prose"><p>${esc(c.summary)}</p><p>${slot('Descrição da coleção cadastrada no painel')}</p></div>
+              <dl class="facts"><div><dt>Design</dt><dd>${c.designers.map(esc).join(', ')}</dd></div></dl>
+            </div>
+          </div>
+          <h2 class="section-title">Imagens da coleção</h2>
+          <ul class="gallery-strip">${pieces.map((p) => `<li><img src="${img(p.img)}" alt="" loading="lazy" width="1024" height="768"></li>`).join('')}</ul>
+          <h2 class="section-title">Peças da coleção</h2>
+          <div class="grid-plates" style="padding-bottom:96px">${pieces.map((p) => plate(p)).join('')}</div>
+        </section>
+      </div>`;
+    bindQuickAdd($('main'));
+  }
+
+  function renderDesignersPage() {
+    const names = unique([...designers.map((d) => d.name), ...products.map((p) => p.designer)]);
+    const name = 'Sérgio J. Matos';
+    const d = photoOf(name);
+    const pieces = products.filter((p) => p.designer === name);
+    const own = collections.filter((c) => c.designers.includes(name));
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Designers']])}
+        ${pageHead({ title: 'Designers', lead: 'Designers e estúdios que assinam peças com a Franccino.', meta: plural(names.length, 'designer', 'designers') })}
+        <div class="tiles">${names.map(designerTile).join('')}</div>
+        ${rule}
+        <section id="detalhe">
+          ${route('/designers/sergio-j-matos')}
+          ${pageHead({ title: name, level: 2 })}
+          <div class="detail-hero">
+            <div class="detail-hero__media"><img src="${img(d.img)}" alt="Retrato de ${esc(name)}" width="800" height="1000"></div>
+            <div class="detail-hero__copy">
+              <div class="prose"><p>${esc(d.note)}</p><p>${slot('Biografia cadastrada no painel')}</p></div>
+              <ul class="store__links"><li><a href="#">Site</a></li><li><a href="#">Instagram</a></li></ul>
+              <h3 style="font-size:1rem">Coleções do designer</h3>
+              <div class="chips">${own.map((c) => `<a class="chip" href="colecoes.html#detalhe">${esc(c.name)}</a>`).join('')}</div>
+            </div>
+          </div>
+          <h2 class="section-title">Peças do designer</h2>
+          <div class="grid-plates" style="padding-bottom:96px">${pieces.map((p) => plate(p)).join('')}</div>
+        </section>
+      </div>`;
+    bindQuickAdd($('main'));
+  }
+
+  const projectTypes = { residential: 'Residencial', corporate: 'Corporativo' };
+  const projectSlots = ['residential', 'corporate', 'residential', 'residential', 'corporate', 'residential'];
+
+  function projectTile(type) {
+    return tile({
+      href: 'projetos.html#detalhe',
+      title: slot('Título do projeto'),
+      meta: `${projectTypes[type]} · ${slot('Cidade')} · ${slot('Ano')}`,
+      text: slot('Resumo do projeto'),
+      attrs: ` data-type="${type}"`,
+    });
+  }
+
+  function renderProjectsPage() {
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Projetos']])}
+        ${pageHead({ title: 'Projetos', lead: 'Projetos residenciais e corporativos com peças da Franccino.', meta: `<span id="p-count"></span>` })}
+        <div class="chips" role="group" aria-label="Tipo de projeto" style="margin-bottom:32px">
+          <button class="chip" type="button" data-type-filter="" aria-pressed="true">Todos</button>
+          <button class="chip" type="button" data-type-filter="residential" aria-pressed="false">Residencial</button>
+          <button class="chip" type="button" data-type-filter="corporate" aria-pressed="false">Corporativo</button>
+        </div>
+        <div class="tiles" id="p-list" style="padding-bottom:0">${projectSlots.map(projectTile).join('')}</div>
+        ${pagination('Páginas de projetos')}
+        ${rule}
+        <section id="detalhe">
+          ${route('/projetos/[slug]')}
+          ${pageHead({ title: slot('Título do projeto'), level: 2 })}
+          <div class="detail-hero">
+            <div class="detail-hero__media">${frame}</div>
+            <div class="detail-hero__copy">
+              <dl class="facts">
+                <div><dt>Cliente</dt><dd>${slot('Cliente')}</dd></div>
+                <div><dt>Arquitetura</dt><dd>${slot('Escritório')}</dd></div>
+                <div><dt>Local</dt><dd>${slot('Cidade — UF')}</dd></div>
+                <div><dt>Ano</dt><dd class="num">${slot('Ano')}</dd></div>
+              </dl>
+              <div class="prose"><p>${slot('Descrição do projeto cadastrada no painel')}</p></div>
+            </div>
+          </div>
+          <h2 class="section-title">Imagens do projeto</h2>
+          <ul class="gallery-strip">${'<li><div class="tile__media"></div></li>'.repeat(3)}</ul>
+          <h2 class="section-title">Peças no projeto</h2>
+          <div class="grid-plates" style="padding-bottom:72px">${products.slice(0, 3).map((p) => plate(p)).join('')}</div>
+        </section>
+        ${rule}
+        <section id="corporativo">
+          ${route('/corporativo')}
+          ${pageHead({ title: 'Corporativo', lead: slot('Introdução cadastrada no painel'), level: 2 })}
+          <div class="blocks" style="padding-bottom:56px">
+            <div class="block-image-text" data-image-position="left">
+              <div class="block-image-text__media">${frame}</div>
+              <div class="prose"><h2>${slot('Título do bloco')}</h2><p>${slot('Texto do bloco de imagem e texto')}</p></div>
+            </div>
+          </div>
+          <h2 class="section-title">Projetos corporativos</h2>
+          <div class="tiles">${['corporate', 'corporate', 'corporate'].map(projectTile).join('')}</div>
+          <h2 class="section-title">Clientes</h2>
+          <ul class="logo-wall">${`<li><span class="meta">${slot('Logo do cliente')}</span></li>`.repeat(6)}</ul>
+        </section>
+      </div>`;
+
+    const draw = (type) => {
+      const tiles = $$('#p-list .tile');
+      tiles.forEach((t) => (t.hidden = Boolean(type) && t.dataset.type !== type));
+      const n = tiles.filter((t) => !t.hidden).length;
+      $('#p-count').textContent = plural(n, 'projeto', 'projetos');
+    };
+    $$('[data-type-filter]').forEach((b) =>
+      b.addEventListener('click', () => {
+        $$('[data-type-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        draw(b.dataset.typeFilter);
+      }),
+    );
+    draw('');
+  }
+
+  function renderFactoryPage() {
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Fábrica']])}
+        ${pageHead({ title: 'Fábrica' })}
+        <img class="page-cover" src="${img('fabrica')}" alt="" width="1600" height="900">
+        <div class="blocks">
+          <div class="prose"><p>${slot('Introdução cadastrada no painel')}</p></div>
+          <dl class="stats num">
+            ${`<div><dt>${slot('Número')}</dt><dd>${slot('Legenda')}</dd></div>`.repeat(3)}
+          </dl>
+          <ol class="timeline">
+            ${`<li><span class="timeline__year num">${slot('Ano')}</span><div><h3>${slot('Marco')}</h3><p>${slot('Descrição do marco')}</p></div></li>`.repeat(3)}
+          </ol>
+          <div class="block-image-text" data-image-position="left">
+            <div class="block-image-text__media"><img src="${img('fabrica')}" alt="" loading="lazy" width="1024" height="768"></div>
+            <div class="prose"><h2>${slot('Título do bloco')}</h2><p>${slot('Texto do bloco, imagem à esquerda')}</p></div>
+          </div>
+          <div class="block-image-text" data-image-position="right">
+            <div class="block-image-text__media">${frame}</div>
+            <div class="prose"><h2>${slot('Título do bloco')}</h2><p>${slot('Texto do bloco, imagem à direita')}</p></div>
+          </div>
+          <blockquote class="block-quote"><p>${slot('Citação cadastrada no painel')}</p><cite>${slot('Autor')}</cite></blockquote>
+          <figure class="block-gallery" style="margin:0">
+            <ul>${products.slice(0, 3).map((p) => `<li><img src="${img(p.img)}" alt="" loading="lazy" width="1024" height="768"></li>`).join('')}</ul>
+            <figcaption>${slot('Legenda da galeria')}</figcaption>
+          </figure>
+        </div>
+      </div>`;
+  }
+
+  function renderFinishesPage() {
+    const groups = { ...bySlug('cadeira-aura').finishes, ...bySlug('sofa-adhara').finishes };
+    const total = Object.values(groups).reduce((sum, list) => sum + list.length, 0);
+    // Tons marcados como ilustrativos mostram o cartão sem imagem (código em texto), como o site faz sem foto.
+    const card = (f) => `<li class="finish-card">
+        <div class="finish-card__swatch">${f.name.includes('ilustrativo') ? `<span class="finish-card__fallback num">${esc(f.code)}</span>` : `<img src="img/finishes/${f.tex}.jpg" alt="" loading="lazy" width="400" height="400">`}</div>
+        <strong>${esc(f.name)}</strong>
+        <span class="meta num">${esc(f.code)}</span>
+      </li>`;
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Acabamentos']])}
+        ${pageHead({ title: 'Acabamentos', meta: plural(total, 'acabamento', 'acabamentos') })}
+        ${Object.entries(groups)
+          .map(([group, list]) => `<section class="finish-group"><h2 class="section-title">${groupName[group]}</h2><ul class="finish-grid">${list.map(card).join('')}</ul></section>`)
+          .join('')}
+      </div>`;
+  }
+
+  const storeType = { 'Loja exclusiva': 'exclusive', Revenda: 'reseller' };
+
+  function renderStoresPage() {
+    const states = unique(stores.map((s) => s.state));
+    const filter = { state: '', type: '' };
+    const chip = (attr, value, label, pressed) => `<button class="chip" type="button" data-${attr}="${value}" aria-pressed="${pressed}">${label}</button>`;
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Lojas']])}
+        ${pageHead({ title: 'Lojas', meta: '<span id="s-count"></span>' })}
+        <div class="stores" style="padding-bottom:96px">
+          <div style="display:grid;gap:20px;align-content:start">
+            <div class="chips" role="group" aria-label="Estado">${chip('state', '', 'Todos os estados', true)}${states.map((s) => chip('state', s, s, false)).join('')}</div>
+            <div class="chips" role="group" aria-label="Tipo de loja">${chip('type', '', 'Todos os tipos', true)}${chip('type', 'exclusive', 'Loja exclusiva', false)}${chip('type', 'reseller', 'Revenda', false)}</div>
+          </div>
+          <div class="store-list" id="s-list"></div>
+        </div>
+      </div>`;
+
+    const mapLink = (s) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.address}, ${s.city} - ${s.state}`)}`;
+    const draw = () => {
+      const list = stores.filter((s) => (!filter.state || s.state === filter.state) && (!filter.type || storeType[s.type] === filter.type));
+      $('#s-count').textContent = plural(list.length, 'loja', 'lojas');
+      $('#s-list').innerHTML = list.length
+        ? list
+            .map(
+              (s) => `<article class="store">
+            <h2 style="font-size:1.1rem">${esc(s.name)}</h2>
+            <address>${esc(s.address)}<br>${esc(s.city)} — ${s.state}</address>
+            <p class="meta">${s.type}</p>
+            <ul class="store__links">
+              <li><a href="tel:${s.phone.replace(/\D/g, '')}">${s.phone}</a></li>
+              <li><a href="${mapLink(s)}" target="_blank" rel="noopener">${icon('pin')}Ver no mapa<span class="visually-hidden"> (abre em nova janela)</span></a></li>
+            </ul>
+          </article>`,
+            )
+            .join('')
+        : '<p class="meta">Nenhuma loja encontrada.</p>';
+    };
+    for (const attr of ['state', 'type']) {
+      $$(`[data-${attr}]`).forEach((b) =>
+        b.addEventListener('click', () => {
+          $$(`[data-${attr}]`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+          filter[attr] = b.dataset[attr];
+          draw();
+        }),
+      );
+    }
+    draw();
+  }
+
+  function renderDownloadsPage() {
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Downloads']])}
+        ${pageHead({ title: 'Downloads', meta: '<span id="d-count"></span>' })}
+        <form class="search-form" id="d-form">
+          <div class="field" style="flex:0 1 220px"><label for="d-area">Linha</label><select id="d-area"><option value="">Todas as linhas</option><option value="casa">Casa</option><option value="giardini">Giardini</option></select></div>
+          <div class="field"><label for="d-q">Buscar peça</label><input id="d-q" type="search"></div>
+          <button class="btn" type="submit">Filtrar</button>
+        </form>
+        <div id="d-results"></div>
+        ${pagination('Páginas de downloads')}
+      </div>`;
+
+    const draw = () => {
+      const area = $('#d-area').value;
+      const q = fold($('#d-q').value.trim());
+      const list = products.filter((p) => (!area || p.area === area) && (!q || fold(p.name).includes(q)));
+      $('#d-count').textContent = plural(list.length, 'peça com arquivos', 'peças com arquivos');
+      $('#d-results').innerHTML = list.length
+        ? `<div class="table-scroll" role="region" aria-label="Arquivos técnicos por peça" tabindex="0"><table class="tech-table">
+          <caption class="visually-hidden">Peças e arquivos técnicos para download</caption>
+          <thead><tr><th scope="col"><span class="visually-hidden">Imagem</span></th><th scope="col">Peça</th><th scope="col">Linha</th><th scope="col">Arquivos</th></tr></thead>
+          <tbody>${list
+            .map(
+              (p) => `<tr>
+              <td><img class="thumb" src="${img(p.img)}" alt="" loading="lazy"></td>
+              <td><a href="produto.html?p=${p.slug}"><strong>${esc(p.name)}</strong></a><div class="meta">${p.category}</div></td>
+              <td><span class="area-dot area-dot--${p.area}"></span>${p.area === 'casa' ? 'Casa' : 'Giardini'}</td>
+              <td><div class="file-links"><a href="#">Ficha PDF</a><a href="#">DWG</a><a href="#">SKP</a></div></td>
+            </tr>`,
+            )
+            .join('')}</tbody></table></div>`
+        : '<div class="empty"><p class="lead">Nenhuma peça com arquivos para estes filtros.</p></div>';
+    };
+    $('#d-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      draw();
+    });
+    draw();
+  }
+
+  function renderContactPage() {
+    const wa = (n) => `<a href="https://wa.me/${n}" target="_blank" rel="noopener">Conversar no WhatsApp</a>`;
+    const types = ['Orçamento', 'Assistência técnica', 'Parceria', 'Imprensa', 'Outro'];
+    $('main').innerHTML = `
+      <div class="wrap">
+        ${crumbs([['Contato']])}
+        ${pageHead({ title: 'Contato' })}
+        <div class="contact-layout">
+          <section style="display:grid;gap:20px" aria-labelledby="ch-title">
+            <h2 id="ch-title" style="font-size:1.25rem">Fale com a Franccino</h2>
+            <dl class="facts">
+              <div><dt>Telefone</dt><dd><a href="tel:+553733814204">${contact.phone}</a></dd></div>
+              <div><dt>E-mail</dt><dd><a href="mailto:${contact.email}">${contact.email}</a></dd></div>
+              <div><dt>Orçamentos</dt><dd>${wa(contact.quotesWhatsapp)}</dd></div>
+              <div><dt>Assistência técnica</dt><dd>${wa(contact.assistanceWhatsapp)}</dd></div>
+              <div><dt>Fábrica</dt><dd>${esc(contact.address)}</dd></div>
+            </dl>
+          </section>
+          <form class="quote-form" id="cf" novalidate>
+            <h2 style="font-size:1.25rem">Envie uma mensagem</h2>
+            <div class="field"><label for="c-name">Nome</label><input id="c-name" autocomplete="name" required></div>
+            <div class="pair">
+              <div class="field"><label for="c-email">E-mail</label><input id="c-email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="c-phone">Telefone</label><input id="c-phone" type="tel" autocomplete="tel"></div>
+            </div>
+            <div class="field"><label for="c-type">Assunto</label><select id="c-type">${types.map((t) => `<option>${t}</option>`).join('')}</select></div>
+            <div class="field"><label for="c-msg">Mensagem</label><textarea id="c-msg" rows="4" required></textarea></div>
+            <label class="consent"><input type="checkbox" id="c-consent" required><span>Li e concordo com a <a href="legal.html">política de privacidade</a>.</span></label>
+            <p class="field error" id="c-error" role="alert" hidden></p>
+            <button class="btn btn--block" type="submit">Enviar</button>
+          </form>
+        </div>
+        <section class="faq" style="margin-bottom:96px" aria-labelledby="faq-title">
+          <h2 id="faq-title" class="section-title" style="padding-top:20px">${slot('Título do bloco de perguntas')}</h2>
+          ${`<details><summary>${slot('Pergunta cadastrada no painel')}</summary><p>${slot('Resposta cadastrada no painel')}</p></details>`.repeat(3)}
+        </section>
+      </div>`;
+
+    $('#cf').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fields = ['#c-name', '#c-email', '#c-msg'].map((sel) => $(sel));
+      fields.forEach((f) => f.setAttribute('aria-invalid', String(!f.value.trim() || !f.validity.valid)));
+      const ok = fields.every((f) => f.value.trim() && f.validity.valid) && $('#c-consent').checked;
+      const err = $('#c-error');
+      err.hidden = ok;
+      if (!ok) {
+        err.textContent = 'Confira nome, e-mail, mensagem e o aceite da política de privacidade.';
+        return;
+      }
+      $('#cf').innerHTML = '<div class="form-status" role="status"><strong>Enviado com sucesso.</strong> (Protótipo: nada foi enviado.)</div>';
+    });
+  }
+
+  function renderSearchPage() {
+    const query = new URLSearchParams(location.search).get('q') ?? 'Matos';
+    const q = fold(query.trim());
+    const hit = (s) => q && fold(s).includes(q);
+    const foundProducts = products.filter((p) => hit(p.name) || hit(p.designer));
+    const foundDesigners = unique(products.map((p) => p.designer)).filter(hit);
+    const foundCollections = collections.filter((c) => hit(c.name) || c.designers.some(hit));
+    const group = (title, body) => `<section class="result-group"><h2 class="section-title">${title}</h2>${body}</section>`;
+    const empty = '<div class="empty"><h2>Nenhum resultado encontrado.</h2><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><a class="btn btn--ghost" href="catalogo.html?area=casa">Ver o catálogo</a></div></div>';
+    const any = foundProducts.length + foundDesigners.length + foundCollections.length;
+    $('main').innerHTML = `
+      <div class="wrap" style="padding-bottom:96px">
+        ${crumbs([['Busca']])}
+        ${pageHead({ title: 'Busca' })}
+        <form class="search-form" action="busca.html" role="search">
+          <div class="field"><label for="s-q">Buscar</label><input id="s-q" name="q" type="search" value="${esc(query)}" placeholder="O que você procura?"></div>
+          <button class="btn" type="submit">Buscar</button>
+        </form>
+        ${
+          any
+            ? `<p class="meta" style="margin-bottom:24px">Resultados para “${esc(query)}”</p>
+          ${foundProducts.length ? group('Peças', `<div class="grid-plates">${foundProducts.map((p) => plate(p)).join('')}</div>`) : ''}
+          ${foundDesigners.length ? group('Designers', `<div class="tiles" style="padding-bottom:0">${foundDesigners.map(designerTile).join('')}</div>`) : ''}
+          ${foundCollections.length ? group('Coleções', `<div class="tiles" style="padding-bottom:0">${foundCollections.map(collectionTile).join('')}</div>`) : ''}`
+            : empty
+        }
+        ${any ? `<div style="margin-top:72px">${rule}<p class="meta" style="margin-bottom:16px">Estado sem resultado</p>${empty}</div>` : ''}
+      </div>`;
+    bindQuickAdd($('main'));
+  }
+
+  function renderLegalPage() {
+    const section = `<h2>${slot('Título da seção')}</h2><p>${slot('Texto jurídico cadastrado no painel pela Franccino')}</p>`;
+    $('main').innerHTML = `
+      <div class="wrap" style="padding-bottom:96px">
+        ${crumbs([['Política de privacidade']])}
+        ${pageHead({ title: 'Política de privacidade', lead: slot('Introdução cadastrada no painel') })}
+        <div class="prose">${section.repeat(3)}</div>
+        <div id="termos" style="margin-top:72px">
+          ${rule}
+          <p class="meta">Página sem texto publicado · /termos</p>
+          ${pageHead({ title: 'Termos de uso', level: 2 })}
+          <div class="empty"><p class="lead">O texto desta página ainda não foi publicado.</p></div>
+        </div>
+      </div>`;
+  }
+
+  function renderErrorPage() {
+    const actions = (first) => `<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">${first}</div>`;
+    $('main').innerHTML = `
+      <div class="wrap error-page">
+        <div class="empty">
+          <h1>Página não encontrada</h1>
+          <p class="lead">O conteúdo que você procura não existe ou foi movido.</p>
+          ${actions('<a class="btn" href="index.html">Voltar para a página inicial</a><a class="btn btn--ghost" href="catalogo.html?area=casa">Ver o catálogo</a>')}
+        </div>
+      </div>
+      <div class="wrap">${rule}<p class="meta">Erro no servidor (500)</p></div>
+      <div class="wrap error-page">
+        <div class="empty">
+          <h2>Algo deu errado</h2>
+          <p class="lead">Não foi possível concluir esta ação. Tente novamente.</p>
+          ${actions('<button class="btn" type="button" onclick="location.reload()">Tentar novamente</button><a class="btn btn--ghost" href="index.html">Voltar para a página inicial</a>')}
+        </div>
+      </div>`;
+  }
+
   renderChrome();
-  ({ home: renderHome, catalogo: renderCatalog, produto: renderProduct, sala: renderPlanner, lista: renderQuote })[page]?.();
+  ({
+    home: renderHome,
+    catalogo: renderCatalog,
+    produto: renderProduct,
+    sala: renderPlanner,
+    lista: renderQuote,
+    colecoes: renderCollectionsPage,
+    designers: renderDesignersPage,
+    projetos: renderProjectsPage,
+    fabrica: renderFactoryPage,
+    acabamentos: renderFinishesPage,
+    lojas: renderStoresPage,
+    downloads: renderDownloadsPage,
+    contato: renderContactPage,
+    busca: renderSearchPage,
+    legal: renderLegalPage,
+    erro: renderErrorPage,
+  })[page]?.();
 })();
