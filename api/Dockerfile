@@ -31,6 +31,8 @@ ENV APP_ENV=staging \
     LOG_CHANNEL=stderr \
     DB_CONNECTION=sqlite \
     DB_DATABASE=/app/storage/database.sqlite \
+    DB_BUSY_TIMEOUT=10000 \
+    DB_JOURNAL_MODE=wal \
     QUEUE_CONNECTION=database \
     SERVER_NAME=:80
 

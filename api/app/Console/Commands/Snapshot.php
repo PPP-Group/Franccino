@@ -135,8 +135,11 @@ class Snapshot extends Command
         $this->call('storage:link', ['--force' => true]);
 
         if (! ($manifest['with_conversions'] ?? false)) {
-            $this->info('Gerando as fotos redimensionadas (alguns minutos)...');
-            config(['queue.default' => 'sync', 'media-library.queue_connection_name' => 'sync']);
+            // With a queue worker the resized photos are made in the background while the site is already up;
+            // with QUEUE_CONNECTION=sync they are made here (about 20 minutes for the full catalog).
+            $this->info(config('queue.default') === 'sync'
+                ? 'Gerando as fotos redimensionadas (cerca de 20 minutos)...'
+                : 'Fotos redimensionadas na fila: o worker gera em segundo plano.');
             $this->call('media-library:regenerate', ['--only-missing' => true, '--force' => true]);
         }
 
