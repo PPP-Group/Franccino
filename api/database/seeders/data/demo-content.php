@@ -2750,7 +2750,7 @@ return [
             'description' => [
                 'pt' => '<p>Desenvolvida em meio a natureza e ao contemporâneo, a tradicionalidade, o simples e o jeitinho mineiro de levar a vida. Aquela áurea de calma interiorana e também de sossego. Sem deixar de lado as particularidades de pertencer a essa terra.</p><p>Desenvolvida em meio a natureza e ao contemporâneo, a tradicionalidade, o simples e o jeitinho mineiro de levar a vida. Aquela áurea de calma interiorana e também de sossego. Sem deixar de lado as particularidades de pertencer a essa terra. Sob as sombras que encobrem seu território brilha a cultura, ganhando vida pela arte contemporânea e cercado pelo Jardim Botânico reluz o Museu Inhotim.</p><p>O Museu Inhotim permite respiro, tranquilidade, encantamento e também descanso. Assim escolhemos a Coleção Gerais neste projeto, proporcionando conforto e requinte para o belo. Em meio a rotina e a agitação, encontrar paz e aconchego.</p><p>Minas é expressão, é o encurtamento das palavras, é a união de outras e o surgimento de novas formas.</p><p>Desenvolvida em meio a natureza e ao contemporâneo, a tradicionalidade, o simples e o jeitinho mineiro de levar a vida. Aquela áurea de calma interiorana e também de sossego.</p><p>Desenvolvida em meio a natureza e ao contemporâneo, a tradicionalidade, o simples e o jeitinho mineiro de levar a vida. Aquela áurea de calma interiorana e também de sossego.</p>',
             ],
-            'cover' => 'https://franccino.com.br/wp-content/uploads/2023/09/bt-voltar.png',
+            'cover' => 'https://franccino.com.br/wp-content/uploads/2025/03/Clara-Arte-scaled.webp',
             'legacy_wp_id' => 8106,
             'legacy_url' => 'https://franccino.com.br/cases/clara-resort/',
         ],
@@ -2768,7 +2768,7 @@ return [
             'description' => [
                 'pt' => '<p>A integração entre a Franccino e a Fazenda Boa Vista resulta em um ambiente de luxo e aconchego para os lares do empreendimento. Com móveis de alta qualidade e design exclusivo, a Franccino ajuda a criar espaços que oferecem conforto e elegância, alinhados ao conceito de equilíbrio e liberdade proposto pela JHSF. Cada peça foi cuidadosamente escolhida para se harmonizar com as exuberantes paisagens e áreas verdes ao redor, criando um ambiente acolhedor e funcional, onde as famílias podem aproveitar momentos de tranquilidade e convivência, sem perder a privacidade e o bem-estar.</p>',
             ],
-            'cover' => 'https://franccino.com.br/wp-content/uploads/2023/09/bt-voltar.png',
+            'cover' => 'https://franccino.com.br/wp-content/uploads/2025/03/Boa-Vista-2-scaled.webp',
             'legacy_wp_id' => 8105,
             'legacy_url' => 'https://franccino.com.br/cases/rascunho-automatico-2/',
         ],
@@ -2786,7 +2786,7 @@ return [
             'description' => [
                 'pt' => '<p>A parceria entre a Franccino e o Kûara Hotel traz um conceito único de design e conforto. Os móveis de luxo e a marcenaria assinada pela Franccino transformam o ambiente do hotel, criando uma atmosfera acolhedora e refinada única no Arraial d’Ajuda. Cada peça foi pensada para oferecer funcionalidade e estética, resultando em espaços que encantam os hóspedes com seu estilo contemporâneo e atenção aos detalhes. Onde a arquitetura orgânica e equilibrada cativa os seus sentidos e torna os momentos de confraternização únicos e leves.</p>',
             ],
-            'cover' => 'https://franccino.com.br/wp-content/uploads/2023/09/bt-voltar.png',
+            'cover' => 'https://franccino.com.br/wp-content/uploads/2025/03/Kuara-Foto-scaled.webp',
             'legacy_wp_id' => 8104,
             'legacy_url' => 'https://franccino.com.br/cases/rascunho-automatico/',
         ],
