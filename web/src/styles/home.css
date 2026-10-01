@@ -370,3 +370,79 @@
   color: inherit;
   text-decoration: none;
 }
+
+/* ---------- carrossel do hero (PPP-107) ---------- */
+
+.hero-carousel {
+  position: relative;
+}
+
+.hero-carousel__slide[hidden] {
+  display: none;
+}
+
+.hero-carousel__controls {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--paper);
+  padding: 4px;
+}
+
+.hero-carousel__button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.hero-carousel__button:hover,
+.hero-carousel__button:focus-visible {
+  background: var(--stone);
+}
+
+.hero-carousel__button--previous .icon {
+  transform: scaleX(-1);
+}
+
+.hero-carousel__dots {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-carousel__dot {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hero-carousel__dot::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--ink);
+}
+
+.hero-carousel__dot[aria-current='true']::before {
+  background: var(--ink);
+}
+
+@media (max-width: 47.99rem) {
+  .hero-carousel__controls {
+    top: calc(var(--header) + 12px);
+    bottom: auto;
+  }
+}

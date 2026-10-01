@@ -448,7 +448,18 @@
       "fallbackTitle": "Móveis de design autoral",
       "catalog": "Ver o catálogo",
       "planner": "Montar uma sala",
-      "designers": "{count, plural, one {# designer} other {# designers}}"
+      "designers": "{count, plural, one {# designer} other {# designers}}",
+      "carousel": {
+        "label": "Destaques",
+        "roleDescription": "carrossel",
+        "slideRoleDescription": "destaque",
+        "slide": "{current} de {total}",
+        "goTo": "Ir para o destaque {current} de {total}",
+        "previous": "Destaque anterior",
+        "next": "Próximo destaque",
+        "pause": "Pausar a troca automática",
+        "play": "Retomar a troca automática"
+      }
     },
     "launches": {
       "title": "Lançamentos",

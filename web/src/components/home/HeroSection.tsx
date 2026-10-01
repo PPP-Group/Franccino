@@ -5,30 +5,39 @@ import { Link } from '@/i18n/navigation';
 import type { Banner } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 
-type HeroSectionProps = { banner: Banner | null; brandNames: string[]; designerCount: number };
+type HeroSectionProps = {
+  banner: Banner | null;
+  brandNames: string[];
+  designerCount: number;
+  /** Posição no carrossel: só o primeiro slide tem `h1` e imagem com prioridade (LCP). */
+  index?: number;
+};
 
 /**
  * Hero do primeiro banner. Todos os campos do banner podem vir `null` (R19): sem imagem de desktop
  * vira a placa sem foto, e texto ausente não é inventado (o título cai no `fallbackTitle` da placa).
  */
-export function HeroSection({ banner, brandNames, designerCount }: HeroSectionProps) {
+export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
   const hasMeta = brandNames.length > 0 || designerCount > 0;
+  const first = index === 0;
+  const titleId = first ? 'hero-title' : `hero-title-${index + 1}`;
+  const Heading = first ? 'h1' : 'h2';
   return (
-    <section className={photo ? 'hero' : 'hero hero--plain'} aria-labelledby="hero-title">
+    <section className={photo ? 'hero' : 'hero hero--plain'} aria-labelledby={titleId}>
       {photo ? (
         <picture className="hero__picture">
           {banner?.image_mobile ? (
             <source media="(max-width: 47.99rem)" srcSet={buildSrcSet(banner.image_mobile)} sizes="100vw" />
           ) : null}
-          <ApiImage image={photo} sizes="100vw" priority className="hero__img" />
+          <ApiImage image={photo} sizes="100vw" priority={first} className="hero__img" />
         </picture>
       ) : null}
       <div className="hero__plate">
-        <h1 className="display" id="hero-title">
+        <Heading className="display" id={titleId}>
           {banner?.title ?? t('fallbackTitle')}
-        </h1>
+        </Heading>
         {banner?.subtitle ? <p className="lead">{banner.subtitle}</p> : null}
         <div className="hero__actions">
           {banner?.cta_label && banner.cta_url ? (

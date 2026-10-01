@@ -67,6 +67,8 @@ const PATHS = {
       <path d="m7 13 2 2M10 10l2 2M13 7l2 2" />
     </>
   ),
+  pause: <path d="M9 5v14M15 5v14" />,
+  play: <path d="M7 5v14l11-7Z" />,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof PATHS;

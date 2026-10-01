@@ -448,7 +448,18 @@
       "fallbackTitle": "Authorial design furniture",
       "catalog": "See the catalogue",
       "planner": "Plan a room",
-      "designers": "{count, plural, one {# designer} other {# designers}}"
+      "designers": "{count, plural, one {# designer} other {# designers}}",
+      "carousel": {
+        "label": "Highlights",
+        "roleDescription": "carousel",
+        "slideRoleDescription": "highlight",
+        "slide": "{current} of {total}",
+        "goTo": "Go to highlight {current} of {total}",
+        "previous": "Previous highlight",
+        "next": "Next highlight",
+        "pause": "Pause automatic rotation",
+        "play": "Resume automatic rotation"
+      }
     },
     "launches": {
       "title": "Novelties",

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { DesignersSection } from '@/components/home/DesignersSection';
 import { FactorySection } from '@/components/home/FactorySection';
 import { FeatureSection } from '@/components/home/FeatureSection';
+import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { HeroSection } from '@/components/home/HeroSection';
 import { LaunchesSection } from '@/components/home/LaunchesSection';
 import { LinesSection } from '@/components/home/LinesSection';
@@ -57,14 +58,29 @@ export default async function HomePage({ params }: Props) {
     ),
   ]);
   const feature = featured[0] ?? null;
+  const brandNames = areas.map((area) => area.brand_name);
 
   return (
     <main>
-      <HeroSection
-        banner={home.banners[0] ?? null}
-        brandNames={areas.map((area) => area.brand_name)}
-        designerCount={designers.length}
-      />
+      {home.banners.length > 1 ? (
+        <HeroCarousel>
+          {home.banners.map((banner, index) => (
+            <HeroSection
+              key={index}
+              index={index}
+              banner={banner}
+              brandNames={brandNames}
+              designerCount={designers.length}
+            />
+          ))}
+        </HeroCarousel>
+      ) : (
+        <HeroSection
+          banner={home.banners[0] ?? null}
+          brandNames={brandNames}
+          designerCount={designers.length}
+        />
+      )}
       {launch && launchPage.data.length > 0 ? (
         <LaunchesSection launch={launch} products={launchPage.data} />
       ) : null}
