@@ -1,84 +1,52 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { PageHead } from '@/components/layout/PageHead';
+import { StoreFinder } from '@/components/stores/StoreFinder';
 import type { Locale } from '@/i18n/config';
-import { Link } from '@/i18n/navigation';
-import { getStores, type StoreList } from '@/lib/api/content';
-import { isValidationError } from '@/lib/api/errors';
-import { firstValue, type RawSearchParams } from '@/lib/api/listing-params';
+import { getPage, getStores } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-const EMPTY_STORE_LIST: StoreList = { stores: [], states: [] };
+type Props = { params: Promise<{ locale: string }> };
 
-type StoresPageProps = {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<RawSearchParams>;
-};
-
-export async function generateMetadata({ params }: StoresPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.stores' });
-
-  return buildMetadata({ locale: locale as Locale, href: '/stores', title: t('title') });
+  const [t, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'storesPage' }),
+    getPage(locale as Locale, 'stores'),
+  ]);
+  return buildMetadata({
+    locale: locale as Locale,
+    href: { pathname: '/stores' },
+    title: page?.seo.title ?? page?.title ?? t('title'),
+    description: page?.seo.description ?? page?.intro,
+    image: page?.seo.image ?? page?.cover,
+  });
 }
 
-export default async function StoresPage({ params, searchParams }: StoresPageProps) {
-  const { locale } = await params;
+export default async function StoresPage({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const t = await getTranslations('pages.stores');
-  const tStores = await getTranslations('stores');
-  const state = firstValue((await searchParams).state);
-
-  let storeList: StoreList;
-  try {
-    storeList = await getStores(locale as Locale, { state });
-  } catch (error) {
-    if (!isValidationError(error)) {
-      throw error;
-    }
-    storeList = EMPTY_STORE_LIST;
-  }
-  const { stores, states } = storeList;
-
+  const [t, common, page, list] = await Promise.all([
+    getTranslations({ locale, namespace: 'storesPage' }),
+    getTranslations({ locale, namespace: 'common' }),
+    getPage(locale, 'stores'),
+    getStores(locale),
+  ]);
   return (
-    <main id="main-content">
-      <h1>{t('title')}</h1>
-
-      {states.length > 0 && (
-        <nav aria-label={tStores('stateFilter')}>
-          <ul>
-            <li>
-              <Link href="/stores">{tStores('allStates')}</Link>
-            </li>
-            {states.map((uf) => (
-              <li key={uf}>
-                <Link href={{ pathname: '/stores', query: { state: uf } }}>{uf}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
-
-      {stores.length === 0 ? (
-        <p>{tStores('empty')}</p>
+    <main className="wrap">
+      <PageHead
+        title={page?.title ?? t('title')}
+        lead={page?.intro}
+        meta={<p className="meta num">{t('count', { count: list.stores.length })}</p>}
+      />
+      {list.stores.length === 0 ? (
+        <EmptyNotice text={common('nothingYet')} />
       ) : (
-        <ul>
-          {stores.map((store) => {
-            const cityState = [store.city, store.state].filter(Boolean).join(', ');
-            return (
-              <li key={store.id}>
-                <address>
-                  <p>{store.name}</p>
-                  <p>{store.address}</p>
-                  <p>{cityState}</p>
-                  {store.phone && <a href={`tel:${store.phone}`}>{store.phone}</a>}
-                  {store.email && <a href={`mailto:${store.email}`}>{store.email}</a>}
-                  {store.website_url && <a href={store.website_url}>{store.website_url}</a>}
-                </address>
-              </li>
-            );
-          })}
-        </ul>
+        <section className="section section--tight" aria-label={t('title')}>
+          <StoreFinder stores={list.stores} states={list.states} allStates typeFilter detailed />
+        </section>
       )}
     </main>
   );

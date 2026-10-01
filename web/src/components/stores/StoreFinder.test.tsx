@@ -42,4 +42,31 @@ describe('StoreFinder', () => {
     expect(html).toContain('href="tel:+5531997469821"');
     expect(html).toContain('Loja exclusiva');
   });
+
+  it('starts with every state and shows contact details on the stores page', () => {
+    const html = renderWithIntl(
+      <StoreFinder
+        stores={[
+          store({
+            whatsapp: '5531997469821',
+            email: 'bh@franccino.com.br',
+            opening_hours: 'Seg a sex, 9h às 18h',
+          }),
+          store({ id: 2, name: 'Grupo Robusti', type: 'reseller', state: 'SP' }),
+        ]}
+        states={['MG', 'SP']}
+        allStates
+        typeFilter
+        detailed
+      />,
+    );
+    expect(html).toContain('Franccino Lourdes');
+    expect(html).toContain('Grupo Robusti');
+    expect(html).toContain('aria-pressed="true">Todos os estados</button>');
+    expect(html).toContain('>Revenda</button>');
+    expect(html).toContain('href="https://wa.me/5531997469821"');
+    expect(html).toContain('href="mailto:bh@franccino.com.br"');
+    expect(html).toContain('https://www.google.com/maps/search/?api=1&amp;query=');
+    expect(html).toContain('Seg a sex, 9h às 18h');
+  });
 });

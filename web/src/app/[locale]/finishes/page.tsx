@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';

@@ -334,6 +334,12 @@
     "gallery": "Gallery"
   },
   "stores": {
+    "typeFilter": "Store type",
+    "allTypes": "All types",
+    "whatsapp": "WhatsApp",
+    "website": "Store website",
+    "instagram": "Instagram",
+    "map": "View on map",
     "stateFilter": "State",
     "allStates": "All states",
     "empty": "No stores found.",
@@ -547,5 +553,9 @@
   "finishes": {
     "title": "Finishes",
     "count": "{count, plural, one {# finish} other {# finishes}}"
+  },
+  "storesPage": {
+    "title": "Stores",
+    "count": "{count, plural, one {# store} other {# stores}}"
   }
 }

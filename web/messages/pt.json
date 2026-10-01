@@ -334,6 +334,12 @@
     "gallery": "Galeria"
   },
   "stores": {
+    "typeFilter": "Tipo de loja",
+    "allTypes": "Todos os tipos",
+    "whatsapp": "WhatsApp",
+    "website": "Site da loja",
+    "instagram": "Instagram",
+    "map": "Ver no mapa",
     "stateFilter": "Estado",
     "allStates": "Todos os estados",
     "empty": "Nenhuma loja encontrada.",
@@ -547,5 +553,9 @@
   "finishes": {
     "title": "Acabamentos",
     "count": "{count, plural, one {# acabamento} other {# acabamentos}}"
+  },
+  "storesPage": {
+    "title": "Lojas",
+    "count": "{count, plural, one {# loja} other {# lojas}}"
   }
 }
