@@ -389,6 +389,24 @@
     "diameter": "Ø"
   },
   "downloads": {
+    "title": "Downloads",
+    "count": "{count, plural, one {# peça com arquivos} other {# peças com arquivos}}",
+    "empty": "Nenhuma peça com arquivos para estes filtros.",
+    "pagination": "Páginas de downloads",
+    "filters": {
+      "area": "Linha",
+      "allAreas": "Todas as linhas",
+      "search": "Buscar peça",
+      "submit": "Filtrar"
+    },
+    "table": {
+      "label": "Arquivos técnicos por peça",
+      "caption": "Peças e arquivos técnicos para download",
+      "image": "Imagem",
+      "piece": "Peça",
+      "area": "Linha",
+      "files": "Arquivos"
+    },
     "linkLabel": "Baixar {title} ({format})",
     "formatAndSize": "{format} · {size}",
     "failed": "Não foi possível gerar o link agora. Tente de novo.",

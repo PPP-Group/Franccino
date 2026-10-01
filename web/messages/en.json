@@ -389,6 +389,24 @@
     "diameter": "Ø"
   },
   "downloads": {
+    "title": "Downloads",
+    "count": "{count, plural, one {# piece with files} other {# pieces with files}}",
+    "empty": "No pieces with files for these filters.",
+    "pagination": "Download pages",
+    "filters": {
+      "area": "Line",
+      "allAreas": "All lines",
+      "search": "Find a piece",
+      "submit": "Filter"
+    },
+    "table": {
+      "label": "Technical files by piece",
+      "caption": "Pieces and technical files to download",
+      "image": "Image",
+      "piece": "Piece",
+      "area": "Line",
+      "files": "Files"
+    },
     "linkLabel": "Download {title} ({format})",
     "formatAndSize": "{format} · {size}",
     "failed": "We could not create the link right now. Please try again.",
