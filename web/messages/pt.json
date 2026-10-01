@@ -27,6 +27,7 @@
     "technical": "Área técnica"
   },
   "footer": {
+    "cookies": "Política de cookies",
     "siteMap": "Mapa do site",
     "privacy": "Privacidade",
     "terms": "Termos de uso",
@@ -566,6 +567,7 @@
     }
   },
   "legal": {
+    "cookies": "Política de cookies",
     "privacy": "Política de privacidade",
     "terms": "Termos de uso",
     "pending": "O texto desta página ainda não foi publicado."
@@ -581,5 +583,13 @@
     "description": "Todas as páginas do site da Franccino em um só lugar.",
     "pages": "Páginas",
     "home": "Início"
+  },
+  "consent": {
+    "title": "Cookies",
+    "body": "Usamos cookies de análise para entender como o site é usado. Você escolhe.",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "policy": "Política de cookies",
+    "privacy": "Política de privacidade"
   }
 }

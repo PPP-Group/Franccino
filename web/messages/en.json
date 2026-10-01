@@ -27,6 +27,7 @@
     "technical": "Technical area"
   },
   "footer": {
+    "cookies": "Cookie policy",
     "siteMap": "Site map",
     "privacy": "Privacy",
     "terms": "Terms of use",
@@ -566,6 +567,7 @@
     }
   },
   "legal": {
+    "cookies": "Cookie policy",
     "privacy": "Privacy policy",
     "terms": "Terms of use",
     "pending": "This page's text has not been published yet."
@@ -581,5 +583,13 @@
     "description": "Every page of the Franccino website in one place.",
     "pages": "Pages",
     "home": "Home"
+  },
+  "consent": {
+    "title": "Cookies",
+    "body": "We use analytics cookies to understand how the site is used. It's your choice.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "policy": "Cookie policy",
+    "privacy": "Privacy policy"
   }
 }

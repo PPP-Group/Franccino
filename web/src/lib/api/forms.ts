@@ -52,6 +52,13 @@ export type NewsletterPayload = {
   turnstile_token?: string;
 };
 
+export type ConsentPayload = {
+  visitor_id: string;
+  choice: 'granted' | 'denied';
+  policy_version: string;
+  locale: Locale;
+};
+
 export type FormResult =
   { ok: true } | { ok: false; status: number; fieldErrors: Record<string, string>; message?: string };
 
@@ -124,6 +131,12 @@ export async function submitContact(payload: ContactPayload): Promise<FormResult
  */
 export async function subscribeNewsletter(payload: NewsletterPayload): Promise<FormResult> {
   const response = await postJson('/newsletter', payload);
+  return toFormResult(response);
+}
+
+/** `POST /consents` (registro do aceite de cookies). `201` on success. */
+export async function recordConsent(payload: ConsentPayload): Promise<FormResult> {
+  const response = await postJson('/consents', payload);
   return toFormResult(response);
 }
 

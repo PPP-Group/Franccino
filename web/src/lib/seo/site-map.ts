@@ -23,4 +23,5 @@ export const SITE_MAP_PAGES = [
   { key: 'contact', namespace: 'nav', href: '/contact' },
   { key: 'privacy', namespace: 'footer', href: '/privacy' },
   { key: 'terms', namespace: 'footer', href: '/terms' },
+  { key: 'cookies', namespace: 'footer', href: '/cookies' },
 ] as const satisfies { key: string; namespace: 'nav' | 'footer' | 'siteMap'; href: AppHref }[];

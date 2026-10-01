@@ -347,3 +347,54 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+/* ---------- aviso de cookies (PPP-81, P5b T7) ---------- */
+
+.consent-banner {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding: 20px var(--gutter);
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+}
+
+.consent-banner__copy {
+  display: grid;
+  gap: 6px;
+  max-width: 72ch;
+}
+
+.consent-banner__title {
+  font-size: 1rem;
+}
+
+.consent-banner__copy a {
+  text-decoration: underline;
+}
+
+.consent-banner__actions {
+  display: flex;
+  gap: 12px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .consent-banner {
+    animation: consent-in var(--t-mid) var(--ease-out) both;
+  }
+}
+
+@keyframes consent-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

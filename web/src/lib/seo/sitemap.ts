@@ -29,6 +29,7 @@ const PAGE_ROUTES: Record<string, Href> = {
   contact: { pathname: '/contact' },
   privacy: { pathname: '/privacy' },
   terms: { pathname: '/terms' },
+  cookies: { pathname: '/cookies' },
 };
 
 /** The `Href` for `entry` in a given locale's `slug`, or `null` when the type/slug can't be routed. */

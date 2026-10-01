@@ -115,6 +115,9 @@ export function SiteFooter({ settings }: { settings: Settings }) {
               <Link href="/terms">{t('terms')}</Link>
             </li>
             <li>
+              <Link href="/cookies">{t('cookies')}</Link>
+            </li>
+            <li>
               <Link href="/site-map">{t('siteMap')}</Link>
             </li>
             {settings.footer_documents.map((document) => (

@@ -45,6 +45,8 @@ const publicSchema = z.object({
   NEXT_PUBLIC_API_URL: z.url(),
   NEXT_PUBLIC_SITE_LOCALES: localesSchema,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: optionalString(),
+  /** Google Tag Manager (opcional): sem ele não há o que consentir e o aviso de cookies não aparece. */
+  NEXT_PUBLIC_GTM_ID: optionalString(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
@@ -74,6 +76,7 @@ export function getPublicEnv(): PublicEnv {
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
       NEXT_PUBLIC_SITE_LOCALES: process.env.NEXT_PUBLIC_SITE_LOCALES,
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+      NEXT_PUBLIC_GTM_ID: process.env.NEXT_PUBLIC_GTM_ID,
     });
   }
   return cachedPublicEnv;
