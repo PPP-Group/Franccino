@@ -103,8 +103,9 @@ Desde 2026-10-01 o repositório tem só duas branches, como combinado no início
 Em 2026-10-01, a pedido do responsável pelo projeto, a branch de trabalho `claude/awesome-keller-iv02zw` (que já
 integrava os PRs #9 a #13 por cherry-pick, mais a P5a T2–T11 e os adiantamentos da seção 4.5) entrou em `develop`
 e `main` por fast-forward, com push direto. Antes disso: suíte da API verde em SQLite e em MySQL 8.4 (como o CI),
-Pint, Larastan, e lint, typecheck, testes e build do site. As branches de feature e as do Dependabot foram
-apagadas; os PRs #1 a #13 fecharam junto. Todo o conteúdo dos PRs #9 a #13 já estava na `develop` (conferido com
+Pint, Larastan, e lint, typecheck, testes e build do site. Os PRs #1 a #13 foram fechados. As branches antigas (`feature/*`,
+`dependabot/*` e `claude/awesome-keller-iv02zw`) ainda precisam ser apagadas por quem tem permissão no GitHub (a
+sessão automática não tem permissão para apagar branch). Todo o conteúdo dos PRs #9 a #13 já estava na `develop` (conferido com
 `git cherry`). As atualizações de dependência do Dependabot (#1 a #8) não entraram: o Dependabot volta a abrir
 as que ainda fizerem sentido, e dependência nova continua dependendo de aprovação do tech lead.
 
