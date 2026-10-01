@@ -594,5 +594,11 @@
     "privacy": "Privacy policy",
     "terms": "Terms of use",
     "pending": "This page's text has not been published yet."
+  },
+  "searchPage": {
+    "title": "Search",
+    "products": "Pieces",
+    "designers": "Designers",
+    "collections": "Collections"
   }
 }

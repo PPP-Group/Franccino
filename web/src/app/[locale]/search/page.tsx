@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ApiImage } from '@/components/media/ApiImage';
+import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { Tile } from '@/components/content/Tile';
+import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
-import { Link } from '@/i18n/navigation';
 import { search } from '@/lib/api/catalog';
 import { isValidationError } from '@/lib/api/errors';
 import { firstValue, type RawSearchParams } from '@/lib/api/listing-params';
@@ -18,24 +20,26 @@ type SearchPageProps = {
 
 export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.search' });
+  const t = await getTranslations({ locale, namespace: 'searchPage' });
 
   return buildMetadata({ locale: locale as Locale, href: '/search', title: t('title'), noindex: true });
 }
 
 export default async function SearchPage({ params, searchParams }: SearchPageProps) {
-  const { locale } = await params;
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
 
-  const t = await getTranslations('pages.search');
-  const tSearch = await getTranslations('search');
-  const tSections = await getTranslations('sections');
+  const [t, tSearch] = await Promise.all([
+    getTranslations({ locale, namespace: 'searchPage' }),
+    getTranslations({ locale, namespace: 'search' }),
+  ]);
   const query = (firstValue((await searchParams).q) ?? '').trim();
 
   let results: SearchResult | null = null;
   if (query.length >= 2) {
     try {
-      results = await search(locale as Locale, query);
+      results = await search(locale, query);
     } catch (error) {
       if (!isValidationError(error)) {
         throw error;
@@ -43,82 +47,86 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
       results = EMPTY_RESULT;
     }
   }
+  const total = results ? results.products.length + results.designers.length + results.collections.length : 0;
 
   return (
-    <main id="main-content">
-      <h1>{t('title')}</h1>
-
-      <form>
-        <label htmlFor="search-q">{tSearch('label')}</label>
-        <input
-          id="search-q"
-          name="q"
-          type="search"
-          defaultValue={query}
-          placeholder={tSearch('placeholder')}
-        />
-        <button type="submit">{tSearch('submit')}</button>
+    <main className="wrap">
+      <PageHead title={t('title')} />
+      <form className="search-form" role="search">
+        <div className="field">
+          <label htmlFor="search-q">{tSearch('label')}</label>
+          <input
+            id="search-q"
+            name="q"
+            type="search"
+            defaultValue={query}
+            placeholder={tSearch('placeholder')}
+          />
+        </div>
+        <button className="btn" type="submit">
+          {tSearch('submit')}
+        </button>
       </form>
-
-      {results && (
+      {results ? (
         <>
-          <p>{tSearch('resultsFor', { query })}</p>
-
-          {results.products.length === 0 &&
-          results.designers.length === 0 &&
-          results.collections.length === 0 ? (
-            <p>{tSearch('noResults')}</p>
+          <p className="meta" role="status">
+            {tSearch('resultsFor', { query })}
+          </p>
+          {total === 0 ? (
+            <EmptyNotice text={tSearch('noResults')} />
           ) : (
             <>
-              {results.products.length > 0 && (
-                <section>
-                  <h2>{tSections('products')}</h2>
-                  <ul>
-                    {results.products.map((product) => (
-                      <li key={product.id}>
-                        <Link href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}>
-                          <ApiImage image={product.cover} sizes="(min-width: 768px) 25vw, 50vw" />
-                          <span>{product.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+              {results.products.length > 0 ? (
+                <section className="result-group" aria-labelledby="results-products">
+                  <h2 id="results-products" className="section-title">
+                    {t('products')}
+                  </h2>
+                  <ProductGrid products={results.products} />
                 </section>
-              )}
-
-              {results.designers.length > 0 && (
-                <section>
-                  <h2>{tSections('designers')}</h2>
-                  <ul>
+              ) : null}
+              {results.designers.length > 0 ? (
+                <section className="result-group" aria-labelledby="results-designers">
+                  <h2 id="results-designers" className="section-title">
+                    {t('designers')}
+                  </h2>
+                  <div className="tiles tiles--four">
                     {results.designers.map((designer) => (
-                      <li key={designer.id}>
-                        <Link href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}>
-                          {designer.name}
-                        </Link>
-                      </li>
+                      <Tile
+                        key={designer.id}
+                        portrait
+                        headingLevel="h3"
+                        href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+                        title={designer.name}
+                        image={designer.portrait}
+                        text={designer.short_bio}
+                      />
                     ))}
-                  </ul>
+                  </div>
                 </section>
-              )}
-
-              {results.collections.length > 0 && (
-                <section>
-                  <h2>{tSections('collections')}</h2>
-                  <ul>
+              ) : null}
+              {results.collections.length > 0 ? (
+                <section className="result-group" aria-labelledby="results-collections">
+                  <h2 id="results-collections" className="section-title">
+                    {t('collections')}
+                  </h2>
+                  <div className="tiles">
                     {results.collections.map((collection) => (
-                      <li key={collection.id}>
-                        <Link href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}>
-                          {collection.name}
-                        </Link>
-                      </li>
+                      <Tile
+                        key={collection.id}
+                        headingLevel="h3"
+                        href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}
+                        title={collection.name}
+                        image={collection.cover}
+                        text={collection.summary}
+                      />
                     ))}
-                  </ul>
+                  </div>
                 </section>
-              )}
+              ) : null}
             </>
           )}
         </>
-      )}
+      ) : null}
     </main>
   );
 }
