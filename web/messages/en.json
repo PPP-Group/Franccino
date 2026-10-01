@@ -508,5 +508,14 @@
     "designers": "Design",
     "gallery": "Collection images",
     "piecesTitle": "Pieces in the collection"
+  },
+  "designers": {
+    "title": "Designers",
+    "description": "Designers and studios who sign pieces with Franccino.",
+    "count": "{count, plural, one {# designer} other {# designers}}",
+    "website": "Website",
+    "instagram": "Instagram",
+    "collections": "Designer's collections",
+    "piecesTitle": "Pieces by this designer"
   }
 }

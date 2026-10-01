@@ -1,46 +1,59 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ApiImage } from '@/components/media/ApiImage';
+import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { Tile } from '@/components/content/Tile';
+import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
-import { Link } from '@/i18n/navigation';
 import { getDesigners } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-type DesignersPageProps = {
-  params: Promise<{ locale: string }>;
-};
+type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: DesignersPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.designers' });
-
-  return buildMetadata({ locale: locale as Locale, href: '/designers', title: t('title') });
+  const t = await getTranslations({ locale, namespace: 'designers' });
+  return buildMetadata({
+    locale: locale as Locale,
+    href: { pathname: '/designers' },
+    title: t('title'),
+    description: t('description'),
+  });
 }
 
-export default async function DesignersPage({ params }: DesignersPageProps) {
-  const { locale } = await params;
+export default async function DesignersPage({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const t = await getTranslations('pages.designers');
-  const tCatalog = await getTranslations('catalog');
-  const designers = await getDesigners(locale as Locale);
-
+  const [t, common, designers] = await Promise.all([
+    getTranslations({ locale, namespace: 'designers' }),
+    getTranslations({ locale, namespace: 'common' }),
+    getDesigners(locale),
+  ]);
   return (
-    <main id="main-content">
-      <h1>{t('title')}</h1>
+    <main className="wrap">
+      <PageHead
+        title={t('title')}
+        lead={t('description')}
+        meta={<p className="meta num">{t('count', { count: designers.length })}</p>}
+      />
       {designers.length === 0 ? (
-        <p>{tCatalog('empty')}</p>
+        <EmptyNotice text={common('nothingYet')} />
       ) : (
-        <ul>
-          {designers.map((designer) => (
-            <li key={designer.id}>
-              <Link href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}>
-                <ApiImage image={designer.portrait} sizes="(min-width: 768px) 25vw, 50vw" />
-                <span>{designer.name}</span>
-              </Link>
-            </li>
+        <div className="tiles tiles--four">
+          {designers.map((designer, index) => (
+            <Tile
+              key={designer.id}
+              href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+              title={designer.name}
+              image={designer.portrait}
+              meta={designer.location ? [designer.location] : []}
+              text={designer.short_bio}
+              portrait
+              priority={index < 4}
+              sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 25vw"
+            />
           ))}
-        </ul>
+        </div>
       )}
     </main>
   );
