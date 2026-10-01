@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-09-29. Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-10-01. Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -11,19 +11,19 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 
 ## 1. Resumo
 
-| Item            | Situação                                                                                           |
-| --------------- | -------------------------------------------------------------------------------------------------- |
-| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                   |
-| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4 |
-| P1 Fundação     | **Concluída**                                                                                      |
-| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)         |
-| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                        |
-| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                         |
-| P5a Páginas     | Plano em revisão (PR #11); Task 1 (telas no protótipo) pronta no PR #13, aguardando aprovação B1   |
-| P5b Go-live     | Plano escrito, em revisão (PR #12): migração, redirects, cookies/analytics, infra, QA, go-live     |
-| PRs abertos     | #9 (API), #10 (site), #11 e #12 (planos), #13 (telas, rascunho), todos aguardando o tech lead      |
-| Testes          | API: 215 testes Pest verdes · Web: 231 testes Vitest verdes                                        |
-| Rodando         | `develop` sobe com banco vazio; nas branches de feature o `db:seed` local traz a demonstração      |
+| Item            | Situação                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                        |
+| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4      |
+| P1 Fundação     | **Concluída**                                                                                           |
+| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)              |
+| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                             |
+| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                              |
+| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5)     |
+| P5b Go-live     | T4 (importador do WordPress) e T7 (cookies) executadas; o resto depende de contas (seção 7)             |
+| PRs abertos     | #9–#13 aguardando o tech lead; a branch `claude/awesome-keller-iv02zw` integra todos e ainda não tem PR |
+| Testes          | API: 265 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`)     |
+| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)                 |
 
 ---
 
@@ -93,16 +93,17 @@ quebradas.
 
 ## 3. Branches
 
-| Branch                     | Conteúdo                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `main`                     | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado |
-| `develop`                  | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**   |
-| `feature/fundacao-projeto` | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                           |
-| `feature/fundacao-api`     | P2 até a T14 (`77412ed`). PR #9 para `develop`                                        |
-| `feature/fundacao-web`     | P3 + P4 completas, com a revisão final. PR #10 para `develop`                         |
-| `feature/p5a-plano`        | Plano da P5a e ledger da fase (só documentação). PR #11 para `develop`                |
-| `feature/p5b-plano`        | Plano da P5b e ledger da fase (só documentação). PR #12 para `develop`                |
-| `feature/p5a-prototipo`    | P5a Task 1: telas no protótipo. PR #13 (rascunho) sobre `feature/p5a-plano`           |
+| Branch                         | Conteúdo                                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `main`                         | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado              |
+| `develop`                      | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**                |
+| `feature/fundacao-projeto`     | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                                        |
+| `feature/fundacao-api`         | P2 até a T14 (`77412ed`). PR #9 para `develop`                                                     |
+| `feature/fundacao-web`         | P3 + P4 completas, com a revisão final. PR #10 para `develop`                                      |
+| `feature/p5a-plano`            | Plano da P5a e ledger da fase (só documentação). PR #11 para `develop`                             |
+| `feature/p5b-plano`            | Plano da P5b e ledger da fase (só documentação). PR #12 para `develop`                             |
+| `feature/p5a-prototipo`        | P5a Task 1: telas no protótipo. PR #13 (rascunho) sobre `feature/p5a-plano`                        |
+| `claude/awesome-keller-iv02zw` | `develop` + #9–#13 integrados + P5a T2–T11 + adiantamentos de 2026-10-01 (seção 4.5). Sem PR ainda |
 
 Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
 direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
@@ -183,11 +184,44 @@ Plano: [`plans/2026-09-24-p4-web-paginas.md`](plans/2026-09-24-p4-web-paginas.md
 | T12    | Página da lista de orçamento e verificação final                                 |
 | Final  | Revisão da branch: páginas voltaram a ser estáticas (R24), menu no tablet        |
 
+### 4.5 P5a, P5b e adiantamentos de contrato (2026-10-01)
+
+Feitos na branch `claude/awesome-keller-iv02zw`, a pedido do product owner, para adiantar o projeto e gerar a
+prévia do cliente. A branch parte de `develop` e traz por cherry-pick os PRs #9 a #13; cada item abaixo é um
+commit com testes. **As Tasks 2–11 da P5a foram executadas antes da aprovação B1 das telas**: se a Franccino pedir
+ajustes, eles entram por cima.
+
+| Item                                         | Entrega                                                                                                                                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P5a T2–T11                                   | Páginas restantes no design system: coleções, designers, projetos, corporativo, fábrica, acabamentos, lojas, downloads, contato, privacidade, termos, busca, erros                                            |
+| Carrossel da home                            | Banner principal vira carrossel (pausa, setas, pontos, respeita `prefers-reduced-motion`)                                                                                                                     |
+| Mapa do site (PPP-110)                       | `/pt/mapa-do-site` e `/en/site-map`, link no rodapé                                                                                                                                                           |
+| Cookies (PPP-81, P5b T7)                     | `POST /consents`, tabela `consent_records`, aviso com GTM só após aceite, página de política                                                                                                                  |
+| Lojas (PPP-108)                              | Foto e descrição por loja no painel, na API e na página                                                                                                                                                       |
+| Vídeos e links (PPP-106)                     | `media_links` em produto, designer e lançamento; player só carrega no clique                                                                                                                                  |
+| Downloads de designer e lançamento (PPP-109) | `product_files` com dono peça, designer ou lançamento; tipos catálogo e apresentação                                                                                                                          |
+| Perfis e registro de atividades (PPP-54)     | Perfil `support` (Atendimento, só consulta) e `activity_logs` (visível só para admin)                                                                                                                         |
+| Importador do WordPress (P5b T4, PPP-58)     | `php artisan franccino:wordpress:import` (ver abaixo)                                                                                                                                                         |
+| Correções                                    | Build quebrava em projetos (`per_page` acima de 48); listeners rodavam duas vezes (descoberta automática); capas dos projetos de demonstração eram o ícone de "voltar"; vídeos e links não revalidavam o site |
+
+**Importador do WordPress.** `php artisan franccino:wordpress:import {--only=*} {--dry-run} {--without-media}
+{--publish} {--limit=}`. Lê a API REST do site atual e o HTML de cada página de produto (galeria, medidas,
+materiais, designer). Idempotente por `legacy_wp_id`; só preenche campo vazio (edição do painel nunca é
+sobrescrita); tudo entra como rascunho, exceto com `--publish` (recusado em produção). Também copia o texto das
+páginas institucional (Fábrica, com a linha do tempo), privacidade e termos. Gera o relatório de lacunas em
+`storage/app/migration/relatorio-AAAA-MM-DD.md`. Execução local de 2026-10-01: 388 de 400 produtos (12 sem área ou
+categoria no WordPress), 386 com fotos, 228 linhas, 14 categorias novas, 3 páginas. Nenhum produto do WordPress
+tem descrição; 129 têm medida configurável e 53 têm medida que o parser não leu (ficam no relatório).
+
+**Prévia para o cliente.** PDF com 22 páginas (computador e celular) gerado a partir do ambiente local com o
+catálogo importado. Fotos de capa de Casa, Giardini, Fábrica e do lançamento foram escolhidas no banco local
+(no staging, pelo painel).
+
 ---
 
 ## 5. Em andamento
 
-Nada em andamento: o trabalho que dá para fazer sem aprovação está feito. Tudo abaixo espera decisão.
+A branch `claude/awesome-keller-iv02zw` (seção 4.5) espera PR para `develop`. O resto abaixo espera decisão.
 
 ### 5.1 PRs abertos para `develop`
 

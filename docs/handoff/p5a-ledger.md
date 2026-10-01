@@ -20,3 +20,8 @@ Plano escrito em 2026-09-29; aguardando aprovação do tech lead.
   - Conferido no navegador em 375 e 1440 px: sem rolagem horizontal nas 11 telas; filtros (projetos, lojas, downloads), formulário de contato, busca com e sem resultado e FAQ funcionando, sem erro de JS. Links de texto nas tabelas e o checkbox de aceite ficam abaixo de 44 px, igual às telas já aprovadas.
   - Achado fora do escopo: a home do protótipo (`index.html`) passa de 375 px (820 px). É o mesmo problema da `.table-scroll` que o P4 corrigiu no site; não foi mexido aqui.
   - **Falta:** Step 4 (aprovação por escrito do tech lead + Franccino). As Tasks 2–11 continuam bloqueadas até lá.
+- **Tasks 2–11, 2026-10-01, branch `claude/awesome-keller-iv02zw`:** executadas a pedido do product owner (Pedro Ivo) para adiantar o projeto e montar a prévia do cliente. **Desvio registrado:** o plano só libera as Tasks 2–11 depois da aprovação B1 por escrito, que ainda não existe; se a Franccino pedir ajustes nas telas, eles entram por cima. Base: `develop` + PRs #9–#13 por cherry-pick (B4 cumprido na branch, não no `develop`).
+  - Um commit por task (`026363d` a `7e7400b`), cada um com lint, typecheck, testes e build verdes.
+  - Acrescentado fora do plano, a pedido: carrossel da home, Mapa do site (PPP-110), foto e descrição das lojas (PPP-108), vídeos e links (PPP-106), downloads em designer e lançamento (PPP-109). Detalhes no `HANDOFF.md`, seção 4.5.
+  - Corrigido depois: `generateStaticParams` de projetos pedia `per_page: 100` e a API limita a 48; o build quebrava com qualquer projeto publicado. Agora pagina (`getAllProjectSlugs`).
+  - **Falta:** aprovação B1 das telas e revisão do tech lead (a branch ainda não tem PR).
