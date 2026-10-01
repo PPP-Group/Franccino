@@ -58,6 +58,12 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
         return $this->role === UserRole::Admin;
     }
 
+    /** Admins and editors manage the catalog and editorial content; customer service only reads the inbox. */
+    public function canEditContent(): bool
+    {
+        return $this->is_active && $this->role !== UserRole::Support;
+    }
+
     public function getAppAuthenticationSecret(): ?string
     {
         return $this->app_authentication_secret;

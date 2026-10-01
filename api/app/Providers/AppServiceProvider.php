@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Jobs\RevalidateFrontend;
+use App\Listeners\RecordPanelActivity;
 use App\Listeners\StoreBlurPlaceholder;
 use App\Listeners\StoreImageMetadata;
+use App\Models\ActivityLog;
 use App\Models\Area;
 use App\Models\Banner;
 use App\Models\Category;
@@ -27,6 +29,7 @@ use App\Models\Project;
 use App\Models\Redirect;
 use App\Models\Store;
 use App\Models\User;
+use App\Observers\RecordsActivity;
 use App\Observers\RevalidatesFrontend;
 use App\Policies\AdminOnlyPolicy;
 use App\Policies\ContentPolicy;
@@ -34,6 +37,7 @@ use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
 use App\Support\FrontendRevalidator;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobProcessed;
@@ -63,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(User::class, AdminOnlyPolicy::class);
+        Gate::policy(ActivityLog::class, AdminOnlyPolicy::class);
 
         Gate::policy(Area::class, FixedRecordPolicy::class);
 
@@ -97,6 +102,19 @@ class AppServiceProvider extends ServiceProvider
 
         $this->configureRateLimiters();
         $this->configureFrontendRevalidation();
+        $this->configureActivityLog();
+    }
+
+    /** Who did what in the panel (PPP-54): content, users, redirects, inbox deletions, settings and sign-ins. */
+    private function configureActivityLog(): void
+    {
+        $models = [...array_keys(RevalidatesFrontend::TAGS), User::class, ContactMessage::class, NewsletterSubscriber::class];
+        foreach ($models as $model) {
+            $model::observe(RecordsActivity::class);
+        }
+
+        Event::listen(Login::class, [RecordPanelActivity::class, 'handleLogin']);
+        Event::listen(SettingsSaved::class, [RecordPanelActivity::class, 'handleSettingsSaved']);
     }
 
     /**

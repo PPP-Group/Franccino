@@ -34,7 +34,7 @@ products · designers · launches 1───* media_links (polimórfica)
 
 clients · stores · banners · pages · redirects · settings        (independentes)
 contact_messages *───0..1 products
-newsletter_subscribers · users                                    (independentes)
+newsletter_subscribers · users 1───* activity_logs                    (painel)
 media (spatie/laravel-medialibrary, polimórfica)
 ```
 
@@ -414,18 +414,40 @@ filtra, sem editar.
 | Coluna                                                       | Tipo                      | Notas                               |
 | ------------------------------------------------------------ | ------------------------- | ----------------------------------- |
 | name, email, password                                        |                           |                                     |
-| role                                                         | string enum               | `admin` \| `editor`                 |
+| role                                                         | string enum               | `admin` \| `editor` \| `support`    |
 | is_active                                                    | bool                      | usuário inativo não entra no painel |
 | app_authentication_secret, app_authentication_recovery_codes | text, null, criptografado | 2FA do Filament                     |
 
-| Permissão                                             | admin | editor |
-| ----------------------------------------------------- | ----- | ------ |
-| Catálogo e conteúdo editorial (CRUD)                  | sim   | sim    |
-| Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    |
-| Logs de download (ver)                                | sim   | sim    |
-| Redirects                                             | sim   | não    |
-| Configurações                                         | sim   | não    |
-| Usuários                                              | sim   | não    |
+| Permissão                                             | admin | editor | support (Atendimento) |
+| ----------------------------------------------------- | ----- | ------ | --------------------- |
+| Catálogo e conteúdo editorial (CRUD)                  | sim   | sim    | não                   |
+| Páginas fixas (editar)                                | sim   | sim    | não                   |
+| Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    | sim                   |
+| Excluir mensagens e inscritos                         | sim   | não    | não                   |
+| Logs de download (ver)                                | sim   | sim    | sim                   |
+| Redirects                                             | sim   | não    | não                   |
+| Configurações                                         | sim   | não    | não                   |
+| Usuários                                              | sim   | não    | não                   |
+| Registro de atividades (ver)                          | sim   | não    | não                   |
+
+`support` (acrescentado em 2026-10-01, PPP-54) é o perfil de atendimento: entra no painel só para ler e
+responder mensagens, newsletter e downloads; não vê nem edita conteúdo.
+
+### activity_logs
+
+Registro de atividades do painel (PPP-54). Uma linha por ação de uma pessoa logada: criar, editar, excluir
+e entrar no painel, além de salvar as configurações. Importações, seeders e a API pública não geram linha.
+Guarda só o **nome** dos campos alterados, nunca os valores; mensagens e inscritos aparecem como `#id`
+(sem dado pessoal do visitante).
+
+| Coluna                   | Tipo           | Notas                                              |
+| ------------------------ | -------------- | -------------------------------------------------- |
+| user_id                  | fk users, null | quem fez (null se o usuário foi excluído depois)   |
+| action                   | string(20)     | `created` \| `updated` \| `deleted` \| `login`     |
+| subject_type, subject_id | morphs, null   | registro afetado; `settings` para as configurações |
+| subject_label            | string, null   | nome ou título no momento da ação                  |
+| changes                  | json, null     | lista de campos alterados (só em `updated`)        |
+| created_at               | timestamp      | sem `updated_at`                                   |
 
 ## Mídia
 

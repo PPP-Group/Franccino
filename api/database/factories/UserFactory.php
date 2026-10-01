@@ -65,6 +65,16 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the user is customer service (read only).
+     */
+    public function support(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Support,
+        ]);
+    }
+
+    /**
      * Indicate that the user is inactive.
      */
     public function inactive(): static

@@ -13,12 +13,12 @@ class FixedRecordPolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->canEditContent();
     }
 
     public function view(User $user, ?Model $record = null): bool
     {
-        return true;
+        return $user->canEditContent();
     }
 
     public function create(User $user): bool
@@ -28,7 +28,7 @@ class FixedRecordPolicy
 
     public function update(User $user, ?Model $record = null): bool
     {
-        return true;
+        return $user->canEditContent();
     }
 
     public function delete(User $user, ?Model $record = null): bool

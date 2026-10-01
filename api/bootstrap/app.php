@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    // Listeners are registered explicitly in AppServiceProvider; discovery would register them a second
+    // time (each image listener ran twice per upload/conversion).
+    ->withEvents(discover: false)
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'content.locale' => SetContentLocale::class,

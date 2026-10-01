@@ -12,6 +12,7 @@ use App\Models\Finish;
 use App\Models\FinishGroup;
 use App\Models\Launch;
 use App\Models\Line;
+use App\Models\MediaLink;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductFile;
@@ -39,6 +40,7 @@ class RevalidatesFrontend
         FinishGroup::class => ['finishes', 'products'],
         Finish::class => ['finishes', 'products'],
         ProductFile::class => ['products', 'designers', 'launches'],
+        MediaLink::class => ['products', 'designers', 'launches'],
         Launch::class => ['launches', 'products', 'home'],
         Project::class => ['projects', 'products'],
         Client::class => ['clients'],
