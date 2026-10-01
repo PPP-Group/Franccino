@@ -85,7 +85,7 @@ function entryFor(href: Href, locales: Locale[], lastModified?: string): Metadat
 }
 
 /** Rotas que só existem no site (não vêm de `/sitemap` da API). A lista de orçamento fica fora (`noindex`). */
-const WEB_ONLY_ROUTES: Href[] = [{ pathname: '/room-planner' }];
+const WEB_ONLY_ROUTES: Href[] = [{ pathname: '/room-planner' }, { pathname: '/site-map' }];
 
 export function webOnlyEntries(locales: Locale[]): MetadataRoute.Sitemap {
   return WEB_ONLY_ROUTES.map((href) => entryFor(href, locales));

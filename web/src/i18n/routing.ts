@@ -31,6 +31,7 @@ export const pathnames = {
   '/search': { pt: '/busca', en: '/search' },
   '/privacy': { pt: '/privacidade', en: '/privacy' },
   '/terms': { pt: '/termos', en: '/terms' },
+  '/site-map': { pt: '/mapa-do-site', en: '/site-map' },
   '/quote-list': { pt: '/lista-de-orcamento', en: '/quote-list' },
   '/room-planner': { pt: '/sala-para-montar', en: '/room-planner' },
 } as const;

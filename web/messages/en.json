@@ -27,6 +27,7 @@
     "technical": "Technical area"
   },
   "footer": {
+    "siteMap": "Site map",
     "privacy": "Privacy",
     "terms": "Terms of use",
     "wordmark": "Franccino",
@@ -574,5 +575,11 @@
     "products": "Pieces",
     "designers": "Designers",
     "collections": "Collections"
+  },
+  "siteMap": {
+    "title": "Site map",
+    "description": "Every page of the Franccino website in one place.",
+    "pages": "Pages",
+    "home": "Home"
   }
 }

@@ -114,6 +114,9 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             <li>
               <Link href="/terms">{t('terms')}</Link>
             </li>
+            <li>
+              <Link href="/site-map">{t('siteMap')}</Link>
+            </li>
             {settings.footer_documents.map((document) => (
               <li key={document.url}>
                 <a href={document.url}>{document.label}</a>

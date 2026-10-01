@@ -235,9 +235,12 @@ describe('sitemapEntries', () => {
 });
 
 describe('webOnlyEntries', () => {
-  it('adds the room planner in the default locale with alternates, and never the quote list', () => {
+  it('adds the room planner and the site map in the default locale with alternates, and never the quote list', () => {
     const entries = webOnlyEntries(['pt', 'en']);
-    expect(entries.map((entry) => entry.url)).toEqual([absoluteUrl('/pt/sala-para-montar')]);
+    expect(entries.map((entry) => entry.url)).toEqual([
+      absoluteUrl('/pt/sala-para-montar'),
+      absoluteUrl('/pt/mapa-do-site'),
+    ]);
     expect(entries[0].alternates?.languages).toMatchObject({ en: absoluteUrl('/en/room-planner') });
   });
 });

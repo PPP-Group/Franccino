@@ -460,3 +460,44 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---------- mapa do site (PPP-110) ---------- */
+
+.site-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  padding-block: clamp(24px, 4vw, 48px) clamp(48px, 8vw, 96px);
+}
+
+.site-map ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.site-map a {
+  display: inline-block;
+  min-height: 44px;
+  padding-block: 10px;
+  color: var(--ink);
+}
+
+.site-map a:hover,
+.site-map a:focus-visible {
+  text-decoration: underline;
+}
+
+@media (max-width: 56.25rem) {
+  .site-map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 35rem) {
+  .site-map {
+    grid-template-columns: 1fr;
+  }
+}

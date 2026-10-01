@@ -27,6 +27,7 @@
     "technical": "Área técnica"
   },
   "footer": {
+    "siteMap": "Mapa do site",
     "privacy": "Privacidade",
     "terms": "Termos de uso",
     "wordmark": "Franccino",
@@ -574,5 +575,11 @@
     "products": "Peças",
     "designers": "Designers",
     "collections": "Coleções"
+  },
+  "siteMap": {
+    "title": "Mapa do site",
+    "description": "Todas as páginas do site da Franccino em um só lugar.",
+    "pages": "Páginas",
+    "home": "Início"
   }
 }
