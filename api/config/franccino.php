@@ -31,4 +31,10 @@ return [
     'demo' => [
         'image_cache' => storage_path('app/demo-cache'),
     ],
+
+    'wordpress' => [
+        'base_url' => env('WORDPRESS_BASE_URL', 'https://franccino.com.br'),
+        'per_page' => 100,
+        'cache' => storage_path('app/wordpress-cache'),
+    ],
 ];
