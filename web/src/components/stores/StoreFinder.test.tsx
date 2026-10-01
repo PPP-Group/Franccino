@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Store } from '@/lib/api/types';
+import { image } from '@/test/fixtures';
 import { renderWithIntl } from '@/test/intl';
 import { StoreFinder } from './StoreFinder';
 
@@ -22,6 +23,8 @@ const store = (overrides: Partial<Store>): Store => ({
   website_url: null,
   instagram_url: null,
   opening_hours: null,
+  description: null,
+  image: null,
   ...overrides,
 });
 
@@ -68,5 +71,15 @@ describe('StoreFinder', () => {
     expect(html).toContain('href="mailto:bh@franccino.com.br"');
     expect(html).toContain('https://www.google.com/maps/search/?api=1&amp;query=');
     expect(html).toContain('Seg a sex, 9h às 18h');
+  });
+
+  it('shows the store photo and description only on the stores page', () => {
+    const withImage = store({ description: 'Showroom com a linha completa.', image: image() });
+    const page = renderWithIntl(<StoreFinder stores={[withImage]} states={['MG']} allStates detailed />);
+    expect(page).toContain('Showroom com a linha completa.');
+    expect(page).toContain('store__image');
+    const home = renderWithIntl(<StoreFinder stores={[withImage]} states={['MG']} />);
+    expect(home).not.toContain('store__image');
+    expect(home).not.toContain('Showroom com a linha completa.');
   });
 });

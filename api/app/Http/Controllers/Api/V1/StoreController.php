@@ -23,6 +23,7 @@ class StoreController extends Controller
             ->when($validated['state'] ?? null, fn ($query, $state) => $query->whereRaw('UPPER(state) = ?', [mb_strtoupper($state)]))
             ->when($validated['type'] ?? null, fn ($query, $type) => $query->where('type', $type))
             ->ordered()
+            ->with('media')
             ->get();
 
         $states = Store::published()

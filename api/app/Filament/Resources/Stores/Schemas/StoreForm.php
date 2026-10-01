@@ -7,6 +7,7 @@ use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Support\BrazilianStates;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -86,7 +87,15 @@ class StoreForm
                 Translatable::tabs(fn (string $locale): array => [
                     Textarea::make("opening_hours.{$locale}")
                         ->label(__('Opening hours')),
+                    Textarea::make("description.{$locale}")
+                        ->label(__('Description'))
+                        ->rows(3)
+                        ->maxLength(600),
                 ]),
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->label(__('Image'))
+                    ->collection('image')
+                    ->image(),
                 ...CommonFields::publication(),
             ]);
     }

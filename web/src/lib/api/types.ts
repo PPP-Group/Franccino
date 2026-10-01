@@ -193,6 +193,9 @@ export type Store = {
   instagram_url: string | null;
   /** Not structured in the contract; treated as pre-formatted display text. */
   opening_hours: string | null;
+  /** Texto curto da loja (Anexo I). */
+  description: string | null;
+  image: Image | null;
 };
 
 export type FinishGroup = {

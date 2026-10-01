@@ -145,7 +145,7 @@ Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `d
 
 `Store`: `id`, `name`, `type`, `address`, `address_complement`, `district`, `city`, `state`, `postal_code`,
 `country`, `latitude`, `longitude`, `phone`, `whatsapp`, `email`, `website_url`, `instagram_url`,
-`opening_hours`.
+`opening_hours`, `description` (texto curto ou `null`), `image` (`Image` ou `null`).
 
 `key` em `/sitemap` (opcional, presente só nestes dois tipos):
 

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
+import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import type { Store } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
@@ -23,7 +24,12 @@ function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
   const type = t.has(`types.${store.type}`) ? t(`types.${store.type}`) : store.type;
   const whatsapp = detailed ? whatsappUrl(store.whatsapp) : null;
   return (
-    <article className="store">
+    <article className={detailed && store.image ? 'store store--with-image' : 'store'}>
+      {detailed && store.image ? (
+        <div className="store__image">
+          <ApiImage image={store.image} sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw" />
+        </div>
+      ) : null}
       <h3>{store.name}</h3>
       <address>
         {store.address}
@@ -41,6 +47,7 @@ function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
       </ul>
       {detailed ? (
         <>
+          {store.description ? <p className="store__description">{store.description}</p> : null}
           {store.opening_hours ? <p className="store__hours">{store.opening_hours}</p> : null}
           <ul className="store__links">
             {whatsapp ? (

@@ -273,8 +273,11 @@ Lojas exclusivas e revendas (página "Lojas" com mapa e filtro por estado e tipo
 | latitude, longitude                                | decimal(10,7), null |                           |
 | phone, whatsapp, email, website_url, instagram_url | string, null        |                           |
 | opening_hours                                      | json tr, null       | texto livre               |
+| description                                        | json tr, null       | texto curto (2026-10-01)  |
 | is_published, sort_order                           |                     |                           |
 | legacy_wp_id, legacy_url                           |                     |                           |
+
+Mídia: `image` (1), foto da loja (acrescentada em 2026-10-01; Anexo I pede imagem e descrição).
 
 ### banners
 

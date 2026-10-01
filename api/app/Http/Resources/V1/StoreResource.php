@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use App\Models\Store;
+use App\Support\ImagePresenter;
 use App\Support\Localized;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -39,6 +40,8 @@ class StoreResource extends JsonResource
             'website_url' => $store->website_url,
             'instagram_url' => $store->instagram_url,
             'opening_hours' => Localized::value($store, 'opening_hours'),
+            'description' => Localized::value($store, 'description'),
+            'image' => ImagePresenter::present($store->getFirstMedia('image'), $store->name),
         ];
     }
 }
