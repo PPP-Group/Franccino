@@ -3,6 +3,7 @@
 namespace App\Filament\RelationManagers;
 
 use App\Filament\Support\Translatable;
+use App\Models\Product;
 use App\Support\Locales;
 use App\Support\VideoEmbed;
 use Filament\Actions\BulkActionGroup;
@@ -20,10 +21,13 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Videos and external links (Anexo I) for products, designers and launches. YouTube and Vimeo videos play
- * inside the site; any other address opens in a new tab.
+ * inside the site; any other address opens in a new tab. Products take at most `PRODUCT_LIMIT` items.
  */
 class MediaLinksRelationManager extends RelationManager
 {
+    /** Contract limit (Anexo I): up to 3 videos or links per product. Designers and launches have no limit. */
+    public const PRODUCT_LIMIT = 3;
+
     protected static string $relationship = 'mediaLinks';
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
@@ -55,6 +59,13 @@ class MediaLinksRelationManager extends RelationManager
             ]);
     }
 
+    private function reachedLimit(): bool
+    {
+        $owner = $this->getOwnerRecord();
+
+        return $owner instanceof Product && $owner->mediaLinks()->count() >= self::PRODUCT_LIMIT;
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -75,8 +86,12 @@ class MediaLinksRelationManager extends RelationManager
                         : null),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->visible(fn (): bool => ! $this->reachedLimit()),
             ])
+            ->description(fn (): ?string => $this->getOwnerRecord() instanceof Product
+                ? __('Up to :count videos or links per product.', ['count' => self::PRODUCT_LIMIT])
+                : null)
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\RelationManagers\MediaLinksRelationManager;
+use App\Filament\Resources\Designers\Pages\EditDesigner;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Models\Designer;
 use App\Models\Launch;
@@ -47,4 +48,19 @@ it('lets editors add a video to a product in the panel', function () {
         ->assertHasNoTableActionErrors();
 
     expect($product->mediaLinks()->sole()->url)->toBe('https://youtu.be/dQw4w9WgXcQ');
+});
+
+it('stops adding videos or links to a product at the contract limit of 3', function () {
+    $this->actingAs(User::factory()->editor()->create());
+    $product = Product::factory()->create();
+    $designer = Designer::factory()->create();
+    foreach (range(1, MediaLinksRelationManager::PRODUCT_LIMIT) as $order) {
+        $product->mediaLinks()->create(['kind' => 'link', 'title' => ['pt' => "Link {$order}"], 'url' => "https://example.com/{$order}", 'sort_order' => $order]);
+        $designer->mediaLinks()->create(['kind' => 'link', 'title' => ['pt' => "Link {$order}"], 'url' => "https://example.com/{$order}", 'sort_order' => $order]);
+    }
+
+    livewire(MediaLinksRelationManager::class, ['ownerRecord' => $product, 'pageClass' => EditProduct::class])
+        ->assertTableActionHidden('create');
+    livewire(MediaLinksRelationManager::class, ['ownerRecord' => $designer, 'pageClass' => EditDesigner::class])
+        ->assertTableActionVisible('create');
 });
