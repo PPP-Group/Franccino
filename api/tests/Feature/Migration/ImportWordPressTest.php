@@ -3,8 +3,10 @@
 use App\Models\Category;
 use App\Models\Designer;
 use App\Models\Line;
+use App\Models\Page;
 use App\Models\Product;
 use Database\Seeders\AreaSeeder;
+use Database\Seeders\PageSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -56,6 +58,14 @@ function fakeWordPress(): void
             'class_list' => ['categorias-produtos-cadeira-giardini'],
             'yoast_head_json' => ['title' => 'Cadeira Aura - Franccino', 'description' => 'Cadeira com estrutura em madeira.'],
         ]]),
+        'wp.test/wp-json/wp/v2/pages*' => $page([
+            ['id' => 579, 'slug' => 'institucional', 'title' => ['rendered' => 'Institucional'], 'content' => ['rendered' => <<<'HTML'
+                <h2>quem somos</h2><p>Há mais de 20 anos no mercado.</p><h2>NOSSA HISTÓRIA</h2>
+                <div class="swiper"><div class="swiper-slide"><h2>2000</h2><h2>Fundação da Franccino.</h2></div></div>
+                HTML]],
+            ['id' => 1465, 'slug' => 'politica-de-privacidade', 'title' => ['rendered' => 'Política de Privacidade'], 'content' => ['rendered' => '<h2>Dados coletados</h2><p>Nome e e-mail.</p>']],
+            ['id' => 40, 'slug' => 'home', 'title' => ['rendered' => 'Home'], 'content' => ['rendered' => '<p>Home</p>']],
+        ]),
         'wp.test/produto/cadeira-aura/' => Http::response($html),
         'wp.test/wp-content/uploads/*' => Http::response($jpeg, 200, ['Content-Type' => 'image/jpeg']),
     ]);
@@ -127,4 +137,21 @@ it('writes nothing on a dry run and publishes only when asked', function () {
     $this->artisan('franccino:wordpress:import', ['--publish' => true, '--without-media' => true])->assertSuccessful();
     expect(Product::sole()->is_published)->toBeTrue()
         ->and(Product::sole()->getMedia('gallery'))->toHaveCount(0);
+});
+
+it('copies the text of the institutional pages into empty pages and keeps panel edits', function () {
+    fakeWordPress();
+    $this->seed(PageSeeder::class);
+    Page::query()->where('key', 'terms')->sole()->update(['content' => [['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Do painel</p>']]]]]);
+
+    $this->artisan('franccino:wordpress:import', ['--only' => ['pages']])->assertSuccessful();
+
+    $content = fn (string $key) => Page::query()->where('key', $key)->sole()->content;
+    expect($content('factory'))->toBe([
+        ['type' => 'rich_text', 'data' => ['body' => ['pt' => "<h2>Quem somos</h2>\n<p>Há mais de 20 anos no mercado.</p>"]]],
+        ['type' => 'timeline', 'data' => ['items' => [['year' => '2000', 'title' => ['pt' => 'Fundação da Franccino.'], 'text' => ['pt' => '']]]]],
+    ])
+        ->and($content('privacy'))->toBe([['type' => 'rich_text', 'data' => ['body' => ['pt' => "<h2>Dados coletados</h2>\n<p>Nome e e-mail.</p>"]]]])
+        ->and($content('terms'))->toBe([['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Do painel</p>']]]])
+        ->and($content('home'))->toBe([]);
 });

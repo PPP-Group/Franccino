@@ -13,13 +13,13 @@ use Illuminate\Console\Command;
 class ImportWordPress extends Command
 {
     protected $signature = 'franccino:wordpress:import
-        {--only=* : designers, lines, categories, products (default: all)}
+        {--only=* : designers, lines, categories, products, pages (default: all)}
         {--dry-run : only read the site and write the report}
         {--without-media : skip downloading product photos}
         {--publish : publish what is imported (local/staging previews only)}
         {--limit= : import at most N products}';
 
-    protected $description = 'Importa o catálogo do site WordPress atual (REST + páginas de produto)';
+    protected $description = 'Importa o catálogo e as páginas institucionais do site WordPress atual';
 
     public function handle(WordPressImporter $importer): int
     {

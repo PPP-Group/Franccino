@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Category;
 use App\Models\Designer;
 use App\Models\Line;
+use App\Models\Page;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -21,7 +22,14 @@ use Throwable;
  */
 class WordPressImporter
 {
-    public const ENTITIES = ['designers', 'lines', 'categories', 'products'];
+    public const ENTITIES = ['designers', 'lines', 'categories', 'products', 'pages'];
+
+    /** WordPress page slug → `pages.key` whose text is copied (Fábrica, Privacidade, Termos de uso). */
+    private const PAGES = [
+        'institucional' => 'factory',
+        'politica-de-privacidade' => 'privacy',
+        'termos-e-condicoes-de-uso' => 'terms',
+    ];
 
     private ImportReport $report;
 
@@ -40,6 +48,7 @@ class WordPressImporter
     public function __construct(
         private readonly Client $client,
         private readonly ProductPageParser $parser,
+        private readonly PageContentParser $pages,
     ) {}
 
     /**
@@ -67,6 +76,10 @@ class WordPressImporter
         }
         if (in_array('products', $only, true)) {
             $this->importProducts($dryRun, $withMedia, $publish, $limit, $progress);
+        }
+        if (in_array('pages', $only, true)) {
+            $this->importPages($dryRun);
+            $progress('pages ok');
         }
 
         return $this->report;
@@ -184,6 +197,55 @@ class WordPressImporter
     }
 
     /** @param callable(string): void $progress */
+    /** Copies the text of the institutional pages into pages still without content (panel edits win). */
+    private function importPages(bool $dryRun): void
+    {
+        foreach ($this->client->paginate('pages') as $item) {
+            $key = self::PAGES[(string) $item['slug']] ?? null;
+            $page = $key !== null ? Page::query()->where('key', $key)->first() : null;
+            if ($page === null) {
+                continue;
+            }
+            if (! empty($page->content)) {
+                $this->report->count('pages', 'skipped');
+
+                continue;
+            }
+            $blocks = $this->pageBlocks($key, (string) ($item['content']['rendered'] ?? ''));
+            if ($blocks === []) {
+                $this->report->count('pages', 'skipped');
+                $this->report->gap('pages', self::title($item), 'sem texto no site atual');
+
+                continue;
+            }
+            $this->report->count('pages', 'updated');
+            $this->report->gap('pages', self::title($item), 'texto copiado do site atual: revisar e traduzir para o inglês');
+            if (! $dryRun) {
+                $page->update(['content' => $blocks]);
+            }
+        }
+    }
+
+    /** @return list<array{type: string, data: array<string, mixed>}> */
+    private function pageBlocks(string $key, string $html): array
+    {
+        $body = $this->pages->richText($html, $key === 'factory' ? 'nossa história' : null);
+        $blocks = $body !== null ? [['type' => 'rich_text', 'data' => ['body' => ['pt' => $body]]]] : [];
+        if ($key !== 'factory') {
+            return $blocks;
+        }
+        $timeline = $this->pages->timeline($html);
+        if ($timeline !== []) {
+            $blocks[] = ['type' => 'timeline', 'data' => ['items' => array_map(fn (array $item) => [
+                'year' => $item['year'],
+                'title' => ['pt' => $item['title']],
+                'text' => ['pt' => $item['text']],
+            ], $timeline)]];
+        }
+
+        return $blocks;
+    }
+
     private function importProducts(bool $dryRun, bool $withMedia, bool $publish, ?int $limit, callable $progress): void
     {
         $areas = Area::query()->pluck('id', 'key');

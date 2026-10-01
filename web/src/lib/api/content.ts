@@ -148,6 +148,19 @@ export async function getProjects(
   });
 }
 
+/** The API caps `per_page` at 48 (docs/api.md): walk every page to list all project slugs. */
+const PROJECT_SLUGS_PER_PAGE = 48;
+
+export async function getAllProjectSlugs(locale: Locale): Promise<string[]> {
+  const first = await getProjects(locale, { per_page: PROJECT_SLUGS_PER_PAGE });
+  const rest = await Promise.all(
+    Array.from({ length: Math.max(0, first.meta.last_page - 1) }, (_, index) =>
+      getProjects(locale, { per_page: PROJECT_SLUGS_PER_PAGE, page: index + 2 }),
+    ),
+  );
+  return [first, ...rest].flatMap((page) => page.data.map((project) => project.slug));
+}
+
 export async function getProject(locale: Locale, slug: string): Promise<ProjectDetail | null> {
   const result = await apiGetOrNull<Item<ProjectDetail | null>>(`/projects/${encodeURIComponent(slug)}`, {
     locale,

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getCollection, getDesigner, getHome, getLaunch, getProject } from './content';
+import { getAllProjectSlugs, getCollection, getDesigner, getHome, getLaunch, getProject } from './content';
 
 const okJson = (body: unknown) =>
   new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
@@ -62,5 +62,37 @@ describe('content cache tags', () => {
     await getCollection('pt', 'linha/aura?x');
     const [url] = fetchMock.mock.calls[0] as [string];
     expect(String(url)).toContain('/collections/linha%2Faura%3Fx');
+  });
+});
+
+describe('getAllProjectSlugs', () => {
+  beforeEach(() => {
+    vi.stubEnv('API_URL', 'http://api.test');
+    vi.stubEnv('SITE_URL', 'http://site.test');
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  it('walks every page without asking for more than the API allows', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const url = new URL(String(input));
+      const page = Number(url.searchParams.get('page') ?? '1');
+      return okJson({
+        data: [{ slug: `obra-${page}` }],
+        links: { first: null, last: null, prev: null, next: null },
+        meta: {
+          current_page: page,
+          last_page: 2,
+          per_page: Number(url.searchParams.get('per_page')),
+          total: 2,
+        },
+      });
+    });
+    await expect(getAllProjectSlugs('pt')).resolves.toEqual(['obra-1', 'obra-2']);
+    for (const [input] of fetchMock.mock.calls) {
+      expect(Number(new URL(String(input)).searchParams.get('per_page'))).toBeLessThanOrEqual(48);
+    }
   });
 });

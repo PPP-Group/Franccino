@@ -6,7 +6,7 @@ import { RichText } from '@/components/content/RichText';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
-import { getProject, getProjects } from '@/lib/api/content';
+import { getAllProjectSlugs, getProject } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -14,8 +14,8 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 const projectHref = (slug: string) => ({ pathname: '/projects/[slug]', params: { slug } }) as const;
 
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
-  const projects = await getProjects(params.locale as Locale, { per_page: 100 });
-  return projects.data.map((project) => ({ slug: project.slug }));
+  const slugs = await getAllProjectSlugs(params.locale as Locale);
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
