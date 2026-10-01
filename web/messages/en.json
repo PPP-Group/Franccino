@@ -313,6 +313,7 @@
       "intro": "Pieces with dimensions and files for specification. Open a piece to see its finishes."
     },
     "launches": {
+      "downloads": "Catalogs and presentations",
       "title": "Novelties",
       "intro": "Collections and pieces launched by Franccino.",
       "empty": "No novelties published right now."
@@ -510,6 +511,7 @@
     "piecesTitle": "Pieces in the collection"
   },
   "designers": {
+    "downloads": "Catalogs and presentations",
     "title": "Designers",
     "description": "Designers and studios who sign pieces with Franccino.",
     "count": "{count, plural, one {# designer} other {# designers}}",

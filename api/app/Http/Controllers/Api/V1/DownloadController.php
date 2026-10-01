@@ -54,13 +54,13 @@ class DownloadController extends Controller
 
     /**
      * `POST /downloads/{file}/link` (`docs/api.md`, "Escrita"). Only files of
-     * published products may be linked; anything else (missing file,
-     * unpublished file, unpublished/deleted product) is a `404`, never
-     * exposing whether the file exists.
+     * a published product, designer or launch may be linked; anything else
+     * (missing file, unpublished file, unpublished/deleted owner) is a `404`,
+     * never exposing whether the file exists.
      */
     public function link(ProductFile $file, Request $request, CreateDownloadLink $action): JsonResponse
     {
-        abort_unless($file->is_published && $file->product?->is_published, 404);
+        abort_unless($file->is_published && $file->owner()?->is_published, 404);
 
         return response()->json(['data' => $action->handle($file, $request)], 201);
     }

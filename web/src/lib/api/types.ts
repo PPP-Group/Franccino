@@ -52,7 +52,7 @@ export type MediaLink = {
 
 export type DownloadFile = {
   id: number;
-  type: 'technical_sheet' | 'block_2d' | 'block_3d' | 'manual' | 'other';
+  type: 'technical_sheet' | 'block_2d' | 'block_3d' | 'manual' | 'catalog' | 'presentation' | 'other';
   title: string;
   format: string;
   size: number | null;
@@ -139,6 +139,7 @@ export type DesignerDetail = DesignerCard & {
   products: ProductCard[];
   collections: CollectionRef[];
   media_links: MediaLink[];
+  files: DownloadFile[];
   seo: Seo;
 };
 
@@ -156,6 +157,7 @@ export type LaunchDetail = LaunchCard & {
   gallery: Image[];
   products: ProductCard[];
   media_links: MediaLink[];
+  files: DownloadFile[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
 };

@@ -6,13 +6,13 @@ import { ContactForm } from '@/components/forms/ContactForm';
 import { DesignerStrip } from '@/components/products/DesignerStrip';
 import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
-import { ProductDownloads } from '@/components/products/ProductDownloads';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { AreaDot } from '@/components/ui/AreaDot';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
+import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import type { Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
@@ -138,7 +138,7 @@ export default async function ProductPage({ params }: Props) {
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
 
-            <ProductDownloads files={product.files} />
+            <FileDownloads files={product.files} title={t('downloads.title')} />
 
             <MediaLinks items={product.media_links} headingId="product-media" />
 

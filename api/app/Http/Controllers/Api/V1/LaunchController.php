@@ -29,7 +29,7 @@ class LaunchController extends Controller
         $launch = Launch::published()
             ->where("slug->{$locale}", $slug)
             ->with([
-                'media', 'mediaLinks',
+                'media', 'mediaLinks', 'files' => fn ($query) => $query->published(),
                 'products' => fn ($query) => $query->published(),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),

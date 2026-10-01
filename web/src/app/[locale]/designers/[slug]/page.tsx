@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { RichText } from '@/components/content/RichText';
+import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MediaLinks } from '@/components/media/MediaLinks';
@@ -94,6 +95,12 @@ export default async function DesignerPage({ params }: Props) {
           ) : null}
         </div>
       </div>
+      <FileDownloads
+        files={designer.files}
+        title={t('downloads')}
+        headingId="designer-downloads"
+        className="media-links--wide block"
+      />
       <MediaLinks
         items={designer.media_links}
         headingId="designer-media"

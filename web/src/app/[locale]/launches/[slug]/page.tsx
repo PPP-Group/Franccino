@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
 import { ViewToggle } from '@/components/catalog/ViewToggle';
 import { RichText } from '@/components/content/RichText';
+import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
@@ -82,6 +83,12 @@ export default async function LaunchPage({ params, searchParams }: Props) {
         <p className="meta num">{t('count', { count: launch.products.length })}</p>
       </div>
       {launch.description ? <RichText html={launch.description} className="catalog-description" /> : null}
+      <FileDownloads
+        files={launch.files}
+        title={t('launches.downloads')}
+        headingId="launch-downloads"
+        className="media-links--wide block"
+      />
       <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
       <div className="toolbar toolbar--end">
         <ViewToggle

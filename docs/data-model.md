@@ -179,22 +179,25 @@ Mídia: `swatch` (1).
 
 ### product_files
 
-Arquivos técnicos para download (ficha técnica, blocos 2D/3D). Ficam em disco **privado**; só saem por
-URL assinada temporária.
+Arquivos para download (ficha técnica, blocos 2D/3D, catálogo, apresentação). Ficam em disco **privado**; só
+saem por URL assinada temporária. Cada arquivo tem um único dono: uma peça, um designer ou um lançamento
+(`designer_id` e `launch_id` acrescentados em 2026-10-01, PPP-109).
 
-| Coluna                   | Tipo         | Notas                                                                |
-| ------------------------ | ------------ | -------------------------------------------------------------------- |
-| product_id               | fk products  |                                                                      |
-| type                     | string enum  | `technical_sheet` \| `block_2d` \| `block_3d` \| `manual` \| `other` |
-| title                    | json tr      | "Ficha técnica"                                                      |
-| format                   | string       | "PDF", "DWG", "SKP", "3DS"... (derivado da extensão, editável)       |
-| disk                     | string       | default `downloads`                                                  |
-| path                     | string       | caminho no disco                                                     |
-| original_name            | string       |                                                                      |
-| mime_type                | string, null |                                                                      |
-| size                     | bigint, null | bytes                                                                |
-| is_published, sort_order |              |                                                                      |
-| legacy_wp_id             |              |                                                                      |
+| Coluna                   | Tipo         | Notas                                                                                               |
+| ------------------------ | ------------ | --------------------------------------------------------------------------------------------------- |
+| product_id               | fk, null     | dono: peça                                                                                          |
+| designer_id              | fk, null     | dono: designer                                                                                      |
+| launch_id                | fk, null     | dono: lançamento                                                                                    |
+| type                     | string enum  | `technical_sheet` \| `block_2d` \| `block_3d` \| `manual` \| `catalog` \| `presentation` \| `other` |
+| title                    | json tr      | "Ficha técnica"                                                                                     |
+| format                   | string       | "PDF", "DWG", "SKP", "3DS"... (derivado da extensão, editável)                                      |
+| disk                     | string       | default `downloads`                                                                                 |
+| path                     | string       | caminho no disco                                                                                    |
+| original_name            | string       |                                                                                                     |
+| mime_type                | string, null |                                                                                                     |
+| size                     | bigint, null | bytes (lido do disco ao salvar)                                                                     |
+| is_published, sort_order |              |                                                                                                     |
+| legacy_wp_id             |              |                                                                                                     |
 
 ### media_links
 
@@ -213,15 +216,15 @@ Vídeos (YouTube/Vimeo) e links externos de produto, designer ou lançamento. Po
 
 Um registro por link gerado. Sem dado pessoal em claro (LGPD).
 
-| Coluna          | Tipo              | Notas                         |
-| --------------- | ----------------- | ----------------------------- |
-| product_file_id | fk                |                               |
-| product_id      | fk                | desnormalizado para relatório |
-| locale          | string(2)         |                               |
-| ip_hash         | string(64)        | `sha256(ip + APP_KEY)`        |
-| user_agent      | string(512), null |                               |
-| referer         | string(512), null |                               |
-| created_at      | timestamp         | sem `updated_at`              |
+| Coluna          | Tipo              | Notas                                                                            |
+| --------------- | ----------------- | -------------------------------------------------------------------------------- |
+| product_file_id | fk                |                                                                                  |
+| product_id      | fk, null          | desnormalizado para relatório; null quando o arquivo é de designer ou lançamento |
+| locale          | string(2)         |                                                                                  |
+| ip_hash         | string(64)        | `sha256(ip + APP_KEY)`                                                           |
+| user_agent      | string(512), null |                                                                                  |
+| referer         | string(512), null |                                                                                  |
+| created_at      | timestamp         | sem `updated_at`                                                                 |
 
 ## Conteúdo editorial
 

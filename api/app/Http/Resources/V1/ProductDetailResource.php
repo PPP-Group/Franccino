@@ -4,7 +4,6 @@ namespace App\Http\Resources\V1;
 
 use App\Models\Finish;
 use App\Models\Product;
-use App\Models\ProductFile;
 use App\Support\ImagePresenter;
 use App\Support\Locales;
 use App\Support\Localized;
@@ -46,7 +45,7 @@ class ProductDetailResource extends ProductCardResource
             'finishes' => $this->finishes($product),
             'gallery' => ImagePresenter::presentMany($product->getMedia('gallery'), $name),
             'model_3d' => $this->model3d($product),
-            'files' => $this->files($product),
+            'files' => DownloadFileResource::collection($product->files)->resolve(),
             'media_links' => MediaLinkResource::collection($product->mediaLinks)->resolve(),
             'line_products' => ProductCardResource::collection($lineProducts)->toArray($request),
             'related' => ProductCardResource::collection($related)->toArray($request),
@@ -112,18 +111,6 @@ class ProductDetailResource extends ProductCardResource
         }
 
         return ['url' => $media->getFullUrl(), 'size' => $media->size];
-    }
-
-    /** @return list<array<string, mixed>> */
-    private function files(Product $product): array
-    {
-        return $product->files->map(fn (ProductFile $file) => [
-            'id' => $file->id,
-            'type' => $file->type->value,
-            'title' => Localized::value($file, 'title'),
-            'format' => $file->format,
-            'size' => $file->size,
-        ])->values()->all();
     }
 
     /**

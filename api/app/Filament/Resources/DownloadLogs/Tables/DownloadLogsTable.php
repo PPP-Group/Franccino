@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\DownloadLogs\Tables;
 
+use App\Models\DownloadLog;
+use App\Models\Launch;
 use App\Models\Product;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
@@ -19,13 +21,15 @@ class DownloadLogsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['productFile.product', 'productFile.designer', 'productFile.launch']))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('Date'))
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('product.name')
-                    ->label(__('Product')),
+                TextColumn::make('owner')
+                    ->label(__('Product, designer or launch'))
+                    ->state(fn (DownloadLog $log): ?string => self::ownerName($log)),
                 TextColumn::make('productFile.title')
                     ->label(__('File')),
                 TextColumn::make('locale')
@@ -50,5 +54,13 @@ class DownloadLogsTable
                             ->when($data['until'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('created_at', '<=', $date));
                     }),
             ]);
+    }
+
+    /** The product, designer or launch whose file was downloaded (PPP-109). */
+    private static function ownerName(DownloadLog $log): ?string
+    {
+        $owner = $log->productFile?->owner();
+
+        return $owner instanceof Launch ? $owner->title : $owner?->name;
     }
 }

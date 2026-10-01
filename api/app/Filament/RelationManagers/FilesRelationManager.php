@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Products\RelationManagers;
+namespace App\Filament\RelationManagers;
 
 use App\Enums\ProductFileType;
 use App\Filament\Support\Translatable;
@@ -24,6 +24,10 @@ use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
+/**
+ * Private files for download of a product, a designer or a launch (PPP-109): saved on the `downloads` disk,
+ * in a folder per owner, and served only through the temporary link.
+ */
 class FilesRelationManager extends RelationManager
 {
     protected static string $relationship = 'files';
@@ -47,7 +51,7 @@ class FilesRelationManager extends RelationManager
                 FileUpload::make('path')
                     ->label(__('File'))
                     ->disk('downloads')
-                    ->directory('products')
+                    ->directory(fn (): string => Str::plural(Str::kebab(class_basename($this->getOwnerRecord()))))
                     ->storeFileNamesIn('original_name')
                     ->maxSize(51200)
                     ->live()

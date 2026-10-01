@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Launches;
 
+use App\Filament\RelationManagers\FilesRelationManager;
 use App\Filament\RelationManagers\MediaLinksRelationManager;
 use App\Filament\Resources\Launches\Pages\CreateLaunch;
 use App\Filament\Resources\Launches\Pages\EditLaunch;
@@ -45,6 +46,7 @@ class LaunchResource extends Resource
     {
         return [
             MediaLinksRelationManager::class,
+            FilesRelationManager::class,
         ];
     }
 

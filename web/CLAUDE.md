@@ -44,9 +44,10 @@ src/
   components/
     layout/{SiteHeader,HeaderNav,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead}.tsx, nav.ts
     ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
-    media/ApiImage.tsx
+    media/{ApiImage,MediaLinks,VideoFacade}.tsx
     content/{RichText,Blocks,Tile,EmptyNotice}.tsx
-    downloads/DownloadsTable.tsx
+    downloads/{DownloadsTable,FileDownloads}.tsx
+    consent/ConsentBanner.tsx
     contact/ContactChannels.tsx
     forms/{ContactForm,NewsletterForm,Turnstile}.tsx
     catalog/{CatalogListing,CatalogToolbar,ProductGrid,TechTable,ViewToggle,Pagination,LaunchTile}.tsx, area-pages.tsx
@@ -65,12 +66,14 @@ src/
     planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
     forms/contact.ts
     ui/{local-store,toast,roving,use-is-client,carousel}.ts
+    media/links.ts
+    consent/{store,gtm}.ts
     projects/type.ts
     stores/{filter,map-link}.ts
     contact-links.ts, settings.ts, env.ts
     format/{dimensions,file-size}.ts
     images/srcset.ts
-    seo/{metadata,jsonld,sitemap}.ts
+    seo/{metadata,jsonld,sitemap,site-map}.ts
     security/basic-auth.ts
   styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages}.css
   test/{fixtures,intl,navigation-mock}.ts(x)

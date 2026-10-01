@@ -38,7 +38,7 @@ class RevalidatesFrontend
         Product::class => ['products', 'home'],
         FinishGroup::class => ['finishes', 'products'],
         Finish::class => ['finishes', 'products'],
-        ProductFile::class => ['products'],
+        ProductFile::class => ['products', 'designers', 'launches'],
         Launch::class => ['launches', 'products', 'home'],
         Project::class => ['projects', 'products'],
         Client::class => ['clients'],

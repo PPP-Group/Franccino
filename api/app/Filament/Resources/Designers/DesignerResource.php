@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Designers;
 
+use App\Filament\RelationManagers\FilesRelationManager;
 use App\Filament\RelationManagers\MediaLinksRelationManager;
 use App\Filament\Resources\Designers\Pages\CreateDesigner;
 use App\Filament\Resources\Designers\Pages\EditDesigner;
@@ -45,6 +46,7 @@ class DesignerResource extends Resource
     {
         return [
             MediaLinksRelationManager::class,
+            FilesRelationManager::class,
         ];
     }
 

@@ -30,6 +30,7 @@ class LaunchResource extends LaunchCardResource
             'gallery' => ImagePresenter::presentMany($launch->getMedia('gallery'), $title),
             'products' => ProductCardResource::collection($launch->products)->toArray($request),
             'media_links' => MediaLinkResource::collection($launch->mediaLinks)->resolve(),
+            'files' => DownloadFileResource::collection($launch->files)->resolve(),
             'seo' => Refs::seo($launch, $launch->getFirstMedia('cover'), $title),
             'slugs' => collect(Locales::all())
                 ->mapWithKeys(fn (string $locale) => [$locale => $launch->getTranslation('slug', $locale, false) ?: null])

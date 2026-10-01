@@ -313,6 +313,7 @@
       "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
     },
     "launches": {
+      "downloads": "Catálogos e apresentações",
       "title": "Lançamentos",
       "intro": "As coleções e peças lançadas pela Franccino.",
       "empty": "Nenhum lançamento publicado no momento."
@@ -510,6 +511,7 @@
     "piecesTitle": "Peças da coleção"
   },
   "designers": {
+    "downloads": "Catálogos e apresentações",
     "title": "Designers",
     "description": "Designers e estúdios que assinam peças com a Franccino.",
     "count": "{count, plural, one {# designer} other {# designers}}",
