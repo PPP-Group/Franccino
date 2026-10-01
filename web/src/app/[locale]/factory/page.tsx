@@ -1,43 +1,49 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Blocks } from '@/components/content/Blocks';
+import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { PageHead } from '@/components/layout/PageHead';
+import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
+
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-type FactoryPageProps = {
-  params: Promise<{ locale: string }>;
-};
+type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: FactoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.factory' });
-  const page = await getPage(locale as Locale, 'factory');
-
+  const [t, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'factory' }),
+    getPage(locale as Locale, 'factory'),
+  ]);
   return buildMetadata({
     locale: locale as Locale,
-    href: '/factory',
+    href: { pathname: '/factory' },
     title: page?.seo.title ?? page?.title ?? t('title'),
     description: page?.seo.description ?? page?.intro,
     image: page?.seo.image ?? page?.cover,
   });
 }
 
-export default async function FactoryPage({ params }: FactoryPageProps) {
-  const { locale } = await params;
+export default async function FactoryPage({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const page = await getPage(locale as Locale, 'factory');
-  if (!page) {
-    notFound();
-  }
-
+  const [t, common, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'factory' }),
+    getTranslations({ locale, namespace: 'common' }),
+    getPage(locale, 'factory'),
+  ]);
   return (
-    <main id="main-content">
-      <h1>{page.title}</h1>
-      {page.intro && <p>{page.intro}</p>}
-      <Blocks blocks={page.content} />
+    <main className="wrap">
+      <PageHead title={page?.title ?? t('title')} lead={page?.intro} />
+      {page?.cover ? <ApiImage image={page.cover} sizes="100vw" priority className="page-cover" /> : null}
+      {page && page.content.length > 0 ? (
+        <Blocks blocks={page.content} />
+      ) : (
+        <EmptyNotice text={common('nothingYet')} />
+      )}
     </main>
   );
 }

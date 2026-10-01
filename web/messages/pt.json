@@ -540,5 +540,12 @@
     "title": "Corporativo",
     "projects": "Projetos corporativos",
     "clients": "Clientes"
+  },
+  "factory": {
+    "title": "Fábrica"
+  },
+  "finishes": {
+    "title": "Acabamentos",
+    "count": "{count, plural, one {# acabamento} other {# acabamentos}}"
   }
 }

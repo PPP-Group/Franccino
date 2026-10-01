@@ -540,5 +540,12 @@
     "title": "Contract",
     "projects": "Corporate projects",
     "clients": "Clients"
+  },
+  "factory": {
+    "title": "Factory"
+  },
+  "finishes": {
+    "title": "Finishes",
+    "count": "{count, plural, one {# finish} other {# finishes}}"
   }
 }
