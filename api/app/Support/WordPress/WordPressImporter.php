@@ -401,14 +401,34 @@ class WordPressImporter
                 ->toMediaCollection('gallery');
         }
         if (! $product->hasMedia('cover') && $urls !== []) {
-            $path = $this->client->download($urls[0]);
+            [$url, $path] = $this->coverPhoto($urls);
             if ($path !== null) {
                 $product->addMedia($path)
                     ->preservingOriginal()
-                    ->withCustomProperties(['legacy_url' => $urls[0]])
+                    ->withCustomProperties(['legacy_url' => $url])
                     ->toMediaCollection('cover');
             }
         }
+    }
+
+    /**
+     * The first gallery photo that fits a product card (neither a wide banner nor a tall strip), or the
+     * first photo when none does.
+     *
+     * @param  non-empty-list<string>  $urls
+     * @return array{0: string, 1: string|null}
+     */
+    private function coverPhoto(array $urls): array
+    {
+        foreach ($urls as $url) {
+            $path = $this->client->download($url);
+            $size = $path !== null ? @getimagesize($path) : false;
+            if ($size !== false && $size[1] > 0 && $size[0] / $size[1] >= 0.6 && $size[0] / $size[1] <= 1.8) {
+                return [$url, $path];
+            }
+        }
+
+        return [$urls[0], $this->client->download($urls[0])];
     }
 
     /** @param array<string, mixed> $values */

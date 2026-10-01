@@ -155,3 +155,14 @@ it('copies the text of the institutional pages into empty pages and keeps panel 
         ->and($content('terms'))->toBe([['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Do painel</p>']]]])
         ->and($content('home'))->toBe([]);
 });
+
+it('picks a cover that fits a card instead of a wide banner', function () {
+    Http::fake([
+        'wp.test/wp-content/uploads/aura-1.jpg' => Http::response(UploadedFile::fake()->image('wide.jpg', 1200, 300)->getContent(), 200, ['Content-Type' => 'image/jpeg']),
+    ]);
+    fakeWordPress();
+
+    $this->artisan('franccino:wordpress:import', ['--only' => ['products']])->assertSuccessful();
+
+    expect(Product::sole()->getFirstMedia('cover')?->getCustomProperty('legacy_url'))->toBe('https://wp.test/wp-content/uploads/aura-2.jpg');
+});
