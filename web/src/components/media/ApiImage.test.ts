@@ -36,14 +36,15 @@ describe('ApiImage', () => {
     expect(element.props.style).toBeUndefined();
   });
 
-  it('adds the blur placeholder as a cover background without an aspect-ratio when dimensions are unknown', () => {
+  it('adds the blur placeholder as a contained background without an aspect-ratio when dimensions are unknown', () => {
     const element = ApiImage({
       image: { ...image, width: null, height: null, blur_data_url: 'data:image/gif;base64,AA==' },
       sizes: '100vw',
     })!;
     expect(element.props.style).toEqual({
       backgroundImage: 'url(data:image/gif;base64,AA==)',
-      backgroundSize: 'cover',
+      backgroundSize: 'contain',
+      backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center',
     });
   });

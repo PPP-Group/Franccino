@@ -24,9 +24,12 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
   const srcSet = buildSrcSet(image);
 
   const style: CSSProperties = {};
+  // The placeholder takes the same box as an `object-fit: contain` photo (most product plates):
+  // with `cover` it filled the letterbox and stayed visible as blurred bands after the photo loaded.
   if (image.blur_data_url) {
     style.backgroundImage = `url(${image.blur_data_url})`;
-    style.backgroundSize = 'cover';
+    style.backgroundSize = 'contain';
+    style.backgroundRepeat = 'no-repeat';
     style.backgroundPosition = 'center';
   }
   // Reserves layout space (avoids CLS) only when both dimensions are known;
