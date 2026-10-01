@@ -575,5 +575,24 @@
   "storesPage": {
     "title": "Stores",
     "count": "{count, plural, one {# store} other {# stores}}"
+  },
+  "contactPage": {
+    "title": "Contact",
+    "channelsTitle": "Talk to Franccino",
+    "formTitle": "Send a message",
+    "channels": {
+      "phone": "Phone",
+      "email": "Email",
+      "quotes": "Quotes",
+      "assistance": "Technical assistance",
+      "assistancePhone": "Assistance phone",
+      "address": "Factory",
+      "openWhatsapp": "Chat on WhatsApp"
+    }
+  },
+  "legal": {
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "pending": "This page's text has not been published yet."
   }
 }

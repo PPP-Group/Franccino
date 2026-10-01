@@ -1,43 +1,45 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Blocks } from '@/components/content/Blocks';
+import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-type TermsPageProps = {
-  params: Promise<{ locale: string }>;
-};
+type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: TermsPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.terms' });
-  const page = await getPage(locale as Locale, 'terms');
-
+  const [t, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'legal' }),
+    getPage(locale as Locale, 'terms'),
+  ]);
   return buildMetadata({
     locale: locale as Locale,
-    href: '/terms',
-    title: page?.seo.title ?? page?.title ?? t('title'),
+    href: { pathname: '/terms' },
+    title: page?.seo.title ?? page?.title ?? t('terms'),
     description: page?.seo.description ?? page?.intro,
     image: page?.seo.image ?? page?.cover,
   });
 }
 
-export default async function TermsPage({ params }: TermsPageProps) {
-  const { locale } = await params;
+export default async function TermsPage({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const page = await getPage(locale as Locale, 'terms');
-  if (!page) {
-    notFound();
-  }
-
+  const [t, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'legal' }),
+    getPage(locale, 'terms'),
+  ]);
   return (
-    <main id="main-content">
-      <h1>{page.title}</h1>
-      {page.intro && <p>{page.intro}</p>}
-      <Blocks blocks={page.content} />
+    <main className="wrap">
+      <PageHead title={page?.title ?? t('terms')} lead={page?.intro} />
+      {page && page.content.length > 0 ? (
+        <Blocks blocks={page.content} />
+      ) : (
+        <EmptyNotice text={t('pending')} />
+      )}
     </main>
   );
 }

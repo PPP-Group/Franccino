@@ -1,40 +1,55 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ContactChannels } from '@/components/contact/ContactChannels';
+import { Blocks } from '@/components/content/Blocks';
 import { ContactForm } from '@/components/forms/ContactForm';
+import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
-import { getPage } from '@/lib/api/content';
+import { getPage, getSettings } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
-type ContactPageProps = {
-  params: Promise<{ locale: string }>;
-};
+type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: ContactPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pages.contact' });
-  const page = await getPage(locale as Locale, 'contact');
-
+  const [t, page] = await Promise.all([
+    getTranslations({ locale, namespace: 'contactPage' }),
+    getPage(locale as Locale, 'contact'),
+  ]);
   return buildMetadata({
     locale: locale as Locale,
-    href: '/contact',
+    href: { pathname: '/contact' },
     title: page?.seo.title ?? page?.title ?? t('title'),
     description: page?.seo.description ?? page?.intro,
     image: page?.seo.image ?? page?.cover,
   });
 }
 
-export default async function ContactPage({ params }: ContactPageProps) {
-  const { locale } = await params;
+export default async function ContactPage({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw as Locale;
   setRequestLocale(locale);
-
-  const t = await getTranslations('pages.contact');
-  const page = await getPage(locale as Locale, 'contact');
-
+  const [t, page, settings] = await Promise.all([
+    getTranslations({ locale, namespace: 'contactPage' }),
+    getPage(locale, 'contact'),
+    getSettings(locale),
+  ]);
   return (
-    <main id="main-content">
-      <h1>{page?.title ?? t('title')}</h1>
-      {page?.intro && <p>{page.intro}</p>}
-      <ContactForm typeSelectable />
+    <main className="wrap">
+      <PageHead title={page?.title ?? t('title')} lead={page?.intro} />
+      <div className="contact-layout">
+        <aside aria-labelledby="contact-channels">
+          <h2 id="contact-channels" className="section-title">
+            {t('channelsTitle')}
+          </h2>
+          <ContactChannels settings={settings} />
+        </aside>
+        <section className="quote-form" aria-labelledby="contact-form-title">
+          <h2 id="contact-form-title">{t('formTitle')}</h2>
+          <ContactForm typeSelectable />
+        </section>
+      </div>
+      {page ? <Blocks blocks={page.content} /> : null}
     </main>
   );
 }

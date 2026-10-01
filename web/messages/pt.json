@@ -575,5 +575,24 @@
   "storesPage": {
     "title": "Lojas",
     "count": "{count, plural, one {# loja} other {# lojas}}"
+  },
+  "contactPage": {
+    "title": "Contato",
+    "channelsTitle": "Fale com a Franccino",
+    "formTitle": "Envie uma mensagem",
+    "channels": {
+      "phone": "Telefone",
+      "email": "E-mail",
+      "quotes": "Orçamentos",
+      "assistance": "Assistência técnica",
+      "assistancePhone": "Telefone da assistência",
+      "address": "Fábrica",
+      "openWhatsapp": "Conversar no WhatsApp"
+    }
+  },
+  "legal": {
+    "privacy": "Política de privacidade",
+    "terms": "Termos de uso",
+    "pending": "O texto desta página ainda não foi publicado."
   }
 }
