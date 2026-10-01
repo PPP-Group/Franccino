@@ -108,7 +108,8 @@
     "notFound": {
       "title": "Page not found",
       "description": "The content you are looking for doesn't exist or has moved.",
-      "backHome": "Back to the homepage"
+      "backHome": "Back to the homepage",
+      "catalog": "See the catalogue"
     },
     "serverError": {
       "title": "Something went wrong",
@@ -327,12 +328,6 @@
       "empty": "—"
     }
   },
-  "sections": {
-    "products": "Products",
-    "collections": "Collections",
-    "designers": "Designers",
-    "gallery": "Gallery"
-  },
   "stores": {
     "typeFilter": "Store type",
     "allTypes": "All types",
@@ -358,28 +353,7 @@
   },
   "pages": {
     "indoor": { "title": "Indoor" },
-    "indoorCategory": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" },
-    "outdoorCategory": { "title": "Outdoor" },
-    "products": { "title": "Products" },
-    "productDetail": { "title": "Product" },
-    "launches": { "title": "Novelties" },
-    "launchDetail": { "title": "Novelty" },
-    "collections": { "title": "Collections" },
-    "collectionDetail": { "title": "Collection" },
-    "designers": { "title": "Designers" },
-    "designerDetail": { "title": "Designer" },
-    "projects": { "title": "Projects" },
-    "projectDetail": { "title": "Project" },
-    "corporate": { "title": "Corporate" },
-    "factory": { "title": "Factory" },
-    "finishes": { "title": "Finishes" },
-    "downloads": { "title": "Downloads" },
-    "stores": { "title": "Stores" },
-    "contact": { "title": "Contact" },
-    "search": { "title": "Search" },
-    "privacy": { "title": "Privacy policy" },
-    "terms": { "title": "Terms of use" }
+    "outdoor": { "title": "Outdoor" }
   },
   "dimensions": {
     "width": "W",

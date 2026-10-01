@@ -71,6 +71,26 @@ function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
   }
 }
 
+/** One entry for `href` in the default locale with `alternates.languages` for every enabled locale. */
+function entryFor(href: Href, locales: Locale[], lastModified?: string): MetadataRoute.Sitemap[number] {
+  const languages: Record<string, string> = {};
+  for (const locale of locales) {
+    languages[htmlLang(locale)] = absoluteUrl(getPathname({ href, locale }));
+  }
+  return {
+    url: absoluteUrl(getPathname({ href, locale: defaultLocale })),
+    ...(lastModified ? { lastModified } : {}),
+    alternates: { languages },
+  };
+}
+
+/** Rotas que só existem no site (não vêm de `/sitemap` da API). A lista de orçamento fica fora (`noindex`). */
+const WEB_ONLY_ROUTES: Href[] = [{ pathname: '/room-planner' }];
+
+export function webOnlyEntries(locales: Locale[]): MetadataRoute.Sitemap {
+  return WEB_ONLY_ROUTES.map((href) => entryFor(href, locales));
+}
+
 export function sitemapEntries(entries: SitemapEntry[], locales: Locale[]): MetadataRoute.Sitemap {
   return entries.flatMap((entry) => {
     const defaultHref = hrefForEntry(entry, entry.slugs[defaultLocale]);

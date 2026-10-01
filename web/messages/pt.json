@@ -108,7 +108,8 @@
     "notFound": {
       "title": "Página não encontrada",
       "description": "O conteúdo que você procura não existe ou foi movido.",
-      "backHome": "Voltar para a página inicial"
+      "backHome": "Voltar para a página inicial",
+      "catalog": "Ver o catálogo"
     },
     "serverError": {
       "title": "Algo deu errado",
@@ -327,12 +328,6 @@
       "empty": "—"
     }
   },
-  "sections": {
-    "products": "Produtos",
-    "collections": "Coleções",
-    "designers": "Designers",
-    "gallery": "Galeria"
-  },
   "stores": {
     "typeFilter": "Tipo de loja",
     "allTypes": "Todos os tipos",
@@ -358,28 +353,7 @@
   },
   "pages": {
     "indoor": { "title": "Indoor" },
-    "indoorCategory": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" },
-    "outdoorCategory": { "title": "Outdoor" },
-    "products": { "title": "Produtos" },
-    "productDetail": { "title": "Produto" },
-    "launches": { "title": "Lançamentos" },
-    "launchDetail": { "title": "Lançamento" },
-    "collections": { "title": "Coleções" },
-    "collectionDetail": { "title": "Coleção" },
-    "designers": { "title": "Designers" },
-    "designerDetail": { "title": "Designer" },
-    "projects": { "title": "Projetos" },
-    "projectDetail": { "title": "Projeto" },
-    "corporate": { "title": "Corporativo" },
-    "factory": { "title": "Fábrica" },
-    "finishes": { "title": "Acabamentos" },
-    "downloads": { "title": "Downloads" },
-    "stores": { "title": "Lojas" },
-    "contact": { "title": "Contato" },
-    "search": { "title": "Busca" },
-    "privacy": { "title": "Política de privacidade" },
-    "terms": { "title": "Termos de uso" }
+    "outdoor": { "title": "Outdoor" }
   },
   "dimensions": {
     "width": "L",

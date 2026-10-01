@@ -42,16 +42,18 @@ src/
     sitemap.ts, robots.ts, not-found.tsx (global)
     fonts.ts, globals.css
   components/
-    layout/{SiteHeader,HeaderNav,SiteFooter,LanguageSwitcher,QuoteListLink}.tsx, nav.ts
+    layout/{SiteHeader,HeaderNav,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead}.tsx, nav.ts
     ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
     media/ApiImage.tsx
-    content/{RichText,Blocks}.tsx
+    content/{RichText,Blocks,Tile,EmptyNotice}.tsx
+    downloads/DownloadsTable.tsx
+    contact/ContactChannels.tsx
     forms/{ContactForm,NewsletterForm,Turnstile}.tsx
     catalog/{CatalogListing,CatalogToolbar,ProductGrid,TechTable,ViewToggle,Pagination,LaunchTile}.tsx, area-pages.tsx
     products/{ProductPlate,ProductRail,QuickAddButton,ProductStage,ModelViewer,ProductConfigurator,...}.tsx
     planner/{RoomPlanner,PlannerLibrary,PlanSvg}.tsx
     quote/QuoteListView.tsx
-    home/{HeroSection,LaunchesSection,LinesSection,FeatureSection,PlannerTeaser,...}.tsx
+    home/{HeroSection,HeroCarousel,LaunchesSection,LinesSection,FeatureSection,PlannerTeaser,...}.tsx
     stores/StoreFinder.tsx
     seo/JsonLd.tsx
   i18n/{config,routing,navigation,request}.ts
@@ -62,13 +64,15 @@ src/
     quote/{types,list,store,hooks,message,snapshot}.ts
     planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
     forms/contact.ts
-    ui/{local-store,toast,roving,use-is-client}.ts
+    ui/{local-store,toast,roving,use-is-client,carousel}.ts
+    projects/type.ts
+    stores/{filter,map-link}.ts
     contact-links.ts, settings.ts, env.ts
     format/{dimensions,file-size}.ts
     images/srcset.ts
     seo/{metadata,jsonld,sitemap}.ts
     security/basic-auth.ts
-  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote}.css
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts
