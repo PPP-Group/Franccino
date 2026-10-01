@@ -10,6 +10,7 @@ use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Collection;
+use App\Models\ConsentRecord;
 use App\Models\ContactMessage;
 use App\Models\Designer;
 use App\Models\DownloadLog;
@@ -87,6 +88,7 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::policy(ContactMessage::class, InboxPolicy::class);
         Gate::policy(NewsletterSubscriber::class, InboxPolicy::class);
+        Gate::policy(ConsentRecord::class, InboxPolicy::class);
 
         Event::listen(MediaHasBeenAddedEvent::class, StoreImageMetadata::class);
         Event::listen(ConversionHasBeenCompletedEvent::class, StoreBlurPlaceholder::class);

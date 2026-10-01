@@ -277,6 +277,14 @@ visitante e o link da mensagem no painel. Limite: 5 por minuto por IP (`429`).
 (`{ "data": { "subscribed": true } }`) se o e-mail já existir e for reativado — a resposta nunca revela
 se o cadastro já existia. Limite: 5 por minuto por IP.
 
+### `POST /consents`
+
+`{ "visitor_id": "<uuid>", "choice": "granted" | "denied", "policy_version"?, "locale" }`. Registra a escolha
+feita no aviso de cookies do site (Anexo I, "registro do aceite"). `visitor_id` é um UUID aleatório gerado no
+navegador (sem dado pessoal); o IP fica só como hash, como no `download_logs`. Cada escolha é uma linha nova
+(histórico). `201 { "data": { "recorded": true } }`. Sem Turnstile (o aviso não pode depender de desafio).
+Limite: o mesmo dos formulários (5 por minuto por IP).
+
 ### `POST /downloads/{file}/link`
 
 Sem corpo. Gera URL temporária (10 minutos) para o arquivo e grava `download_logs`.

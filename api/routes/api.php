@@ -38,6 +38,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
     Route::middleware('throttle:api-forms')->group(function () {
         Route::post('contact', V1\ContactController::class)->name('contact');
         Route::post('newsletter', V1\NewsletterController::class)->name('newsletter');
+        Route::post('consents', V1\ConsentController::class)->name('consents');
     });
 
     Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])

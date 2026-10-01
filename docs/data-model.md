@@ -293,7 +293,8 @@ Mídia: `image` (1, desktop), `image_mobile` (1, opcional).
 
 Conteúdo e SEO das páginas fixas do site. Cada página corresponde a uma rota do front, identificada por `key`.
 Chaves semeadas: `home`, `indoor`, `outdoor`, `products`, `launches`, `collections`, `designers`,
-`projects`, `corporate`, `factory`, `stores`, `finishes`, `downloads`, `contact`, `privacy`, `terms`.
+`projects`, `corporate`, `factory`, `stores`, `finishes`, `downloads`, `contact`, `privacy`, `terms`,
+`cookies` (política de cookies, acrescentada em 2026-10-01; o `PageSeeder` cria a página que faltar).
 
 | Coluna                     | Tipo          | Notas                    |
 | -------------------------- | ------------- | ------------------------ |
@@ -370,6 +371,21 @@ destinatários do formulário de contato (lista de e-mails, não exposta na API)
 
 `email` (único), `name` (null), `locale`, `source` (`footer`, `contact`...), `consent_at`,
 `unsubscribed_at` (null), `ip_hash`.
+
+### consent_records
+
+Registro do aceite de cookies (Anexo I, LGPD), gravado por `POST /consents`. Só inclusão; o painel lista e
+filtra, sem editar.
+
+| Coluna         | Tipo              | Notas                                 |
+| -------------- | ----------------- | ------------------------------------- |
+| visitor_id     | uuid, índice      | gerado no navegador, sem dado pessoal |
+| choice         | string            | `granted` \| `denied`                 |
+| policy_version | string(40), null  | versão da política vigente na escolha |
+| locale         | string(2)         |                                       |
+| ip_hash        | string(64)        | hash do IP, como em `download_logs`   |
+| user_agent     | string(512), null |                                       |
+| created_at     | timestamp, índice | sem `updated_at`                      |
 
 ## Acesso ao painel
 

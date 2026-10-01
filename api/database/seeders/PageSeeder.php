@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 class PageSeeder extends Seeder
 {
     /**
-     * Seed the 16 fixed page keys from docs/data-model.md. Idempotent: uses
+     * Seed the 17 fixed page keys from docs/data-model.md. Idempotent: uses
      * `firstOrCreate` by `key` so content already edited through the panel is
      * never overwritten by a later run.
      */
@@ -31,6 +31,7 @@ class PageSeeder extends Seeder
             'contact' => ['pt' => 'Contato', 'en' => 'Contact'],
             'privacy' => ['pt' => 'Política de privacidade', 'en' => 'Privacy policy'],
             'terms' => ['pt' => 'Termos de uso', 'en' => 'Terms of use'],
+            'cookies' => ['pt' => 'Política de cookies', 'en' => 'Cookie policy'],
         ];
 
         foreach ($pages as $key => $title) {
