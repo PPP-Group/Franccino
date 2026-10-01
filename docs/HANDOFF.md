@@ -22,7 +22,7 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5)     |
 | P5b Go-live     | T4 (importador do WordPress) e T7 (cookies) executadas; o resto depende de contas (seção 7)             |
 | PRs abertos     | #9–#13 aguardando o tech lead; a branch `claude/awesome-keller-iv02zw` integra todos e ainda não tem PR |
-| Testes          | API: 265 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`)     |
+| Testes          | API: 266 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`)     |
 | Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)                 |
 
 ---
@@ -198,7 +198,7 @@ ajustes, eles entram por cima.
 | Mapa do site (PPP-110)                       | `/pt/mapa-do-site` e `/en/site-map`, link no rodapé                                                                                                                                                           |
 | Cookies (PPP-81, P5b T7)                     | `POST /consents`, tabela `consent_records`, aviso com GTM só após aceite, página de política                                                                                                                  |
 | Lojas (PPP-108)                              | Foto e descrição por loja no painel, na API e na página                                                                                                                                                       |
-| Vídeos e links (PPP-106)                     | `media_links` em produto, designer e lançamento; player só carrega no clique                                                                                                                                  |
+| Vídeos e links (PPP-106)                     | `media_links` em produto, designer e lançamento (até 3 por peça); player só carrega no clique                                                                                                                 |
 | Downloads de designer e lançamento (PPP-109) | `product_files` com dono peça, designer ou lançamento; tipos catálogo e apresentação                                                                                                                          |
 | Perfis e registro de atividades (PPP-54)     | Perfil `support` (Atendimento, só consulta) e `activity_logs` (visível só para admin)                                                                                                                         |
 | Importador do WordPress (P5b T4, PPP-58)     | `php artisan franccino:wordpress:import` (ver abaixo)                                                                                                                                                         |
