@@ -146,6 +146,16 @@
   text-decoration: underline;
 }
 
+.prose p + p,
+.prose p + ul,
+.prose ul + p {
+  margin-top: 0.85em;
+}
+
+.prose ul {
+  padding-left: 1.2em;
+}
+
 .block-image img,
 .block-image-text img {
   width: 100%;
@@ -197,6 +207,8 @@
 .timeline p {
   color: var(--ink-muted);
   max-width: 64ch;
+  /* Cada linha do texto do painel é um fato da linha do tempo. */
+  white-space: pre-line;
 }
 
 .stats {

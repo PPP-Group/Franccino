@@ -122,7 +122,7 @@ export default async function ProductPage({ params }: Props) {
               </ul>
               <div className="panel__copy" lang={contentLang}>
                 {product.tagline ? <p className="lead">{product.tagline}</p> : null}
-                {product.description ? <RichText html={product.description} /> : null}
+                {product.description ? <RichText html={product.description} className="prose" /> : null}
                 {product.materials ? (
                   <p className="meta">{t('materials', { materials: product.materials })}</p>
                 ) : null}
