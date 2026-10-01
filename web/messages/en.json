@@ -517,5 +517,28 @@
     "instagram": "Instagram",
     "collections": "Designer's collections",
     "piecesTitle": "Pieces by this designer"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Residential and corporate projects with Franccino pieces.",
+    "count": "{count, plural, one {# project} other {# projects}}",
+    "typeFilter": "Project type",
+    "allTypes": "All",
+    "types": {
+      "residential": "Residential",
+      "corporate": "Corporate"
+    },
+    "pagination": "Project pages",
+    "client": "Client",
+    "architect": "Architecture",
+    "location": "Location",
+    "year": "Year",
+    "gallery": "Project images",
+    "piecesTitle": "Pieces in the project"
+  },
+  "corporate": {
+    "title": "Contract",
+    "projects": "Corporate projects",
+    "clients": "Clients"
   }
 }
