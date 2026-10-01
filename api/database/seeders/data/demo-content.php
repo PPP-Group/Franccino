@@ -227,7 +227,7 @@ return [
             'bio' => [
                 'pt' => '<p>Daniela Ferro formou-se em design pela Universidade Federal do Paraná. Desde o início de sua carreira, tem se dedicado ao design de móveis e hoje possui um portfólio extenso de criações, que abrange todas as tipologias do segmento. Ela se inspira nos designers da Bauhaus e sua estética radicalmente moderna, passando pelos dinamarqueses e pelos grandes mestres brasileiros das décadas de 50 e 60, para um conceito contemporâneo, que é uma marca de suas notáveis criações. Seu design caracteriza-se pelo traço conciso e expressivo, pela harmonia de proporções e pelo conforto.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Daniela-Ferro-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/daniela-ferro-png.png',
             'legacy_wp_id' => 3159,
             'legacy_url' => 'https://franccino.com.br/designer/daniela-ferro/',
         ],
@@ -240,7 +240,7 @@ return [
             'bio' => [
                 'pt' => '<p>Sergio J. Matos começou sua carreira em 2005, quando abriu seu estúdio. Por ter nascido em uma região próxima à reserva indígena do Xingu, Sérgio aprendeu a admirar a cultura local.</p><p>A curiosidade pela diversidade da floresta, com seus materiais naturais, fez com que adotasse elementos regionais em seus trabalhos, se abastecendo de um referendado no caldeirão cultural. Sua estampa de originalidade está no feito à mão, com calor humano.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/01/Sergio-J-Matos-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/01/Sergio-J-Matos-Franccino.jpg',
             'legacy_wp_id' => 1802,
             'legacy_url' => 'https://franccino.com.br/designer/sergio-matos/',
         ],
@@ -253,7 +253,7 @@ return [
             'bio' => [
                 'pt' => '<p>Fundado em 2013, o estúdio de arquitetura e design Zanocchi & Starke se baseia na fusão e diversidade de experiências profissionais e culturais do arquiteto italiano Andrea Zanocchi e da designer brasileira Carolina Starke. A paixão pelo design faz com que a dupla explore em suas criações a capacidade de evocar emoções e transmitir uma história, transcendendo o mero uso e a utilidade da peça. O Estúdio detém premiações como o Brasil Design Awards, Museu da Casa Brasileira e Salão Design, além de ter participado de exposições em eventos como o Salone del Mobile, Paris Design Week, Bienal Iberoamericana de Diseño e DW! São Paulo Design Weekend.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Zanocchi-Starke-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/ZS.png',
             'legacy_wp_id' => 3181,
             'legacy_url' => 'https://franccino.com.br/designer/zanocchi-starke/',
         ],
@@ -266,7 +266,7 @@ return [
             'bio' => [
                 'pt' => '<p>Graduado em Design de Produtos em 2008 pela Faculdade de Engenharia e Arquitetura da Universidade Fumec e Pós-Graduado em Design de Móveis no ano de 2011 pela Universidade do Estado de Minas Gerais (UEMG). A proximidade com os processos de produção rendeu experiências que influenciam no desenvolvimento de seus projetos, cuja preocupação é facilitar a produção em qualquer nível tecnológico.</p><p>Com um olhar criterioso, preocupado em desenvolver produtos que tenham boas características comerciais, o objetivo é projetar, de forma racional, minimizando processos, materiais e recursos construtivos. A partir de um conceito minimalista, busca o equilíbrio estético e funcional, sempre buscando soluções inteligentes, capazes de conferir ao produto beleza e autenticidade.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Zia-Costa-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Zia-Costa.png',
             'legacy_wp_id' => 3165,
             'legacy_url' => 'https://franccino.com.br/designer/zia-costa/',
         ],
@@ -279,7 +279,7 @@ return [
             'bio' => [
                 'pt' => '<p>Formado em arquitetura na USP-São Carlos, Paulo Alves, em 20 anos de carreira, traz em seus trabalhos uma lógica criativa em que a madeira e suas características naturais e simbólicas é a protagonista. Sempre com resultados surpreendentes, sua maestria no trabalho autoral com madeira remete ao legado dos mestres do móvel moderno brasileiro.</p><p>Acreditando no potencial da Franccino em relação a metalurgia, Paulo desenvolveu peças em metal para a marca, com a mesma ideologia criativa da sua carreira.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/01/Paulo-Alves-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/01/Paulo-Alves-foto-Victor-Affaro-.jpg',
             'legacy_wp_id' => 1799,
             'legacy_url' => 'https://franccino.com.br/designer/paulo-alves/',
         ],
@@ -292,7 +292,7 @@ return [
             'bio' => [
                 'pt' => '<p>Bruno Rangel, nascido em Campos dos Goytacazes, no interior do Rio de Janeiro, morou por 20 anos na capital fluminense, onde se formou em Design de Interiores pela Universidade Cândido Mendes e liderou o escritório de arquitetura com mais dois sócios até sua mudança para a capital paulista no início de 2019. Sua vida profissional foi construída com foco na arquitetura, mas sempre com um olhar voltado para os detalhes, principalmente os relacionados à marcenaria. Durante esses anos na arquitetura, desenhou algumas peças exclusivas para os clientes do escritório.</p><p>Sua dedicação ao design de mobiliário aumentou significativamente no final de 2017, quando uma grande loja especializada em design nacional sediada em São Paulo aprovou e decidiu lançar uma linha, que ocorreu no início de 2018. Uma das peças que compõem essa linha recebeu em 2019 uma menção honrosa no prêmio de design do Museu da Casa Brasileira.</p><p>A cultura indígena, o meio ambiente, a cultura popular e o cotidiano brasileiro são suas maiores referências e o que estimula seu desejo de criar e produzir algo novo.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Bruno-Rangel-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Bruno-Rangel.png',
             'legacy_wp_id' => 3178,
             'legacy_url' => 'https://franccino.com.br/designer/bruno-rangel/',
         ],
@@ -305,7 +305,7 @@ return [
             'bio' => [
                 'pt' => '<p>Graduada em Design de Produto e Design Gráfico pela PUC – RJ, especialista em Marketing pela UFMG, Mestre em Design e professora na Escola de Design da UEMG. É professora do curso de Pós-Graduação em Design de Móveis da Escola de Design da UEMG.</p><p>Em seus projetos de mobiliário, concilia valores estéticos e funcionais do produto para que se tornem atraentes e prazerosos.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Maria-Jose-Canedo-1.png',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Maria-Jose-Canedo-2.png',
             'legacy_wp_id' => 3168,
             'legacy_url' => 'https://franccino.com.br/designer/maria-jose-canedo/',
         ],
@@ -318,7 +318,7 @@ return [
             'bio' => [
                 'pt' => '<p>Arquiteta e Mestre em Educação pela UFMG, Isabela Vecci busca inspiração especialmente no campo da História e da Filosofia para suas criações em espaços culturais, comerciais, residenciais e mobiliário.</p><p>Inspirada na literatura e na história, a designer busca se apropriar de imagens – mentais ou materiais – para transformá-las em produtos de grande poesia.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Isabela-Vecci-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/IV.png',
             'legacy_wp_id' => 3175,
             'legacy_url' => 'https://franccino.com.br/designer/isabela-vecci/',
         ],
@@ -331,7 +331,7 @@ return [
             'bio' => [
                 'pt' => '<p>O Coletivo de Arquitetos é um estúdio formado pelos sócios arquitetos Guile Amadeu, Gustavo Fontes, Rodrigo Lacerda e por arquitetos parceiros, que atuam simultaneamente nas cidades de São Paulo e Aracaju. Seu foco principal de trabalho é o desenvolvimento de projetos de arquitetura, com áreas expandidas de interesse que incluem projeto de paisagismo, desenho urbano, intervenção em patrimônio histórico e design de objetos. Para atuar nessas diversas áreas, o coletivo conta com parcerias e colaborações de arquitetos especializados no desenvolvimento de soluções projetuais de forma coletiva.</p><p>Formou-se pela Universidade Federal de Santa Catarina em 2014 e posteriormente obteve pós-graduação pela Escola da Cidade (São Paulo). Durante sua trajetória acadêmica, dedicou-se a pesquisas e projetos com diferentes abordagens, buscando sempre complementar sua formação. Trabalhou em escritórios de arquitetura, atuou como avaliador de eficiência energética em edificações e fez parte da equipe responsável por representar o Brasil na competição internacional de casas solares Solar Decathlon Europe 2012, em Madri. Em 2011, realizou um intercâmbio acadêmico na Faculdade de Arquitetura e Urbanismo da Universidade de São Paulo (FAU – USP), onde cursou disciplinas e trabalhou no desenvolvimento da Casa Solar. No ano seguinte, participou de seu segundo intercâmbio, dessa vez internacional, ingressando na Escola Técnica Superior de Arquitetura da Universidade Politécnica de Madri (E.T.S.A.M – UPM).</p><p>Formou-se pela Fundação Armando Álvares Penteado em 2004 e especializou-se em Projeto de Arquitetura pela Universidade Presbiteriana Mackenzie em 2010. Colaborou com os escritórios Arquitetura de Hospitais Karman, com o Escritório Paulistano de Arquitetura e com o arquiteto Paulo Mendes da Rocha. Em suas atividades profissionais, obteve premiações em escala nacional, como a menção honrosa no 7° Prêmio Jovens Arquitetos IAB-SP com a Residência Aracaju em 2005. Em 2009, fundou o Coletivo de Arquitetos e, além das atividades desenvolvidas no escritório, é professor universitário nas disciplinas de Projeto de Arquitetura e Desenho Urbano em Aracaju, Sergipe.</p><p>Formou-se pela Fundação Armando Álvares Penteado em 2003. No ano seguinte, realizou sua primeira pós-graduação em Desenho e Cálculo de Estruturas pela Universidade Politécnica da Catalunya (UPC). Pela mesma universidade, especializou-se no curso Habitar La Casa em 2005. Durante os quatro anos em que permaneceu fora do Brasil, colaborou com o escritório EMBT – Miralles Tagliabue Arquitectes Associats. Paralelamente, participou de concursos em conjunto com outros dois arquitetos europeus, recebendo em 2006 o Primeiro Prêmio no Concurso de Requalificação de Área Urbana em Podenzano, Itália. No mesmo ano, com a mesma equipe de arquitetos, recebeu menção honrosa no Concurso para Biblioteca Municipal de Melzo, também na Itália. Em 2009, fundou o Coletivo de Arquitetos.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Coletivo-de-Arquitetos-100.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Prancheta-1.jpg',
             'legacy_wp_id' => 3172,
             'legacy_url' => 'https://franccino.com.br/designer/coletivo-de-arquitetos/',
         ],
@@ -344,7 +344,7 @@ return [
             'bio' => [
                 'pt' => '<p>ALVA é um escritório de design de mobiliário e objetos, formado pelos irmãos Susana Bastos, artista e estilista, e Marcelo Alvarenga, arquiteto.</p><p>Seus projetos são resultado do encontro desses dois olhares, o arquitetônico e o artístico, e para além da racionalidade e funcionalidade habituais, eles buscam o inusitado, os novos usos e uma expressiva materialidade.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2025/01/ghiu.webp',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2025/01/vasdfd.webp',
             'legacy_wp_id' => 7540,
             'legacy_url' => 'https://franccino.com.br/designer/alva-design/',
         ],
@@ -357,7 +357,7 @@ return [
             'bio' => [
                 'pt' => '<p>Com uma jornada profissional marcada por um ano e meio de imersão em Barcelona, Natália teve o privilégio de ser orientada por renomados mestres espanhóis, enquanto completava um mestrado especializado em mobiliário residencial, comercial, hoteleiro e urbano. Originária de Vila Velha, Vitória, essa experiência não apenas refinou suas habilidades técnicas, mas também enriqueceu sua visão de mundo, incorporando influências culturais diversas em sua prática.</p><p>Em seu processo criativo, Natália coloca grande ênfase na celebração dos materiais e dos processos. Ela reconhece que cada elemento, desde a escolha da matéria-prima até a técnica de fabricação, contribui para a identidade única de cada peça de mobiliário ou espaço projetado.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/Natalia-2-1.jpg',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/natalia.png',
             'legacy_wp_id' => 3409,
             'legacy_url' => 'https://franccino.com.br/designer/natalia-scarpati/',
         ],
@@ -370,7 +370,7 @@ return [
             'bio' => [
                 'pt' => '<p>Desenvolver um novo produto é criar sua história através dos estudos e projetos de criação. É pensar exatamente como ele vai fazer parte da vida das pessoas e agregar valor no ambiente em que for inserido.</p><p>Atenta aos avanços tecnológicos e aos novos anseios das pessoas no jeito de morar, a Franccino busca o design contemporâneo desenvolvendo cada vez mais produtos de conforto e qualidade com detalhes exclusivos. Tudo para garantir bem estar e bom gosto na utilização das peças.</p><p>Os móveis da marca estão em constante evolução, acompanhando as últimas tendências nacionais e internacionais. A pesquisa de tendências e novos materiais orientam a construção dos produtos.</p><p>A cada Lançamento, criação e desenvolvimento caminham interligados com ideias que se materializam a partir de novas experiências e progresso alcançados.</p>',
             ],
-            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/estudio-2.png',
+            'portrait' => 'https://franccino.com.br/wp-content/uploads/2024/04/estudio.png',
             'legacy_wp_id' => 3231,
             'legacy_url' => 'https://franccino.com.br/designer/estudio-franccino/',
         ],
@@ -1189,11 +1189,11 @@ return [
         [
             'slug' => [
                 'pt' => 'cadeira-melina',
-                'en' => 'melina-estofada-chair',
+                'en' => 'melina-upholstered-chair',
             ],
             'name' => [
                 'pt' => 'Cadeira Melina Estofada',
-                'en' => 'Melina Estofada Chair',
+                'en' => 'Melina Upholstered Chair',
             ],
             'area' => 'indoor',
             'category' => 'chairs',
@@ -1355,7 +1355,7 @@ return [
                 'pt' => 'Pausa leve entre sol, sombra e forma',
             ],
             'description' => [
-                'pt' => '<p>A</p><p>Mesa de Centro ARP</p><p>traduz a identidade da coleção em uma peça de presença sutil e equilibrada. Construída integralmente em alumínio, com opção de tampo em alumínio ou Fórmica, permite personalização da pintura eletrostática, adaptando-se com naturalidade a diferentes composições.</p><p>Assinada por</p><p>Andrea Zanocchi</p><p>, pode ser utilizada em áreas externas e revela, em suas linhas e planos bem definidos, a inspiração na Pedra do Arpoador. Um desenho preciso e durável, pensado para acompanhar momentos de pausa com elegância e leveza.</p>',
+                'pt' => '<p>A Mesa de Centro ARP traduz a identidade da coleção em uma peça de presença sutil e equilibrada. Construída integralmente em alumínio, com opção de tampo em alumínio ou Fórmica, permite personalização da pintura eletrostática, adaptando-se com naturalidade a diferentes composições.</p><p>Assinada por Andrea Zanocchi, pode ser utilizada em áreas externas e revela, em suas linhas e planos bem definidos, a inspiração na Pedra do Arpoador. Um desenho preciso e durável, pensado para acompanhar momentos de pausa com elegância e leveza.</p>',
             ],
             'dimensions' => [],
             'materials' => [
@@ -1383,7 +1383,7 @@ return [
                 'pt' => 'Sofisticação, sem perder a leveza e a praticidade.',
             ],
             'description' => [
-                'pt' => '<p>A Poltrona Noa é uma verdadeira expressão de</p><p>minimalismo</p><p>, onde cada detalhe foi cuidadosamente pensado para exalar</p><p>requinte</p><p>e</p><p>simplicidade</p><p>. Com</p><p>estrutura em alumínio com pintura eletrostática</p><p>, ela combina durabilidade e leveza, criando uma base elegante e moderna. A</p><p>almofada de assento</p><p>oferece conforto sem exageros, enquanto o</p><p>encosto e os braços em trama com corda de 6mm</p><p>conferem um toque artesanal e contemporâneo à peça. O</p><p>detalhe decorativo</p><p>do encosto adiciona uma camada de sofisticação, sem perder a leveza e a praticidade, tornando-a perfeita para ambientes que valorizam a beleza discreta e o design funcional. Cada elemento dessa cadeira é uma combinação de elegância sutil e estilo atemporal.</p>',
+                'pt' => '<p>A Poltrona Noa é uma verdadeira expressão de minimalismo, onde cada detalhe foi cuidadosamente pensado para exalar requinte e simplicidade. Com estrutura em alumínio com pintura eletrostática, ela combina durabilidade e leveza, criando uma base elegante e moderna. A almofada de assento oferece conforto sem exageros, enquanto o encosto e os braços em trama com corda de 6mm conferem um toque artesanal e contemporâneo à peça. O detalhe decorativo do encosto adiciona uma camada de sofisticação, sem perder a leveza e a praticidade, tornando-a perfeita para ambientes que valorizam a beleza discreta e o design funcional. Cada elemento dessa cadeira é uma combinação de elegância sutil e estilo atemporal.</p>',
             ],
             'dimensions' => [
                 [
@@ -1566,7 +1566,7 @@ return [
                 'pt' => 'Moderna e resistente, fazendo parte do ambiente e marcando com seu visual sofisticado.',
             ],
             'description' => [
-                'pt' => '<p>A Cadeira Marcela é uma elegante opção de assento para complementar sua decoração. Com sua estrutura em madeira maciça de tauari, ela é resistente e durável, além de possuir um visual sofisticado e moderno.</p><p>O encosto da cadeira é composto por uma aplicação de tela que permite uma boa circulação de ar, aumentando o conforto do usuário. Já o assento é revestido em espuma flexível de alto desempenho, proporcionando um alto nível de conforto e aconchego</p><p>A Cadeira Marcela é ideal para compor ambientes como sala de jantar, sala de estar, entre outros, agregando beleza e conforto ao espaço.</p>',
+                'pt' => '<p>A Cadeira Marcela é uma elegante opção de assento para complementar sua decoração. Com sua estrutura em madeira maciça de tauari, ela é resistente e durável, além de possuir um visual sofisticado e moderno.</p><p>O encosto da cadeira é composto por uma aplicação de tela que permite uma boa circulação de ar, aumentando o conforto do usuário. Já o assento é revestido em espuma flexível de alto desempenho, proporcionando um alto nível de conforto e aconchego A Cadeira Marcela é ideal para compor ambientes como sala de jantar, sala de estar, entre outros, agregando beleza e conforto ao espaço.</p>',
             ],
             'dimensions' => [
                 [
@@ -1631,7 +1631,7 @@ return [
                 'pt' => 'O verão como cenário do encontro',
             ],
             'description' => [
-                'pt' => '<p>A</p><p>Mesa de Jantar ARP</p><p>expressa a força silenciosa da coleção em uma peça que valoriza o encontro. Sua estrutura em alumínio recebe tampo em alumínio ou Fórmica, com acabamento em pintura eletrostática personalizável, garantindo resistência, versatilidade e harmonia no ambiente.</p><p>Assinada por</p><p>Andrea Zanocchi</p><p>, é indicada também para áreas externas e apresenta um desenho claro, inspirado na Pedra do Arpoador, onde planos firmes e linhas contínuas se equilibram com naturalidade. Uma peça atemporal, pensada para atravessar o tempo e reunir pessoas com conforto visual e elegância.</p>',
+                'pt' => '<p>A Mesa de Jantar ARP expressa a força silenciosa da coleção em uma peça que valoriza o encontro. Sua estrutura em alumínio recebe tampo em alumínio ou Fórmica, com acabamento em pintura eletrostática personalizável, garantindo resistência, versatilidade e harmonia no ambiente.</p><p>Assinada por Andrea Zanocchi, é indicada também para áreas externas e apresenta um desenho claro, inspirado na Pedra do Arpoador, onde planos firmes e linhas contínuas se equilibram com naturalidade. Uma peça atemporal, pensada para atravessar o tempo e reunir pessoas com conforto visual e elegância.</p>',
             ],
             'dimensions' => [],
             'materials' => [
@@ -1659,7 +1659,7 @@ return [
                 'pt' => 'Modernidade e o calor do artesanalmente sofisticado.',
             ],
             'description' => [
-                'pt' => '<p>A Cadeira Noa reflete a essência do</p><p>minimalismo</p><p>, com linhas limpas e design descomplicado que exalam</p><p>requinte</p><p>e sofisticação. A</p><p>estrutura em alumínio</p><p>com pintura eletrostática</p><p>traz um toque moderno e durável, enquanto a</p><p>almofada de</p><p>assento</p><p>oferece conforto sem perder a leveza visual. O</p><p>encosto e assento em trama com</p><p>corda de 8mm</p><p>adicionam um elemento artesanal e ao mesmo tempo contemporâneo, criando uma peça que é sinônimo de</p><p>simplicidade</p><p>refinada. Seu design elegante e funcional, aliado à escolha de materiais de qualidade, torna esta cadeira a escolha ideal para quem busca beleza e praticidade de forma sutil e sofisticada.</p>',
+                'pt' => '<p>A Cadeira Noa reflete a essência do minimalismo, com linhas limpas e design descomplicado que exalam requinte e sofisticação. A estrutura em alumínio com pintura eletrostática traz um toque moderno e durável, enquanto a almofada de assento oferece conforto sem perder a leveza visual. O encosto e assento em trama com corda de 8mm adicionam um elemento artesanal e ao mesmo tempo contemporâneo, criando uma peça que é sinônimo de simplicidade refinada. Seu design elegante e funcional, aliado à escolha de materiais de qualidade, torna esta cadeira a escolha ideal para quem busca beleza e praticidade de forma sutil e sofisticada.</p>',
             ],
             'dimensions' => [
                 [
@@ -2044,7 +2044,7 @@ return [
                 'pt' => 'Essência do verão em forma contínua',
             ],
             'description' => [
-                'pt' => '<p>O</p><p>Banco ARP</p><p>traduz a identidade da coleção em um gesto mais direto e versátil. Produzido integralmente em alumínio, com acabamento em pintura eletrostática personalizável, o banco pode ser adaptado a diferentes composições e usos, inclusive em áreas externas.</p><p>Assinado por</p><p>Andrea Zanocchi</p><p>, seu desenho valoriza linhas limpas e proporções cuidadosamente desenhadas, com curvas sutis que remetem à Pedra do Arpoador. Uma peça de presença discreta e marcante, que une resistência, leveza visual e atemporalidade.</p>',
+                'pt' => '<p>O Banco ARP traduz a identidade da coleção em um gesto mais direto e versátil. Produzido integralmente em alumínio, com acabamento em pintura eletrostática personalizável, o banco pode ser adaptado a diferentes composições e usos, inclusive em áreas externas.</p><p>Assinado por Andrea Zanocchi, seu desenho valoriza linhas limpas e proporções cuidadosamente desenhadas, com curvas sutis que remetem à Pedra do Arpoador. Uma peça de presença discreta e marcante, que une resistência, leveza visual e atemporalidade.</p>',
             ],
             'dimensions' => [],
             'materials' => [
@@ -2070,7 +2070,7 @@ return [
                 'pt' => 'A sutileza em unir e agregar sofisticação.',
             ],
             'description' => [
-                'pt' => '<p>A Mesa de Jantar Noa é o convite perfeito para</p><p>reunir</p><p>familiares e amigos, criando o ambiente ideal para</p><p>confraternizar</p><p>e compartilhar momentos especiais. Com</p><p>estrutura em madeira maciça freijó</p><p>, ela transmite solidez e elegância, enquanto o</p><p>tampo em madeira maciça freijó</p><p>, com</p><p>detalhes nas laterais</p><p>, acrescenta um toque de sofisticação sutil e ao mesmo tempo acolhedor. Sua presença no ambiente é capaz de</p><p>acolher</p><p>a todos com seu design harmonioso, sendo o centro de grandes refeições e conversas que aquecem o coração. Uma mesa pensada para proporcionar não apenas funcionalidade, mas também conforto e união em cada encontro.</p>',
+                'pt' => '<p>A Mesa de Jantar Noa é o convite perfeito para reunir familiares e amigos, criando o ambiente ideal para confraternizar e compartilhar momentos especiais. Com estrutura em madeira maciça freijó, ela transmite solidez e elegância, enquanto o tampo em madeira maciça freijó, com detalhes nas laterais, acrescenta um toque de sofisticação sutil e ao mesmo tempo acolhedor. Sua presença no ambiente é capaz de acolher a todos com seu design harmonioso, sendo o centro de grandes refeições e conversas que aquecem o coração. Uma mesa pensada para proporcionar não apenas funcionalidade, mas também conforto e união em cada encontro.</p>',
             ],
             'dimensions' => [],
             'materials' => null,
@@ -2488,7 +2488,7 @@ return [
                 'pt' => 'Verão esculpido em linhas permanentes',
             ],
             'description' => [
-                'pt' => '<p>A</p><p>Cadeira ARP</p><p>é inteiramente construída em alumínio, com estofado que amplia o conforto e valoriza a experiência de uso. A pintura eletrostática e o tecido são personalizáveis, permitindo que cada peça seja única e alinhada ao projeto.</p><p>Assinada por</p><p>Andrea Zanocchi</p><p>, pode ser utilizada em áreas externas e traz no encosto curvo a inspiração da Pedra do Arpoador — uma referência sutil ao encontro entre solidez e movimento. Seu desenho revela planos bem definidos combinados a curvas suaves, resultando em uma cadeira durável, confortável e naturalmente elegante, pensada para acompanhar o tempo com leveza.</p>',
+                'pt' => '<p>A Cadeira ARP é inteiramente construída em alumínio, com estofado que amplia o conforto e valoriza a experiência de uso. A pintura eletrostática e o tecido são personalizáveis, permitindo que cada peça seja única e alinhada ao projeto.</p><p>Assinada por Andrea Zanocchi, pode ser utilizada em áreas externas e traz no encosto curvo a inspiração da Pedra do Arpoador — uma referência sutil ao encontro entre solidez e movimento. Seu desenho revela planos bem definidos combinados a curvas suaves, resultando em uma cadeira durável, confortável e naturalmente elegante, pensada para acompanhar o tempo com leveza.</p>',
             ],
             'dimensions' => [
                 [
@@ -2523,7 +2523,7 @@ return [
                 'pt' => 'Definição de descanso e relaxamento com o toque do sofisticado.',
             ],
             'description' => [
-                'pt' => '<p>O Sofá Noa é a definição de</p><p>descanso</p><p>e</p><p>relaxamento</p><p>, projetado para oferecer momentos de</p><p>bem-estar</p><p>em qualquer ambiente. Sua</p><p>estrutura em alumínio com</p><p>pintura eletrostática</p><p>garante resistência e um toque contemporâneo, enquanto a</p><p>base em</p><p>madeira maciça freijó</p><p>, com</p><p>detalhes nas laterais</p><p>, traz um charme natural e sofisticado. O</p><p>encosto e braços em trama com corda de 22mm</p><p>conferem um visual leve e elegante, enquanto as</p><p>almofadas de assento e encosto estofadas</p><p>proporcionam o conforto ideal para um descanso completo. Cada elemento foi pensado para criar um espaço perfeito para relaxar e se desconectar, promovendo um ambiente acolhedor e harmonioso.</p>',
+                'pt' => '<p>O Sofá Noa é a definição de descanso e relaxamento, projetado para oferecer momentos de bem-estar em qualquer ambiente. Sua estrutura em alumínio com pintura eletrostática garante resistência e um toque contemporâneo, enquanto a base em madeira maciça freijó, com detalhes nas laterais, traz um charme natural e sofisticado. O encosto e braços em trama com corda de 22mm conferem um visual leve e elegante, enquanto as almofadas de assento e encosto estofadas proporcionam o conforto ideal para um descanso completo. Cada elemento foi pensado para criar um espaço perfeito para relaxar e se desconectar, promovendo um ambiente acolhedor e harmonioso.</p>',
             ],
             'dimensions' => [],
             'materials' => null,
