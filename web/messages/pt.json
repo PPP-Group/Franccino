@@ -499,5 +499,14 @@
       "lead": "Lojas exclusivas e revendas. Escolha o estado.",
       "consultant": "Falar com um consultor"
     }
+  },
+  "collections": {
+    "title": "Coleções",
+    "description": "Coleções da Franccino e as peças de cada uma.",
+    "count": "{count, plural, one {# coleção} other {# coleções}}",
+    "pieces": "{count, plural, =0 {sem peças} one {# peça} other {# peças}}",
+    "designers": "Design",
+    "gallery": "Imagens da coleção",
+    "piecesTitle": "Peças da coleção"
   }
 }
