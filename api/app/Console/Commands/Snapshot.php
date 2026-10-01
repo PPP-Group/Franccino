@@ -132,7 +132,7 @@ class Snapshot extends Command
 
         $this->call('migrate', ['--force' => true]);
         $this->call('db:seed', ['--class' => AdminUserSeeder::class, '--force' => true]);
-        $this->call('storage:link');
+        $this->call('storage:link', ['--force' => true]);
 
         if (! ($manifest['with_conversions'] ?? false)) {
             $this->info('Gerando as fotos redimensionadas (alguns minutos)...');

@@ -1,0 +1,44 @@
+# Preview completo (API + painel + site) em containers: `docker compose -f compose.preview.yaml up --build`.
+# Serve para testar no computador e como referência do EasyPanel (docs/deploy-preview.md).
+# Variáveis em .env.preview (copie de .env.preview.example; nunca commitar).
+name: franccino-preview
+
+services:
+  api:
+    build:
+      context: ./api
+    restart: unless-stopped
+    env_file: .env.preview
+    environment:
+      APP_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+      FRONTEND_URL: ${SITE_PUBLIC_URL:-http://localhost:3000}
+      FRONTEND_REVALIDATE_URL: http://web:3000/api/revalidate
+    ports:
+      - '${API_PORT:-8000}:80'
+    volumes:
+      - api-storage:/app/storage
+      - ./snapshots:/snapshots:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost/up']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    env_file: .env.preview
+    environment:
+      API_URL: http://api
+      NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+      SITE_URL: ${SITE_PUBLIC_URL:-http://localhost:3000}
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  api-storage:

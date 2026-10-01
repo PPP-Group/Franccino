@@ -1,0 +1,21 @@
+# Imagem da API (api/Dockerfile): só o código. Banco, fotos e caches vivem no volume /app/storage.
+vendor
+node_modules
+.env
+.env.*
+!.env.example
+tests
+.phpunit.cache
+.phpunit.result.cache
+database/*.sqlite*
+storage/app/*
+!storage/app/.gitignore
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing
+storage/framework/views/*
+storage/logs/*
+storage/media-library
+public/storage
+public/hot
+bootstrap/cache/*.php

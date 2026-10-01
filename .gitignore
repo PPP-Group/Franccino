@@ -19,6 +19,7 @@ Thumbs.db
 !.env.example
 !api/.env.example
 !web/.env.example
+!.env.preview.example
 *.pem
 *.key
 
@@ -113,3 +114,7 @@ docker-compose.override.yml
 
 # Estado local da ferramenta de design (Impeccable)
 /web/.impeccable/questions/
+
+# Snapshots de conteúdo (php artisan franccino:snapshot): dados do cliente, nunca no repositório
+/snapshots/
+*.snapshot.zip

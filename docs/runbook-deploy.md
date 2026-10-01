@@ -1,6 +1,8 @@
 # Runbook de deploy
 
 Status: rascunho (2026-09-23). Hospedagem ainda não definida; os passos abaixo valem para VPS/Forge no Laravel e
+
+Preview com senha (EasyPanel/Docker) e revisão local com o conteúdo real: ver [`deploy-preview.md`](deploy-preview.md).
 Vercel ou Node no Next. Completar quando as contas existirem.
 
 ## Ambientes

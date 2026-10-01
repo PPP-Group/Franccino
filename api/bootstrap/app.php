@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
     // time (each image listener ran twice per upload/conversion).
     ->withEvents(discover: false)
     ->withMiddleware(function (Middleware $middleware): void {
+        // Atrás do proxy do EasyPanel/Cloudflare (HTTPS termina antes do PHP): sem isso o painel gera links http://.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'content.locale' => SetContentLocale::class,
             'no-store' => NoStoreCache::class,

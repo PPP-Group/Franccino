@@ -1,0 +1,14 @@
+# Contexto do build do site (web/Dockerfile, raiz do repositório). A API tem o próprio api/.dockerignore.
+**/node_modules
+**/.next
+.git
+.env
+.env.*
+!.env.preview.example
+api
+design
+docs
+docker
+**/*.log
+web/.env.local
+web/coverage
