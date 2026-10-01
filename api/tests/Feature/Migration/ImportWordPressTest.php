@@ -84,7 +84,7 @@ it('imports designers, lines, one category per type and products as drafts with 
         ->and($product->category->getTranslation('name', 'pt'))->toBe('Cadeiras')
         ->and($product->line?->name)->toBe('Aura')
         ->and($product->designer?->slug)->toBe('estudio-franccino')
-        ->and($product->dimensions)->toBe([['width' => 600, 'depth' => 600, 'height' => 750, 'seat_height' => null, 'diameter' => null]])
+        ->and($product->dimensions)->toEqual([['width' => 600, 'depth' => 600, 'height' => 750, 'seat_height' => null, 'diameter' => null]])
         ->and($product->getTranslation('materials', 'pt'))->toBe('Estrutura em madeira freijó.')
         ->and($product->getTranslation('seo_title', 'pt'))->toBe('Cadeira Aura')
         ->and($product->getMedia('gallery'))->toHaveCount(2)
@@ -147,12 +147,13 @@ it('copies the text of the institutional pages into empty pages and keeps panel 
     $this->artisan('franccino:wordpress:import', ['--only' => ['pages']])->assertSuccessful();
 
     $content = fn (string $key) => Page::query()->where('key', $key)->sole()->content;
-    expect($content('factory'))->toBe([
+    // toEqual: MySQL stores JSON with its own key order.
+    expect($content('factory'))->toEqual([
         ['type' => 'rich_text', 'data' => ['body' => ['pt' => "<h2>Quem somos</h2>\n<p>Há mais de 20 anos no mercado.</p>"]]],
         ['type' => 'timeline', 'data' => ['items' => [['year' => '2000', 'title' => ['pt' => 'Fundação da Franccino.'], 'text' => ['pt' => '']]]]],
     ])
-        ->and($content('privacy'))->toBe([['type' => 'rich_text', 'data' => ['body' => ['pt' => "<h2>Dados coletados</h2>\n<p>Nome e e-mail.</p>"]]]])
-        ->and($content('terms'))->toBe([['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Do painel</p>']]]])
+        ->and($content('privacy'))->toEqual([['type' => 'rich_text', 'data' => ['body' => ['pt' => "<h2>Dados coletados</h2>\n<p>Nome e e-mail.</p>"]]]])
+        ->and($content('terms'))->toEqual([['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Do painel</p>']]]])
         ->and($content('home'))->toBe([]);
 });
 

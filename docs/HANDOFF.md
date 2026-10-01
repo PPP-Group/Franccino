@@ -11,19 +11,19 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 
 ## 1. Resumo
 
-| Item            | Situação                                                                                                |
-| --------------- | ------------------------------------------------------------------------------------------------------- |
-| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                        |
-| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4      |
-| P1 Fundação     | **Concluída**                                                                                           |
-| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)              |
-| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                             |
-| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                              |
-| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5)     |
-| P5b Go-live     | T4 (importador do WordPress) e T7 (cookies) executadas; o resto depende de contas (seção 7)             |
-| PRs abertos     | #9–#13 aguardando o tech lead; a branch `claude/awesome-keller-iv02zw` integra todos e ainda não tem PR |
-| Testes          | API: 266 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`)     |
-| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)                 |
+| Item            | Situação                                                                                            |
+| --------------- | --------------------------------------------------------------------------------------------------- |
+| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                    |
+| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4  |
+| P1 Fundação     | **Concluída**                                                                                       |
+| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)          |
+| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                         |
+| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                          |
+| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5) |
+| P5b Go-live     | T4 (importador do WordPress) e T7 (cookies) executadas; o resto depende de contas (seção 7)         |
+| PRs abertos     | Nenhum: tudo integrado em `develop` e `main` em 2026-10-01 (seção 3)                                |
+| Testes          | API: 266 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`) |
+| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)             |
 
 ---
 
@@ -93,25 +93,20 @@ quebradas.
 
 ## 3. Branches
 
-| Branch                         | Conteúdo                                                                                           |
-| ------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `main`                         | Igual à `develop` em 2026-09-28 (tudo integrado). Daqui em diante, só por PR aprovado              |
-| `develop`                      | Integração: todas as fases até P2 T12 e P4 T8 + esta documentação. **Comece daqui**                |
-| `feature/fundacao-projeto`     | P1, specs, planos, protótipo, `web/DESIGN.md`, documentação                                        |
-| `feature/fundacao-api`         | P2 até a T14 (`77412ed`). PR #9 para `develop`                                                     |
-| `feature/fundacao-web`         | P3 + P4 completas, com a revisão final. PR #10 para `develop`                                      |
-| `feature/p5a-plano`            | Plano da P5a e ledger da fase (só documentação). PR #11 para `develop`                             |
-| `feature/p5b-plano`            | Plano da P5b e ledger da fase (só documentação). PR #12 para `develop`                             |
-| `feature/p5a-prototipo`        | P5a Task 1: telas no protótipo. PR #13 (rascunho) sobre `feature/p5a-plano`                        |
-| `claude/awesome-keller-iv02zw` | `develop` + #9–#13 integrados + P5a T2–T11 + adiantamentos de 2026-10-01 (seção 4.5). Sem PR ainda |
+Desde 2026-10-01 o repositório tem só duas branches, como combinado no início do projeto:
 
-Em 2026-09-28, a pedido do responsável pelo projeto, tudo foi mergeado em `develop` e `main` de uma vez (push
-direto, sem PR), **incluindo** a P2 T12 ainda não revisada e a P4 T8 com ajustes pendentes (seção 5). Na integração,
-200 testes da API e 203 do site passaram e o typecheck ficou verde. O histórico inicial do repositório antigo
-(`PPP-Group/Francciono-Website`) foi mantido de propósito.
+| Branch    | Papel                                                                                     |
+| --------- | ----------------------------------------------------------------------------------------- |
+| `main`    | Produção. Igual à `develop` em 2026-10-01                                                 |
+| `develop` | Integração (staging). Trabalho novo sai daqui em `feature/nome-curto` ou `fix/nome-curto` |
 
-Depois disso (ainda em 2026-09-28) o trabalho continuou só nas branches de feature, que entram em `develop` por PR:
-as duas estão à frente de `develop`, sem nenhum commit atrás, e mergeiam sem conflito (sozinhas e juntas).
+Em 2026-10-01, a pedido do responsável pelo projeto, a branch de trabalho `claude/awesome-keller-iv02zw` (que já
+integrava os PRs #9 a #13 por cherry-pick, mais a P5a T2–T11 e os adiantamentos da seção 4.5) entrou em `develop`
+e `main` por fast-forward, com push direto. Antes disso: suíte da API verde em SQLite e em MySQL 8.4 (como o CI),
+Pint, Larastan, e lint, typecheck, testes e build do site. As branches de feature e as do Dependabot foram
+apagadas; os PRs #1 a #13 fecharam junto. Todo o conteúdo dos PRs #9 a #13 já estava na `develop` (conferido com
+`git cherry`). As atualizações de dependência do Dependabot (#1 a #8) não entraram: o Dependabot volta a abrir
+as que ainda fizerem sentido, e dependência nova continua dependendo de aprovação do tech lead.
 
 ---
 
@@ -221,7 +216,7 @@ catálogo importado. Fotos de capa de Casa, Giardini, Fábrica e do lançamento 
 
 ## 5. Em andamento
 
-A branch `claude/awesome-keller-iv02zw` (seção 4.5) espera PR para `develop`. O resto abaixo espera decisão.
+O trabalho de 2026-10-01 está em `develop` e `main` (seção 3). O resto abaixo espera decisão.
 
 ### 5.1 PRs abertos para `develop`
 
