@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Collection as CollectionModel;
 use App\Models\Concerns\HasImageConversions;
+use App\Models\Concerns\HasMediaLinks;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ use Spatie\Translatable\HasTranslations;
 class Product extends Model implements HasMedia
 {
     /** @use HasFactory<ProductFactory> */
-    use HasFactory, HasImageConversions, HasPublication, HasTranslations, SoftDeletes;
+    use HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasTranslations, SoftDeletes;
 
     protected $guarded = [];
 

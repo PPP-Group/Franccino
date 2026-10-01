@@ -56,6 +56,9 @@ type DesignerRef = { id: number; slug: string; name: string };
 type LineRef = { id: number; slug: string; name: string };
 type CollectionRef = { id: number; slug: string; name: string; year: number | null };
 
+// Vídeo ou link externo (Anexo I). `embed_url` só para vídeo do YouTube (domínio sem cookies) ou do Vimeo.
+type MediaLink = { id: number; kind: 'video' | 'link'; title: string; url: string; embed_url: string | null };
+
 type Dimension = {
   label: string | null;
   width: number | null; // mm
@@ -101,6 +104,7 @@ type ProductDetail = ProductCard & {
   gallery: Image[];
   model_3d: { url: string; size: number | null } | null; // null se não houver GLB ou 3D desligado
   files: DownloadFile[];
+  media_links: MediaLink[]; // vídeos (YouTube/Vimeo) e links externos, na ordem do painel
   line_products: ProductCard[]; // outras peças da mesma linha (até 8)
   related: ProductCard[]; // mesma área e categoria (até 8)
   seo: Seo;
@@ -123,9 +127,9 @@ type ProductDetail = ProductCard & {
 | `GET /collections`        |                                                                                                          | `CollectionCard[]` (`CollectionRef` + `summary`, `cover`, `product_count`)                                                                                       |
 | `GET /collections/{slug}` |                                                                                                          | `CollectionCard` + `description`, `gallery`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs`                                               |
 | `GET /designers`          |                                                                                                          | `DesignerCard[]` (`DesignerRef` + `short_bio`, `portrait`, `location`)                                                                                           |
-| `GET /designers/{slug}`   |                                                                                                          | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `seo`                                         |
+| `GET /designers/{slug}`   |                                                                                                          | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `seo`             |
 | `GET /launches`           |                                                                                                          | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                               |
-| `GET /launches/{slug}`    |                                                                                                          | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                               |
+| `GET /launches/{slug}`    |                                                                                                          | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `seo`, `slugs`                                                   |
 | `GET /projects`           | `type?`                                                                                                  | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`)                                                  |
 | `GET /projects/{slug}`    |                                                                                                          | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                 |
 | `GET /clients`            |                                                                                                          | `{ id, name, url, logo }[]`                                                                                                                                      |

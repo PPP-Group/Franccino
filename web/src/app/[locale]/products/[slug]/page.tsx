@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { AreaDot } from '@/components/ui/AreaDot';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
+import { MediaLinks } from '@/components/media/MediaLinks';
 import type { Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
 import { getAllProductSlugs, getProduct } from '@/lib/api/catalog';
@@ -138,6 +139,8 @@ export default async function ProductPage({ params }: Props) {
             </ProductConfigurator>
 
             <ProductDownloads files={product.files} />
+
+            <MediaLinks items={product.media_links} headingId="product-media" />
 
             <details className="quote-inline block">
               <summary>{t('quoteOnlyThis')}</summary>

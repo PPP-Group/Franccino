@@ -5,6 +5,7 @@ import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { RichText } from '@/components/content/RichText';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';
+import { MediaLinks } from '@/components/media/MediaLinks';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
@@ -93,6 +94,11 @@ export default async function DesignerPage({ params }: Props) {
           ) : null}
         </div>
       </div>
+      <MediaLinks
+        items={designer.media_links}
+        headingId="designer-media"
+        className="media-links--wide block"
+      />
       {designer.products.length > 0 ? (
         <section aria-labelledby="designer-pieces">
           <h2 id="designer-pieces" className="section-title">

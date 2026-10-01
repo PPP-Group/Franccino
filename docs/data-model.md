@@ -30,6 +30,7 @@ areas 1───* products *───1 categories
                 ├──*───* collections
                 ├──*───* launches
                 └──*───* projects
+products · designers · launches 1───* media_links (polimórfica)
 
 clients · stores · banners · pages · redirects · settings        (independentes)
 contact_messages *───0..1 products
@@ -194,6 +195,19 @@ URL assinada temporária.
 | size                     | bigint, null | bytes                                                                |
 | is_published, sort_order |              |                                                                      |
 | legacy_wp_id             |              |                                                                      |
+
+### media_links
+
+Vídeos (YouTube/Vimeo) e links externos de produto, designer ou lançamento. Polimórfica
+(`linkable_type` + `linkable_id`). O player só carrega quando o visitante clica.
+
+| Coluna                     | Tipo        | Notas                                                         |
+| -------------------------- | ----------- | ------------------------------------------------------------- |
+| linkable_type, linkable_id | morphs      | `Product`, `Designer` ou `Launch`                             |
+| kind                       | string enum | `video` \| `link`                                             |
+| title                      | json tr     | "Making of", "Matéria na Casa Vogue"                          |
+| url                        | string(512) | vídeo: URL do YouTube ou Vimeo; link: qualquer URL `https://` |
+| sort_order                 | int         | ordem no painel (arrastar)                                    |
 
 ### download_logs
 

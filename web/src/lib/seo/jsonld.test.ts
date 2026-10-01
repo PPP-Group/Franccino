@@ -111,6 +111,7 @@ function buildProduct(): ProductDetail {
     ],
     model_3d: null,
     files: [],
+    media_links: [],
     line_products: [],
     related: [],
     seo: { title: null, description: null, image: null },

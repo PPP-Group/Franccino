@@ -48,7 +48,7 @@ class ProductController extends Controller
             ->where("slug->{$locale}", $slug)
             ->with([
                 'area', 'category', 'designer', 'line', 'collections',
-                'finishes.group', 'media',
+                'finishes.group', 'media', 'mediaLinks',
                 'files' => fn ($query) => $query->published(),
                 'launches' => fn ($query) => $query->published(),
             ])

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasImageConversions;
+use App\Models\Concerns\HasMediaLinks;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\LaunchFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,7 @@ use Spatie\Translatable\HasTranslations;
 class Launch extends Model implements HasMedia
 {
     /** @use HasFactory<LaunchFactory> */
-    use HasFactory, HasImageConversions, HasPublication, HasTranslations;
+    use HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasTranslations;
 
     protected $guarded = [];
 

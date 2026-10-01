@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Designers;
 
+use App\Filament\RelationManagers\MediaLinksRelationManager;
 use App\Filament\Resources\Designers\Pages\CreateDesigner;
 use App\Filament\Resources\Designers\Pages\EditDesigner;
 use App\Filament\Resources\Designers\Pages\ListDesigners;
@@ -43,7 +44,7 @@ class DesignerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MediaLinksRelationManager::class,
         ];
     }
 

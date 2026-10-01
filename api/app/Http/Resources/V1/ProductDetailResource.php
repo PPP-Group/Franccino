@@ -47,6 +47,7 @@ class ProductDetailResource extends ProductCardResource
             'gallery' => ImagePresenter::presentMany($product->getMedia('gallery'), $name),
             'model_3d' => $this->model3d($product),
             'files' => $this->files($product),
+            'media_links' => MediaLinkResource::collection($product->mediaLinks)->resolve(),
             'line_products' => ProductCardResource::collection($lineProducts)->toArray($request),
             'related' => ProductCardResource::collection($related)->toArray($request),
             'seo' => Refs::seo($product, $product->getFirstMedia('cover'), $name),

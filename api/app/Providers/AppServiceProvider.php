@@ -18,6 +18,7 @@ use App\Models\Finish;
 use App\Models\FinishGroup;
 use App\Models\Launch;
 use App\Models\Line;
+use App\Models\MediaLink;
 use App\Models\NewsletterSubscriber;
 use App\Models\Page;
 use App\Models\Product;
@@ -72,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Finish::class, ContentPolicy::class);
         Gate::policy(Product::class, ContentPolicy::class);
         Gate::policy(ProductFile::class, ContentPolicy::class);
+        Gate::policy(MediaLink::class, ContentPolicy::class);
 
         Gate::policy(DownloadLog::class, InboxPolicy::class);
 

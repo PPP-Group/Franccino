@@ -29,6 +29,7 @@ class LaunchResource extends LaunchCardResource
             'description' => RichText::sanitize(Localized::value($launch, 'description')),
             'gallery' => ImagePresenter::presentMany($launch->getMedia('gallery'), $title),
             'products' => ProductCardResource::collection($launch->products)->toArray($request),
+            'media_links' => MediaLinkResource::collection($launch->mediaLinks)->resolve(),
             'seo' => Refs::seo($launch, $launch->getFirstMedia('cover'), $title),
             'slugs' => collect(Locales::all())
                 ->mapWithKeys(fn (string $locale) => [$locale => $launch->getTranslation('slug', $locale, false) ?: null])

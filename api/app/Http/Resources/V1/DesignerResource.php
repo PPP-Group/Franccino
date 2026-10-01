@@ -49,6 +49,7 @@ class DesignerResource extends DesignerCardResource
                 ->map(fn (CollectionModel $collection) => Refs::collection($collection))
                 ->values()
                 ->all(),
+            'media_links' => MediaLinkResource::collection($designer->mediaLinks)->resolve(),
             'seo' => Refs::seo($designer, $designer->getFirstMedia('portrait'), $designer->name),
         ]);
     }

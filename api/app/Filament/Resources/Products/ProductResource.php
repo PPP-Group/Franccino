@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products;
 
+use App\Filament\RelationManagers\MediaLinksRelationManager;
 use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
@@ -47,6 +48,7 @@ class ProductResource extends Resource
     {
         return [
             FilesRelationManager::class,
+            MediaLinksRelationManager::class,
         ];
     }
 

@@ -591,5 +591,11 @@
     "decline": "Recusar",
     "policy": "Política de cookies",
     "privacy": "Política de privacidade"
+  },
+  "mediaLinks": {
+    "title": "Vídeos e links",
+    "videos": "Vídeos",
+    "links": "Links",
+    "play": "Assistir ao vídeo: {title}"
   }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasImageConversions;
+use App\Models\Concerns\HasMediaLinks;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\DesignerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 class Designer extends Model implements HasMedia
 {
     /** @use HasFactory<DesignerFactory> */
-    use HasFactory, HasImageConversions, HasPublication, HasTranslations;
+    use HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasTranslations;
 
     protected $guarded = [];
 

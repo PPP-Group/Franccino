@@ -591,5 +591,11 @@
     "decline": "Decline",
     "policy": "Cookie policy",
     "privacy": "Privacy policy"
+  },
+  "mediaLinks": {
+    "title": "Videos and links",
+    "videos": "Videos",
+    "links": "Links",
+    "play": "Play video: {title}"
   }
 }

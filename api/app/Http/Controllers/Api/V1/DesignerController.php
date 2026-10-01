@@ -30,7 +30,7 @@ class DesignerController extends Controller
     {
         $designer = Designer::published()
             ->where('slug', $slug)
-            ->with('media')
+            ->with(['media', 'mediaLinks'])
             ->firstOrFail();
 
         $products = $designer->products()

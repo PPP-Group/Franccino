@@ -41,6 +41,15 @@ export type Dimension = {
   diameter: number | null;
 };
 
+export type MediaLink = {
+  id: number;
+  kind: 'video' | 'link';
+  title: string;
+  url: string;
+  /** Player address (YouTube no-cookie or Vimeo); null for links and for videos from other hosts. */
+  embed_url: string | null;
+};
+
 export type DownloadFile = {
   id: number;
   type: 'technical_sheet' | 'block_2d' | 'block_3d' | 'manual' | 'other';
@@ -77,6 +86,7 @@ export type ProductDetail = ProductCard & {
   gallery: Image[];
   model_3d: { url: string; size: number | null } | null;
   files: DownloadFile[];
+  media_links: MediaLink[];
   line_products: ProductCard[];
   related: ProductCard[];
   seo: Seo;
@@ -128,6 +138,7 @@ export type DesignerDetail = DesignerCard & {
   instagram_url: string | null;
   products: ProductCard[];
   collections: CollectionRef[];
+  media_links: MediaLink[];
   seo: Seo;
 };
 
@@ -144,6 +155,7 @@ export type LaunchDetail = LaunchCard & {
   description: string | null;
   gallery: Image[];
   products: ProductCard[];
+  media_links: MediaLink[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
 };
