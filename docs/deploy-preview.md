@@ -68,8 +68,12 @@ SNAPSHOT_URL=<link direto do zip, opcional>
 ```
 
 `APP_KEY` pode ficar vazia: a imagem gera uma e guarda no volume. `APP_LOCALE=pt_BR`, SQLite e fila já vêm de
-fábrica na imagem. O nome interno `franccino_web` segue o padrão `<projeto>_<serviço>` do EasyPanel; confira no
-painel se o projeto tiver outro nome.
+fábrica na imagem.
+
+O nome interno segue o padrão `<projeto>_<serviço>` do EasyPanel. Os exemplos usam o projeto `franccino` com os
+serviços `api` e `web`. Com outros nomes (ex.: projeto `sites`, serviços `api-franccino` e `site-franccino`), troque
+em `FRONTEND_REVALIDATE_URL` e em `API_URL` (ex.: `http://sites_api-franccino`). O comando
+`docker service ls` no VPS lista os nomes certos.
 
 ### Serviço `web`
 
@@ -91,7 +95,8 @@ STAGING_BASIC_AUTH_USER=franccino
 STAGING_BASIC_AUTH_PASSWORD=<senha que vai para o cliente>
 ```
 
-`SITE_ENV=staging` liga a senha e o `noindex` (o Google não indexa o preview).
+`SITE_ENV=staging` liga a senha e o `noindex` (o Google não indexa o preview). O `web` **não** leva volume: só a
+`api` tem mount.
 
 ### Colocando o conteúdo no VPS
 
@@ -121,6 +126,14 @@ editado no painel atualiza o site sozinho (revalidação).
 3. Criar `web` e fazer deploy (o build espera a API responder).
 4. Abrir `https://preview.<seu-dominio>/pt`, entrar com a senha do preview, e o painel em
    `https://api-preview.<seu-dominio>/admin`.
+
+### Problemas comuns
+
+| Sintoma                                                   | Causa e correção                                                                                                                                                |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `failed to populate volume ... no such file or directory` | Volume num serviço que não precisa (o `web`): apague o mount. Se for na `api`, crie a pasta no VPS com `mkdir -p` no caminho da mensagem e faça Deploy de novo. |
+| Bolinha laranja no `web` e "Aguardando a API" no log      | `API_URL` com nome interno errado (ver o padrão `<projeto>_<serviço>` acima) ou a `api` fora do ar.                                                             |
+| "Service not found" no domínio                            | O container do serviço não está rodando ou a porta do domínio está errada (`api` = 80, `web` = 3000). Veja a aba Logs.                                          |
 
 ## Observações
 
