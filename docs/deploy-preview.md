@@ -14,7 +14,7 @@ newsletter, aceites e logs. Ele é dado do cliente: guarde no Drive do projeto, 
 Requisitos do `CLAUDE.md` (Node 24, pnpm 11, PHP 8.4 + Composer). Na raiz do repositório:
 
 ```bash
-git fetch origin && git checkout claude/awesome-keller-iv02zw
+git fetch origin && git checkout develop
 pnpm install
 pnpm bootstrap --sqlite      # cria api/.env e web/.env.local, mostra a senha do admin
 cd api
@@ -43,7 +43,7 @@ A API sobe em http://localhost:8000 e o site em http://localhost:3000 (pede o us
 ## 3. VPS com EasyPanel
 
 Um projeto (ex.: `franccino`) com dois serviços do tipo **App**, os dois a partir do GitHub
-(`PPP-Group/Franccino`, branch `claude/awesome-keller-iv02zw` até o merge, depois `develop`).
+(`PPP-Group/Franccino`, branch `main`).
 
 ### Serviço `api`
 
@@ -109,7 +109,9 @@ Escolha um:
 
    O caminho do volume aparece na aba de volumes do serviço; o acima é o padrão.
 
-Depois de importar, faça **Redeploy** do `web` para o build pegar o conteúdo novo. Daí em diante, o que for
+O import leva cerca de 1 minuto; as fotos redimensionadas vão para a fila e o worker da API gera em segundo plano
+(uns 20 minutos para o catálogo todo; até lá algumas fotos aparecem borradas). Depois de importar, faça
+**Redeploy** do `web` para o build pegar o conteúdo novo. Daí em diante, o que for
 editado no painel atualiza o site sozinho (revalidação).
 
 ### Ordem do primeiro deploy
