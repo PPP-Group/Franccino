@@ -83,11 +83,12 @@ Ambiente:
 
 Medidas lidas pelo próprio visualizador do site (`getDimensions()` do model-viewer):
 
-| Página                                     | Botão 3D | Modelo carregou | Medidas (L × A × P, mm) | GLB                              |
-| ------------------------------------------ | -------- | --------------- | ----------------------- | -------------------------------- |
-| `/pt/produtos/cadeira-marcela-sem-braco-2` | sim      | sim             | 549 × 850 × 610         | 200, `model/gltf-binary`, 3,5 MB |
-| `/pt/produtos/poltrona-maria-2`            | sim      | sim             | 715 × 750 × 790         | 200, `model/gltf-binary`, 3,2 MB |
-| `/pt/produtos/sofa-campestre`              | sim      | sim             | 2000 × 907 × 1000       | 200, `model/gltf-binary`, 2,5 MB |
+| Página                                                                | Botão 3D | Modelo carregou | Medidas (L × A × P, mm) | GLB                              |
+| --------------------------------------------------------------------- | -------- | --------------- | ----------------------- | -------------------------------- |
+| `/pt/produtos/cadeira-marcela-sem-braco` (Indoor, página do briefing) | sim      | sim             | 549 × 850 × 610         | 200, `model/gltf-binary`, 3,5 MB |
+| `/pt/produtos/cadeira-marcela-sem-braco-2`                            | sim      | sim             | 549 × 850 × 610         | 200, `model/gltf-binary`, 3,5 MB |
+| `/pt/produtos/poltrona-maria-2`                                       | sim      | sim             | 715 × 750 × 790         | 200, `model/gltf-binary`, 3,2 MB |
+| `/pt/produtos/sofa-campestre`                                         | sim      | sim             | 2000 × 907 × 1000       | 200, `model/gltf-binary`, 2,5 MB |
 
 Outros testes:
 
