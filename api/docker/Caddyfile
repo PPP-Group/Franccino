@@ -1,0 +1,26 @@
+# Servidor da API no container (api/Dockerfile): o mesmo que o `frankenphp php-server` fazia, mais o CORS da mídia.
+# O visualizador 3D do site baixa o GLB de /storage com fetch, a partir do domínio do site (docs/runbook-deploy.md,
+# "CORS da mídia"); arquivo estático não passa pelo config/cors.php do Laravel. MEDIA_CORS_ORIGINS é a regex das
+# origens liberadas, montada pelo entrypoint a partir de FRONTEND_URL.
+{
+	skip_install_trust
+	admin off
+	auto_https off
+	frankenphp
+}
+
+:80 {
+	root * /app/public
+	encode zstd br gzip
+
+	@media_cors {
+		path /storage/*
+		header_regexp Origin "{$MEDIA_CORS_ORIGINS}"
+	}
+	header @media_cors {
+		Access-Control-Allow-Origin {http.request.header.Origin}
+		Vary Origin
+	}
+
+	php_server
+}

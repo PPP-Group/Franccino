@@ -164,5 +164,8 @@ Não reimportar o snapshot e não apagar o banco.
 - O preview usa SQLite e disco local no volume. Produção usa MySQL e R2 (`runbook-deploy.md`); o snapshot
   serve para preview e revisão, não para produção.
 - Formulários: com `MAIL_MAILER=log` as mensagens ficam só no painel (Mensagens), sem e-mail.
+- O visualizador 3D baixa o GLB de `/storage` a partir do domínio do site. O `api/docker/Caddyfile` responde
+  `Access-Control-Allow-Origin` nesses arquivos só para as origens de `FRONTEND_URL` (o entrypoint monta a regra).
+  Para ligar o 3D de um produto: painel → produto → **Modelo 3D** (GLB até 5 MB) e o "3D" ativado.
 - Imagens base: `dunglas/frankenphp` (PHP 8.4 + Caddy) para a API e `node:24` para o site. O healthcheck da
   imagem base testa a porta 2019, que o `php-server` não abre; o `api/Dockerfile` troca pela rota `/up`.

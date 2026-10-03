@@ -20,6 +20,14 @@ if [ "${DB_CONNECTION}" = "sqlite" ] && [ ! -f "${DB_DATABASE}" ]; then
     touch "${DB_DATABASE}"
 fi
 
+# CORS da mídia (/storage) para o visualizador 3D: só as origens de FRONTEND_URL, separadas por vírgula, viram a regex
+# que o docker/Caddyfile usa. Ponto vira [.], sem barra invertida para o Caddyfile não interpretar.
+if [ -z "${MEDIA_CORS_ORIGINS}" ]; then
+    origins="$(printf '%s' "${FRONTEND_URL:-http://localhost:3000}" | tr -d ' ' | sed 's/[.]/[.]/g; s/,/|/g')"
+    MEDIA_CORS_ORIGINS="^(${origins})\$"
+    export MEDIA_CORS_ORIGINS
+fi
+
 php artisan storage:link --force > /dev/null
 # Num redeploy o container novo sobe antes do antigo parar: a trava no volume impede duas migrations ao mesmo
 # tempo no mesmo SQLite (erro "table already exists").
