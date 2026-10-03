@@ -42,7 +42,9 @@ return [
             'busy_timeout' => env('DB_BUSY_TIMEOUT'),
             'journal_mode' => env('DB_JOURNAL_MODE'),
             'synchronous' => null,
-            'transaction_mode' => 'DEFERRED',
+            // IMMEDIATE no container (api/Dockerfile): a transação já nasce com a vez de escrever e espera o
+            // busy_timeout, em vez de falhar quando outro processo grava no meio dela.
+            'transaction_mode' => env('DB_TRANSACTION_MODE', 'DEFERRED'),
         ],
 
         'mysql' => [

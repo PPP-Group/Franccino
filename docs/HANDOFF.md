@@ -213,6 +213,28 @@ tem descrição; 129 têm medida configurável e 53 têm medida que o parser nã
 catálogo importado. Fotos de capa de Casa, Giardini, Fábrica e do lançamento foram escolhidas no banco local
 (no staging, pelo painel).
 
+### 4.6 Preview no VPS (2026-10-02)
+
+Preview no ar no VPS (EasyPanel, projeto `sites`); nomes e domínios em `docs/deploy-preview.md`. O primeiro deploy
+expôs quatro defeitos da imagem da API, todos corrigidos e testados em container antes do merge:
+
+- **Healthcheck da imagem base.** Testava a porta 2019, que o `php-server` não abre, e o Swarm reiniciava a
+  API sem parar. Agora testa `/up`.
+- **Migrations ao mesmo tempo.** Dois containers no mesmo volume durante o redeploy davam "table already
+  exists". Agora há uma trava (`flock`).
+- **Import do snapshot com a API ligada.** Ele sobrescrevia o arquivo do SQLite sob conexões abertas e dava
+  "database is locked". Agora o import copia o conteúdo por dentro do SQLite, numa transação, e preserva
+  usuários e fila.
+- **Fotos borradas.** O snapshot leve dizia que as fotos redimensionadas existiam, e o `media-library:regenerate`
+  perdia parte delas com o worker rodando. Agora a API mostra a original até a redimensionada ficar pronta,
+  e dois workers processam a fila.
+
+Fora do código:
+
+- Senhas com `#` são cortadas pelo EasyPanel.
+- O SSL de todo o VPS caiu por um YAML inválido do roteador do VTX Tap (`vtx-dominios`, outro repositório),
+  que está desligado.
+
 ---
 
 ## 5. Em andamento

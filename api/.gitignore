@@ -22,6 +22,9 @@
 /public/js/filament
 /public/storage
 /storage/*.key
+/storage/.snapshot-imported
+/storage/.migrate.lock
+/storage/.app-key
 /storage/app/demo-cache/
 /storage/pail
 /storage/phpstan
