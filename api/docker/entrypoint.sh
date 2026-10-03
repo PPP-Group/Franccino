@@ -21,23 +21,36 @@ if [ "${DB_CONNECTION}" = "sqlite" ] && [ ! -f "${DB_DATABASE}" ]; then
 fi
 
 php artisan storage:link --force > /dev/null
-php artisan migrate --force
+# Num redeploy o container novo sobe antes do antigo parar: a trava no volume impede duas migrations ao mesmo
+# tempo no mesmo SQLite (erro "table already exists").
+flock storage/.migrate.lock php artisan migrate --force
 
-# Conteúdo de exemplo: SNAPSHOT_URL aponta para um zip de `php artisan franccino:snapshot export` (uma vez só).
+# Conteúdo de exemplo: SNAPSHOT_URL aponta para um zip de `php artisan franccino:snapshot export`. Importa uma vez
+# só: o comando grava storage/.snapshot-imported (também no import manual), e daí em diante vale o que for
+# editado no painel. Link fora do ar não derruba a API.
 if [ -n "${SNAPSHOT_URL}" ] && [ ! -f storage/.snapshot-imported ]; then
     echo "Baixando o snapshot de conteúdo..."
-    curl -fsSL "${SNAPSHOT_URL}" -o /tmp/snapshot.zip
-    php artisan franccino:snapshot import /tmp/snapshot.zip --force
+    if curl -fsSL "${SNAPSHOT_URL}" -o /tmp/snapshot.zip; then
+        flock storage/.migrate.lock php artisan franccino:snapshot import /tmp/snapshot.zip --force \
+            || echo "Import do snapshot falhou; a API sobe com o conteúdo atual."
+    else
+        echo "Não foi possível baixar SNAPSHOT_URL; a API sobe com o conteúdo atual."
+    fi
     rm -f /tmp/snapshot.zip
-    date > storage/.snapshot-imported
 fi
 
 php artisan db:seed --class=AdminUserSeeder --force
 php artisan optimize > /dev/null
 
-# Worker da fila (fotos redimensionadas, revalidação do site, e-mails). Reinicia sozinho a cada hora.
+# Workers da fila (fotos redimensionadas, revalidação do site, e-mails), QUEUE_WORKERS em paralelo (padrão 2: o
+# catálogo inteiro sai em cerca de meia hora). Reiniciam sozinhos a cada hora. Foto grande num VPS pequeno passa
+# de 1 minuto: o limite por tarefa é 5 (e DB_QUEUE_RETRY_AFTER, 10).
 if [ "${RUN_QUEUE_WORKER:-true}" = "true" ]; then
-    (while true; do php artisan queue:work --tries=3 --sleep=3 --max-time=3600 || sleep 5; done) &
+    i=0
+    while [ "$i" -lt "${QUEUE_WORKERS:-2}" ]; do
+        (while true; do php artisan queue:work --tries=3 --sleep=3 --timeout=300 --max-time=3600 || sleep 5; done) &
+        i=$((i + 1))
+    done
 fi
 
 exec "$@"
