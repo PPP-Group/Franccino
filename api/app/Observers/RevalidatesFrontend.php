@@ -50,10 +50,22 @@ class RevalidatesFrontend
         Redirect::class => ['redirects'],
     ];
 
+    /**
+     * What the media library writes while it makes the resized photos. Not a content change: revalidating on it
+     * queued one "revalidate all products" job per finished photo (the queue never shrank and the site kept
+     * re-rendering). Pages pick up the new sizes on their hourly revalidation.
+     */
+    private const MEDIA_BOOKKEEPING = ['generated_conversions', 'responsive_images', 'updated_at'];
+
     public function __construct(private readonly FrontendRevalidator $revalidator) {}
 
     public function saved(Model $model): void
     {
+        if ($model instanceof Media && ! $model->wasRecentlyCreated
+            && array_diff(array_keys($model->getChanges()), self::MEDIA_BOOKKEEPING) === []) {
+            return;
+        }
+
         $this->revalidate($model);
     }
 

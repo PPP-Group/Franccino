@@ -61,6 +61,22 @@ it('revalidates the owner model tags when its media changes', function () {
     Bus::assertDispatched(RevalidateFrontend::class, fn ($job) => collect($job->tags)->sort()->values()->all() === ['home', 'products']);
 });
 
+it('does not revalidate when the media library only records a finished resized photo', function () {
+    Bus::fake([RevalidateFrontend::class]);
+    $product = Product::factory()->create();
+    $media = $product->addMedia(UploadedFile::fake()->image('cover.jpg', 40, 30))->toMediaCollection('cover');
+    app(FrontendRevalidator::class)->flush();
+    Bus::assertDispatchedTimes(RevalidateFrontend::class, 1);
+
+    $media->fresh()->markAsConversionGenerated('w480');
+    app(FrontendRevalidator::class)->flush();
+    Bus::assertDispatchedTimes(RevalidateFrontend::class, 1);
+
+    $media->fresh()->setCustomProperty('alt', 'Capa')->save();
+    app(FrontendRevalidator::class)->flush();
+    Bus::assertDispatchedTimes(RevalidateFrontend::class, 2);
+});
+
 it('revalidates the settings tag when the general settings are saved', function () {
     Bus::fake([RevalidateFrontend::class]);
 
