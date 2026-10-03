@@ -37,6 +37,7 @@ use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
 use App\Support\FrontendRevalidator;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -100,9 +101,21 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaHasBeenAddedEvent::class, StoreImageMetadata::class);
         Event::listen(ConversionHasBeenCompletedEvent::class, StoreBlurPlaceholder::class);
 
+        $this->configurePanelUploads();
         $this->configureRateLimiters();
         $this->configureFrontendRevalidation();
         $this->configureActivityLog();
+    }
+
+    /**
+     * Photos and 3D models uploaded in the panel go to the public media disk, like the ones the importer adds.
+     * Without a disk, Filament falls back to FILESYSTEM_DISK (`local`, private) and the site gets a 403 for them.
+     */
+    private function configurePanelUploads(): void
+    {
+        SpatieMediaLibraryFileUpload::configureUsing(
+            fn (SpatieMediaLibraryFileUpload $upload) => $upload->disk(config('media-library.disk_name')),
+        );
     }
 
     /** Who did what in the panel (PPP-54): content, users, redirects, inbox deletions, settings and sign-ins. */
