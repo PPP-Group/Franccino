@@ -6,6 +6,8 @@ use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 use function Pest\Livewire\livewire;
 
@@ -56,4 +58,27 @@ it('requires portuguese name and a unique slug per locale', function () {
         ->fillForm(['name' => ['pt' => null], 'slug' => ['pt' => 'cadeira-aura']])
         ->call('create')
         ->assertHasFormErrors(['name.pt' => 'required', 'slug.pt' => 'unique']);
+});
+
+it('stores panel uploads on the public media disk, so the site can load them', function () {
+    Storage::fake('media');
+    Storage::fake('local');
+    $product = Product::factory()->create();
+
+    livewire(EditProduct::class, ['record' => $product->getRouteKey()])
+        ->fillForm([
+            'cover' => UploadedFile::fake()->image('capa.jpg', 40, 30),
+            'model_3d' => UploadedFile::fake()->createWithContent('cadeira.glb', minimalGlb()),
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $product->refresh();
+    $cover = $product->getFirstMedia('cover');
+    $model = $product->getFirstMedia('model_3d');
+
+    expect($cover?->disk)->toBe('media')
+        ->and($model?->disk)->toBe('media');
+    Storage::disk('media')->assertExists($model->getPathRelativeToRoot());
+    Storage::disk('local')->assertDirectoryEmpty('/');
 });
