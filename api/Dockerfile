@@ -46,4 +46,4 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5m --retries=3 \
     CMD curl -fsS -o /dev/null http://localhost/up || exit 1
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
-CMD ["frankenphp", "php-server", "--root", "/app/public", "--listen", ":80"]
+CMD ["frankenphp", "run", "--config", "/app/docker/Caddyfile"]
