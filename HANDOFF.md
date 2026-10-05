@@ -397,3 +397,27 @@ O Pedro Ivo é PO, tech lead e PM do projeto.
   - os GLB e os assets da página. Os GLB e a página podem ser recriados pela seção 4.4.
 - **Na pasta `snapshots/` local**, ignorada pelo git: os zips de snapshot (completo e leve). Uma cópia do leve
   foi enviada ao Pedro Ivo em 5 partes; o banco do VPS já tem o conteúdo.
+
+---
+
+## 12. Sessão de 05/10/2026 (nova conta)
+
+- **Fonte oficial:** Adobe Garamond Pro, no Drive em `_ARQUIVOS LIBERADOS PARA SITE / _FONTE FRANCCINO OFICIAL`. Os
+  arquivos são .otf com licença de desktop da Adobe, que não cobre uso em site (PPP-105). A troca da fonte está pronta
+  localmente (`web/src/app/fonts.ts`, `web/src/assets/fonts/`, tokens), mas **não foi commitada**: o commit foi
+  bloqueado pela verificação de segurança da sessão por causa da licença. Sobe quando o Pedro Ivo liberar ou quando
+  chegar a licença de webfont (Adobe Fonts ou compra).
+- **Página do teste 3D** republicada nesta conta: https://claude.ai/artifact/7s5zRZ1pCunRQF9ta81XuS (privada; o
+  Pedro Ivo compartilha).
+- **Linear sincronizado com o código** em 05/10. Criadas PPP-116 (acesso ao painel do preview para a Franccino),
+  PPP-117 (organização do painel) e PPP-118 (revisão técnica página por página).
+- **Reunião com a Franccino (05/10):**
+  - Material do cliente com prazo de 19/10/2026 (PPP-62): licença da fonte, logo em SVG, textos em inglês,
+    descrição dos produtos, lista de acabamentos, fichas técnicas em PDF, fotos originais em alta (fundo branco,
+    mesmo ângulo), fotos das lojas e da fábrica, blocos 3D e 2D que já existem, retorno consolidado do layout.
+  - Retorno do layout em PPP-42 (rodada 1): Casa/Jardim ou Indoor/Outdoor, menu com categorias no hover, busca no
+    cabeçalho com sugestões, 3 produtos por linha, card só com foto e nome, coleções no estilo do site atual,
+    lançamentos sem bloco pequeno, fábrica com mais fotos e vídeo, lojas com foto.
+  - 3D: a Franccino sobe os blocos que já tem; download em SketchUp é prioridade para os arquitetos (a área de
+    downloads já aceita "Bloco 3D" e "Bloco 2D"). A Franccino testa a conversão de um modelo do teste para SketchUp.
+  - A Franccino faz reunião interna em 06/10 e manda o retorno consolidado.
