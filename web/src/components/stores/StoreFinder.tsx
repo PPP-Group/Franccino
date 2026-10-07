@@ -8,6 +8,7 @@ import type { Store } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { filterStores, STORE_TYPES } from '@/lib/stores/filter';
 import { mapSearchUrl } from '@/lib/stores/map-link';
+import { StoreMap } from './StoreMap';
 
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   const common = useTranslations('common');
@@ -24,7 +25,10 @@ function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
   const type = t.has(`types.${store.type}`) ? t(`types.${store.type}`) : store.type;
   const whatsapp = detailed ? whatsappUrl(store.whatsapp) : null;
   return (
-    <article className={detailed && store.image ? 'store store--with-image' : 'store'}>
+    <article
+      id={`store-${store.id}`}
+      className={detailed && store.image ? 'store store--with-image' : 'store'}
+    >
       {detailed && store.image ? (
         <div className="store__image">
           <ApiImage image={store.image} sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw" />
@@ -98,6 +102,8 @@ type StoreFinderProps = {
   allStates?: boolean;
   typeFilter?: boolean;
   detailed?: boolean;
+  /** Mapa com os pinos das lojas abaixo dos filtros (página de lojas). */
+  map?: boolean;
 };
 
 /** Lojas por estado (UF) e, na página de lojas, por tipo; filtro local, sem navegar. */
@@ -108,6 +114,7 @@ export function StoreFinder({
   allStates = false,
   typeFilter = false,
   detailed = false,
+  map = false,
 }: StoreFinderProps) {
   const t = useTranslations('stores');
   const [state, setState] = useState<string | null>(allStates ? null : (states[0] ?? null));
@@ -159,6 +166,7 @@ export function StoreFinder({
             ))}
           </div>
         ) : null}
+        {map ? <StoreMap stores={visible} /> : null}
       </div>
       <div className="store-list" aria-live="polite">
         {visible.length > 0 ? (

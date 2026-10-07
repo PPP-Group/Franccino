@@ -45,7 +45,7 @@ export default async function StoresPage({ params }: Props) {
         <EmptyNotice text={common('nothingYet')} />
       ) : (
         <section className="section section--tight" aria-label={t('title')}>
-          <StoreFinder stores={list.stores} states={list.states} allStates typeFilter detailed />
+          <StoreFinder stores={list.stores} states={list.states} allStates typeFilter detailed map />
         </section>
       )}
     </main>

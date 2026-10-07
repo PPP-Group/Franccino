@@ -334,6 +334,8 @@
   },
   "stores": {
     "typeFilter": "Tipo de loja",
+    "mapLabel": "Mapa das lojas",
+    "mapAttribution": "© colaboradores do OpenStreetMap",
     "allTypes": "Todos os tipos",
     "whatsapp": "WhatsApp",
     "website": "Site da loja",

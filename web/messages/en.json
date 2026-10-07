@@ -334,6 +334,8 @@
   },
   "stores": {
     "typeFilter": "Store type",
+    "mapLabel": "Store map",
+    "mapAttribution": "© OpenStreetMap contributors",
     "allTypes": "All types",
     "whatsapp": "WhatsApp",
     "website": "Store website",
