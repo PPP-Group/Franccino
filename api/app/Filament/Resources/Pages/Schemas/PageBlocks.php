@@ -13,7 +13,7 @@ use Filament\Forms\Components\TextInput;
 
 /**
  * The page content blocks, exactly as listed in `docs/data-model.md` (pages.content):
- * `rich_text`, `image`, `image_text`, `timeline`, `faq`, `stats`, `quote`, `cta`, `gallery`.
+ * `rich_text`, `image`, `image_text`, `timeline`, `faq`, `stats`, `quote`, `cta`, `gallery`, `video`.
  * Each block's translatable texts are edited pt/en side by side via `Translatable::tabs`;
  * block images use a plain `FileUpload` on the `media` disk, `pages` directory (Ruling R8) —
  * not Spatie Media Library, since block images live inside the `content` JSON, not a
@@ -34,6 +34,7 @@ class PageBlocks
             self::quote(),
             self::cta(),
             self::gallery(),
+            self::video(),
         ];
     }
 
@@ -205,6 +206,28 @@ class PageBlocks
                 Translatable::tabs(fn (string $locale): array => [
                     TextInput::make("caption.{$locale}")
                         ->label(__('Caption')),
+                ]),
+            ]);
+    }
+
+    /** YouTube or Vimeo video (e.g. "Conheça a Franccino" on the factory page), played only after a click. */
+    private static function video(): Block
+    {
+        return Block::make('video')
+            ->label(__('Video'))
+            ->schema([
+                TextInput::make('url')
+                    ->label(__('Video address (YouTube or Vimeo)'))
+                    ->url()
+                    ->required(),
+                FileUpload::make('poster')
+                    ->label(__('Cover'))
+                    ->disk('media')
+                    ->directory('pages')
+                    ->image(),
+                Translatable::tabs(fn (string $locale): array => [
+                    TextInput::make("title.{$locale}")
+                        ->label(__('Title')),
                 ]),
             ]);
     }

@@ -341,6 +341,7 @@ Assim a estrutura e as imagens são únicas e os dois idiomas são editados lado
 | `quote`      | `text` (tr), `author`                                                          |
 | `cta`        | `heading` (tr), `body` (tr), `label` (tr), `url` (tr)                          |
 | `gallery`    | `images[]` (paths), `caption` (tr)                                             |
+| `video`      | `url` (YouTube ou Vimeo), `poster` (path, opcional), `title` (tr)              |
 
 Imagens de blocos ficam no disco `media` (sem conversões automáticas).
 

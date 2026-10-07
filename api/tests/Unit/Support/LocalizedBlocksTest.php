@@ -64,3 +64,27 @@ it('resolves the remaining block types', function () {
             'caption' => 'Legenda',
         ]);
 });
+
+it('resolves a video block with its embed url and cover', function () {
+    Storage::fake('media');
+
+    $blocks = [
+        ['type' => 'video', 'data' => [
+            'url' => 'https://youtu.be/OG_GNCn0HoQ',
+            'poster' => 'pages/video.png',
+            'title' => ['pt' => 'Conheça a Franccino', 'en' => 'Meet Franccino'],
+        ]],
+        ['type' => 'video', 'data' => ['url' => 'https://example.com/video.mp4', 'poster' => null, 'title' => null]],
+    ];
+
+    $en = LocalizedBlocks::resolve($blocks, 'en');
+
+    expect($en[0]['data'])->toBe([
+        'url' => 'https://youtu.be/OG_GNCn0HoQ',
+        'embed_url' => 'https://www.youtube-nocookie.com/embed/OG_GNCn0HoQ',
+        'poster' => Storage::disk('media')->url('pages/video.png'),
+        'title' => 'Meet Franccino',
+    ])
+        ->and($en[1]['data']['embed_url'])->toBeNull()
+        ->and($en[1]['data']['poster'])->toBeNull();
+});

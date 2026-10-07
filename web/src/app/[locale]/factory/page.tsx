@@ -2,10 +2,8 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Blocks } from '@/components/content/Blocks';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
-import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
+import { PageBanner } from '@/components/layout/PageBanner';
 import type { Locale } from '@/i18n/config';
-
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -36,14 +34,16 @@ export default async function FactoryPage({ params }: Props) {
     getPage(locale, 'factory'),
   ]);
   return (
-    <main className="wrap">
-      <PageHead title={page?.title ?? t('title')} lead={page?.intro} />
-      {page?.cover ? <ApiImage image={page.cover} sizes="100vw" priority className="page-cover" /> : null}
-      {page && page.content.length > 0 ? (
-        <Blocks blocks={page.content} />
-      ) : (
-        <EmptyNotice text={common('nothingYet')} />
-      )}
+    <main>
+      {/* Abre com a foto da fachada (capa da página no painel), como pedido nos ajustes de 06/10/2026. */}
+      <PageBanner image={page?.cover ?? null} title={page?.title ?? t('title')} lead={page?.intro} />
+      <div className="wrap">
+        {page && page.content.length > 0 ? (
+          <Blocks blocks={page.content} />
+        ) : (
+          <EmptyNotice text={common('nothingYet')} />
+        )}
+      </div>
     </main>
   );
 }

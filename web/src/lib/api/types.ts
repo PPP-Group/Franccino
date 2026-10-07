@@ -264,6 +264,14 @@ export type CtaBlockData = { heading: string | null; body: string | null; label:
 
 export type GalleryBlockData = { images: string[]; caption: string | null };
 
+/** `embed_url` só para YouTube ou Vimeo; outro endereço vira link simples. */
+export type VideoBlockData = {
+  url: string;
+  embed_url: string | null;
+  poster: string | null;
+  title: string | null;
+};
+
 export type Block =
   | { type: 'rich_text'; data: RichTextBlockData }
   | { type: 'image'; data: ImageBlockData }
@@ -273,7 +281,8 @@ export type Block =
   | { type: 'stats'; data: StatsBlockData }
   | { type: 'quote'; data: QuoteBlockData }
   | { type: 'cta'; data: CtaBlockData }
-  | { type: 'gallery'; data: GalleryBlockData };
+  | { type: 'gallery'; data: GalleryBlockData }
+  | { type: 'video'; data: VideoBlockData };
 
 export type PageContent = {
   key: string;
