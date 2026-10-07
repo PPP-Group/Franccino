@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { AreaMenuKey, AreaMenus } from './area-menu';
+import { HeaderSearch } from './HeaderSearch';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { activeNavKey, NAV_ITEMS } from './nav';
 import { QuoteListLink } from './QuoteListLink';
@@ -215,9 +216,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
         })}
       </nav>
       <div className="tools">
-        <Link href="/search" aria-label={t('search')}>
-          <Icon name="search" />
-        </Link>
+        <HeaderSearch />
         <LanguageSwitcher />
         <QuoteListLink />
         <button

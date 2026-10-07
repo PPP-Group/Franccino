@@ -355,7 +355,9 @@
     "placeholder": "O que você procura?",
     "submit": "Buscar",
     "noResults": "Nenhum resultado encontrado.",
-    "resultsFor": "Resultados para “{query}”"
+    "resultsFor": "Resultados para “{query}”",
+    "seeAll": "Ver todos os resultados",
+    "kind": { "product": "Peça", "designer": "Designer", "collection": "Coleção" }
   },
   "pages": {
     "indoor": { "title": "Indoor" },
