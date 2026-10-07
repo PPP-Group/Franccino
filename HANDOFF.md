@@ -456,3 +456,14 @@ O cliente mandou o documento "Franccino — Ajustes no novo site" (06/10/2026), 
 - **Não testado em container:** esta máquina não tem Docker. Rodaram `php artisan test` (273), `composer lint`,
   `composer analyse`, `pnpm --filter web test` (277), `lint`, `typecheck` e o build como no CI.
 - **Item 5 (Designers) e item 9 (Sala para montar):** sem mudança de layout, como pedido.
+
+### 13.1 Complemento (07/10): busca com sugestões no cabeçalho
+
+- A lupa do cabeçalho agora abre um campo de busca com sugestões enquanto a pessoa digita (a partir de 2 letras,
+  peças, designers e coleções), e "Ver todos os resultados" leva à página de busca. Pendência do retorno de
+  05/10 (PPP-42). Arquivos: `components/layout/HeaderSearch.tsx`, `lib/search/` (lógica, server action e teste).
+- **Nomes das áreas:** o documento do cliente usa "Casa" e "Giardini". Fica assim; a dúvida "Casa/Jardim ou
+  Indoor/Outdoor" da reunião de 05/10 está resolvida.
+- Em 07/10 a fonte da Adobe foi abandonada: vale a seção 13 (Cormorant Garamond e EB Garamond, licença aberta).
+- **Conteúdo ainda não cadastrado no painel do preview** (sem acesso ao painel nesta sessão): as 3 imagens do
+  banner da home, capas das páginas, vídeo da Fábrica, logos dos clientes e fotos das lojas.

@@ -435,3 +435,71 @@
   font-size: 0.8125rem;
   color: var(--footer-text);
 }
+
+/* Busca do cabeçalho com sugestões. O painel abre logo abaixo do cabeçalho, como o painel de categorias. */
+.header-search__panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-search__inner {
+  display: grid;
+  gap: 12px;
+  padding-block: 20px 28px;
+}
+
+.header-search__inner input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 1.125rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line-field);
+  border-radius: 0;
+}
+
+.header-search__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header-search__list a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.header-search__list a:hover span {
+  text-decoration: underline;
+}
+
+.header-search__list small,
+.header-search__empty {
+  color: var(--ink-muted);
+}
+
+.header-search__all {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 18px;
+  font: inherit;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+}

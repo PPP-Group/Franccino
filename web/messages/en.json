@@ -355,7 +355,9 @@
     "placeholder": "What are you looking for?",
     "submit": "Search",
     "noResults": "No results found.",
-    "resultsFor": "Results for “{query}”"
+    "resultsFor": "Results for “{query}”",
+    "seeAll": "See all results",
+    "kind": { "product": "Piece", "designer": "Designer", "collection": "Collection" }
   },
   "pages": {
     "indoor": { "title": "Indoor" },
