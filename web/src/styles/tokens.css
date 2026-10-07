@@ -3,7 +3,8 @@
   Fonte, logo e imagens definitivas chegam com o manual de marca: troque aqui.
 */
 :root {
-  --stone: #f2f1ed;
+  /* Fundo das páginas: branco puro (pedido do cliente, 06/10/2026, "como no site da Saccaro"). */
+  --stone: #ffffff;
   --paper: #ffffff;
   --ink: #171717;
   --ink-muted: #57564f;
@@ -19,6 +20,11 @@
   --footer-muted: #a6a49b;
   --footer-rule: #34342f;
   --hero-ground: #d9d3c7;
+  /* Texto claro direto sobre a foto do banner (versão do Marcelo, ajustes 06/10/2026). */
+  --hero-shade: rgba(12, 11, 10, 0.62);
+  --hero-shade-clear: rgba(12, 11, 10, 0);
+  --on-photo-muted: rgba(255, 255, 255, 0.86);
+  --on-photo-rule: rgba(255, 255, 255, 0.4);
   --portrait-ground: #e4e1da;
   --row-hover: #fafaf8;
   --status-ok-bg: #f2f5f2;
@@ -30,7 +36,9 @@
   --plan-selected: #eef2ee;
   --plan-conflict: #f7e9e6;
 
-  --font: var(--font-brand), 'Helvetica Neue', Arial, sans-serif;
+  /* Cormorant Garamond nos títulos e EB Garamond no texto (src/app/fonts.ts). */
+  --font: var(--font-serif-text), Garamond, Georgia, serif;
+  --font-heading: var(--font-serif-display), var(--font-serif-text), Garamond, Georgia, serif;
   --wide: 118;
   --wordmark-wide: 125;
   --text: 100;
@@ -43,4 +51,5 @@
   --t-fast: 180ms;
   --t-mid: 420ms;
   --shadow-plate: 0 18px 40px -28px rgba(23, 23, 23, 0.35);
+  --shadow-lift: 0 24px 48px -24px rgba(23, 23, 23, 0.32);
 }

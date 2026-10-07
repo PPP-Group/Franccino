@@ -26,9 +26,9 @@
 }
 
 .wordmark {
-  font-size: 0.95rem;
-  font-weight: 500;
-  font-variation-settings: 'wdth' var(--wordmark-wide);
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
   letter-spacing: 0.3em;
   text-decoration: none;
   text-transform: uppercase;
@@ -38,11 +38,13 @@
 .nav {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: clamp(14px, 1.6vw, 26px);
-  font-size: 0.875rem;
+  font-size: 0.95rem;
 }
 
-.nav a {
+.nav > a,
+.nav-area__trigger {
   text-decoration: none;
   color: var(--ink-muted);
   white-space: nowrap;
@@ -53,10 +55,92 @@
     border-color var(--t-fast) ease;
 }
 
-.nav a:hover,
-.nav a[aria-current='page'] {
+.nav > a:hover,
+.nav > a[aria-current='page'],
+.nav-area__trigger:hover,
+.nav-area__trigger[data-active='true'],
+.nav-area.is-open .nav-area__trigger {
   color: var(--ink);
   border-color: var(--ink);
+}
+
+/* Casa e Giardini: painel de categorias em colunas (ajustes do cliente, 06/10/2026, "estilo Saccaro"). */
+.nav-area__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border-top: 0;
+  border-inline: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-area__trigger .icon {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--t-fast) ease;
+}
+
+.nav-area.is-open .nav-area__trigger .icon {
+  transform: rotate(180deg);
+}
+
+.nav-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-panel[hidden] {
+  display: none;
+}
+
+.nav-panel__inner {
+  display: grid;
+  gap: 18px;
+  padding-block: 28px 36px;
+}
+
+.nav-panel__all {
+  justify-self: start;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.nav-panel__all:hover {
+  text-decoration: underline;
+}
+
+.nav-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 5 170px;
+  column-gap: 32px;
+}
+
+.nav-panel__list li {
+  break-inside: avoid;
+}
+
+.nav-panel__list a {
+  display: block;
+  padding-block: 6px;
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.nav-panel__list a:hover,
+.nav-panel__list a:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
 }
 
 .tools {
@@ -153,6 +237,38 @@
     background: var(--stone);
     border-bottom: 1px solid var(--line);
     font-size: 1.125rem;
+    max-height: calc(100dvh - var(--header));
+    overflow-y: auto;
+  }
+
+  /* No menu recolhido, as categorias abrem como sanfona embaixo de Casa e Giardini. */
+  .nav-area {
+    width: 100%;
+  }
+
+  .nav-panel {
+    position: static;
+    border-bottom: 0;
+    background: transparent;
+  }
+
+  .nav-panel .wrap {
+    padding-inline: 0;
+  }
+
+  .nav-panel__inner {
+    gap: 6px;
+    padding-block: 4px 12px;
+    padding-left: 16px;
+  }
+
+  .nav-panel__all {
+    font-size: 1.05rem;
+  }
+
+  .nav-panel__list {
+    columns: 2 140px;
+    font-size: 1rem;
   }
 }
 

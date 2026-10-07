@@ -23,8 +23,7 @@
     "downloads": "Downloads",
     "stores": "Stores",
     "contact": "Contact",
-    "planner": "Room planner",
-    "technical": "Technical area"
+    "planner": "Room planner"
   },
   "footer": {
     "cookies": "Cookie policy",
@@ -66,7 +65,8 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "quoteList": "Quote list, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
-    "quoteListShort": "List"
+    "quoteListShort": "List",
+    "areaAll": "View all {area}"
   },
   "quote": {
     "viewList": "View list",
@@ -281,8 +281,6 @@
       "sort": "Sort by",
       "search": "Search",
       "apply": "Filter",
-      "categories": "Categories",
-      "all": "All",
       "allDesigners": "All designers",
       "facetOption": "{name} ({count})"
     },
@@ -303,7 +301,7 @@
       "body": "Remove a filter or talk to the team.",
       "clear": "Clear filters"
     },
-    "newTag": "New",
+    "newTag": "New releases",
     "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
     "resultsLabel": "Results",
     "view": { "label": "View", "grid": "Grid", "table": "Technical table" },

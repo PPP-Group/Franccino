@@ -23,8 +23,7 @@
     "downloads": "Downloads",
     "stores": "Lojas",
     "contact": "Contato",
-    "planner": "Sala para montar",
-    "technical": "Área técnica"
+    "planner": "Sala para montar"
   },
   "footer": {
     "cookies": "Política de cookies",
@@ -66,7 +65,8 @@
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
     "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
-    "quoteListShort": "Lista"
+    "quoteListShort": "Lista",
+    "areaAll": "Ver tudo de {area}"
   },
   "quote": {
     "viewList": "Ver lista",
@@ -281,8 +281,6 @@
       "sort": "Ordenar por",
       "search": "Buscar",
       "apply": "Filtrar",
-      "categories": "Categorias",
-      "all": "Todas",
       "allDesigners": "Todos os designers",
       "facetOption": "{name} ({count})"
     },
@@ -303,7 +301,7 @@
       "body": "Tire um filtro ou fale com a equipe.",
       "clear": "Limpar filtros"
     },
-    "newTag": "Novo",
+    "newTag": "Lançamentos",
     "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
     "resultsLabel": "Resultados",
     "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },

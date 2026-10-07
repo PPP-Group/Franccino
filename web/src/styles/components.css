@@ -136,7 +136,8 @@
 .tag {
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   padding: 3px 8px;
   border: 1px solid var(--line-strong);
   background: var(--paper);

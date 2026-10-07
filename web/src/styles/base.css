@@ -83,16 +83,15 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-weight: 400;
-  font-variation-settings: 'wdth' var(--wide);
-  letter-spacing: -0.015em;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
 .display {
   font-size: clamp(2.5rem, 5.2vw, 4.9rem);
   line-height: 1.02;
-  letter-spacing: -0.025em;
 }
 
 h1 {
@@ -106,11 +105,9 @@ h2 {
 }
 
 h3 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.3;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  font-variation-settings: 'wdth' var(--text);
+  font-weight: 600;
 }
 
 p {

@@ -13,7 +13,6 @@ describe('main navigation', () => {
       'factory',
       'stores',
       'planner',
-      'technical',
     ]);
   });
 
