@@ -467,3 +467,13 @@ O cliente mandou o documento "Franccino — Ajustes no novo site" (06/10/2026), 
 - Em 07/10 a fonte da Adobe foi abandonada: vale a seção 13 (Cormorant Garamond e EB Garamond, licença aberta).
 - **Conteúdo ainda não cadastrado no painel do preview** (sem acesso ao painel nesta sessão): as 3 imagens do
   banner da home, capas das páginas, vídeo da Fábrica, logos dos clientes e fotos das lojas.
+
+## 14. Para continuar em outra sessão (07/10/2026)
+
+- **Terminar a rodada 1:** siga `docs/handoff/rodada-1-conteudo-passo-a-passo.md` (ordem de merge e deploy, o que
+  cadastrar no painel e de onde vem cada arquivo). Branch `feature/ajustes-cliente-rodada-1`, PR #23.
+- **Registro da reunião de 05/10** (decisões, pedidos e prazo de 19/10): `docs/reunioes/2026-10-05-reuniao-franccino.md`.
+- A conta do Pedro Ivo nesta sessão tinha Linear, Google Drive e GitHub; Gmail não estava conectado.
+- Dois commits antigos da `develop` (`5bbb856`, `3e6c5bd`) trazem o nome do modelo no rodapé, contra a regra da
+  seção 10. Só se corrige reescrevendo o histórico, com aval do tech lead.
+- Sem Docker nesta máquina de sessão: o teste em container ainda precisa ser feito antes do merge na `main`.
