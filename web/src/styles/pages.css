@@ -938,3 +938,89 @@
   background: var(--paper);
   color: var(--ink);
 }
+
+/* ---------- mapa das lojas (ajustes do cliente, 06/10/2026) ---------- */
+
+.store-map {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.store-map__frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--portrait-ground);
+}
+
+.store-map__tiles img {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+  max-width: none;
+  filter: grayscale(1);
+}
+
+.store-map__pins {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.store-map__pins li {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.store-map__pin {
+  position: absolute;
+  left: -11px;
+  top: -30px;
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--paper);
+  border-radius: 50% 50% 50% 0;
+  background: var(--ink);
+  transform: rotate(-45deg);
+  transition: background var(--t-fast) ease;
+}
+
+.store-map__pin::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.store-map__pin:hover,
+.store-map__pin:focus-visible {
+  background: var(--wood);
+}
+
+.store-map__credit {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  text-align: right;
+}
+
+.store-map__credit a {
+  color: inherit;
+}
+
+@media (min-width: 900px) {
+  .stores__intro:has(.store-map) {
+    position: sticky;
+    top: calc(var(--header) + 24px);
+    align-self: start;
+  }
+}
+
+@media (max-width: 899px) {
+  .store-map__frame {
+    aspect-ratio: 4 / 3;
+  }
+}

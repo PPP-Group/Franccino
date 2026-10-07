@@ -263,12 +263,13 @@
 .store-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: 40px 32px;
 }
 
+/* Sem "cartão colado" (ajustes do cliente, 06/10/2026): a loja fica solta, separada por um fio. */
 .store {
-  background: var(--paper);
-  padding: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
   display: grid;
   gap: 8px;
   align-content: start;
