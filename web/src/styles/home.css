@@ -64,6 +64,60 @@
   flex-wrap: wrap;
 }
 
+/*
+  Banner com foto no estilo da "versão do Marcelo" (ajustes do cliente, 06/10/2026): a foto ocupa o
+  banner, escurece na base e o texto fica direto sobre ela, sem a placa branca. A placa branca continua
+  só no banner sem foto (`.hero--plain`).
+*/
+.hero:not(.hero--plain)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--hero-shade) 0%, var(--hero-shade-clear) 62%);
+  pointer-events: none;
+}
+
+.hero:not(.hero--plain) .hero__plate {
+  z-index: 1;
+  background: transparent;
+  color: var(--paper);
+  padding: 0;
+  bottom: calc(var(--gutter) + 72px);
+}
+
+.hero:not(.hero--plain) .hero__plate .display {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.04;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+}
+
+.hero:not(.hero--plain) .hero__plate .lead {
+  color: var(--on-photo-muted);
+}
+
+.hero:not(.hero--plain) .hero__meta {
+  color: var(--on-photo-muted);
+  border-top-color: var(--on-photo-rule);
+}
+
+.hero:not(.hero--plain) .btn {
+  background: var(--paper);
+  border-color: var(--paper);
+  color: var(--ink);
+}
+
+.hero:not(.hero--plain) .btn--ghost {
+  background: transparent;
+  color: var(--paper);
+}
+
+.hero:not(.hero--plain) .btn--ghost:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
 @keyframes plate-in {
   from {
     clip-path: inset(0 0 100% 0);
@@ -383,13 +437,14 @@
 
 .hero-carousel__controls {
   position: absolute;
+  z-index: 2;
   right: var(--gutter);
   bottom: var(--gutter);
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--paper);
   padding: 4px;
+  color: var(--paper);
 }
 
 .hero-carousel__button {
@@ -399,13 +454,13 @@
   height: 44px;
   border: 0;
   background: transparent;
-  color: var(--ink);
+  color: inherit;
   cursor: pointer;
 }
 
 .hero-carousel__button:hover,
 .hero-carousel__button:focus-visible {
-  background: var(--stone);
+  background: var(--on-photo-rule);
 }
 
 .hero-carousel__button--previous .icon {
@@ -433,11 +488,11 @@
   content: '';
   width: 8px;
   height: 8px;
-  border: 1px solid var(--ink);
+  border: 1px solid currentColor;
 }
 
 .hero-carousel__dot[aria-current='true']::before {
-  background: var(--ink);
+  background: currentColor;
 }
 
 @media (max-width: 47.99rem) {

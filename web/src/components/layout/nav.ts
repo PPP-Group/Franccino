@@ -1,6 +1,9 @@
 import type { AppHref } from '@/i18n/navigation';
 
-/** Ordem aprovada (conflito C7 do plano P4). Corporativo, Downloads e Contato ficam no rodapé. */
+/**
+ * Ordem aprovada (conflito C7 do plano P4). Corporativo, Downloads e Contato ficam no rodapé.
+ * "Área técnica" saiu do menu (ajustes do cliente, 06/10/2026): o acesso é só pelo botão "Tabela técnica" do catálogo.
+ */
 export const NAV_ITEMS = [
   { key: 'indoor', href: '/indoor' },
   { key: 'outdoor', href: '/outdoor' },
@@ -11,7 +14,6 @@ export const NAV_ITEMS = [
   { key: 'factory', href: '/factory' },
   { key: 'stores', href: '/stores' },
   { key: 'planner', href: '/room-planner' },
-  { key: 'technical', href: { pathname: '/products', query: { view: 'table' } } },
 ] as const satisfies { key: string; href: AppHref }[];
 
 export type NavKey = (typeof NAV_ITEMS)[number]['key'];

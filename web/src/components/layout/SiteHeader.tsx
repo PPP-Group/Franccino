@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import type { AreaMenus } from './area-menu';
 import { HeaderNav } from './HeaderNav';
 
-export function SiteHeader() {
+export function SiteHeader({ menus }: { menus: AreaMenus }) {
   const t = useTranslations('header');
   return (
     <header className="site-header">
@@ -10,7 +11,7 @@ export function SiteHeader() {
         <Link className="wordmark" href="/" aria-label={t('homeLabel')}>
           {t('wordmark')}
         </Link>
-        <HeaderNav />
+        <HeaderNav menus={menus} />
       </div>
     </header>
   );

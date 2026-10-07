@@ -83,9 +83,6 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/stores">{t('whereToFind')}</Link>
               </li>
               <li>
-                <Link href={{ pathname: '/products', query: { view: 'table' } }}>{nav('technical')}</Link>
-              </li>
-              <li>
                 <Link href="/downloads">{nav('downloads')}</Link>
               </li>
               <li>

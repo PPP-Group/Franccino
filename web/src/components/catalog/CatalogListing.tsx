@@ -14,13 +14,7 @@ import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
-import {
-  listingQuery,
-  toFilterOption,
-  type CatalogView,
-  type FilterOption,
-  type ListingPatch,
-} from '@/lib/catalog/view';
+import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar } from './CatalogToolbar';
 import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
@@ -38,8 +32,6 @@ export type CatalogListingProps = {
   view: CatalogView;
   hrefFor: (patch: ListingPatch) => AppHref;
   formAction: string;
-  /** Sem valor: categorias das facetas. */
-  categoryOptions?: FilterOption[];
   /** A categoria já está no caminho (páginas de categoria): não repetir na query do form. */
   categoryInPath?: boolean;
   facetsParams: ProductFacetsParams;
@@ -105,8 +97,6 @@ export async function CatalogListing(props: CatalogListingProps) {
       <CatalogToolbar
         view={view}
         hrefFor={hrefFor}
-        categoryOptions={props.categoryOptions ?? facets.categories.map(toFilterOption)}
-        activeCategory={params.category}
         designerOptions={facets.designers.map(toFilterOption)}
         activeDesigner={params.designer}
         formAction={props.formAction}

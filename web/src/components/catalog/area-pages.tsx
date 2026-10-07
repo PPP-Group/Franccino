@@ -66,11 +66,6 @@ export async function AreaPage({
       view={view}
       hrefFor={areaListingHref(area, params, view)}
       formAction={getPathname({ href: areaHref(area), locale })}
-      categoryOptions={detail.categories.map((category) => ({
-        value: category.slug,
-        label: category.name,
-        count: category.product_count,
-      }))}
       facetsParams={{ area, category: params.category }}
     />
   );
@@ -120,11 +115,6 @@ export async function AreaCategoryPage(props: {
       view={view}
       hrefFor={areaListingHref(area, params, view)}
       formAction={getPathname({ href: categoryHref(area, slug), locale })}
-      categoryOptions={detail.categories.map((item) => ({
-        value: item.slug,
-        label: item.name,
-        count: item.product_count,
-      }))}
       categoryInPath
       facetsParams={{ area, category: slug }}
     />
