@@ -7,7 +7,8 @@
     "viewAll": "Ver tudo",
     "breadcrumb": "Você está em",
     "home": "Início",
-    "opensInNewWindow": "(abre em nova janela)"
+    "opensInNewWindow": "(abre em nova janela)",
+    "learnMore": "Saiba mais"
   },
   "nav": {
     "indoor": "Casa",
@@ -502,8 +503,6 @@
   "collections": {
     "title": "Coleções",
     "description": "Coleções da Franccino e as peças de cada uma.",
-    "count": "{count, plural, one {# coleção} other {# coleções}}",
-    "pieces": "{count, plural, =0 {sem peças} one {# peça} other {# peças}}",
     "designers": "Design",
     "gallery": "Imagens da coleção",
     "piecesTitle": "Peças da coleção"
