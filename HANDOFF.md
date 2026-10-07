@@ -421,3 +421,38 @@ O Pedro Ivo é PO, tech lead e PM do projeto.
   - 3D: a Franccino sobe os blocos que já tem; download em SketchUp é prioridade para os arquitetos (a área de
     downloads já aceita "Bloco 3D" e "Bloco 2D"). A Franccino testa a conversão de um modelo do teste para SketchUp.
   - A Franccino faz reunião interna em 06/10 e manda o retorno consolidado.
+
+---
+
+## 13. Sessão de 07/10/2026: ajustes do cliente, rodada 1 (PPP-42)
+
+O cliente mandou o documento "Franccino — Ajustes no novo site" (06/10/2026), página por página. Branch
+`feature/ajustes-cliente-rodada-1`, PR para a `develop`.
+
+- **Fonte:** o cliente mandou Cormorant Garamond (títulos) e EB Garamond (texto). As duas são SIL Open Font
+  License 1.1, que permite uso em site. Entram por `next/font/google`, que baixa no build e serve do próprio
+  site (sem dependência nova). Substitui a pendência da Adobe Garamond Pro da seção 12.
+- **Feito, por item do documento:**
+
+  | Item                    | O que mudou                                                                                                                              |
+  | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+  | Regras gerais           | Fundo branco (`--stone`), sem caixas brancas com borda; "Área técnica" fora do menu e do rodapé                                          |
+  | 1. Página inicial       | Banner no estilo da versão do Marcelo: texto direto sobre a foto, sem a placa branca                                                     |
+  | 2. Casa e Giardini      | Categorias num painel em colunas no menu; sem os botões de categoria; card só com foto e nome; 3 por linha; hover "vem para frente"      |
+  | 3. Lançamentos          | Banner com foto; todas as peças juntas, sem dividir por lançamento; etiqueta "Lançamentos"                                               |
+  | 4. Coleções             | Título centralizado, blocos grandes 2 por linha, hover escurece com nome e "Saiba mais"; página interna com banner largo, título e texto |
+  | 6. Projetos/Corporativo | Banner; projetos em faixas com foto e texto alternando o lado e "Saiba mais"; "Alguns de nossos clientes" em faixa com setas             |
+  | 7. Fábrica              | Banner com a capa da página; bloco novo "Vídeo" no painel; "Nossa História" na horizontal, com setas                                     |
+  | 8. Lojas                | Mapa com os pinos de todas as lojas abaixo dos filtros (segue o filtro); lojas sem cartão                                                |
+
+- **Conteúdo que entra pelo painel** (o layout já está pronto e usa o que for cadastrado):
+  - capa (banner) das páginas Lançamentos, Projetos, Corporativo e Fábrica (foto da fachada), em Páginas;
+  - Fábrica: bloco "Vídeo" com `https://youtu.be/OG_GNCn0HoQ` (o "Conheça a Franccino" do site antigo) e a capa;
+  - as 3 imagens do banner da home (restaurante, piscina de dia, piscina à noite), em Banners;
+  - logos dos clientes, em Clientes; foto de cada loja, em Lojas.
+- **Para o tech lead decidir:** o mapa das lojas não usa biblioteca; monta os ladrilhos do OpenStreetMap
+  (`web/src/lib/stores/map-view.ts`, constante `TILE_URL`) com a atribuição exigida. A política de uso do
+  OpenStreetMap pede provedor comercial para uso pesado; trocar o provedor é só mudar `TILE_URL`.
+- **Não testado em container:** esta máquina não tem Docker. Rodaram `php artisan test` (273), `composer lint`,
+  `composer analyse`, `pnpm --filter web test` (277), `lint`, `typecheck` e o build como no CI.
+- **Item 5 (Designers) e item 9 (Sala para montar):** sem mudança de layout, como pedido.
