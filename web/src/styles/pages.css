@@ -532,3 +532,182 @@
 .store__description {
   color: var(--ink-muted);
 }
+
+/* ---------- banner com foto no topo (ajustes do cliente, 06/10/2026) ---------- */
+
+.page-banner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: clamp(360px, 62vh, 640px);
+  overflow: hidden;
+  background: var(--hero-ground);
+  color: var(--paper);
+}
+
+.page-banner__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--hero-shade) 0%, var(--hero-shade-clear) 66%);
+  pointer-events: none;
+}
+
+.page-banner__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  padding-block: clamp(32px, 6vw, 72px);
+}
+
+.page-banner__title {
+  color: var(--paper);
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.page-banner__lead {
+  max-width: 60ch;
+  color: var(--on-photo-muted);
+  font-size: 1.0625rem;
+}
+
+.page-banner + .wrap {
+  padding-top: clamp(32px, 5vw, 56px);
+}
+
+/* ---------- coleções no modelo do site antigo (ajustes do cliente, 06/10/2026) ---------- */
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-bottom: 96px;
+}
+
+.collection-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.collection-tile__media {
+  aspect-ratio: 16 / 9;
+  background: var(--hero-ground);
+}
+
+.collection-tile__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 900ms var(--ease-out);
+}
+
+.collection-tile__overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+  background: var(--hero-shade-clear);
+  transition: background var(--t-mid) ease;
+}
+
+.collection-tile__title {
+  color: var(--paper);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--t-mid) ease,
+    transform var(--t-mid) var(--ease-out);
+}
+
+.collection-tile__more {
+  padding: 8px 22px;
+  border: 1px solid var(--paper);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  opacity: 0;
+  transition: opacity var(--t-mid) ease;
+}
+
+.collection-tile:hover .collection-tile__overlay,
+.collection-tile:focus-visible .collection-tile__overlay {
+  background: var(--hero-shade);
+}
+
+.collection-tile:hover .collection-tile__title,
+.collection-tile:focus-visible .collection-tile__title,
+.collection-tile:hover .collection-tile__more,
+.collection-tile:focus-visible .collection-tile__more {
+  opacity: 1;
+  transform: none;
+}
+
+.collection-tile:hover .collection-tile__media img {
+  transform: scale(1.03);
+}
+
+.collection-tile:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+
+/* Sem mouse (celular, tablet), o nome e o "Saiba mais" ficam sempre à vista. */
+@media (hover: none) {
+  .collection-tile__overlay {
+    background: var(--hero-shade);
+  }
+
+  .collection-tile__title,
+  .collection-tile__more {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.collection-banner img {
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  object-fit: cover;
+}
+
+.collection-intro {
+  display: grid;
+  gap: 24px;
+  padding-bottom: 56px;
+}
+
+@media (max-width: 48rem) {
+  .collection-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-tile__media img,
+  .collection-tile__title {
+    transition: none;
+  }
+}
