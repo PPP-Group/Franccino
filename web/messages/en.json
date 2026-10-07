@@ -8,7 +8,9 @@
     "breadcrumb": "You are here",
     "home": "Home",
     "opensInNewWindow": "(opens in a new window)",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "scrollPrevious": "Previous",
+    "scrollNext": "Next"
   },
   "nav": {
     "indoor": "Casa",
@@ -520,7 +522,6 @@
   "projects": {
     "title": "Projects",
     "description": "Residential and corporate projects with Franccino pieces.",
-    "count": "{count, plural, one {# project} other {# projects}}",
     "typeFilter": "Project type",
     "allTypes": "All",
     "types": {
@@ -538,7 +539,7 @@
   "corporate": {
     "title": "Contract",
     "projects": "Corporate projects",
-    "clients": "Clients"
+    "clients": "Some of our clients"
   },
   "factory": {
     "title": "Factory"
@@ -596,5 +597,8 @@
     "videos": "Videos",
     "links": "Links",
     "play": "Play video: {title}"
+  },
+  "blocks": {
+    "timeline": "Timeline"
   }
 }

@@ -8,7 +8,9 @@
     "breadcrumb": "Você está em",
     "home": "Início",
     "opensInNewWindow": "(abre em nova janela)",
-    "learnMore": "Saiba mais"
+    "learnMore": "Saiba mais",
+    "scrollPrevious": "Voltar",
+    "scrollNext": "Avançar"
   },
   "nav": {
     "indoor": "Casa",
@@ -520,7 +522,6 @@
   "projects": {
     "title": "Projetos",
     "description": "Projetos residenciais e corporativos com peças da Franccino.",
-    "count": "{count, plural, one {# projeto} other {# projetos}}",
     "typeFilter": "Tipo de projeto",
     "allTypes": "Todos",
     "types": {
@@ -538,7 +539,7 @@
   "corporate": {
     "title": "Corporativo",
     "projects": "Projetos corporativos",
-    "clients": "Clientes"
+    "clients": "Alguns de nossos clientes"
   },
   "factory": {
     "title": "Fábrica"
@@ -596,5 +597,8 @@
     "videos": "Vídeos",
     "links": "Links",
     "play": "Assistir ao vídeo: {title}"
+  },
+  "blocks": {
+    "timeline": "Linha do tempo"
   }
 }

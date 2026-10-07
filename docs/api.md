@@ -206,7 +206,12 @@ type Block =
   | { type: 'stats'; data: { items: { value: string; label: string }[] } }
   | { type: 'quote'; data: { text: string; author: string | null } }
   | { type: 'cta'; data: { heading: string | null; body: string | null; label: string; url: string } }
-  | { type: 'gallery'; data: { images: string[]; caption: string | null } };
+  | { type: 'gallery'; data: { images: string[]; caption: string | null } }
+  | {
+      type: 'video';
+      // embed_url: YouTube (nocookie) ou Vimeo; null para outro endereço, que vira link simples.
+      data: { url: string; embed_url: string | null; poster: string | null; title: string | null };
+    };
 ```
 
 ### `GET /settings`
