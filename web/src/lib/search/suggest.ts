@@ -1,9 +1,11 @@
-import type { SearchResult } from '@/lib/api/types';
+import type { Image, SearchResult } from '@/lib/api/types';
 
 export type Suggestion = {
   kind: 'product' | 'designer' | 'collection';
   slug: string;
   name: string;
+  /** Capa da peça ou da coleção, retrato do designer. */
+  image: Image | null;
 };
 
 export const MIN_QUERY_LENGTH = 2;
@@ -22,12 +24,18 @@ export function toSuggestions(result: SearchResult): Suggestion[] {
   return [
     ...result.products
       .slice(0, LIMITS.product)
-      .map((item) => ({ kind: 'product' as const, slug: item.slug, name: item.name })),
-    ...result.designers
-      .slice(0, LIMITS.designer)
-      .map((item) => ({ kind: 'designer' as const, slug: item.slug, name: item.name })),
-    ...result.collections
-      .slice(0, LIMITS.collection)
-      .map((item) => ({ kind: 'collection' as const, slug: item.slug, name: item.name })),
+      .map((item) => ({ kind: 'product' as const, slug: item.slug, name: item.name, image: item.cover })),
+    ...result.designers.slice(0, LIMITS.designer).map((item) => ({
+      kind: 'designer' as const,
+      slug: item.slug,
+      name: item.name,
+      image: item.portrait,
+    })),
+    ...result.collections.slice(0, LIMITS.collection).map((item) => ({
+      kind: 'collection' as const,
+      slug: item.slug,
+      name: item.name,
+      image: item.cover,
+    })),
   ];
 }
