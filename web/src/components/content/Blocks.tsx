@@ -5,6 +5,9 @@
  * (sanitizado pela API); o resto é texto simples.
  */
 
+import { useTranslations } from 'next-intl';
+import { VideoFacade } from '@/components/media/VideoFacade';
+import { Rail } from '@/components/ui/Rail';
 import type {
   Block,
   CtaBlockData,
@@ -16,6 +19,7 @@ import type {
   RichTextBlockData,
   StatsBlockData,
   TimelineBlockData,
+  VideoBlockData,
 } from '@/lib/api/types';
 import { RichText } from './RichText';
 
@@ -51,22 +55,39 @@ function ImageTextBlock({ data }: { data: ImageTextBlockData }) {
   );
 }
 
+/**
+ * "Nossa História" na horizontal, como no site antigo (ajustes do cliente, 06/10/2026): anos lado a lado,
+ * com setas para avançar. Cada linha do texto do painel vira um fato do ano.
+ */
 function TimelineBlock({ data }: { data: TimelineBlockData }) {
+  const t = useTranslations('blocks');
   if (data.items.length === 0) {
     return null;
   }
   return (
-    <ol className="timeline">
-      {data.items.map((item, index) => (
-        <li key={index}>
-          <span className="timeline__year num">{item.year}</span>
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <Rail label={t('timeline')} className="timeline-rail">
+      <ol className="timeline">
+        {data.items.map((item, index) => {
+          const facts = (item.text ?? '')
+            .split('\n')
+            .map((line) => line.trim())
+            .filter(Boolean);
+          return (
+            <li key={index} className="timeline__item">
+              <span className="timeline__year num">{item.year}</span>
+              <h3>{item.title}</h3>
+              {facts.length > 0 ? (
+                <ul className="timeline__facts">
+                  {facts.map((fact, factIndex) => (
+                    <li key={factIndex}>{fact}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+    </Rail>
   );
 }
 
@@ -141,6 +162,24 @@ function GalleryBlock({ data }: { data: GalleryBlockData }) {
   );
 }
 
+function VideoBlock({ data }: { data: VideoBlockData }) {
+  const title = data.title ?? data.url;
+  if (!data.embed_url) {
+    return data.url ? (
+      <p className="block-video">
+        <a className="link-arrow" href={data.url} target="_blank" rel="noopener noreferrer">
+          {title}
+        </a>
+      </p>
+    ) : null;
+  }
+  return (
+    <div className="block-video">
+      <VideoFacade title={title} embedUrl={data.embed_url} poster={data.poster} />
+    </div>
+  );
+}
+
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case 'rich_text':
@@ -161,6 +200,8 @@ function BlockView({ block }: { block: Block }) {
       return <CtaBlock data={block.data} />;
     case 'gallery':
       return <GalleryBlock data={block.data} />;
+    case 'video':
+      return <VideoBlock data={block.data} />;
     default:
       return null;
   }

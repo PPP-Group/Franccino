@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Storage;
  * `Localized::array()`), sanitizes `rich_text.body` and `image_text.body` — the
  * *only* HTML fields in any block, including page `intro`, which is plain text
  * (Ruling R8) — and turns `image` / `images[]` (paths on the `media` disk) into
- * absolute URLs.
+ * absolute URLs. A `video` block also gets its `embed_url` (YouTube/Vimeo, see
+ * `VideoEmbed`), or `null` for any other address.
  */
 final class LocalizedBlocks
 {
@@ -88,6 +89,12 @@ final class LocalizedBlocks
             'gallery' => [
                 'images' => array_map(fn (?string $path) => self::url($path), $data['images'] ?? []),
                 'caption' => Localized::array($data['caption'] ?? null, $locale),
+            ],
+            'video' => [
+                'url' => $data['url'] ?? null,
+                'embed_url' => filled($data['url'] ?? null) ? VideoEmbed::url($data['url']) : null,
+                'poster' => self::url($data['poster'] ?? null),
+                'title' => Localized::array($data['title'] ?? null, $locale),
             ],
             default => $data,
         };

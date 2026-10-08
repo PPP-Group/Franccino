@@ -142,6 +142,12 @@
   gap: 12px;
 }
 
+.catalog-head--center {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+}
+
 .catalog-head--tight {
   padding-top: 8px;
 }

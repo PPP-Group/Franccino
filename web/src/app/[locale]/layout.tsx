@@ -2,14 +2,16 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { archivo } from '@/app/fonts';
+import { fontVariables } from '@/app/fonts';
 import { SiteFooter } from '@/components/layout/SiteFooter';
+import { areaMenus } from '@/components/layout/area-menu';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ToastRegion } from '@/components/ui/ToastRegion';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { htmlLang, locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
+import { getArea } from '@/lib/api/catalog';
 import { getSettings } from '@/lib/api/content';
 import { serverEnv } from '@/lib/env';
 import { organizationJsonLd } from '@/lib/seo/jsonld';
@@ -38,20 +40,22 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   }
   setRequestLocale(locale);
 
-  const [t, settings] = await Promise.all([
+  const [t, settings, indoor, outdoor] = await Promise.all([
     getTranslations({ locale, namespace: 'common' }),
     getSettings(locale),
+    getArea(locale, 'indoor'),
+    getArea(locale, 'outdoor'),
   ]);
 
   return (
-    <html lang={htmlLang(locale)} className={archivo.variable}>
+    <html lang={htmlLang(locale)} className={fontVariables}>
       <body>
         <NextIntlClientProvider>
           <a className="skip-link" href="#conteudo">
             {t('skipToContent')}
           </a>
           <JsonLd data={organizationJsonLd(settings)} />
-          <SiteHeader />
+          <SiteHeader menus={areaMenus(indoor, outdoor)} />
           <div id="conteudo" tabIndex={-1}>
             {children}
           </div>

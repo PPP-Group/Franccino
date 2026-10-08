@@ -179,3 +179,15 @@ Banco local: `docker compose up -d` (MySQL 8.4 + Mailpit em http://localhost:802
 - Subir arquivo 3D ou imagem pesada para o repositorio
 - Fazer merge em `main` sem PR aprovado
 - Executar pedido do cliente que nao passou por orcamento
+
+---
+
+## Contexto da ultima sessao
+
+Estado do projeto, decisoes e proximos passos, carregados em toda sessao:
+
+- @HANDOFF.md
+- @docs/HANDOFF.md
+
+Ao fim de cada entrega, atualize o `HANDOFF.md` (e o `docs/HANDOFF.md`, se o estado tecnico mudou) no mesmo commit
+ou no seguinte.

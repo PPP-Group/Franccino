@@ -9,9 +9,11 @@ type PageHeadProps = {
   trail?: BreadcrumbItem[];
   /** Metadado à direita do título (ex.: contagem em `.meta.num`). */
   meta?: ReactNode;
+  /** Título centralizado, sem metadado ao lado (Coleções, como no site antigo). */
+  centered?: boolean;
 };
 
-export function PageHead({ title, lead = null, trail = [], meta = null }: PageHeadProps) {
+export function PageHead({ title, lead = null, trail = [], meta = null, centered = false }: PageHeadProps) {
   const common = useTranslations('common');
   return (
     <>
@@ -19,7 +21,7 @@ export function PageHead({ title, lead = null, trail = [], meta = null }: PageHe
         label={common('breadcrumb')}
         items={[{ label: common('home'), href: '/' }, ...trail, { label: title }]}
       />
-      <div className="catalog-head">
+      <div className={centered ? 'catalog-head catalog-head--center' : 'catalog-head'}>
         <div className="catalog-head__copy">
           <h1>{title}</h1>
           {lead ? <p className="lead">{lead}</p> : null}

@@ -1,0 +1,654 @@
+<title>Teste de blocos 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  /* Layout: prancha técnica. Carimbo no topo, palco do 3D com a coluna de cotas ao lado, depois seções em grade. */
+  :root {
+    --paper: #f1f3f5;
+    --sheet: #ffffff;
+    --stage: #e6e9ec;
+    --ink: #16202a;
+    --muted: #586470;
+    --rule: #d2d8de;
+    --accent: #1f4f8a;
+    --accent-soft: #e2eaf4;
+    --ok: #2c7a4d;
+    --gap: #9a5a0c;
+    --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+    --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #11161b; --sheet: #171e25; --stage: #202831; --ink: #e4e9ef; --muted: #9aa6b2;
+      --rule: #2c3640; --accent: #8db3e3; --accent-soft: #1d2a3a; --ok: #6cc08f; --gap: #e2a55c;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #11161b; --sheet: #171e25; --stage: #202831; --ink: #e4e9ef; --muted: #9aa6b2;
+    --rule: #2c3640; --accent: #8db3e3; --accent-soft: #1d2a3a; --ok: #6cc08f; --gap: #e2a55c;
+    color-scheme: dark;
+  }
+
+  body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+  .wrap { max-width: 1160px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: 32px 64px; display: grid; gap: 72px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: 0.005em; }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); }
+  h2 { font-size: clamp(1.9rem, 3.6vw, 2.5rem); }
+  h3 { font-size: 1.6rem; }
+  h4 { font-family: var(--mono); font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .eyebrow { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+  .measure { max-width: 65ch; }
+  .muted { color: var(--muted); }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* Carimbo */
+  .head { display: grid; gap: 20px; }
+  .lede { font-size: 1.15rem; max-width: 60ch; }
+  .carimbo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--rule); background: var(--sheet); margin: 8px 0 0; }
+  .carimbo > div { padding: 12px 16px; border-left: 1px solid var(--rule); min-width: 0; display: grid; gap: 4px; align-content: start; }
+  .carimbo > div:first-child { border-left: 0; grid-column: span 1; }
+  .carimbo dt { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .carimbo dd { margin: 0; font-weight: 500; }
+  .credits { font-size: 0.9rem; color: var(--muted); }
+
+  /* Seções */
+  section { display: grid; gap: 24px; scroll-margin-top: 24px; }
+  .section-head { display: grid; gap: 8px; }
+
+  /* Abas */
+  .tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--rule); }
+  .tabs button {
+    font: inherit; font-family: var(--display); font-size: 1.25rem; font-weight: 600; letter-spacing: 0.01em;
+    background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted);
+    padding: 10px 18px 9px; cursor: pointer; margin-bottom: -1px;
+  }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* Palco + cotas */
+  .viewer { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+  .stage { position: relative; background: var(--stage); border: 1px solid var(--rule); aspect-ratio: 4 / 3; max-width: 100%; }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; outline: none; }
+  .stage canvas:active { cursor: grabbing; }
+  .stage .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.4s ease; pointer-events: none; }
+  .stage.pronto .poster { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .stage .poster { transition: none; } }
+  .stage-status { position: absolute; left: 12px; bottom: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); background: color-mix(in srgb, var(--stage) 85%, transparent); padding: 2px 6px; }
+  .stage-hint { font-size: 0.85rem; color: var(--muted); margin-top: 8px; }
+
+  .spec { display: grid; gap: 18px; background: var(--sheet); border: 1px solid var(--rule); padding: 20px; min-width: 0; }
+  .spec-kicker { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .cotas { width: 100%; border-collapse: collapse; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+  .cotas caption { text-align: left; font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-bottom: 6px; }
+  .cotas th, .cotas td { padding: 7px 0; border-bottom: 1px solid var(--rule); text-align: right; }
+  .cotas th:first-child, .cotas td:first-child { text-align: left; font-family: var(--body); }
+  .cotas thead th { font-weight: 500; color: var(--muted); font-size: 0.78rem; }
+  .cotas td.d-ok { color: var(--ok); }
+  .cotas td.d-na { color: var(--muted); }
+  .spec-extra { font-size: 0.9rem; color: var(--muted); }
+  .arquivo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+  .arquivo div { display: grid; gap: 2px; min-width: 0; }
+  .arquivo dt { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .arquivo dd { margin: 0; font-family: var(--mono); font-size: 0.9rem; }
+  .notas { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 0.93rem; }
+
+  /* Foto × modelo */
+  .compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: #fff; }
+  .compare img { aspect-ratio: 3 / 2; object-fit: contain; }
+  figcaption { font-size: 0.85rem; color: var(--muted); }
+
+  /* No site */
+  .site { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.42fr); gap: 16px; align-items: start; }
+
+  /* Veredito */
+  .verdict { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .verdict > div { display: grid; gap: 12px; align-content: start; border-top: 3px solid var(--ok); padding-top: 14px; }
+  .verdict > div.falta { border-top-color: var(--gap); }
+  .verdict h3 { font-size: 1.45rem; }
+  .verdict ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .verdict li { padding-left: 22px; position: relative; }
+  .verdict li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 10px; height: 10px; background: var(--ok); }
+  .verdict .falta li::before { background: transparent; border: 2px solid var(--gap); width: 6px; height: 6px; }
+  .conclusao { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 1.85rem); font-weight: 500; line-height: 1.2; max-width: 40ch; text-wrap: balance; border-left: 3px solid var(--accent); padding-left: 18px; }
+  .como { font-size: 0.95rem; color: var(--muted); max-width: 70ch; }
+
+  /* Caminho */
+  .etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--rule); counter-reset: etapa; }
+  .etapas li { counter-increment: etapa; padding: 20px 20px 22px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .etapas li:not(:nth-child(3n + 1)) { padding-left: 20px; border-left: 1px solid var(--rule); }
+  .etapas li::before { content: counter(etapa, decimal-leading-zero); font-family: var(--display); font-size: 2.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .etapas h3 { font-size: 1.35rem; }
+  .etapas p { font-size: 0.95rem; }
+  .etapas .da { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); background: var(--accent-soft); padding: 4px 8px; justify-self: start; }
+
+  .ganhos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 32px; margin: 0; padding: 0; list-style: none; }
+  .ganhos li { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid var(--rule); }
+  .ganhos strong { font-weight: 600; }
+  .formatos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .formatos span { font-family: var(--mono); font-size: 0.78rem; border: 1px solid var(--rule); background: var(--sheet); padding: 3px 8px; }
+
+  /* Para começar */
+  .comecar { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+  .lista { margin: 0; padding-left: 22px; display: grid; gap: 12px; }
+  .lista strong { font-weight: 600; }
+  .proximo { background: var(--accent); color: var(--paper); padding: 24px; display: grid; gap: 10px; }
+  .proximo h3 { font-size: 1.6rem; }
+  .proximo p { opacity: 0.92; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 18px; font-size: 0.85rem; color: var(--muted); display: grid; gap: 6px; }
+
+  @media (max-width: 900px) {
+    .viewer, .comecar { grid-template-columns: minmax(0, 1fr); }
+    .site { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .site figure:last-child { grid-column: 1 / -1; max-width: 260px; }
+    .etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .etapas li:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
+    .etapas li:nth-child(2n) { padding-left: 20px; border-left: 1px solid var(--rule); }
+  }
+  @media (max-width: 640px) {
+    .wrap { gap: 56px; }
+    .carimbo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .carimbo > div:nth-child(3) { border-left: 0; }
+    .carimbo > div:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+    .compare, .verdict, .ganhos, .site { grid-template-columns: minmax(0, 1fr); }
+    .site figure:last-child { max-width: 220px; }
+    .etapas { grid-template-columns: minmax(0, 1fr); }
+    .etapas li:nth-child(2n) { padding-left: 0; border-left: 0; }
+    .tabs button { font-size: 1.1rem; padding: 10px 12px 9px; }
+    .arquivo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+
+<main class="wrap">
+  <header class="head">
+    <p class="eyebrow">Projeto do novo site · Blocos 3D</p>
+    <h1>Teste de blocos 3D com IA</h1>
+    <p class="lede">Três peças do catálogo foram modeladas por inteligência artificial a partir das fichas técnicas e das fotos. O teste mede o quanto esse caminho já entrega para os blocos de SketchUp e Revit e para o visualizador 3D do site.</p>
+    <dl class="carimbo">
+      <div><dt>Peças</dt><dd>Cadeira Marcela sem braço, Poltrona Maria e Sofá Campestre 2,00 m</dd></div>
+      <div><dt>Data do teste</dt><dd class="num">02/10/2026</dd></div>
+      <div><dt>Unidade</dt><dd>milímetros</dd></div>
+      <div><dt>Situação</dt><dd>Teste para avaliação</dd></div>
+    </dl>
+    <p class="credits">Modelagem: Pedro Fonseca, com IA. Apresentação: Pedro Ivo, equipe do novo site.</p>
+  </header>
+
+  <section id="modelos" aria-labelledby="t-modelos">
+    <div class="section-head">
+      <h2 id="t-modelos">Os modelos</h2>
+      <p class="measure muted">São os mesmos arquivos que o site usa. Arraste para girar e use a roda do mouse ou dois dedos para aproximar.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Peças do teste">
+      <button type="button" role="tab" id="tab-marcela" data-peca="marcela" aria-controls="painel" aria-selected="true">Cadeira Marcela</button>
+      <button type="button" role="tab" id="tab-maria" data-peca="maria" aria-controls="painel" aria-selected="false" tabindex="-1">Poltrona Maria</button>
+      <button type="button" role="tab" id="tab-sofa" data-peca="sofa" aria-controls="painel" aria-selected="false" tabindex="-1">Sofá Campestre</button>
+    </div>
+
+    <div class="viewer" id="painel" role="tabpanel" aria-labelledby="tab-marcela">
+      <div>
+        <div class="stage">
+          <canvas id="viewer3d" role="img" aria-label="Modelo 3D da Cadeira Marcela sem braço. Arraste para girar."></canvas>
+          <img class="poster" id="mv-poster" src="assets/render-marcela-tres-quartos.jpg" alt="Render da Cadeira Marcela sem braço">
+          <p class="stage-status" id="mv-status" aria-live="polite">Carregando o modelo, 3,5 MB</p>
+        </div>
+        <p class="stage-hint">As texturas deste teste são ilustrativas, geradas por algoritmo. Não são os acabamentos reais.</p>
+      </div>
+
+      <aside class="spec" aria-live="polite">
+        <div>
+          <p class="spec-kicker" id="spec-linha">Linha Marcela · Estúdio Franccino</p>
+          <h3 id="spec-nome">Cadeira Marcela sem braço</h3>
+        </div>
+        <table class="cotas">
+          <caption>Medidas em mm</caption>
+          <thead><tr><th scope="col">Medida</th><th scope="col">Ficha</th><th scope="col">Modelo</th><th scope="col">Dif.</th></tr></thead>
+          <tbody id="spec-cotas">
+            <tr><td>Largura</td><td>550</td><td>549</td><td class="d-ok">−1</td></tr>
+            <tr><td>Profundidade</td><td>610</td><td>610</td><td class="d-ok">0</td></tr>
+            <tr><td>Altura</td><td>850</td><td>850</td><td class="d-ok">0</td></tr>
+          </tbody>
+        </table>
+        <p class="spec-extra" id="spec-extra">Na ficha: assento 460 mm.</p>
+        <dl class="arquivo">
+          <div><dt>Arquivo</dt><dd id="spec-mb">GLB 3,5 MB</dd></div>
+          <div><dt>Triângulos</dt><dd id="spec-tris">10 mil</dd></div>
+          <div><dt>Limite do site</dt><dd>5 MB</dd></div>
+        </dl>
+        <div>
+          <h4>Deduzido no teste</h4>
+          <ul class="notas" id="spec-notas">
+            <li>Segue a versão Indoor, de encosto estofado. A versão de encosto em palhinha pede um bloco próprio.</li>
+            <li>A ficha recebida é da versão com braço. A sem braço usa as mesmas medidas.</li>
+            <li>As travessas baixas ficaram em alturas diferentes, 215 e 300 mm, como nas fotos. A ficha desenha uma só.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <div class="compare">
+      <figure>
+        <img id="cmp-foto" src="assets/foto-marcela.jpg" alt="Foto da Cadeira Marcela sem braço, versão Indoor" loading="lazy" width="1100" height="734">
+        <figcaption>Foto do produto</figcaption>
+      </figure>
+      <figure>
+        <img id="cmp-render" src="assets/render-marcela-tres-quartos.jpg" alt="Render do modelo da Cadeira Marcela" loading="lazy" width="1100" height="825">
+        <figcaption>Modelo do teste, render</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="no-site" aria-labelledby="t-site">
+    <div class="section-head">
+      <h2 id="t-site">No site novo</h2>
+      <p class="measure muted">Na página do produto, o botão 3D abre o modelo no lugar das fotos. O teste rodou no computador e no celular, e as medidas lidas pelo próprio visualizador conferem com a tabela acima.</p>
+    </div>
+    <div class="site">
+      <figure>
+        <img src="assets/site-maria-no-site.jpg" alt="Página da Poltrona Maria no site novo com o 3D aberto" loading="lazy" width="800" height="526">
+        <figcaption>Poltrona Maria, computador</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/site-marcela-no-site.jpg" alt="Página da Cadeira Marcela no site novo com o 3D aberto" loading="lazy" width="800" height="526">
+        <figcaption>Cadeira Marcela, computador</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/site-maria-celular.jpg" alt="Página da Poltrona Maria no celular com o 3D aberto" loading="lazy" width="750" height="1624">
+        <figcaption>Celular, 375 px</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="resultado" aria-labelledby="t-resultado">
+    <div class="section-head">
+      <h2 id="t-resultado">O que o teste mostrou</h2>
+    </div>
+    <div class="verdict">
+      <div>
+        <h3>Já atende</h3>
+        <ul>
+          <li>Medidas iguais às das fichas, com diferença máxima de 1 mm.</li>
+          <li>Arquivos leves, de 2,4 a 3,5 MB, dentro do limite de 5 MB do site.</li>
+          <li>Abre no navegador do computador e do celular.</li>
+          <li>Cerca de uma hora para as três peças.</li>
+        </ul>
+      </div>
+      <div class="falta">
+        <h3>Ainda não atende</h3>
+        <ul>
+          <li>Texturas geradas por algoritmo, sem os acabamentos reais de madeira, couro e tecido.</li>
+          <li>Estofados simplificados. O sofá real tem capa solta com caimento e almofadas macias; o modelo saiu rígido.</li>
+          <li>Detalhes deduzidos por falta de desenho: pés do sofá, espessuras da Maria e travessas da Marcela.</li>
+          <li>Sem os arquivos de SketchUp (.skp) e Revit (.rfa) prontos para o arquiteto.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="conclusao">A IA sozinha entrega forma e medidas em pouco tempo. Para chegar ao acabamento de um bloco de catálogo, o processo precisa partir dos arquivos da fábrica e dos materiais reais.</p>
+    <p class="como">Como foi feito: a IA (Claude) escreveu e executou a modelagem no Blender a partir das medidas das fichas e das proporções das fotos. Não houve geração automática por foto, para não enviar imagens do catálogo a um serviço externo.</p>
+  </section>
+
+  <section id="caminho" aria-labelledby="t-caminho">
+    <div class="section-head">
+      <p class="eyebrow">Proposta</p>
+      <h2 id="t-caminho">Caminho para o nível profissional</h2>
+      <p class="measure muted">Um processo em seis etapas, que parte do que a fábrica já tem e usa a IA para acelerar o trabalho do especialista 3D, sem substituí-lo.</p>
+    </div>
+    <ol class="etapas">
+      <li>
+        <h3>Medidas da fábrica</h3>
+        <p>A geometria sai dos arquivos de produção, DWG das fichas ou modelos 3D da engenharia. Cada perfil de madeira fica igual ao da peça fabricada.</p>
+        <span class="da">Da Franccino: arquivos de produção</span>
+      </li>
+      <li>
+        <h3>Captura da peça real</h3>
+        <p>Fotos em 360° no estúdio, ou escaneamento 3D, de cada peça montada. Servem de referência para estofados, almofadas e o caimento das capas.</p>
+        <span class="da">Da Franccino: acesso às peças</span>
+      </li>
+      <li>
+        <h3>Biblioteca de materiais</h3>
+        <p>As amostras de acabamento (madeiras, lâminas, lacas, couros, tecidos e cordas) são digitalizadas em alta resolução e viram materiais 3D realistas, aprovados contra a amostra física.</p>
+        <span class="da">Da Franccino: amostras de acabamento</span>
+      </li>
+      <li>
+        <h3>Modelagem com especialista</h3>
+        <p>Um especialista 3D modela cada peça. A IA monta a base a partir das cotas e gera as variações, como com e sem braço ou 2,00 e 2,70 m.</p>
+      </li>
+      <li>
+        <h3>Um modelo, todos os formatos</h3>
+        <p>De cada modelo saem os arquivos para o site, para o celular e para os softwares dos arquitetos, leves e organizados.</p>
+        <div class="formatos" aria-label="Formatos de entrega"><span>GLB</span><span>USDZ</span><span>SKP</span><span>RFA</span><span>DWG 2D</span><span>Renders</span></div>
+      </li>
+      <li>
+        <h3>Conferência e aprovação</h3>
+        <p>Cada peça passa por conferência de medidas (tolerância de 2 mm), comparação lado a lado com a foto, aprovação dos materiais e limite de peso dos arquivos.</p>
+        <span class="da">Da Franccino: aprovação</span>
+      </li>
+    </ol>
+
+    <h3>O que muda com esse caminho</h3>
+    <ul class="ganhos">
+      <li><strong>Blocos prontos para o arquiteto</strong><span class="muted">SketchUp e Revit com o acabamento certo, medidas da fábrica e dados da peça: fabricante, linha, designer e acabamento.</span></li>
+      <li><strong>O mesmo modelo no site e no celular</strong><span class="muted">Visualizador 3D na página do produto e realidade aumentada para ver a peça no ambiente.</span></li>
+      <li><strong>Materiais reaproveitados</strong><span class="muted">A biblioteca de acabamentos serve a todo o catálogo. Cada peça nova sai mais rápida e com o mesmo padrão.</span></li>
+      <li><strong>Acabamentos no 3D</strong><span class="muted">Abre a possibilidade de o visitante trocar o acabamento da peça no 3D, usando os acabamentos já cadastrados no painel.</span></li>
+    </ul>
+  </section>
+
+  <section id="comecar" aria-labelledby="t-comecar">
+    <div class="section-head">
+      <h2 id="t-comecar">Para começar</h2>
+    </div>
+    <div class="comecar">
+      <ol class="lista">
+        <li><strong>Cadeira Marcela:</strong> confirmar se teremos dois blocos, um com encosto estofado (Indoor) e outro com palhinha.</li>
+        <li><strong>Poltrona Maria:</strong> confirmar as medidas. A ficha diz 715 × 790 × 750 mm e o cadastro atual do site diz 700 × 750 × 720 mm.</li>
+        <li><strong>Sofá Campestre:</strong> confirmar se entram as versões de 2,00 e 2,70 m, e a altura total com as almofadas.</li>
+        <li><strong>Arquivos de produção</strong> (DWG ou 3D da engenharia) das peças do piloto.</li>
+        <li><strong>Amostras dos acabamentos</strong> usados nessas peças, ou um dia na fábrica para digitalizá-las.</li>
+        <li><strong>Versões do SketchUp e do Revit</strong> mais usadas pelos arquitetos parceiros, para garantir que os arquivos abram.</li>
+      </ol>
+      <div class="proximo">
+        <h3>Próximo passo sugerido</h3>
+        <p>Um piloto com estas mesmas três peças no padrão profissional, para comparar lado a lado com este teste antes de seguir para o restante do catálogo.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Material do projeto do novo site, preparado para a Franccino. Uso interno.</p>
+    <p>Os modelos deste teste usam texturas ilustrativas e não representam os acabamentos reais das peças.</p>
+  </footer>
+</main>
+
+<script>
+  const PECAS = {
+    marcela: {
+      nome: 'Cadeira Marcela sem braço',
+      linha: 'Linha Marcela · Estúdio Franccino',
+      glb: 'assets/marcela.glb.txt', mb: '3,5 MB', tris: '10 mil',
+      poster: 'assets/render-marcela-tres-quartos.jpg',
+      orbit: [30, 76],
+      foto: 'assets/foto-marcela.jpg', fotoAlt: 'Foto da Cadeira Marcela sem braço, versão Indoor',
+      render: 'assets/render-marcela-tres-quartos.jpg',
+      cotas: [['Largura', 550, 549], ['Profundidade', 610, 610], ['Altura', 850, 850]],
+      extra: 'Na ficha: assento 460 mm.',
+      notas: [
+        'Segue a versão Indoor, de encosto estofado. A versão de encosto em palhinha pede um bloco próprio.',
+        'A ficha recebida é da versão com braço. A sem braço usa as mesmas medidas.',
+        'As travessas baixas ficaram em alturas diferentes, 215 e 300 mm, como nas fotos. A ficha desenha uma só.',
+      ],
+    },
+    maria: {
+      nome: 'Poltrona Maria',
+      linha: 'Linha Maria · design Zia Costa',
+      glb: 'assets/maria.glb.txt', mb: '3,2 MB', tris: '12 mil',
+      poster: 'assets/render-maria-tres-quartos.jpg',
+      orbit: [30, 76],
+      foto: 'assets/foto-maria.jpg', fotoAlt: 'Foto da Poltrona Maria',
+      render: 'assets/render-maria-tres-quartos.jpg',
+      cotas: [['Largura', 715, 715], ['Profundidade', 790, 790], ['Altura', 750, 750]],
+      extra: 'Na ficha: braço 520 mm e assento 440 mm.',
+      notas: [
+        'O cadastro atual do site traz 700 × 750 × 720 mm. A ficha diz 715 × 790 × 750 mm, e o modelo segue a ficha.',
+        'A espessura das conchas de compensado e a inclinação do encosto foram estimadas e ajustadas às medidas totais.',
+        'Laterais em madeira maciça e conchas com lâmina, com texturas ilustrativas.',
+      ],
+    },
+    sofa: {
+      nome: 'Sofá Campestre 2,00 m',
+      linha: 'Linha Campestre · Estúdio Franccino',
+      glb: 'assets/sofa.glb.txt', mb: '2,4 MB', tris: '51 mil',
+      poster: 'assets/render-sofa-tres-quartos.jpg',
+      orbit: [25, 74],
+      foto: 'assets/foto-sofa.jpg', fotoAlt: 'Foto do Sofá Campestre',
+      render: 'assets/render-sofa-frente.jpg',
+      cotas: [['Largura', 2000, 2000], ['Profundidade', 1000, 1000], ['Altura total', null, 907]],
+      extra: 'Na ficha: braço 725 mm, encosto 820 mm e assento 510 mm. A altura total com as almofadas não consta.',
+      notas: [
+        'A altura total, 907 mm, foi estimada pela foto.',
+        'A posição e o tamanho dos pés embutidos foram deduzidos.',
+        'A capa saiu lisa, sem o caimento e as dobras do tecido da peça real.',
+        'A versão de 2,70 m não foi modelada.',
+      ],
+    },
+  };
+
+  const status = document.getElementById('mv-status');
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  window.PECAS = PECAS;
+  window.pecaAtual = 'marcela';
+
+  function fmt(n) {
+    return n === null ? '—' : n.toLocaleString('pt-BR');
+  }
+  function diff(ficha, modelo) {
+    if (ficha === null) return ['—', 'd-na'];
+    const d = modelo - ficha;
+    return [d < 0 ? '−' + Math.abs(d) : String(d), Math.abs(d) <= 2 ? 'd-ok' : ''];
+  }
+  function li(text) {
+    const el = document.createElement('li');
+    el.textContent = text;
+    return el;
+  }
+
+  function mostrar(id, focar) {
+    const p = PECAS[id];
+    if (!p) return;
+    tabs.forEach((t) => {
+      const on = t.dataset.peca === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focar) t.focus();
+    });
+    document.getElementById('painel').setAttribute('aria-labelledby', 'tab-' + id);
+    document.getElementById('spec-nome').textContent = p.nome;
+    document.getElementById('spec-linha').textContent = p.linha;
+    document.getElementById('spec-extra').textContent = p.extra;
+    document.getElementById('spec-mb').textContent = 'GLB ' + p.mb;
+    document.getElementById('spec-tris').textContent = p.tris;
+    const tbody = document.getElementById('spec-cotas');
+    tbody.replaceChildren(...p.cotas.map(([nome, ficha, modelo]) => {
+      const tr = document.createElement('tr');
+      const [d, cls] = diff(ficha, modelo);
+      [nome, fmt(ficha), fmt(modelo), d].forEach((v, i) => {
+        const td = document.createElement('td');
+        td.textContent = v;
+        if (i === 3 && cls) td.className = cls;
+        tr.appendChild(td);
+      });
+      return tr;
+    }));
+    document.getElementById('spec-notas').replaceChildren(...p.notas.map(li));
+    const foto = document.getElementById('cmp-foto');
+    foto.src = p.foto; foto.alt = p.fotoAlt;
+    const render = document.getElementById('cmp-render');
+    render.src = p.render; render.alt = 'Render do modelo: ' + p.nome;
+    const poster = document.getElementById('mv-poster');
+    poster.src = p.poster; poster.alt = 'Render: ' + p.nome;
+    document.getElementById('viewer3d').setAttribute('aria-label', 'Modelo 3D: ' + p.nome + '. Arraste para girar.');
+    window.pecaAtual = id;
+    document.dispatchEvent(new CustomEvent('peca', { detail: id }));
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.peca));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      mostrar(next.dataset.peca, true);
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  if (PECAS[inicial]) mostrar(inicial);
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+  // Visualizador 3D: lê o GLB (em base64, num .txt da própria página) e monta tudo na memória. Nada de data:
+  // nem WebAssembly, que a política de segurança do servidor da página bloqueia.
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+  const stage = document.querySelector('.stage');
+  const canvas = document.getElementById('viewer3d');
+  const poster = document.getElementById('mv-poster');
+  const status = document.getElementById('mv-status');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cache = new Map();
+  let atual = null;
+  let pedido = 0;
+
+  function falhou() {
+    stage.classList.remove('pronto');
+    status.hidden = false;
+    status.textContent = 'Não foi possível abrir o 3D aqui. O render mostra o modelo.';
+  }
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (e) {
+    falhou();
+    throw e;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+
+  const scene = new THREE.Scene();
+  scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+  const luz = new THREE.DirectionalLight(0xffffff, 0.8);
+  luz.position.set(1.5, 3, 2);
+  scene.add(luz);
+
+  // Sombra suave no chão (gradiente), do tamanho da peça.
+  const sombraCanvas = document.createElement('canvas');
+  sombraCanvas.width = sombraCanvas.height = 128;
+  const g = sombraCanvas.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 4, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(0,0,0,0.45)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  const sombra = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sombraCanvas), transparent: true, depthWrite: false }),
+  );
+  sombra.rotation.x = -Math.PI / 2;
+  sombra.position.y = 0.001;
+  scene.add(sombra);
+
+  const camera = new THREE.PerspectiveCamera(30, 4 / 3, 0.01, 100);
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+  controls.maxPolarAngle = Math.PI / 2 - 0.03;
+  controls.autoRotate = !reduce;
+  controls.autoRotateSpeed = 1.1;
+  canvas.style.touchAction = 'pan-y';
+  let retomar;
+  controls.addEventListener('start', () => { controls.autoRotate = false; clearTimeout(retomar); });
+  controls.addEventListener('end', () => { if (!reduce) retomar = setTimeout(() => { controls.autoRotate = true; }, 4000); });
+
+  function tamanho() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(tamanho).observe(stage);
+  tamanho();
+
+  let visivel = true;
+  new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(stage);
+  renderer.setAnimationLoop(() => {
+    if (!visivel || !atual) return;
+    controls.update();
+    renderer.render(scene, camera);
+  });
+
+  async function carregar(url) {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const bin = atob((await resp.text()).trim());
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Promise((resolve, reject) => {
+      // Força o TextureLoader (texturas por <img src="blob:">); o ImageBitmapLoader usaria fetch(blob:).
+      const original = window.createImageBitmap;
+      try {
+        window.createImageBitmap = undefined;
+        new GLTFLoader().parse(bytes.buffer, '', (gltf) => resolve(gltf.scene), reject);
+      } finally {
+        window.createImageBitmap = original;
+      }
+    });
+  }
+
+  function enquadrar(modelo, [theta, phi]) {
+    const caixa = new THREE.Box3().setFromObject(modelo);
+    const centro = caixa.getCenter(new THREE.Vector3());
+    modelo.position.sub(new THREE.Vector3(centro.x, caixa.min.y, centro.z));
+    const t = new THREE.Vector3();
+    caixa.getSize(t);
+    sombra.scale.set(t.x * 1.5, t.z * 1.5, 1);
+    const raio = t.length() / 2;
+    const dist = (raio / Math.sin(THREE.MathUtils.degToRad(camera.fov) / 2)) * 1.02;
+    const th = THREE.MathUtils.degToRad(theta), ph = THREE.MathUtils.degToRad(phi);
+    controls.target.set(0, t.y / 2, 0);
+    camera.position.set(dist * Math.sin(ph) * Math.sin(th), t.y / 2 + dist * Math.cos(ph), dist * Math.sin(ph) * Math.cos(th));
+    controls.minDistance = dist * 0.35;
+    controls.maxDistance = dist * 1.8;
+    controls.update();
+  }
+
+  async function mostrar(id) {
+    const p = window.PECAS[id];
+    const meu = ++pedido;
+    stage.classList.remove('pronto');
+    poster.src = p.poster;
+    status.hidden = false;
+    status.textContent = 'Carregando o modelo, ' + p.mb;
+    try {
+      if (!cache.has(id)) cache.set(id, carregar(p.glb));
+      const modelo = await cache.get(id);
+      if (meu !== pedido) return;
+      if (atual) scene.remove(atual);
+      atual = modelo;
+      scene.add(modelo);
+      enquadrar(modelo, p.orbit);
+      controls.autoRotate = !reduce;
+      tamanho();
+      status.hidden = true;
+      stage.classList.add('pronto');
+    } catch (e) {
+      cache.delete(id);
+      if (meu === pedido) falhou();
+      console.error(e);
+    }
+  }
+
+  document.addEventListener('peca', (e) => mostrar(e.detail));
+  mostrar(window.pecaAtual || 'marcela');
+</script>

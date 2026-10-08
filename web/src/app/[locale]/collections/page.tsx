@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { CollectionTile } from '@/components/content/CollectionTile';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
-import { Tile } from '@/components/content/Tile';
 import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
 import { getCollections } from '@/lib/api/content';
@@ -30,28 +30,18 @@ export default async function CollectionsPage({ params }: Props) {
     getCollections(locale),
   ]);
   return (
-    <main className="wrap">
-      <PageHead
-        title={t('title')}
-        meta={<p className="meta num">{t('count', { count: collections.length })}</p>}
-      />
+    <main>
+      <div className="wrap">
+        <PageHead title={t('title')} centered />
+      </div>
       {collections.length === 0 ? (
-        <EmptyNotice text={common('nothingYet')} />
+        <div className="wrap">
+          <EmptyNotice text={common('nothingYet')} />
+        </div>
       ) : (
-        <div className="tiles">
+        <div className="collection-grid">
           {collections.map((collection, index) => (
-            <Tile
-              key={collection.id}
-              href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}
-              title={collection.name}
-              image={collection.cover}
-              meta={[
-                ...(collection.year ? [String(collection.year)] : []),
-                t('pieces', { count: collection.product_count }),
-              ]}
-              text={collection.summary}
-              priority={index < 3}
-            />
+            <CollectionTile key={collection.id} collection={collection} priority={index < 2} />
           ))}
         </div>
       )}

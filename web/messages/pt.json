@@ -7,7 +7,10 @@
     "viewAll": "Ver tudo",
     "breadcrumb": "Você está em",
     "home": "Início",
-    "opensInNewWindow": "(abre em nova janela)"
+    "opensInNewWindow": "(abre em nova janela)",
+    "learnMore": "Saiba mais",
+    "scrollPrevious": "Voltar",
+    "scrollNext": "Avançar"
   },
   "nav": {
     "indoor": "Casa",
@@ -23,8 +26,7 @@
     "downloads": "Downloads",
     "stores": "Lojas",
     "contact": "Contato",
-    "planner": "Sala para montar",
-    "technical": "Área técnica"
+    "planner": "Sala para montar"
   },
   "footer": {
     "cookies": "Política de cookies",
@@ -66,7 +68,8 @@
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
     "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
-    "quoteListShort": "Lista"
+    "quoteListShort": "Lista",
+    "areaAll": "Ver tudo de {area}"
   },
   "quote": {
     "viewList": "Ver lista",
@@ -281,8 +284,6 @@
       "sort": "Ordenar por",
       "search": "Buscar",
       "apply": "Filtrar",
-      "categories": "Categorias",
-      "all": "Todas",
       "allDesigners": "Todos os designers",
       "facetOption": "{name} ({count})"
     },
@@ -303,7 +304,7 @@
       "body": "Tire um filtro ou fale com a equipe.",
       "clear": "Limpar filtros"
     },
-    "newTag": "Novo",
+    "newTag": "Lançamentos",
     "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
     "resultsLabel": "Resultados",
     "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
@@ -333,6 +334,8 @@
   },
   "stores": {
     "typeFilter": "Tipo de loja",
+    "mapLabel": "Mapa das lojas",
+    "mapAttribution": "© colaboradores do OpenStreetMap",
     "allTypes": "Todos os tipos",
     "whatsapp": "WhatsApp",
     "website": "Site da loja",
@@ -352,7 +355,9 @@
     "placeholder": "O que você procura?",
     "submit": "Buscar",
     "noResults": "Nenhum resultado encontrado.",
-    "resultsFor": "Resultados para “{query}”"
+    "resultsFor": "Resultados para “{query}”",
+    "seeAll": "Ver todos os resultados",
+    "kind": { "product": "Peça", "designer": "Designer", "collection": "Coleção" }
   },
   "pages": {
     "indoor": { "title": "Indoor" },
@@ -504,8 +509,6 @@
   "collections": {
     "title": "Coleções",
     "description": "Coleções da Franccino e as peças de cada uma.",
-    "count": "{count, plural, one {# coleção} other {# coleções}}",
-    "pieces": "{count, plural, =0 {sem peças} one {# peça} other {# peças}}",
     "designers": "Design",
     "gallery": "Imagens da coleção",
     "piecesTitle": "Peças da coleção"
@@ -523,7 +526,6 @@
   "projects": {
     "title": "Projetos",
     "description": "Projetos residenciais e corporativos com peças da Franccino.",
-    "count": "{count, plural, one {# projeto} other {# projetos}}",
     "typeFilter": "Tipo de projeto",
     "allTypes": "Todos",
     "types": {
@@ -541,7 +543,7 @@
   "corporate": {
     "title": "Corporativo",
     "projects": "Projetos corporativos",
-    "clients": "Clientes"
+    "clients": "Alguns de nossos clientes"
   },
   "factory": {
     "title": "Fábrica"
@@ -599,5 +601,8 @@
     "videos": "Vídeos",
     "links": "Links",
     "play": "Assistir ao vídeo: {title}"
+  },
+  "blocks": {
+    "timeline": "Linha do tempo"
   }
 }

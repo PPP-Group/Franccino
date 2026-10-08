@@ -45,25 +45,19 @@ export default async function CollectionPage({ params }: Props) {
   }
   const t = await getTranslations({ locale, namespace: 'collections' });
   return (
-    <main className="wrap">
-      <PageHead
-        title={collection.name}
-        lead={collection.summary}
-        trail={[{ label: t('title'), href: '/collections' }]}
-        meta={
-          <ul className="meta meta-inline num">
-            {collection.year ? <li>{collection.year}</li> : null}
-            <li>{t('pieces', { count: collection.product_count })}</li>
-          </ul>
-        }
-      />
-      <div className="detail-hero">
-        <div className="detail-hero__media">
-          {collection.cover ? (
-            <ApiImage image={collection.cover} sizes="(max-width: 56.25rem) 100vw, 58vw" priority />
-          ) : null}
+    <main>
+      {collection.cover ? (
+        <div className="collection-banner">
+          <ApiImage image={collection.cover} sizes="100vw" priority />
         </div>
-        <div className="detail-hero__copy">
+      ) : null}
+      <div className="wrap">
+        <PageHead
+          title={collection.name}
+          lead={collection.summary}
+          trail={[{ label: t('title'), href: '/collections' }]}
+        />
+        <div className="collection-intro">
           {collection.description ? <RichText html={collection.description} className="prose" /> : null}
           {collection.designers.length > 0 ? (
             <dl className="facts">
@@ -84,24 +78,24 @@ export default async function CollectionPage({ params }: Props) {
             </dl>
           ) : null}
         </div>
+        {collection.gallery.length > 0 ? (
+          <ul className="gallery-strip" aria-label={t('gallery')}>
+            {collection.gallery.map((picture) => (
+              <li key={picture.id}>
+                <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {collection.products.length > 0 ? (
+          <section aria-labelledby="collection-pieces" className="section--tight">
+            <h2 id="collection-pieces" className="section-title">
+              {t('piecesTitle')}
+            </h2>
+            <ProductGrid products={collection.products} />
+          </section>
+        ) : null}
       </div>
-      {collection.gallery.length > 0 ? (
-        <ul className="gallery-strip" aria-label={t('gallery')}>
-          {collection.gallery.map((picture) => (
-            <li key={picture.id}>
-              <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {collection.products.length > 0 ? (
-        <section aria-labelledby="collection-pieces" className="section--tight">
-          <h2 id="collection-pieces" className="section-title">
-            {t('piecesTitle')}
-          </h2>
-          <ProductGrid products={collection.products} />
-        </section>
-      ) : null}
     </main>
   );
 }
