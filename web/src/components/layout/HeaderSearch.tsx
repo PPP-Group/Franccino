@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { suggestSearch } from '@/lib/search/actions';
@@ -134,7 +135,13 @@ export function HeaderSearch() {
                   {items.map((item) => (
                     <li key={`${item.kind}-${item.slug}`}>
                       <Link href={suggestionHref(item)} onClick={close}>
-                        <span>{item.name}</span>
+                        <span
+                          className={`header-search__thumb header-search__thumb--${item.kind}`}
+                          aria-hidden="true"
+                        >
+                          <ApiImage image={item.image ? { ...item.image, alt: '' } : null} sizes="88px" />
+                        </span>
+                        <span className="header-search__name">{item.name}</span>
                         <small>{tSearch(`kind.${item.kind}`)}</small>
                       </Link>
                     </li>
