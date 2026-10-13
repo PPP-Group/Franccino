@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-10-01. Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-10-13 (resumo e seção 5.1; o resto descreve o estado de 2026-10-01). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -11,19 +11,19 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 
 ## 1. Resumo
 
-| Item            | Situação                                                                                            |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                    |
-| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4  |
-| P1 Fundação     | **Concluída**                                                                                       |
-| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)          |
-| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                         |
-| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                          |
-| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5) |
-| P5b Go-live     | T4 (importador do WordPress) e T7 (cookies) executadas; o resto depende de contas (seção 7)         |
-| PRs abertos     | Nenhum: tudo integrado em `develop` e `main` em 2026-10-01 (seção 3)                                |
-| Testes          | API: 266 testes Pest verdes · Web: 271 testes Vitest verdes (branch `claude/awesome-keller-iv02zw`) |
-| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)             |
+| Item            | Situação                                                                                              |
+| --------------- | ----------------------------------------------------------------------------------------------------- |
+| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                      |
+| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4    |
+| P1 Fundação     | **Concluída**                                                                                         |
+| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)            |
+| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                           |
+| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                            |
+| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5)   |
+| P5b Go-live     | T4, T7 no `develop`; T2+T3 (redirects, PR #29) e T8 (CSP, PR #30) em revisão; resto depende de contas |
+| PRs abertos     | #29 a #32 para `develop` (seção 5.1), mais os do Dependabot                                           |
+| Testes          | `develop` em 13/10: API 273 testes Pest · Web 281 testes Vitest, todos verdes                         |
+| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)               |
 
 ---
 
@@ -241,18 +241,18 @@ Fora do código:
 
 O trabalho de 2026-10-01 está em `develop` e `main` (seção 3). O resto abaixo espera decisão.
 
-### 5.1 PRs abertos para `develop`
+### 5.1 PRs abertos para `develop` (13/10/2026)
 
-| PR                                                    | Branch                  | Conteúdo                                                                    | CI                     |
-| ----------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------- | ---------------------- |
-| [#9](https://github.com/PPP-Group/Franccino/pull/9)   | `feature/fundacao-api`  | P2 T12 (revisão e correções), T13 (revalidação do site), T14 (demonstração) | `api / test` verde     |
-| [#10](https://github.com/PPP-Group/Franccino/pull/10) | `feature/fundacao-web`  | P4 T8–T12 e revisão final (inclui este documento)                           | `web / build` verde    |
-| [#11](https://github.com/PPP-Group/Franccino/pull/11) | `feature/p5a-plano`     | Plano da P5a (páginas restantes) e ledger da fase; só documentação          | sem CI (só documentos) |
-| [#12](https://github.com/PPP-Group/Franccino/pull/12) | `feature/p5b-plano`     | Plano da P5b (migração, infraestrutura e go-live) e ledger; só documentação | sem CI (só documentos) |
-| [#13](https://github.com/PPP-Group/Franccino/pull/13) | `feature/p5a-prototipo` | Rascunho, base `feature/p5a-plano`: P5a Task 1, telas no protótipo para B1  | sem CI (só protótipo)  |
+| PR                                                    | Branch                       | Conteúdo                                                                                   |
+| ----------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
+| [#29](https://github.com/PPP-Group/Franccino/pull/29) | `feature/redirects-301`      | P5b T2 e T3: redirects 301 do site antigo (comando na API + `proxy.ts`), PPP-94            |
+| [#30](https://github.com/PPP-Group/Franccino/pull/30) | `feature/csp-completa`       | P5b T8: CSP completa, em Report-Only até `CSP_ENFORCE=true`                                |
+| [#31](https://github.com/PPP-Group/Franccino/pull/31) | `fix/404-com-layout`         | Revisão técnica (PPP-118): 404 com layout e 33 links do `/en` sem slug em inglês           |
+| [#32](https://github.com/PPP-Group/Franccino/pull/32) | `feature/painel-organizacao` | PPP-117: painel em português, menus reorganizados, filtros nas listas de produto e coleção |
 
-Os quatro primeiros mergeiam sem conflito. O #13 é empilhado sobre o #11: depois do merge do #11, trocar a base para `develop`. O `develop` exige histórico linear: merge por **rebase**. A execução da P5a e da
-P5b depende de #9 e #10.
+Todos partem do `develop` de 13/10 e não dependem um do outro. O #29 e o #30 acrescentam uma entrada no fim de
+`docs/handoff/p5b-ledger.md`: o segundo a entrar tem um conflito trivial nesse arquivo (manter as duas entradas).
+Depois do merge na `main`, rodar `php artisan franccino:redirects:generate` no preview.
 
 ### 5.2 O que precisa ser aprovado ou providenciado
 
