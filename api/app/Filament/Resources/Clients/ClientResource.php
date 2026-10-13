@@ -20,6 +20,18 @@ class ClientResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Client');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Clients');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Content');
@@ -27,7 +39,7 @@ class ClientResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 5;
+        return 4;
     }
 
     public static function form(Schema $schema): Schema

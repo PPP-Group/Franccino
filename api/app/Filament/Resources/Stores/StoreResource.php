@@ -20,6 +20,18 @@ class StoreResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Store');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Stores');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Content');
@@ -27,7 +39,7 @@ class StoreResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 6;
+        return 5;
     }
 
     public static function form(Schema $schema): Schema
