@@ -45,7 +45,7 @@ class ProductController extends Controller
         $locale = app(ContentLocale::class)->current();
 
         $product = Product::published()
-            ->where("slug->{$locale}", $slug)
+            ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'area', 'category', 'designer', 'line', 'collections',
                 'finishes.group', 'media', 'mediaLinks',

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasDownloadFiles;
 use App\Models\Concerns\HasImageConversions;
+use App\Models\Concerns\HasLocalizedSlug;
 use App\Models\Concerns\HasMediaLinks;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\LaunchFactory;
@@ -17,7 +18,7 @@ use Spatie\Translatable\HasTranslations;
 class Launch extends Model implements HasMedia
 {
     /** @use HasFactory<LaunchFactory> */
-    use HasDownloadFiles, HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasTranslations;
+    use HasDownloadFiles, HasFactory, HasImageConversions, HasLocalizedSlug, HasMediaLinks, HasPublication, HasTranslations;
 
     protected $guarded = [];
 

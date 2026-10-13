@@ -41,7 +41,7 @@ class CategoryController extends Controller
         $locale = app(ContentLocale::class)->current();
 
         $category = Category::published()
-            ->where("slug->{$locale}", $slug)
+            ->whereLocalizedSlug($slug, $locale)
             ->with('media')
             ->firstOrFail();
 

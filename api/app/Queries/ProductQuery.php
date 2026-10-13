@@ -38,7 +38,7 @@ final class ProductQuery
 
         if (filled($filters['category'] ?? null)) {
             $category = $filters['category'];
-            $query->whereHas('category', fn (Builder $query) => $query->where("slug->{$locale}", $category));
+            $query->whereHas('category', fn (Builder $query) => $query->whereLocalizedSlug($category, $locale));
         }
 
         if (filled($filters['designer'] ?? null)) {
@@ -48,7 +48,7 @@ final class ProductQuery
 
         if (filled($filters['collection'] ?? null)) {
             $collection = $filters['collection'];
-            $query->whereHas('collections', fn (Builder $query) => $query->where("slug->{$locale}", $collection));
+            $query->whereHas('collections', fn (Builder $query) => $query->whereLocalizedSlug($collection, $locale));
         }
 
         if (filled($filters['line'] ?? null)) {
@@ -63,7 +63,7 @@ final class ProductQuery
 
         if (filled($filters['launch'] ?? null)) {
             $launch = $filters['launch'];
-            $query->whereHas('launches', fn (Builder $query) => $query->published()->where("slug->{$locale}", $launch));
+            $query->whereHas('launches', fn (Builder $query) => $query->published()->whereLocalizedSlug($launch, $locale));
         }
 
         if (filled($filters['q'] ?? null)) {
