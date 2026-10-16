@@ -210,16 +210,28 @@ class PageBlocks
             ]);
     }
 
-    /** YouTube or Vimeo video (e.g. "Conheça a Franccino" on the factory page), played only after a click. */
+    /**
+     * Video played only after a click: a file uploaded here (MP4, served by the site itself, e.g. the factory film)
+     * or, without a file, a YouTube or Vimeo address.
+     */
     private static function video(): Block
     {
         return Block::make('video')
             ->label(__('Video'))
             ->schema([
+                FileUpload::make('file')
+                    ->label(__('Video file (MP4)'))
+                    ->helperText(__('Export it in 1080p, MP4 (H.264), up to :size MB: see "Video on the site" in Help. Nothing loads until the visitor clicks play.', ['size' => intdiv((int) config('franccino.uploads.video_max_kb'), 1024)]))
+                    ->disk('media')
+                    ->directory('videos')
+                    ->acceptedFileTypes(['video/mp4'])
+                    ->maxSize(config('franccino.uploads.video_max_kb'))
+                    ->requiredWithout('url'),
                 TextInput::make('url')
                     ->label(__('Video address (YouTube or Vimeo)'))
+                    ->helperText(__('Only if there is no file above.'))
                     ->url()
-                    ->required(),
+                    ->requiredWithout('file'),
                 FileUpload::make('poster')
                     ->label(__('Cover'))
                     ->disk('media')

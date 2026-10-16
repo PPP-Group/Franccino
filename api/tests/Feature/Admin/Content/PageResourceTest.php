@@ -75,6 +75,34 @@ it('saves image_text and cta blocks with texts in both languages', function () {
         ->and($content[1]['data']['url'])->toEqual(['pt' => 'https://franccino.com.br/contato', 'en' => 'https://franccino.com/contact']);
 });
 
+it('saves a video block with an uploaded MP4, and asks for a file or an address', function () {
+    $page = Page::where('key', 'factory')->sole();
+
+    livewire(EditPage::class, ['record' => $page->getRouteKey()])
+        ->fillForm(['content' => [['type' => 'video', 'data' => ['title' => ['pt' => 'A fábrica']]]]])
+        ->call('save')
+        ->assertHasFormErrors();
+
+    livewire(EditPage::class, ['record' => $page->getRouteKey()])
+        ->fillForm([
+            'content' => [[
+                'type' => 'video',
+                'data' => [
+                    'file' => [UploadedFile::fake()->create('fabrica.mp4', 40 * 1024, 'video/mp4')],
+                    'title' => ['pt' => 'A fábrica', 'en' => 'The factory'],
+                ],
+            ]],
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $data = $page->refresh()->content[0]['data'];
+
+    expect($data['file'])->toStartWith('videos/')
+        ->and($data['url'])->toBeNull();
+    Storage::disk('media')->assertExists($data['file']);
+});
+
 it('does not allow creating or deleting pages', function () {
     $this->get('/admin/pages/create')->assertNotFound();
 });

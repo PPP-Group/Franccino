@@ -82,9 +82,22 @@ it('resolves a video block with its embed url and cover', function () {
     expect($en[0]['data'])->toBe([
         'url' => 'https://youtu.be/OG_GNCn0HoQ',
         'embed_url' => 'https://www.youtube-nocookie.com/embed/OG_GNCn0HoQ',
+        'file' => null,
         'poster' => Storage::disk('media')->url('pages/video.png'),
         'title' => 'Meet Franccino',
     ])
         ->and($en[1]['data']['embed_url'])->toBeNull()
         ->and($en[1]['data']['poster'])->toBeNull();
+});
+
+it('resolves a video uploaded in the panel to its address on the media disk', function () {
+    Storage::fake('media');
+
+    $data = LocalizedBlocks::resolve([
+        ['type' => 'video', 'data' => ['file' => 'videos/fabrica.mp4', 'url' => null, 'poster' => 'pages/fabrica.jpg', 'title' => null]],
+    ], 'pt')[0]['data'];
+
+    expect($data['file'])->toBe(Storage::disk('media')->url('videos/fabrica.mp4'))
+        ->and($data['url'])->toBeNull()
+        ->and($data['embed_url'])->toBeNull();
 });

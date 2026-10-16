@@ -600,7 +600,8 @@
     "title": "Videos and links",
     "videos": "Videos",
     "links": "Links",
-    "play": "Play video: {title}"
+    "play": "Play video: {title}",
+    "video": "Video"
   },
   "blocks": {
     "timeline": "Timeline"

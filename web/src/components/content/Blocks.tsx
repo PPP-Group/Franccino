@@ -163,12 +163,20 @@ function GalleryBlock({ data }: { data: GalleryBlockData }) {
 }
 
 function VideoBlock({ data }: { data: VideoBlockData }) {
-  const title = data.title ?? data.url;
+  const t = useTranslations('mediaLinks');
+  const title = data.title ?? t('video');
+  if (data.file) {
+    return (
+      <div className="block-video">
+        <VideoFacade title={title} src={data.file} poster={data.poster} />
+      </div>
+    );
+  }
   if (!data.embed_url) {
     return data.url ? (
       <p className="block-video">
         <a className="link-arrow" href={data.url} target="_blank" rel="noopener noreferrer">
-          {title}
+          {data.title ?? data.url}
         </a>
       </p>
     ) : null;

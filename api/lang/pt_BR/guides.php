@@ -125,12 +125,13 @@ return [
                 'Menu Conteúdo → Páginas e clique na página (ex.: Fábrica).',
                 'Capa: a foto do topo da página. Na Fábrica, use a foto da fachada.',
                 'Em Conteúdo, monte a página com blocos: "Adicionar" e escolha o tipo (texto, imagem, imagem e texto, linha do tempo, vídeo, números, citação, galeria, perguntas frequentes).',
-                'Vídeo: cole o endereço do YouTube ou Vimeo e envie uma imagem de capa. O vídeo só carrega quando a pessoa clica.',
+                'Vídeo: envie o arquivo MP4, que roda no próprio site (é o caso do filme da Fábrica), ou cole o endereço do YouTube ou Vimeo. Envie também uma imagem de capa: o vídeo só carrega quando a pessoa clica.',
                 'Linha do tempo: um item por ano, com título e texto curto. O site mostra na horizontal, com setas.',
                 'Arraste os blocos para mudar a ordem e clique em "Salvar alterações".',
             ],
             'tips' => [
                 'Blocos curtos e com imagem são mais lidos que um texto longo.',
+                'Vídeo no site: exporte em 1080p, MP4 (H.264), com até 150 MB. No HandBrake (gratuito), use a predefinição "Fast 1080p30" com "Web Optimized" marcado. Um vídeo de 3 minutos fica com cerca de 60 MB. Não envie o arquivo original em 4K.',
             ],
         ],
 

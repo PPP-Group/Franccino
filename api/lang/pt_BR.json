@@ -477,5 +477,8 @@
     "Videos shown in the panel help center, one per guide.": "Vídeos que aparecem na central de ajuda do painel, um por guia.",
     "Guide": "Guia",
     "Video address": "Endereço do vídeo",
-    "YouTube, Vimeo or Google Drive link. On Drive, share the file as \"anyone with the link\".": "Link do YouTube, do Vimeo ou do Google Drive. No Drive, compartilhe o arquivo como \"qualquer pessoa com o link\"."
+    "YouTube, Vimeo or Google Drive link. On Drive, share the file as \"anyone with the link\".": "Link do YouTube, do Vimeo ou do Google Drive. No Drive, compartilhe o arquivo como \"qualquer pessoa com o link\".",
+    "Video file (MP4)": "Arquivo de vídeo (MP4)",
+    "Export it in 1080p, MP4 (H.264), up to :size MB: see \"Video on the site\" in Help. Nothing loads until the visitor clicks play.": "Exporte em 1080p, MP4 (H.264), com até :size MB: veja \"Vídeo no site\" na Ajuda. Nada carrega antes de a pessoa clicar para assistir.",
+    "Only if there is no file above.": "Só se não houver arquivo acima."
 }

@@ -218,8 +218,15 @@ type Block =
   | { type: 'gallery'; data: { images: string[]; caption: string | null } }
   | {
       type: 'video';
+      // file: URL do MP4 enviado no painel, tocado no próprio site; tem prioridade sobre url.
       // embed_url: YouTube (nocookie) ou Vimeo; null para outro endereço, que vira link simples.
-      data: { url: string; embed_url: string | null; poster: string | null; title: string | null };
+      data: {
+        url: string | null;
+        embed_url: string | null;
+        file: string | null;
+        poster: string | null;
+        title: string | null;
+      };
     };
 ```
 
