@@ -176,8 +176,7 @@ class ProductForm
             SpatieMediaLibraryFileUpload::make('cover')
                 ->label(__('Cover'))
                 ->collection('cover')
-                ->image()
-                ->helperText(__('Required before the product can be published.')),
+                ->image(),
             SpatieMediaLibraryFileUpload::make('gallery')
                 ->label(__('Gallery'))
                 ->collection('gallery')
@@ -190,8 +189,7 @@ class ProductForm
                 ->acceptedFileTypes(['model/gltf-binary', 'application/octet-stream'])
                 ->maxSize(config('franccino.uploads.model_3d_max_kb')),
             Toggle::make('is_3d_enabled')
-                ->label(__('3D enabled'))
-                ->helperText(__('Turn off to hide the 3D viewer for this product.')),
+                ->label(__('3D enabled')),
         ];
     }
 }

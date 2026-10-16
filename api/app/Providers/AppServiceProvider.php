@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Filament\Support\FieldHelp;
 use App\Jobs\RevalidateFrontend;
 use App\Listeners\RecordPanelActivity;
 use App\Listeners\StoreBlurPlaceholder;
@@ -38,6 +39,7 @@ use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
 use App\Support\FrontendRevalidator;
 use App\Support\Locales;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -121,6 +123,12 @@ class AppServiceProvider extends ServiceProvider
     {
         SpatieMediaLibraryFileUpload::configureUsing(
             fn (SpatieMediaLibraryFileUpload $upload) => $upload->disk(config('media-library.disk_name')),
+        );
+
+        // Dica embaixo de cada campo do painel (lang/pt_BR/panel-help.php). Um helperText escrito no formulário vale
+        // por cima desta, porque é aplicado depois.
+        Field::configureUsing(
+            fn (Field $field) => $field->helperText(fn (Field $component): ?string => FieldHelp::for($component)),
         );
     }
 

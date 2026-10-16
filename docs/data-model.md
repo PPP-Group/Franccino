@@ -367,7 +367,9 @@ Configurações globais via `spatie/laravel-settings` (grupo `general`), editada
 nome da empresa, e-mail e telefone de contato, endereço da fábrica, WhatsApp de orçamentos, WhatsApp e
 telefone de assistência técnica, redes sociais (Instagram, Facebook, Pinterest, LinkedIn, YouTube),
 destinatários do formulário de contato (lista de e-mails, não exposta na API) e documentos do rodapé
-(lista `label` tr + arquivo, ex. relatórios de transparência salarial, que são exigência legal).
+(lista `label` tr + arquivo, ex. relatórios de transparência salarial, que são exigência legal). Também guarda os vídeos
+dos tutoriais da central de ajuda do painel (`tutorial_videos`: lista `guide` + `url` do YouTube, Vimeo ou Google Drive,
+não exposta na API).
 
 ## Relacionamento com o público
 
