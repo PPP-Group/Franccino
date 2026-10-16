@@ -40,6 +40,12 @@ class GeneralSettings extends Settings
      */
     public array $footer_documents;
 
+    /**
+     * Tutorial videos of the panel help center: `['guide' => 'products', 'url' => 'https://youtu.be/...']`
+     * (YouTube, Vimeo or Google Drive). Not exposed in the public API.
+     */
+    public array $tutorial_videos;
+
     public static function group(): string
     {
         return 'general';

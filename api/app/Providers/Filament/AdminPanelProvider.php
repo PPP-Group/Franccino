@@ -2,18 +2,20 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
+use App\Filament\Pages\HelpCenter;
+use App\Filament\Support\PanelGuides;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -30,6 +32,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->brandName('Franccino')
+            ->brandLogo(fn (): View => view('filament.hooks.brand'))
+            ->darkMode(false)
+            ->sidebarCollapsibleOnDesktop()
             ->login()
             ->passwordReset()
             ->profile(isSimple: false)
@@ -37,7 +42,22 @@ class AdminPanelProvider extends PanelProvider
                 AppAuthentication::make()->recoverable(),
             ])
             ->colors([
-                'primary' => Color::Stone,
+                // Madeira do site (web/src/styles/tokens.css, --wood) no tom 600, que é o dos botões; cinzas quentes
+                // como o fundo do site. A paleta é fixa porque a gerada a partir do hex sai alaranjada.
+                'primary' => array_map(Color::convertToOklch(...), [
+                    50 => '#faf6f2',
+                    100 => '#f3eae1',
+                    200 => '#e5d2bf',
+                    300 => '#d0b293',
+                    400 => '#b38a66',
+                    500 => '#966b47',
+                    600 => '#7b4b2a',
+                    700 => '#653d22',
+                    800 => '#4f301b',
+                    900 => '#3d2515',
+                    950 => '#22140b',
+                ]),
+                'gray' => Color::Stone,
             ])
             ->databaseNotifications()
             ->navigationGroups([
@@ -52,10 +72,19 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
-            ])
+            ->renderHook(PanelsRenderHook::HEAD_END, fn (): View => view('filament.hooks.styles'))
+            ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, fn (): View => view('filament.hooks.login-note'))
+            ->renderHook(PanelsRenderHook::USER_MENU_BEFORE, fn (): View => view('filament.hooks.topbar-help'))
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => filament()->auth()->check()
+                ? view('filament.hooks.onboarding-tour')->render()
+                : '')
+            ->renderHook(PanelsRenderHook::PAGE_HEADER_ACTIONS_BEFORE, function (): string {
+                $guide = PanelGuides::forRoute(request()->route()?->getName());
+
+                return $guide === null ? '' : view('filament.hooks.contextual-help', [
+                    'url' => HelpCenter::getUrl().'#'.$guide,
+                ])->render();
+            })
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

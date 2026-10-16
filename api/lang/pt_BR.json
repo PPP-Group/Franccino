@@ -352,7 +352,7 @@
     "Seat height (mm)": "Altura do assento (mm)",
     "Singular name": "Nome no singular",
     "Size": "Tamanho",
-    "Slug": "Slug",
+    "Slug": "Endereço (slug)",
     "Swatch": "Amostra",
     "Tagline": "Frase de efeito",
     "Title": "Título",
@@ -472,5 +472,10 @@
     "Users": "Usuários",
     "Last updated": "Atualizado",
     "With cover": "Com capa",
-    "Without cover": "Sem capa"
+    "Without cover": "Sem capa",
+    "Tutorial videos": "Vídeos dos tutoriais",
+    "Videos shown in the panel help center, one per guide.": "Vídeos que aparecem na central de ajuda do painel, um por guia.",
+    "Guide": "Guia",
+    "Video address": "Endereço do vídeo",
+    "YouTube, Vimeo or Google Drive link. On Drive, share the file as \"anyone with the link\".": "Link do YouTube, do Vimeo ou do Google Drive. No Drive, compartilhe o arquivo como \"qualquer pessoa com o link\"."
 }
