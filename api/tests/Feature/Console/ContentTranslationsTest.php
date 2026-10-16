@@ -62,7 +62,7 @@ it('fills only the empty translations and makes the english slug from the new na
     expect($product->getTranslation('name', 'en', false))->toBe('Rito Side Table')
         ->and($product->getTranslation('slug', 'en', false))->toBe('rito-side-table')
         ->and($product->getTranslation('description', 'en', false))->toBe('<p>Solid wood table.</p>')
-        ->and($product->dimensions[0]['label'])->toBe(['pt' => 'Pequena', 'en' => 'Small'])
+        ->and($product->dimensions[0]['label'])->toEqual(['pt' => 'Pequena', 'en' => 'Small'])
         ->and($product->search_text)->toContain('rito side table')
         ->and($kept->getTranslation('name', 'en', false))->toBe('Toé Chair (panel)')
         ->and($kept->getTranslation('slug', 'en', false))->toBe('toe-chair-panel')
@@ -110,7 +110,8 @@ it('fills page blocks by matching the portuguese text anywhere in the tree', fun
 
     $item = $page->refresh()->content[0]['data']['items'][0];
 
-    expect($item['title'])->toBe(['pt' => 'Fundação da Franccino.', 'en' => 'Franccino is founded.'])
+    // toEqual: o MySQL reordena as chaves do JSON.
+    expect($item['title'])->toEqual(['pt' => 'Fundação da Franccino.', 'en' => 'Franccino is founded.'])
         ->and($item['text']['en'])->toBe('First store')
         ->and($item['year'])->toBe('2000');
 });
