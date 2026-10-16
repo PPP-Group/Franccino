@@ -477,3 +477,67 @@ O cliente mandou o documento "Franccino — Ajustes no novo site" (06/10/2026), 
 - Dois commits antigos da `develop` (`5bbb856`, `3e6c5bd`) trazem o nome do modelo no rodapé, contra a regra da
   seção 10. Só se corrige reescrevendo o histórico, com aval do tech lead.
 - Sem Docker nesta máquina de sessão: o teste em container ainda precisa ser feito antes do merge na `main`.
+
+## 15. Sessão de 13/10/2026 (Pedro Leite)
+
+Trabalho que não depende de material do cliente nem de contas. Cada item é um PR para a `develop`, com testes; nenhum
+foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
+
+- **Já na `main` (PRs #25 e #26):** miniaturas (capa ou retrato) nas sugestões da busca do cabeçalho.
+- **#29, redirects 301 (P5b T2 e T3, PPP-94):**
+  - comando `php artisan franccino:redirects:generate {--dry-run}`, que grava o `legacy_url` dos registros publicados e
+    os caminhos fixos de `config('franccino.legacy')` (páginas, fallback por prefixo `/*` e 410);
+  - o `proxy.ts` aplica as regras antes do roteamento de idioma.
+  - Depois do deploy, rodar o comando no preview.
+- **#30, CSP completa (P5b T8):** em Report-Only até `CSP_ENFORCE=true`. Passos para virar para bloqueio em
+  `docs/runbook-deploy.md`.
+- **#31, revisão técnica (PPP-118, parte automatizada):** rastreio local de 316 páginas e checagem de celular em 27.
+  Corrigidos:
+  - a 404 sem layout;
+  - 33 links do `/en` que davam 404 (peça, coleção ou projeto sem slug em inglês).
+
+  Falta a passada manual da equipe (ícones, espaçamentos, conteúdo do painel) e o 3D, que não tem GLB no banco local.
+
+- **#32, organização do painel (PPP-117):**
+  - nomes do conteúdo em português (o fallback ia para `en`);
+  - menus traduzidos, com coleções, lançamentos e designers no grupo Catálogo;
+  - filtros por coleção, linha e capa na lista de produtos.
+- **Não feito, depende de terceiros:**
+  - cadastro do conteúdo da rodada 1 no painel do preview (precisa de acesso ao painel e dos arquivos do cliente,
+    `docs/handoff/rodada-1-conteudo-passo-a-passo.md`);
+  - infraestrutura (R2, staging, e-mail, monitoramento);
+  - dependências que aguardam aprovação.
+- **Regra de commit:** o commit `79c4e09` (busca com miniaturas) saiu com o rodapé `Co-Authored-By` com o nome do
+  modelo, contra a seção 10. Os commits seguintes desta sessão não têm o rodapé.
+- **Próximo da fila sem dependência externa:**
+  - arquivos 3D por URL assinada (contrato 13.2): hoje o GLB é mídia pública;
+  - revisão de segurança do painel (PPP-95).
+
+## 16. Sessão de 16/10/2026: painel guiado, tradução para o inglês e merge geral
+
+- **Merge de tudo na `develop`:** PRs #27 a #33 (os do Pedro Leite e as atualizações de dependência), #34 e #35.
+  Conflitos em `docs/handoff/p5b-ledger.md` e `docs/api.md` resolvidos mantendo os dois lados, com commit de merge
+  (sem reescrever histórico). Depois, PR da `develop` para a `main`.
+- **#34, painel personalizado (PPP-117):**
+  - visual da marca (marrom e pedra, Cormorant nos títulos), sempre claro, logo no topo e no login, menu recolhível;
+  - tela "Início" com boas-vindas, atalhos (só os que o perfil pode usar) e "Saúde do conteúdo" (sem capa, sem
+    descrição, sem nome em inglês, mensagens não lidas);
+  - **Central de ajuda** (`/admin/ajuda`) com um guia por tela, botão "Ajuda desta tela" no topo de cada página e
+    tour de boas-vindas no primeiro acesso (reabre pelo menu do usuário);
+  - dica embaixo de cada campo (`lang/pt_BR/panel-help.php`, aplicada a todos os campos pelo `FieldHelp`);
+  - **vídeos dos tutoriais:** Configurações → "Vídeos dos tutoriais" recebe um link (YouTube não listado, Vimeo ou
+    Drive) por guia, que aparece na Central de ajuda. Os vídeos ainda precisam ser gravados (ex.: Loom).
+- **#35, tradução do conteúdo para o inglês:**
+  - `php artisan franccino:translations:export <arquivo>` e `franccino:translations:import <arquivo> {--force}
+{--dry-run}`; o import casa pelo texto em português (não pelo id), só preenche o que está vazio e cria os
+    slugs em inglês;
+  - `api/database/data/translations/en.json`: 980 textos do preview traduzidos (`reviewed: false`, a Franccino
+    confere depois);
+  - passo a passo para rodar no VPS em `docs/deploy-preview.md` ("Traduzir o conteúdo para o inglês"). **Ainda não
+    foi rodado no preview.**
+- **Fonte:** Cormorant Garamond e EB Garamond estão no site inteiro desde o PR #24.
+- **Ambiente desta sessão (para a próxima):**
+  - o proxy bloqueia os zips do GitHub, e o `composer install` falha. O `vendor` foi montado clonando cada pacote do
+    `composer.lock` na referência exata;
+  - o Docker Hub devolveu 429. A imagem do Node veio de `mirror.gcr.io/library/node:24-bookworm-slim`, com o
+    certificado do proxy num `FROM` local (só para teste, nada disso foi para o repositório).

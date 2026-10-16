@@ -20,6 +20,18 @@ class FinishResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Finish');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Finishes');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Catalog');
@@ -27,7 +39,7 @@ class FinishResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 4;
+        return 7;
     }
 
     public static function form(Schema $schema): Schema

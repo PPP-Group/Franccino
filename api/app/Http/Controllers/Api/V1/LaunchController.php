@@ -27,7 +27,7 @@ class LaunchController extends Controller
         $locale = app(ContentLocale::class)->current();
 
         $launch = Launch::published()
-            ->where("slug->{$locale}", $slug)
+            ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media', 'mediaLinks', 'files' => fn ($query) => $query->published(),
                 'products' => fn ($query) => $query->published(),

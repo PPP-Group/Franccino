@@ -16,6 +16,18 @@ class DownloadLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowDownTray;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Download log');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Download logs');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Relationship');

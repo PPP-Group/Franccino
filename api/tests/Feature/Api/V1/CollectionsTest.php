@@ -55,3 +55,11 @@ it('returns 404 for an unpublished collection', function () {
 
     $this->getJson('/api/v1/collections/oculta')->assertNotFound();
 });
+
+it('finds a collection by the portuguese slug when it has no english slug', function () {
+    CollectionModel::factory()->create(['slug' => ['pt' => 'colecao-tempo'], 'name' => ['pt' => 'Coleção Tempo']]);
+
+    $this->getJson('/api/v1/collections/colecao-tempo?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.name', 'Coleção Tempo');
+});

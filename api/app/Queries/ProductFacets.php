@@ -97,7 +97,7 @@ final class ProductFacets
 
         if (filled($filters['category'] ?? null)) {
             $category = $filters['category'];
-            $query->whereHas('category', fn (Builder $query) => $query->where("slug->{$locale}", $category));
+            $query->whereHas('category', fn (Builder $query) => $query->whereLocalizedSlug($category, $locale));
         }
 
         if (filled($filters['q'] ?? null)) {

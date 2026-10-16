@@ -147,6 +147,15 @@ type ProductDetail = ProductCard & {
 Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `designer` e `line` usam o slug
 único; `finish` usa o id; `area` usa a key.
 
+Slug por idioma (`/products/{slug}`, `/collections/{slug}`, `/categories/{slug}`, `/launches/{slug}`, `/projects/{slug}` e
+os filtros acima): o registro é achado pelo slug do idioma pedido e, se ele não tiver slug nesse idioma, pelo slug em
+`pt`, o mesmo que os cards mostram no fallback. `slugs` continua trazendo `null` no idioma sem slug.
+
+`GET /redirects`: `from` é o caminho do site antigo normalizado (sem barra final, exceto a raiz; query com as chaves
+em ordem alfabética), `to` é `null` quando `status` é `410`. `from` terminado em `/*` vale para tudo abaixo do
+prefixo (`/produto/*`); o site procura primeiro o caminho com a query, depois só o caminho e por último o prefixo
+mais longo. O site aplica as regras no `proxy.ts`, só em caminhos sem prefixo de idioma.
+
 `Store`: `id`, `name`, `type`, `address`, `address_complement`, `district`, `city`, `state`, `postal_code`,
 `country`, `latitude`, `longitude`, `phone`, `whatsapp`, `email`, `website_url`, `instagram_url`,
 `opening_hours`, `description` (texto curto ou `null`), `image` (`Image` ou `null`).

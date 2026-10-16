@@ -20,14 +20,26 @@ class CollectionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Collection');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Collections');
+    }
+
     public static function getNavigationGroup(): ?string
     {
-        return __('Content');
+        return __('Catalog');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 1;
+        return 2;
     }
 
     public static function form(Schema $schema): Schema

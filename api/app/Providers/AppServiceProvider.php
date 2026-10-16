@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Filament\Support\FieldHelp;
 use App\Jobs\RevalidateFrontend;
 use App\Listeners\RecordPanelActivity;
 use App\Listeners\StoreBlurPlaceholder;
@@ -37,6 +38,8 @@ use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
 use App\Support\ContentLocale;
 use App\Support\FrontendRevalidator;
+use App\Support\Locales;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -50,6 +53,7 @@ use Spatie\LaravelSettings\Events\SettingsSaved;
 use Spatie\MediaLibrary\Conversions\Events\ConversionHasBeenCompletedEvent;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Translatable\Translatable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -67,6 +71,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Content keys are `pt`/`en`, but the panel runs in `pt_BR`: without this, a translatable attribute read in
+        // the panel fell back to `en` (the app's fallback locale) and lists showed the English names.
+        app(Translatable::class)->fallback(fallbackLocale: Locales::default());
+
         Gate::policy(User::class, AdminOnlyPolicy::class);
         Gate::policy(ActivityLog::class, AdminOnlyPolicy::class);
 
@@ -115,6 +123,12 @@ class AppServiceProvider extends ServiceProvider
     {
         SpatieMediaLibraryFileUpload::configureUsing(
             fn (SpatieMediaLibraryFileUpload $upload) => $upload->disk(config('media-library.disk_name')),
+        );
+
+        // Dica embaixo de cada campo do painel (lang/pt_BR/panel-help.php). Um helperText escrito no formulário vale
+        // por cima desta, porque é aplicado depois.
+        Field::configureUsing(
+            fn (Field $field) => $field->helperText(fn (Field $component): ?string => FieldHelp::for($component)),
         );
     }
 

@@ -31,6 +31,10 @@ php artisan test --filter=NomeDoTeste   # roda só um teste ou arquivo
   `FrontendRevalidator`, ...)
 - `database/{migrations,factories,seeders,settings}`
 - `lang/pt_BR.json` — traduções da interface do painel
+- `lang/pt_BR/panel-help.php` — dica embaixo de cada campo do painel, por `<modelo>.<campo>` ou só `<campo>`
+  (`App\Filament\Support\FieldHelp`, aplicada a todo campo em `AppServiceProvider`)
+- `lang/pt_BR/guides.php` — Central de ajuda, tour de boas-vindas e tela inicial do painel
+  (`App\Filament\Support\PanelGuides`); campo novo ou tela nova pede a dica e o guia correspondentes
 - `routes/api.php` — rotas públicas da API, sempre com prefixo `/api`
 - `tests/{Feature/Admin,Feature/Api/V1,Unit}`
 

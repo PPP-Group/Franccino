@@ -35,6 +35,20 @@ it('flags fallback when english is missing', function () {
         ->assertJsonPath('data.locale_fallback', true);
 });
 
+it('finds the product by the portuguese slug when it has no english slug', function () {
+    publishedProduct(['slug' => ['pt' => 'cadeira-aura']]);
+
+    $this->getJson('/api/v1/products/cadeira-aura?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.slugs', ['pt' => 'cadeira-aura', 'en' => null]);
+});
+
+it('does not take the portuguese slug of a product that has its own english slug', function () {
+    publishedProduct();
+
+    $this->getJson('/api/v1/products/cadeira-aura?locale=en')->assertNotFound();
+});
+
 it('hides unpublished products', function () {
     publishedProduct(['is_published' => false]);
     $this->getJson('/api/v1/products/cadeira-aura')->assertNotFound();

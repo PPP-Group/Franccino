@@ -358,10 +358,11 @@ export type SitemapEntry = {
   updated_at: string;
 };
 
+/** `to` is `null` for `410`; `from` ending in `/*` matches everything under the prefix (docs/api.md). */
 export type RedirectRule = {
   from: string;
-  to: string;
-  status: number;
+  to: string | null;
+  status: 301 | 302 | 410;
 };
 
 // ---------------------------------------------------------------------------

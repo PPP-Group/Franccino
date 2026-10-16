@@ -6,10 +6,12 @@ use App\Support\Locales;
 use Closure;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Text;
 
 /**
  * Builds the pt/en tab set shared by every translatable form section, so each
- * resource declares its fields once instead of repeating the tab wiring.
+ * resource declares its fields once instead of repeating the tab wiring. The other-language tabs open
+ * with a note saying they are optional (the site falls back to Portuguese).
  */
 final class Translatable
 {
@@ -20,7 +22,9 @@ final class Translatable
             ->tabs(array_map(
                 fn (string $locale): Tab => Tab::make(Locales::label($locale))
                     ->key("{$key}-{$locale}")
-                    ->schema($fields($locale)),
+                    ->schema($locale === Locales::default()
+                        ? $fields($locale)
+                        : [Text::make(__('guides.english_tab_note')), ...$fields($locale)]),
                 Locales::all(),
             ))
             ->columnSpanFull();

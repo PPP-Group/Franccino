@@ -349,13 +349,17 @@ Imagens de blocos ficam no disco `media` (sem conversões automáticas).
 
 Mapa de redirecionamento do site antigo e regras manuais. O front consome via API.
 
-| Coluna      | Tipo          | Notas                                                                    |
-| ----------- | ------------- | ------------------------------------------------------------------------ |
-| from_path   | string, único | caminho normalizado, pode incluir query (`/?taxonomy=linhas&term=pinot`) |
-| to_path     | string, null  | null quando `status_code = 410`                                          |
-| status_code | smallint      | 301 \| 302 \| 410                                                        |
-| is_active   | bool          |                                                                          |
-| notes       | string, null  |                                                                          |
+`php artisan franccino:redirects:generate` (P5b T3) grava uma linha por `legacy_url` dos registros publicados e os
+caminhos fixos de `config('franccino.legacy')`, com `notes = 'gerado: …'`. Linha sem esse marcador foi editada no
+painel e o comando não mexe nela; linha gerada cujo registro sumiu ou foi despublicado fica com `is_active = false`.
+
+| Coluna      | Tipo          | Notas                                                                  |
+| ----------- | ------------- | ---------------------------------------------------------------------- |
+| from_path   | string, único | caminho normalizado, pode incluir query; `/*` no fim vale como prefixo |
+| to_path     | string, null  | null quando `status_code = 410`                                        |
+| status_code | smallint      | 301 \| 302 \| 410                                                      |
+| is_active   | bool          |                                                                        |
+| notes       | string, null  | `gerado: <origem>` marca linha do `franccino:redirects:generate`       |
 
 ### settings
 
@@ -363,7 +367,9 @@ Configurações globais via `spatie/laravel-settings` (grupo `general`), editada
 nome da empresa, e-mail e telefone de contato, endereço da fábrica, WhatsApp de orçamentos, WhatsApp e
 telefone de assistência técnica, redes sociais (Instagram, Facebook, Pinterest, LinkedIn, YouTube),
 destinatários do formulário de contato (lista de e-mails, não exposta na API) e documentos do rodapé
-(lista `label` tr + arquivo, ex. relatórios de transparência salarial, que são exigência legal).
+(lista `label` tr + arquivo, ex. relatórios de transparência salarial, que são exigência legal). Também guarda os vídeos
+dos tutoriais da central de ajuda do painel (`tutorial_videos`: lista `guide` + `url` do YouTube, Vimeo ou Google Drive,
+não exposta na API).
 
 ## Relacionamento com o público
 

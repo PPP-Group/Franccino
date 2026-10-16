@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Support\PanelGuides;
 use App\Filament\Support\Translatable;
 use App\Models\User;
 use App\Settings\GeneralSettings;
@@ -9,6 +10,7 @@ use App\Support\Locales;
 use BackedEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\SettingsPage;
@@ -119,6 +121,27 @@ class ManageGeneralSettings extends SettingsPage
                             ])
                             ->reorderable()
                             ->collapsible()
+                            ->columnSpanFull(),
+                    ]),
+                Section::make(__('Tutorial videos'))
+                    ->description(__('Videos shown in the panel help center, one per guide.'))
+                    ->schema([
+                        Repeater::make('tutorial_videos')
+                            ->hiddenLabel()
+                            ->schema([
+                                Select::make('guide')
+                                    ->label(__('Guide'))
+                                    ->options(PanelGuides::options())
+                                    ->required()
+                                    ->distinct(),
+                                TextInput::make('url')
+                                    ->label(__('Video address'))
+                                    ->helperText(__('YouTube, Vimeo or Google Drive link. On Drive, share the file as "anyone with the link".'))
+                                    ->url()
+                                    ->required(),
+                            ])
+                            ->columns(2)
+                            ->defaultItems(0)
                             ->columnSpanFull(),
                     ]),
             ]);

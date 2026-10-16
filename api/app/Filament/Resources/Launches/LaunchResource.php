@@ -22,14 +22,26 @@ class LaunchResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Launch');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Launches');
+    }
+
     public static function getNavigationGroup(): ?string
     {
-        return __('Content');
+        return __('Catalog');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 2;
+        return 3;
     }
 
     public static function form(Schema $schema): Schema
