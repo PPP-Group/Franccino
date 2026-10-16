@@ -477,3 +477,38 @@ O cliente mandou o documento "Franccino — Ajustes no novo site" (06/10/2026), 
 - Dois commits antigos da `develop` (`5bbb856`, `3e6c5bd`) trazem o nome do modelo no rodapé, contra a regra da
   seção 10. Só se corrige reescrevendo o histórico, com aval do tech lead.
 - Sem Docker nesta máquina de sessão: o teste em container ainda precisa ser feito antes do merge na `main`.
+
+## 15. Sessão de 13/10/2026 (Pedro Leite)
+
+Trabalho que não depende de material do cliente nem de contas. Cada item é um PR para a `develop`, com testes; nenhum
+foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
+
+- **Já na `main` (PRs #25 e #26):** miniaturas (capa ou retrato) nas sugestões da busca do cabeçalho.
+- **#29, redirects 301 (P5b T2 e T3, PPP-94):**
+  - comando `php artisan franccino:redirects:generate {--dry-run}`, que grava o `legacy_url` dos registros publicados e
+    os caminhos fixos de `config('franccino.legacy')` (páginas, fallback por prefixo `/*` e 410);
+  - o `proxy.ts` aplica as regras antes do roteamento de idioma.
+  - Depois do deploy, rodar o comando no preview.
+- **#30, CSP completa (P5b T8):** em Report-Only até `CSP_ENFORCE=true`. Passos para virar para bloqueio em
+  `docs/runbook-deploy.md`.
+- **#31, revisão técnica (PPP-118, parte automatizada):** rastreio local de 316 páginas e checagem de celular em 27.
+  Corrigidos:
+  - a 404 sem layout;
+  - 33 links do `/en` que davam 404 (peça, coleção ou projeto sem slug em inglês).
+
+  Falta a passada manual da equipe (ícones, espaçamentos, conteúdo do painel) e o 3D, que não tem GLB no banco local.
+
+- **#32, organização do painel (PPP-117):**
+  - nomes do conteúdo em português (o fallback ia para `en`);
+  - menus traduzidos, com coleções, lançamentos e designers no grupo Catálogo;
+  - filtros por coleção, linha e capa na lista de produtos.
+- **Não feito, depende de terceiros:**
+  - cadastro do conteúdo da rodada 1 no painel do preview (precisa de acesso ao painel e dos arquivos do cliente,
+    `docs/handoff/rodada-1-conteudo-passo-a-passo.md`);
+  - infraestrutura (R2, staging, e-mail, monitoramento);
+  - dependências que aguardam aprovação.
+- **Regra de commit:** o commit `79c4e09` (busca com miniaturas) saiu com o rodapé `Co-Authored-By` com o nome do
+  modelo, contra a seção 10. Os commits seguintes desta sessão não têm o rodapé.
+- **Próximo da fila sem dependência externa:**
+  - arquivos 3D por URL assinada (contrato 13.2): hoje o GLB é mídia pública;
+  - revisão de segurança do painel (PPP-95).

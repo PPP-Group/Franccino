@@ -24,6 +24,18 @@ class ProductResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Product');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Products');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Catalog');

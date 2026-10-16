@@ -20,6 +20,18 @@ class LineResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Line');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Lines');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Catalog');
@@ -27,7 +39,7 @@ class LineResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 3;
+        return 6;
     }
 
     public static function form(Schema $schema): Schema
