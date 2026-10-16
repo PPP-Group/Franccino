@@ -512,3 +512,32 @@ foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
 - **Próximo da fila sem dependência externa:**
   - arquivos 3D por URL assinada (contrato 13.2): hoje o GLB é mídia pública;
   - revisão de segurança do painel (PPP-95).
+
+## 16. Sessão de 16/10/2026: painel guiado, tradução para o inglês e merge geral
+
+- **Merge de tudo na `develop`:** PRs #27 a #33 (os do Pedro Leite e as atualizações de dependência), #34 e #35.
+  Conflitos em `docs/handoff/p5b-ledger.md` e `docs/api.md` resolvidos mantendo os dois lados, com commit de merge
+  (sem reescrever histórico). Depois, PR da `develop` para a `main`.
+- **#34, painel personalizado (PPP-117):**
+  - visual da marca (marrom e pedra, Cormorant nos títulos), sempre claro, logo no topo e no login, menu recolhível;
+  - tela "Início" com boas-vindas, atalhos (só os que o perfil pode usar) e "Saúde do conteúdo" (sem capa, sem
+    descrição, sem nome em inglês, mensagens não lidas);
+  - **Central de ajuda** (`/admin/ajuda`) com um guia por tela, botão "Ajuda desta tela" no topo de cada página e
+    tour de boas-vindas no primeiro acesso (reabre pelo menu do usuário);
+  - dica embaixo de cada campo (`lang/pt_BR/panel-help.php`, aplicada a todos os campos pelo `FieldHelp`);
+  - **vídeos dos tutoriais:** Configurações → "Vídeos dos tutoriais" recebe um link (YouTube não listado, Vimeo ou
+    Drive) por guia, que aparece na Central de ajuda. Os vídeos ainda precisam ser gravados (ex.: Loom).
+- **#35, tradução do conteúdo para o inglês:**
+  - `php artisan franccino:translations:export <arquivo>` e `franccino:translations:import <arquivo> {--force}
+{--dry-run}`; o import casa pelo texto em português (não pelo id), só preenche o que está vazio e cria os
+    slugs em inglês;
+  - `api/database/data/translations/en.json`: 980 textos do preview traduzidos (`reviewed: false`, a Franccino
+    confere depois);
+  - passo a passo para rodar no VPS em `docs/deploy-preview.md` ("Traduzir o conteúdo para o inglês"). **Ainda não
+    foi rodado no preview.**
+- **Fonte:** Cormorant Garamond e EB Garamond estão no site inteiro desde o PR #24.
+- **Ambiente desta sessão (para a próxima):**
+  - o proxy bloqueia os zips do GitHub, e o `composer install` falha. O `vendor` foi montado clonando cada pacote do
+    `composer.lock` na referência exata;
+  - o Docker Hub devolveu 429. A imagem do Node veio de `mirror.gcr.io/library/node:24-bookworm-slim`, com o
+    certificado do proxy num `FROM` local (só para teste, nada disso foi para o repositório).
