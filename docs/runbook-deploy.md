@@ -47,6 +47,21 @@ Preview com senha (EasyPanel/Docker) e revisão local com o conteúdo real: ver 
 | `REVALIDATE_SECRET`                                      | igual a `FRONTEND_REVALIDATE_SECRET` da API |
 | `STAGING_BASIC_AUTH_USER`, `STAGING_BASIC_AUTH_PASSWORD` | só em staging                               |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`                         | Cloudflare Turnstile                        |
+| `NEXT_PUBLIC_GTM_ID`                                     | Google Tag Manager (vazio = sem analytics)  |
+| `NEXT_PUBLIC_MEDIA_URL`                                  | domínio do R2 de mídia, só para a CSP       |
+| `CSP_ENFORCE`                                            | `false` (só relata) até validar; `true`     |
+
+### Política de segurança de conteúdo (CSP)
+
+Montada em `web/src/lib/security/csp.ts` a partir de `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MEDIA_URL`, `NEXT_PUBLIC_GTM_ID`,
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` e dos ladrilhos do mapa (`TILE_URL`). Os valores entram no build (`next.config.ts`):
+mudou alguma dessas variáveis, faça o build de novo.
+
+1. Staging com `CSP_ENFORCE=false` por uma semana: o navegador só relata (`Content-Security-Policy-Report-Only`), e o
+   `frame-ancestors 'none'` continua valendo à parte.
+2. Conferir no console (Ferramentas do desenvolvedor) que home, produto com 3D, formulário com Turnstile e o GTM depois
+   do aceite de cookies não mostram `[Report Only] Refused to…`.
+3. Sem violação, `CSP_ENFORCE=true` em staging e depois em produção. Registrar a data no ledger da P5b.
 
 ## Deploy da API
 
