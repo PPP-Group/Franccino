@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasImageConversions;
+use App\Models\Concerns\HasLocalizedSlug;
 use App\Models\Concerns\HasPublication;
 use Database\Factories\CollectionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Spatie\Translatable\HasTranslations;
 class Collection extends Model implements HasMedia
 {
     /** @use HasFactory<CollectionFactory> */
-    use HasFactory, HasImageConversions, HasPublication, HasTranslations;
+    use HasFactory, HasImageConversions, HasLocalizedSlug, HasPublication, HasTranslations;
 
     protected $guarded = [];
 

@@ -54,7 +54,7 @@ class ProjectController extends Controller
         $locale = app(ContentLocale::class)->current();
 
         $project = Project::published()
-            ->where("slug->{$locale}", $slug)
+            ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media',
                 'products' => fn ($query) => $query->published(),

@@ -28,7 +28,7 @@ class CollectionController extends Controller
         $locale = app(ContentLocale::class)->current();
 
         $collection = CollectionModel::published()
-            ->where("slug->{$locale}", $slug)
+            ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media',
                 'products' => fn ($query) => $query->published(),
