@@ -148,6 +148,29 @@ Depois, faça **Deploy do site** para o build pegar o conteúdo.
 
 Não reimportar o snapshot e não apagar o banco.
 
+### Traduzir o conteúdo para o inglês
+
+O arquivo `api/database/data/translations/en.json` traz a tradução de todo o conteúdo publicado no preview em 16/10/2026
+(nomes e textos dos produtos, categorias, coleções, designers, projetos, lançamento e páginas, incluindo
+privacidade, termos e cookies). O importador acha cada texto pelo português, então serve para qualquer cópia do
+banco. Ele só preenche o que está vazio em inglês: o que foi escrito no painel continua. Também cria o endereço em
+inglês (ex.: `/en/products/rito-side-table`). Depois do deploy da API, no terminal do VPS:
+
+```bash
+API=$(docker ps -q -f name=<nome interno da api> | head -1)
+docker exec $API php artisan franccino:translations:import database/data/translations/en.json --dry-run   # só conta
+docker exec $API php artisan franccino:translations:import database/data/translations/en.json
+```
+
+Depois faça Deploy do site. Para conteúdo novo, gere a lista do que falta, traduza o campo `en` e importe:
+
+```bash
+docker exec $API php artisan franccino:translations:export storage/app/faltando-en.json
+docker cp $API:/app/storage/app/faltando-en.json .
+```
+
+`--force` sobrescreve também o que já tem tradução (use só para corrigir uma tradução importada antes).
+
 ### Problemas comuns
 
 | Sintoma                                                                                                     | Causa e correção                                                                                                                                                                                                                                                 |
