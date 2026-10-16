@@ -9,6 +9,8 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CollectionsTable
@@ -24,16 +26,25 @@ class CollectionsTable
                     ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('year')
-                    ->label(__('Year')),
+                    ->label(__('Year'))
+                    ->sortable(),
                 TextColumn::make('products_count')
                     ->label(__('Products'))
                     ->counts('products'),
                 IconColumn::make('is_featured')
                     ->label(__('Featured'))
                     ->boolean(),
-                IconColumn::make('is_published')
-                    ->label(__('Published'))
-                    ->boolean(),
+                ToggleColumn::make('is_published')
+                    ->label(__('Published')),
+                TextColumn::make('updated_at')
+                    ->label(__('Last updated'))
+                    ->since()
+                    ->sortable()
+                    ->toggleable(),
+            ])
+            ->filters([
+                TernaryFilter::make('is_published')
+                    ->label(__('Published')),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')

@@ -23,6 +23,18 @@ class AreaResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMap;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Area');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Areas');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Catalog');
@@ -30,7 +42,7 @@ class AreaResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 6;
+        return 9;
     }
 
     public static function form(Schema $schema): Schema

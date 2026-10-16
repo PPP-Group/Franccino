@@ -20,6 +20,18 @@ class BannerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Banner');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Banners');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Content');
@@ -27,7 +39,7 @@ class BannerResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 7;
+        return 1;
     }
 
     public static function form(Schema $schema): Schema

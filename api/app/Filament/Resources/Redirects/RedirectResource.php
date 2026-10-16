@@ -20,6 +20,18 @@ class RedirectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowsRightLeft;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Redirect');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Redirects');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('System');

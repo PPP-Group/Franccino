@@ -4,6 +4,7 @@ use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Models\Category;
+use App\Models\Collection;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -81,4 +82,30 @@ it('stores panel uploads on the public media disk, so the site can load them', f
         ->and($model?->disk)->toBe('media');
     Storage::disk('media')->assertExists($model->getPathRelativeToRoot());
     Storage::disk('local')->assertDirectoryEmpty('/');
+});
+
+it('shows product and category names in portuguese, not in the fallback language', function () {
+    $product = publishedProduct();
+
+    livewire(ListProducts::class)
+        ->assertCanSeeTableRecords([$product])
+        ->assertSee('Cadeira Aura')
+        ->assertSee('Cadeiras')
+        ->assertDontSee('Aura Chair');
+});
+
+it('filters products by collection and by missing cover', function () {
+    $inCollection = Product::factory()->create();
+    $other = Product::factory()->create();
+    $collection = Collection::factory()->create();
+    $collection->products()->attach($inCollection);
+
+    livewire(ListProducts::class)
+        ->filterTable('collection', $collection->id)
+        ->assertCanSeeTableRecords([$inCollection])
+        ->assertCanNotSeeTableRecords([$other]);
+
+    livewire(ListProducts::class)
+        ->filterTable('cover', false)
+        ->assertCanSeeTableRecords([$inCollection, $other]);
 });
