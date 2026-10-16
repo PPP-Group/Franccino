@@ -76,7 +76,7 @@ php artisan queue:restart     # recarrega o worker
 ```
 
 Serviços permanentes: worker da fila (`php artisan queue:work --tries=3`) e agendador (`* * * * * php artisan
-schedule:run`). PHP com `upload_max_filesize` e `post_max_size` de pelo menos 64M (GLB e PDFs) e o limite
+schedule:run`). PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
 equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 
 CORS da mídia: o visualizador 3D (`@google/model-viewer`) baixa o GLB com `fetch` a partir do domínio do site, então

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
  * *only* HTML fields in any block, including page `intro`, which is plain text
  * (Ruling R8) — and turns `image` / `images[]` (paths on the `media` disk) into
  * absolute URLs. A `video` block also gets its `embed_url` (YouTube/Vimeo, see
- * `VideoEmbed`), or `null` for any other address.
+ * `VideoEmbed`), or `null` for any other address, and the URL of its uploaded `file`, if any.
  */
 final class LocalizedBlocks
 {
@@ -93,6 +93,7 @@ final class LocalizedBlocks
             'video' => [
                 'url' => $data['url'] ?? null,
                 'embed_url' => filled($data['url'] ?? null) ? VideoEmbed::url($data['url']) : null,
+                'file' => self::url($data['file'] ?? null),
                 'poster' => self::url($data['poster'] ?? null),
                 'title' => Localized::array($data['title'] ?? null, $locale),
             ],

@@ -266,8 +266,10 @@ export type GalleryBlockData = { images: string[]; caption: string | null };
 
 /** `embed_url` só para YouTube ou Vimeo; outro endereço vira link simples. */
 export type VideoBlockData = {
-  url: string;
+  url: string | null;
   embed_url: string | null;
+  /** Arquivo de vídeo enviado no painel (MP4), tocado no próprio site; tem prioridade sobre `url`. */
+  file: string | null;
   poster: string | null;
   title: string | null;
 };

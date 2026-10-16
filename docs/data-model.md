@@ -330,18 +330,18 @@ Mídia: `cover` (1), `og_image` (1).
 `content` é uma lista **não traduzível** de blocos; os textos dentro de cada bloco é que são `{pt, en}`.
 Assim a estrutura e as imagens são únicas e os dois idiomas são editados lado a lado.
 
-| Bloco        | Dados                                                                          |
-| ------------ | ------------------------------------------------------------------------------ |
-| `rich_text`  | `body` (tr, HTML)                                                              |
-| `image`      | `image` (path), `caption` (tr)                                                 |
-| `image_text` | `image`, `heading` (tr), `body` (tr, HTML), `image_position` (`left`\|`right`) |
-| `timeline`   | `items[]`: `year`, `title` (tr), `text` (tr)                                   |
-| `faq`        | `items[]`: `question` (tr), `answer` (tr)                                      |
-| `stats`      | `items[]`: `value`, `label` (tr)                                               |
-| `quote`      | `text` (tr), `author`                                                          |
-| `cta`        | `heading` (tr), `body` (tr), `label` (tr), `url` (tr)                          |
-| `gallery`    | `images[]` (paths), `caption` (tr)                                             |
-| `video`      | `url` (YouTube ou Vimeo), `poster` (path, opcional), `title` (tr)              |
+| Bloco        | Dados                                                                                                                 |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `rich_text`  | `body` (tr, HTML)                                                                                                     |
+| `image`      | `image` (path), `caption` (tr)                                                                                        |
+| `image_text` | `image`, `heading` (tr), `body` (tr, HTML), `image_position` (`left`\|`right`)                                        |
+| `timeline`   | `items[]`: `year`, `title` (tr), `text` (tr)                                                                          |
+| `faq`        | `items[]`: `question` (tr), `answer` (tr)                                                                             |
+| `stats`      | `items[]`: `value`, `label` (tr)                                                                                      |
+| `quote`      | `text` (tr), `author`                                                                                                 |
+| `cta`        | `heading` (tr), `body` (tr), `label` (tr), `url` (tr)                                                                 |
+| `gallery`    | `images[]` (paths), `caption` (tr)                                                                                    |
+| `video`      | `file` (path de MP4 no disco `media`, `videos/`) ou `url` (YouTube ou Vimeo), `poster` (path, opcional), `title` (tr) |
 
 Imagens de blocos ficam no disco `media` (sem conversões automáticas).
 

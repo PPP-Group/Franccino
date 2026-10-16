@@ -56,6 +56,7 @@ describe('Blocks', () => {
               url: 'https://youtu.be/OG_GNCn0HoQ',
               embed_url: 'https://www.youtube-nocookie.com/embed/OG_GNCn0HoQ',
               poster: 'https://api.test/media/pages/video.png',
+              file: null,
               title: 'Conheça a Franccino',
             },
           },
@@ -70,12 +71,41 @@ describe('Blocks', () => {
         blocks={[
           {
             type: 'video',
-            data: { url: 'https://example.com/v.mp4', embed_url: null, poster: null, title: null },
+            data: {
+              url: 'https://example.com/v.mp4',
+              embed_url: null,
+              file: null,
+              poster: null,
+              title: null,
+            },
           },
         ]}
       />,
     );
     expect(link).toContain('href="https://example.com/v.mp4"');
+  });
+
+  it('plays a video uploaded in the panel on the site itself, loading nothing before the click', () => {
+    const html = renderWithIntl(
+      <Blocks
+        blocks={[
+          {
+            type: 'video',
+            data: {
+              url: null,
+              embed_url: null,
+              file: 'https://api.test/media/videos/fabrica.mp4',
+              poster: 'https://api.test/media/pages/fabrica.jpg',
+              title: null,
+            },
+          },
+        ]}
+      />,
+    );
+    expect(html).toContain('video__poster');
+    expect(html).toContain('Assistir ao vídeo: Vídeo');
+    expect(html).not.toContain('fabrica.mp4');
+    expect(html).not.toContain('<iframe');
   });
 
   it('renders the call to action as a button link', () => {

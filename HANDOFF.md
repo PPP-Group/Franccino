@@ -536,6 +536,36 @@ foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
   - passo a passo para rodar no VPS em `docs/deploy-preview.md` ("Traduzir o conteúdo para o inglês"). **Ainda não
     foi rodado no preview.**
 - **Fonte:** Cormorant Garamond e EB Garamond estão no site inteiro desde o PR #24.
+- **Teste em container (16/10):** imagem da API e do site montadas da `develop` e testadas juntas. Resultados:
+  - o site compila ao iniciar, fica healthy e pede a senha do preview;
+  - `/pt`, `/en` e o catálogo respondem;
+  - CSP em Report-Only e `noindex` ativos;
+  - as fontes são servidas pelo próprio site.
+
+  Depois disso, o PR #36 (`develop` → `main`) foi mergeado.
+
+- **Drive, uploads de 16/10** (pasta `_FOTOS E VÍDEOS FRANCCINO`, cerca de 26 GB):
+  - cerca de 700 fotos (HEIC de iPhone) e 250 vídeos da fábrica (Metal, Cooper, Ateliê, captações de 14-05 e
+    15-01) e de peças em produção (TEMPO, Bou, Sofá Rio, Martino, Apruma);
+  - os vídeos editados `FRANCCINO FÁBRICA 4K` e vertical, e o manifesto da coleção TEMPO;
+  - Clara Arte Resort: 47 fotos profissionais, 2 vídeos e o catálogo (PDF e docx).
+  - As pastas `06 - Fábrica-…-001` a `-009` são partes do mesmo zip, e o `…-008.zip` da raiz é cópia.
+  - Ainda faltam: logo em vetor, descrições, acabamentos, fichas técnicas, blocos 3D e 2D, fotos de catálogo,
+    fotos das lojas, logos dos clientes e os originais do banner.
+- **Lista de materiais para o Matheus:** PDF de 16/10 com 17 itens, sem o pedido de textos em inglês e sem os
+  antigos itens 17 e 18, com o aviso de que imagens e logos podem ficar para depois. Junto vai a planilha de
+  conferência do inglês (980 textos, com colunas de correção). Os dois foram entregues ao Pedro Ivo e não estão no
+  repositório.
+- **Vídeo próprio na página Fábrica** (pedido do Pedro Ivo em 16/10: sem YouTube, rodando no site):
+  - o bloco Vídeo aceita um MP4 enviado no painel (até 150 MB, disco `media`, pasta `videos/`) ou, sem arquivo, o
+    endereço do YouTube/Vimeo;
+  - o site mostra a capa e só baixa o vídeo no clique (`<video>` nativo, com Range e CORS testados em container);
+  - o limite de upload temporário do Livewire (12 MB por padrão) barrava qualquer arquivo maior pelo painel, inclusive
+    GLB e PDFs. `config/livewire.php` e `docker/php.ini` passaram a seguir o maior limite (teste `UploadLimitsTest`);
+  - o original em 4K (983 MB) não sai do Drive pelo conector. Otimizar antes de subir, conforme a seção 2.1 de
+    `docs/handoff/rodada-1-conteudo-passo-a-passo.md`.
+- **Depois do deploy, no VPS:** rodar `franccino:redirects:generate` e `franccino:translations:import` (com
+  `--dry-run` antes) e fazer o deploy do site (passo a passo em `docs/deploy-preview.md`).
 - **Ambiente desta sessão (para a próxima):**
   - o proxy bloqueia os zips do GitHub, e o `composer install` falha. O `vendor` foi montado clonando cada pacote do
     `composer.lock` na referência exata;
