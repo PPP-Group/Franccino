@@ -20,6 +20,18 @@ class ProjectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Project');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Projects');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Content');

@@ -17,6 +17,8 @@ class ActivityLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('System');

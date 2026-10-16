@@ -23,6 +23,18 @@ class PageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('Page');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Pages');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Content');
@@ -30,7 +42,7 @@ class PageResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 8;
+        return 2;
     }
 
     public static function form(Schema $schema): Schema

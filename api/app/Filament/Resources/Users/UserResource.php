@@ -20,6 +20,18 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('User');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Users');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('System');
