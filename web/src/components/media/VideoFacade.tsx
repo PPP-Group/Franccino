@@ -8,14 +8,18 @@ import { withAutoplay } from '@/lib/media/links';
 /**
  * Click-to-load player: nothing from YouTube or Vimeo loads (and no third-party cookie is set) until the
  * visitor asks for the video. An optional `poster` (a page block's cover) shows behind the play button.
+ * With `src` (a video file served by the site's own storage) the same button starts a native `<video>`:
+ * not a byte of the file is downloaded before the click.
  */
 export function VideoFacade({
   title,
-  embedUrl,
+  embedUrl = null,
+  src = null,
   poster = null,
 }: {
   title: string;
-  embedUrl: string;
+  embedUrl?: string | null;
+  src?: string | null;
   poster?: string | null;
 }) {
   const t = useTranslations('mediaLinks');
@@ -23,7 +27,17 @@ export function VideoFacade({
   return (
     <figure className="video">
       <div className="video__frame">
-        {playing ? (
+        {playing && src ? (
+          <video
+            src={src}
+            aria-label={title}
+            poster={poster ?? undefined}
+            controls
+            autoPlay
+            playsInline
+            preload="auto"
+          />
+        ) : playing && embedUrl ? (
           <iframe
             src={withAutoplay(embedUrl)}
             title={title}

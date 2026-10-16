@@ -26,6 +26,9 @@ return [
 
     'uploads' => [
         'model_3d_max_kb' => 20480,
+        // Page video blocks (e.g. the factory film), served by the site itself. Keep in step with `config/livewire.php`
+        // and `docker/php.ini`.
+        'video_max_kb' => 153600,
     ],
 
     'demo' => [

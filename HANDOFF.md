@@ -556,6 +556,14 @@ foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
   antigos itens 17 e 18, com o aviso de que imagens e logos podem ficar para depois. Junto vai a planilha de
   conferência do inglês (980 textos, com colunas de correção). Os dois foram entregues ao Pedro Ivo e não estão no
   repositório.
+- **Vídeo próprio na página Fábrica** (pedido do Pedro Ivo em 16/10: sem YouTube, rodando no site):
+  - o bloco Vídeo aceita um MP4 enviado no painel (até 150 MB, disco `media`, pasta `videos/`) ou, sem arquivo, o
+    endereço do YouTube/Vimeo;
+  - o site mostra a capa e só baixa o vídeo no clique (`<video>` nativo, com Range e CORS testados em container);
+  - o limite de upload temporário do Livewire (12 MB por padrão) barrava qualquer arquivo maior pelo painel, inclusive
+    GLB e PDFs. `config/livewire.php` e `docker/php.ini` passaram a seguir o maior limite (teste `UploadLimitsTest`);
+  - o original em 4K (983 MB) não sai do Drive pelo conector. Otimizar antes de subir, conforme a seção 2.1 de
+    `docs/handoff/rodada-1-conteudo-passo-a-passo.md`.
 - **Depois do deploy, no VPS:** rodar `franccino:redirects:generate` e `franccino:translations:import` (com
   `--dry-run` antes) e fazer o deploy do site (passo a passo em `docs/deploy-preview.md`).
 - **Ambiente desta sessão (para a próxima):**

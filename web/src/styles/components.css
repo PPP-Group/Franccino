@@ -434,6 +434,7 @@
 }
 
 .video__frame iframe,
+.video__frame video,
 .video__play {
   position: absolute;
   inset: 0;

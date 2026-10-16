@@ -600,7 +600,8 @@
     "title": "Vídeos e links",
     "videos": "Vídeos",
     "links": "Links",
-    "play": "Assistir ao vídeo: {title}"
+    "play": "Assistir ao vídeo: {title}",
+    "video": "Vídeo"
   },
   "blocks": {
     "timeline": "Linha do tempo"
