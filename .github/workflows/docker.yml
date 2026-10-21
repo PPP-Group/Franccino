@@ -1,0 +1,61 @@
+name: docker
+
+# Monta as imagens do preview (api/Dockerfile e web/Dockerfile) e sobe as duas juntas com compose.preview.yaml, como
+# no EasyPanel. Os PRs #16 a #19 foram defeitos de imagem que os testes não pegavam: healthcheck, migrations,
+# CORS e disco dos uploads.
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - 'api/**'
+      - 'web/**'
+      - 'compose.preview.yaml'
+      - '.env.preview.example'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/docker.yml'
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - name: Variáveis do preview de teste
+        run: |
+          key=$(openssl rand -hex 32)
+          secret=$(openssl rand -hex 32)
+          sed -e "s/^ADMIN_EMAIL=.*/ADMIN_EMAIL=ci@franccino.test/" \
+              -e "s/^ADMIN_PASSWORD=.*/ADMIN_PASSWORD=Franccino2026ci/" \
+              -e "s/^FRONTEND_API_KEY=.*/FRONTEND_API_KEY=${key}/" \
+              -e "s/^FRONTEND_REVALIDATE_SECRET=.*/FRONTEND_REVALIDATE_SECRET=${secret}/" \
+              -e "s/^REVALIDATE_SECRET=.*/REVALIDATE_SECRET=${secret}/" \
+              -e "s/^STAGING_BASIC_AUTH_USER=.*/STAGING_BASIC_AUTH_USER=franccino/" \
+              -e "s/^STAGING_BASIC_AUTH_PASSWORD=.*/STAGING_BASIC_AUTH_PASSWORD=preview2026/" \
+              .env.preview.example > .env.preview
+          echo "FRONTEND_API_KEY=${key}" >> "$GITHUB_ENV"
+      - name: Monta e sobe a API e o site
+        run: docker compose -f compose.preview.yaml up -d --build --wait --wait-timeout 1500
+      - name: Confere o que o EasyPanel confere
+        run: |
+          set -e
+          curl -fsS http://localhost:8000/up > /dev/null
+          curl -fsS -H "X-Frontend-Key: ${FRONTEND_API_KEY}" -H 'Accept: application/json' \
+            http://localhost:8000/api/v1/settings > /dev/null
+          curl -fsS http://localhost:8000/robots.txt | grep -q 'Disallow: /'
+          curl -fsS -o /dev/null http://localhost:8000/admin/login
+          curl -fsS http://localhost:3000/robots.txt > /dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/pt)" = 401
+          curl -fsS -u franccino:preview2026 -o /dev/null http://localhost:3000/pt
+          curl -fsS -u franccino:preview2026 -o /dev/null http://localhost:3000/en
+          curl -fsS -u franccino:preview2026 -o /dev/null http://localhost:3000/pt/produtos
+      - name: Logs em caso de falha
+        if: failure()
+        run: docker compose -f compose.preview.yaml logs --tail 200
+      - name: Desliga
+        if: always()
+        run: docker compose -f compose.preview.yaml down -v

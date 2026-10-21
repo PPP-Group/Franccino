@@ -9,12 +9,13 @@
   "scripts": {
     "prepare": "husky",
     "bootstrap": "node scripts/bootstrap.mjs",
-    "dev": "concurrently -k -n api,queue,web -c blue,magenta,green \"php api/artisan serve\" \"php api/artisan queue:listen --tries=1\" \"pnpm --filter web dev\"",
+    "dev": "concurrently -k -n api,queue,web -c blue,magenta,green \"php api/artisan serve\" \"php api/artisan queue:listen --tries=1 --timeout=0\" \"pnpm --filter web dev\"",
     "lint": "pnpm --filter web lint && cd api && composer lint",
     "test": "pnpm run test:api && pnpm run test:web",
     "test:api": "cd api && php artisan test",
     "test:web": "pnpm --filter web test",
-    "format": "prettier --write \"*.{json,md,yml,yaml}\" \"docs/**/*.md\" \".github/**/*.{yml,yaml,md}\""
+    "format": "prettier --write \"*.{json,md,yml,yaml}\" \"docs/**/*.md\" \".github/**/*.{yml,yaml,md}\"",
+    "check:redirects": "node scripts/check-redirects.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",

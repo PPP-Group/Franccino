@@ -75,6 +75,10 @@ describe('buildCsp', () => {
     expect(directive(csp, 'connect-src')).toContain('ws:');
   });
 
+  it('sends violations to the site log', () => {
+    expect(directive(buildCsp(base), 'report-uri')).toEqual(['/api/csp-report']);
+  });
+
   it('leaves frame-ancestors out of the report-only policy', () => {
     expect(directive(buildCsp({ ...base, reportOnly: true }), 'frame-ancestors')).toEqual([]);
   });

@@ -29,6 +29,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Falha com alerta de segurança alto ou crítico nas dependências do site.
+      - run: pnpm audit --prod --audit-level=high
       - run: pnpm --filter web lint
       - run: pnpm --filter web typecheck
       - run: pnpm --filter web test

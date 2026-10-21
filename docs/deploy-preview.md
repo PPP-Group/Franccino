@@ -190,6 +190,22 @@ docker cp $API:/app/storage/app/faltando-en.json .
 
 `--force` sobrescreve também o que já tem tradução (use só para corrigir uma tradução importada antes).
 
+### Redirects do site antigo
+
+Depois do deploy da API, gere as regras a partir dos endereços antigos gravados no banco, faça Deploy do site e
+confira os 1.094 endereços do sitemap do WordPress contra o preview:
+
+```bash
+docker exec $API php artisan franccino:redirects:generate --dry-run   # só conta
+docker exec $API php artisan franccino:redirects:generate
+# no computador, na raiz do repositório (Node 24):
+pnpm check:redirects --site https://<domínio do site> --user <usuário do preview> --password <senha>
+```
+
+O relatório sai em `redirects-relatorio.csv`, com um endereço por linha: `ok` (redirect para uma página que abre, ou
+410 de propósito), `pagina` (abre direto) e `quebrado`. O comando termina com erro se houver algum quebrado; os 20
+primeiros aparecem na tela.
+
 ### Problemas comuns
 
 | Sintoma                                                                                                     | Causa e correção                                                                                                                                                                                                                                                 |

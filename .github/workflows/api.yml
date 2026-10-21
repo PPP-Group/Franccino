@@ -48,6 +48,8 @@ jobs:
           path: ~/.composer/cache
           key: composer-${{ hashFiles('api/composer.lock') }}
       - run: composer install --no-interaction --prefer-dist --no-progress
+      # Falha com qualquer alerta de segurança conhecido nas dependências (P5b, sem ferramenta nova).
+      - run: composer audit --locked --no-interaction
       - run: cp .env.example .env && php artisan key:generate
       - run: composer lint
       - run: composer analyse

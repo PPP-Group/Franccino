@@ -59,3 +59,9 @@ it('lists consents read-only in the panel', function () {
     $this->get('/admin/consent-records/create')->assertNotFound();
     expect(User::factory()->editor()->create()->can('delete', $record))->toBeFalse();
 });
+
+it('keeps a long user agent within the column size', function () {
+    $this->postJson('/api/v1/consents', validConsent(), ['User-Agent' => str_repeat('a', 2000)])->assertCreated();
+
+    expect(mb_strlen(ConsentRecord::sole()->user_agent))->toBeLessThanOrEqual(512);
+});
