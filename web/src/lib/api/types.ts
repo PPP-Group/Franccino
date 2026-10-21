@@ -125,6 +125,8 @@ export type CollectionDetail = CollectionCard & {
   products: ProductCard[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
+  /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
+  locale_fallback: boolean;
 };
 
 export type DesignerCard = DesignerRef & {
@@ -142,6 +144,8 @@ export type DesignerDetail = DesignerCard & {
   media_links: MediaLink[];
   files: DownloadFile[];
   seo: Seo;
+  /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
+  locale_fallback: boolean;
 };
 
 export type LaunchCard = {
@@ -161,6 +165,8 @@ export type LaunchDetail = LaunchCard & {
   files: DownloadFile[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
+  /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
+  locale_fallback: boolean;
 };
 
 export type ProjectCard = {
@@ -183,6 +189,8 @@ export type ProjectDetail = ProjectCard & {
   products: ProductCard[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
+  /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
+  locale_fallback: boolean;
 };
 
 export type Client = { id: number; name: string; url: string | null; logo: Image | null };
@@ -294,6 +302,8 @@ export type PageContent = {
   content: Block[];
   cover: Image | null;
   seo: Seo;
+  /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
+  locale_fallback: boolean;
 };
 
 /**

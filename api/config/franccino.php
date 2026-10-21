@@ -24,6 +24,20 @@ return [
         'link_ttl_minutes' => 10,
     ],
 
+    // Days each personal-data log is kept (LGPD), then removed by the daily `model:prune`. Empty = kept. The periods
+    // are a legal decision of the Franccino; these defaults only keep the tables from growing forever.
+    'retention' => [
+        'activity_logs' => env('RETENTION_ACTIVITY_LOGS_DAYS', 365),
+        'download_logs' => env('RETENTION_DOWNLOAD_LOGS_DAYS', 365),
+        'consent_records' => env('RETENTION_CONSENT_RECORDS_DAYS', 1825),
+    ],
+
+    'backups' => [
+        // Daily copies of the database and weekly copies with the uploaded files, in storage/app/backups.
+        'keep_database' => 14,
+        'keep_files' => 2,
+    ],
+
     'panel' => [
         // Administrators must set up two-factor authentication on their next login (PPP-95).
         'admin_mfa_required' => (bool) env('PANEL_ADMIN_MFA_REQUIRED', true),

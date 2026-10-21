@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Filament\Support\FieldHelp;
 use App\Jobs\RevalidateFrontend;
+use App\Listeners\NotifyAdminsOfFailedJob;
 use App\Listeners\RecordPanelActivity;
 use App\Listeners\StoreBlurPlaceholder;
 use App\Listeners\StoreImageMetadata;
@@ -44,8 +45,11 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -147,6 +151,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(Login::class, [RecordPanelActivity::class, 'handleLogin']);
         Event::listen(SettingsSaved::class, [RecordPanelActivity::class, 'handleSettingsSaved']);
+
+        Event::listen(JobFailed::class, NotifyAdminsOfFailedJob::class);
+
+        // `/up` (container healthcheck) also checks the database, not only that PHP answers.
+        Event::listen(DiagnosingHealth::class, fn () => DB::select('select 1'));
     }
 
     /**

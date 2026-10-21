@@ -6,6 +6,7 @@ use App\Models\Concerns\HasDownloadFiles;
 use App\Models\Concerns\HasImageConversions;
 use App\Models\Concerns\HasMediaLinks;
 use App\Models\Concerns\HasPublication;
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\DesignerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Spatie\Translatable\HasTranslations;
 class Designer extends Model implements HasMedia
 {
     /** @use HasFactory<DesignerFactory> */
-    use HasDownloadFiles, HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasTranslations;
+    use HasDownloadFiles, HasFactory, HasImageConversions, HasMediaLinks, HasPublication, HasSearchText, HasTranslations;
 
     protected $guarded = [];
 
@@ -48,5 +49,11 @@ class Designer extends Model implements HasMedia
     public function lines(): HasMany
     {
         return $this->hasMany(Line::class);
+    }
+
+    /** @return list<string|null> */
+    public function searchableTexts(): array
+    {
+        return [$this->name];
     }
 }

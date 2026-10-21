@@ -33,6 +33,7 @@ class PageResource extends JsonResource
             'content' => LocalizedBlocks::resolve($page->content ?? [], $locale),
             'cover' => ImagePresenter::present($page->getFirstMedia('cover'), $title),
             'seo' => Refs::seo($page, $page->getFirstMedia('og_image') ?? $page->getFirstMedia('cover'), $title),
+            'locale_fallback' => Localized::missing($page, ['title', 'intro']),
         ];
     }
 }

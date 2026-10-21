@@ -32,6 +32,7 @@ class LaunchResource extends LaunchCardResource
             'media_links' => MediaLinkResource::collection($launch->mediaLinks)->resolve(),
             'files' => DownloadFileResource::collection($launch->files)->resolve(),
             'seo' => Refs::seo($launch, $launch->getFirstMedia('cover'), $title),
+            'locale_fallback' => Localized::missing($launch, ['title', 'summary', 'description']),
             'slugs' => collect(Locales::all())
                 ->mapWithKeys(fn (string $locale) => [$locale => $launch->getTranslation('slug', $locale, false) ?: null])
                 ->all(),

@@ -46,7 +46,7 @@ return [
                 'Aba Geral: escreva o nome em português (o endereço da página se preenche sozinho). Escolha a área (Casa ou Giardini), a categoria, a linha e o designer.',
                 'Aba Conteúdo: escreva a descrição e os materiais. O texto em inglês é opcional.',
                 'Aba Medidas: clique em "Adicionar" e informe largura, profundidade e altura em milímetros. Peça com mais de um tamanho ganha uma linha por versão (ex.: "2,00 m" e "2,70 m").',
-                'Aba Acabamentos: escolha os acabamentos em que a peça é feita.',
+                'Depois de salvar, na lista Acabamentos (abaixo do formulário): "Anexar" para escolher os acabamentos da peça e arraste para mudar a ordem.',
                 'Aba Mídia e 3D: envie a foto de capa (obrigatória para publicar) e, se tiver, as fotos da galeria e o arquivo 3D em GLB.',
                 'Aba SEO: opcional. Vazio, o site usa o nome e a descrição.',
                 'Ligue "Publicado" (aba Geral) e clique em "Criar".',
@@ -65,7 +65,7 @@ return [
             'steps' => [
                 'Menu Catálogo → Coleções → "Criar".',
                 'Escreva o nome, o resumo (uma frase) e a descrição.',
-                'Em Produtos, escolha as peças da coleção.',
+                'Depois de salvar, na lista Produtos (abaixo do formulário): "Anexar" para escolher as peças e arraste para pôr na ordem do site.',
                 'Envie a capa: foto horizontal grande. Ela aparece no bloco da coleção e no topo da página.',
                 'Ligue "Publicado" e clique em "Criar".',
             ],
@@ -80,7 +80,7 @@ return [
             'steps' => [
                 'Menu Catálogo → Lançamentos → "Criar".',
                 'Escreva o título (ex.: Coleção Tempo 25 anos), o resumo e o ano.',
-                'Em Produtos, escolha as peças lançadas. Elas ganham a etiqueta "Lançamentos" no site.',
+                'Depois de salvar, na lista Produtos (abaixo do formulário): "Anexar" para escolher as peças lançadas e arraste para pôr na ordem do site. Elas ganham a etiqueta "Lançamentos".',
                 'Envie a capa e ligue "Publicado".',
                 'A foto do topo da página Lançamentos fica em Conteúdo → Páginas → Lançamentos → Capa.',
             ],
@@ -179,7 +179,7 @@ return [
             'steps' => [
                 'Primeiro os grupos: Catálogo → Grupos de acabamento (ex.: Madeiras, Tecidos).',
                 'Depois cada acabamento: Catálogo → Acabamentos → "Criar". Escolha o grupo, escreva o nome e o código e envie a foto da amostra.',
-                'Por fim, abra cada produto e escolha os acabamentos na aba Acabamentos.',
+                'Por fim, abra cada produto e anexe os acabamentos na lista Acabamentos, abaixo do formulário.',
             ],
             'tips' => [
                 'Foto da amostra quadrada, com luz uniforme e sem sombra, para as amostras ficarem iguais lado a lado.',
@@ -317,6 +317,11 @@ return [
             'no_english_hint' => 'O site em inglês mostra o português',
             'unread' => 'Mensagens não lidas',
             'unread_hint' => 'Relacionamento → Mensagens de contato',
+            'no_recipients' => 'Mensagens do site sem destinatário',
+            'no_recipients_value' => 'Ninguém recebe',
+            'no_recipients_hint' => 'Cadastre os e-mails em Configurações → Contato',
+            'job_failed_title' => 'Uma tarefa automática falhou',
+            'job_failed_body' => ':job: :message. As próximas falhas iguais na próxima hora não geram aviso.',
         ],
     ],
 

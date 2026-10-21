@@ -77,8 +77,14 @@ php artisan queue:restart     # recarrega o worker
 ```
 
 Serviços permanentes: worker da fila (`php artisan queue:work --tries=3`) e agendador (`* * * * * php artisan
-schedule:run`). PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
-equivalente no servidor web (ex.: `client_max_body_size` no nginx).
+schedule:run`; a imagem Docker roda `schedule:work`). O agendador (`routes/console.php`) faz:
+
+- `model:prune` dos logs com dados pessoais pelo prazo de `RETENTION_ACTIVITY_LOGS_DAYS` (365),
+  `RETENTION_DOWNLOAD_LOGS_DAYS` (365) e `RETENTION_CONSENT_RECORDS_DAYS` (1825). Vazio guarda para sempre. O prazo é
+  decisão jurídica da Franccino;
+- limpeza dos jobs com falha (30 dias) e das exportações CSV do painel (7 dias);
+- `franccino:backup` do SQLite (preview). Com MySQL, o backup do banco é o do provedor. PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
+  equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 
 CORS da mídia: o visualizador 3D (`@google/model-viewer`) baixa o GLB com `fetch` a partir do domínio do site, então
 o bucket de mídia do R2 (ou o servidor que entrega `/storage` no disco local) precisa responder

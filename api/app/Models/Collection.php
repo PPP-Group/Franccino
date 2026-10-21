@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasImageConversions;
 use App\Models\Concerns\HasLocalizedSlug;
 use App\Models\Concerns\HasPublication;
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\CollectionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Spatie\Translatable\HasTranslations;
 class Collection extends Model implements HasMedia
 {
     /** @use HasFactory<CollectionFactory> */
-    use HasFactory, HasImageConversions, HasLocalizedSlug, HasPublication, HasTranslations;
+    use HasFactory, HasImageConversions, HasLocalizedSlug, HasPublication, HasSearchText, HasTranslations;
 
     protected $guarded = [];
 
@@ -49,5 +50,11 @@ class Collection extends Model implements HasMedia
         return $this->belongsToMany(Product::class, 'collection_product')
             ->withPivot('sort_order')
             ->orderByPivot('sort_order');
+    }
+
+    /** @return list<string|null> */
+    public function searchableTexts(): array
+    {
+        return array_values($this->getTranslations('name'));
     }
 }

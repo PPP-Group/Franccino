@@ -144,3 +144,18 @@ it('does not allow creating or editing download logs in the panel', function () 
     $this->get('/admin/download-logs/create')->assertNotFound();
     $this->get("/admin/download-logs/{$log->id}/edit")->assertNotFound();
 });
+
+it('lets customer service unsubscribe someone who asks to leave the newsletter, keeping the record', function () {
+    $this->actingAs(User::factory()->support()->create());
+    $leaving = NewsletterSubscriber::factory()->create(['unsubscribed_at' => null]);
+    $staying = NewsletterSubscriber::factory()->create(['unsubscribed_at' => null]);
+
+    livewire(ListNewsletterSubscribers::class)
+        ->callTableAction('unsubscribe', $leaving)
+        ->filterTable('subscribed', true)
+        ->assertCanSeeTableRecords([$staying])
+        ->assertCanNotSeeTableRecords([$leaving]);
+
+    expect($leaving->refresh()->unsubscribed_at)->not->toBeNull()
+        ->and($staying->refresh()->unsubscribed_at)->toBeNull();
+});

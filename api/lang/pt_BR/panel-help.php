@@ -50,7 +50,6 @@ return [
     'collection.cover' => 'Foto grande e horizontal (ideal 2400 × 1200 px). Aparece no bloco da coleção e no topo da página dela.',
     'launch.title' => 'Nome do lançamento, ex.: Coleção Tempo 25 anos.',
     'launch.cover' => 'Foto grande e horizontal (ideal 2400 × 1200 px) para o topo do lançamento.',
-    'launch.products' => 'Peças deste lançamento. Elas ganham a etiqueta "Lançamentos" no site.',
 
     // Designer
     'designer.name' => 'Nome do designer ou do estúdio.',

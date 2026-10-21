@@ -87,32 +87,34 @@ linha Pinot, linha Bloco). Sem página própria no site; usadas em "outras peça
 
 ### designers
 
-| Coluna                     | Tipo          | Notas                           |
-| -------------------------- | ------------- | ------------------------------- |
-| name                       | string        |                                 |
-| slug                       | string, único | igual nos dois idiomas          |
-| short_bio                  | json tr       | uma ou duas frases (cards)      |
-| bio                        | json tr       | HTML (rich text)                |
-| location                   | string, null  | "Belo Horizonte, MG", "Espanha" |
-| website_url, instagram_url | string, null  |                                 |
-| is_published, sort_order   |               |                                 |
-| seo_title, seo_description | json tr       |                                 |
-| legacy_wp_id, legacy_url   |               |                                 |
+| Coluna                     | Tipo          | Notas                                                                                            |
+| -------------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| name                       | string        |                                                                                                  |
+| slug                       | string, único | igual nos dois idiomas                                                                           |
+| short_bio                  | json tr       | uma ou duas frases (cards)                                                                       |
+| bio                        | json tr       | HTML (rich text)                                                                                 |
+| location                   | string, null  | "Belo Horizonte, MG", "Espanha"                                                                  |
+| website_url, instagram_url | string, null  |                                                                                                  |
+| is_published, sort_order   |               |                                                                                                  |
+| seo_title, seo_description | json tr       |                                                                                                  |
+| legacy_wp_id, legacy_url   |               |                                                                                                  |
+| search_text                | text, null    | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
 Mídia: `portrait` (1).
 
 ### collections
 
-| Coluna                                | Tipo           | Notas       |
-| ------------------------------------- | -------------- | ----------- |
-| name                                  | json tr        |             |
-| slug                                  | json tr        |             |
-| year                                  | smallint, null |             |
-| summary                               | json tr        | texto curto |
-| description                           | json tr        | HTML        |
-| is_featured, is_published, sort_order |                |             |
-| seo_title, seo_description            | json tr        |             |
-| legacy_wp_id, legacy_url              |                |             |
+| Coluna                                | Tipo           | Notas                                                                                            |
+| ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| name                                  | json tr        |                                                                                                  |
+| slug                                  | json tr        |                                                                                                  |
+| year                                  | smallint, null |                                                                                                  |
+| summary                               | json tr        | texto curto                                                                                      |
+| description                           | json tr        | HTML                                                                                             |
+| is_featured, is_published, sort_order |                |                                                                                                  |
+| seo_title, seo_description            | json tr        |                                                                                                  |
+| legacy_wp_id, legacy_url              |                |                                                                                                  |
+| search_text                           | text, null     | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`, `product_id`, `sort_order`).
 

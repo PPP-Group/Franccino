@@ -61,4 +61,10 @@ if [ "${RUN_QUEUE_WORKER:-true}" = "true" ]; then
     done
 fi
 
+# Agendador (routes/console.php): limpeza dos logs pelo prazo de retenção, jobs com falha, exportações e o backup
+# do SQLite. RUN_SCHEDULER=false desliga (ex.: um segundo container só de fila).
+if [ "${RUN_SCHEDULER:-true}" = "true" ]; then
+    (while true; do php artisan schedule:work || sleep 5; done) &
+fi
+
 exec "$@"
