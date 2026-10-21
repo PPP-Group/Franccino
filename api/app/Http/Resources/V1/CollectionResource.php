@@ -41,6 +41,7 @@ class CollectionResource extends CollectionCardResource
                 ->all(),
             'products' => ProductCardResource::collection($products)->toArray($request),
             'seo' => Refs::seo($collection, $collection->getFirstMedia('cover'), $name),
+            'locale_fallback' => Localized::missing($collection, ['name', 'summary', 'description']),
             'slugs' => collect(Locales::all())
                 ->mapWithKeys(fn (string $locale) => [$locale => $collection->getTranslation('slug', $locale, false) ?: null])
                 ->all(),

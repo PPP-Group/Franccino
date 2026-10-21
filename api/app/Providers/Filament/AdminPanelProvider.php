@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\HelpCenter;
+use App\Filament\Support\InitialsAvatarProvider;
 use App\Filament\Support\PanelGuides;
 use App\Http\Middleware\RequireAdminMultiFactor;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
@@ -62,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 ]),
                 'gray' => Color::Stone,
             ])
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make(fn () => __('Catalog')),

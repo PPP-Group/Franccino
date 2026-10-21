@@ -481,5 +481,12 @@
     "Video file (MP4)": "Arquivo de vídeo (MP4)",
     "Export it in 1080p, MP4 (H.264), up to :size MB: see \"Video on the site\" in Help. Nothing loads until the visitor clicks play.": "Exporte em 1080p, MP4 (H.264), com até :size MB: veja \"Vídeo no site\" na Ajuda. Nada carrega antes de a pessoa clicar para assistir.",
     "Only if there is no file above.": "Só se não houver arquivo acima.",
-    "The panel needs at least one active administrator.": "O painel precisa de pelo menos um administrador ativo."
+    "The panel needs at least one active administrator.": "O painel precisa de pelo menos um administrador ativo.",
+    "Drag the pieces into the order the site shows them.": "Arraste as peças para a ordem em que o site mostra.",
+    "Drag the finishes into the order the site shows them.": "Arraste os acabamentos para a ordem em que o site mostra.",
+    "Group": "Grupo",
+    "Subscription": "Inscrição",
+    "All": "Todos",
+    "Subscribed": "Inscritos",
+    "Unsubscribed": "Descadastrados"
 }

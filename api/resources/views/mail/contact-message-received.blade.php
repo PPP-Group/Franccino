@@ -2,19 +2,19 @@
 # {{ __('New contact message') }}
 
 **{{ __('Type') }}:** {{ $contactMessage->type->label() }}
-**{{ __('Name') }}:** {{ $contactMessage->name }}
-**{{ __('Email') }}:** {{ $contactMessage->email }}
+**{{ __('Name') }}:** {{ \App\Support\MarkdownText::escape($contactMessage->name) }}
+**{{ __('Email') }}:** {{ \App\Support\MarkdownText::escape($contactMessage->email) }}
 @if($contactMessage->phone)
-**{{ __('Phone') }}:** {{ $contactMessage->phone }}
+**{{ __('Phone') }}:** {{ \App\Support\MarkdownText::escape($contactMessage->phone) }}
 @endif
 @if($contactMessage->company)
-**{{ __('Company') }}:** {{ $contactMessage->company }}
+**{{ __('Company') }}:** {{ \App\Support\MarkdownText::escape($contactMessage->company) }}
 @endif
 @if($contactMessage->profession)
 **{{ __('Profession') }}:** {{ $contactMessage->profession->label() }}
 @endif
 @if($contactMessage->city || $contactMessage->state)
-**{{ __('Location') }}:** {{ trim(($contactMessage->city ?? '').(($contactMessage->city && $contactMessage->state) ? ' - ' : '').($contactMessage->state ?? '')) }}
+**{{ __('Location') }}:** {{ \App\Support\MarkdownText::escape(trim(($contactMessage->city ?? '').(($contactMessage->city && $contactMessage->state) ? ' - ' : '').($contactMessage->state ?? ''))) }}
 @endif
 @if($product)
 **{{ __('Product') }}:** {{ $product }}
@@ -23,7 +23,7 @@
 
 **{{ __('Message') }}:**
 
-{{ $contactMessage->message }}
+{{ \App\Support\MarkdownText::escape($contactMessage->message) }}
 
 @if(count($items) > 0)
 ## {{ __('Items') }}
@@ -34,13 +34,13 @@
   {{ __('Finishes') }}: {{ collect($item['finishes'])->map(fn ($finish) => $finish['name'].($finish['code'] ? " ({$finish['code']})" : ''))->join(', ') }}
 @endif
 @if(!empty($item['note']))
-  {{ __('Note') }}: {{ $item['note'] }}
+  {{ __('Note') }}: {{ \App\Support\MarkdownText::escape($item['note']) }}
 @endif
 @endforeach
 @endif
 
 @if($contactMessage->source_url)
-{{ __('Sent from') }}: {{ $contactMessage->source_url }}
+{{ __('Sent from') }}: {{ \App\Support\MarkdownText::escape($contactMessage->source_url) }}
 @endif
 
 @component('mail::button', ['url' => $panelUrl])

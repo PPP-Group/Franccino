@@ -145,6 +145,10 @@ type ProductDetail = ProductCard & {
 | `GET /sitemap`            |                                                                                                          | `{ type, key?, slugs: Record<Locale, string \| null>, updated_at }[]` de tudo que é público (para `sitemap.xml`)                                                              |
 | `GET /redirects`          |                                                                                                          | `{ from, to, status }[]` ativos                                                                                                                                               |
 
+`locale_fallback: boolean` vem no detalhe de produto (nome e descrição), coleção (nome, resumo e descrição), designer
+(bio curta e bio), lançamento e projeto (título, resumo e descrição) e página (título e introdução): `true` quando um
+desses textos existe em `pt` e não no idioma pedido. Em `pt` é sempre `false`.
+
 `sort` em `/products`: `featured` (default: destaque, `sort_order`, nome), `name`, `newest`.
 Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `designer` e `line` usam o slug
 único; `finish` usa o id; `area` usa a key.

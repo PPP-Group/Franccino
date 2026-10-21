@@ -2,10 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Pages\ManageGeneralSettings;
 use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Filament\Resources\Products\ProductResource;
 use App\Models\ContactMessage;
 use App\Models\Product;
+use App\Settings\GeneralSettings;
 use App\Support\Locales;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -81,6 +83,15 @@ class ContentHealthWidget extends StatsOverviewWidget
                 ->description(__('guides.dashboard.stat.no_english_hint'))
                 ->icon('heroicon-o-language')
                 ->url($products);
+        }
+
+        // Without recipients the site stores the message and no e-mail leaves (SubmitContactMessage).
+        if (blank(app(GeneralSettings::class)->contact_recipients)) {
+            $stats[] = Stat::make(__('guides.dashboard.stat.no_recipients'), __('guides.dashboard.stat.no_recipients_value'))
+                ->description(__('guides.dashboard.stat.no_recipients_hint'))
+                ->icon('heroicon-o-exclamation-triangle')
+                ->color('danger')
+                ->url(ManageGeneralSettings::canAccess() ? ManageGeneralSettings::getUrl() : null);
         }
 
         if (ContactMessageResource::canViewAny()) {

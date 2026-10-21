@@ -28,6 +28,7 @@ describe('apiGet', () => {
     expect(String(url)).toBe('http://api.test/api/v1/products?locale=en&area=indoor&page=2');
     expect((init as RequestInit & { next: unknown }).next).toEqual({ tags: ['products'], revalidate: 3600 });
     expect(new Headers((init as RequestInit).headers).get('X-Frontend-Key')).toBe('key-123');
+    expect((init as RequestInit).signal).toBeInstanceOf(AbortSignal);
   });
 
   it('returns null on 404 with apiGetOrNull', async () => {

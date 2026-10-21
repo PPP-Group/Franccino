@@ -6,7 +6,6 @@ use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Support\Locales;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -40,12 +39,6 @@ class LaunchForm
                     ->label(__('Year'))
                     ->required()
                     ->numeric(),
-                Select::make('products')
-                    ->label(__('Products'))
-                    ->relationship('products', 'name')
-                    ->multiple()
-                    ->searchable()
-                    ->preload(),
                 ...CommonFields::publication(),
                 Translatable::tabs(fn (string $locale): array => CommonFields::seo($locale), key: 'seo'),
                 SpatieMediaLibraryFileUpload::make('cover')

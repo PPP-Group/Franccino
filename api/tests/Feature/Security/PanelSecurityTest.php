@@ -2,6 +2,7 @@
 
 use App\Enums\UserRole;
 use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\RequireAdminMultiFactor;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
@@ -82,4 +83,12 @@ it('requires two-factor authentication from administrators only', function () {
 
     $this->actingAs(User::factory()->admin()->create());
     expect($middleware->handle(Request::create('/admin'), $next)->isRedirect())->toBeTrue();
+});
+
+it('draws the user avatar in the panel instead of asking a third-party service', function () {
+    $this->actingAs(User::factory()->admin()->create(['name' => 'Pedro Ivo']));
+
+    $this->get('/admin')->assertOk()->assertDontSee('ui-avatars.com')->assertSee('data:image/svg+xml;base64', false);
+    expect(base64_decode(str((new InitialsAvatarProvider)->get(User::factory()->make(['name' => 'Pedro Ivo'])))->after('base64,')))
+        ->toContain('>PI<');
 });

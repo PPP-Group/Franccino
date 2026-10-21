@@ -37,3 +37,17 @@ it('returns false when cloudflare rejects the token', function () {
 
     expect(app(Turnstile::class)->verify('bad-token', '1.1.1.1'))->toBeFalse();
 });
+
+it('refuses the form instead of failing when cloudflare does not answer', function () {
+    config(['franccino.turnstile.secret_key' => 'my-secret']);
+    Http::fake(['challenges.cloudflare.com/*' => Http::failedConnection()]);
+
+    expect(app(Turnstile::class)->verify('visitor-token', '1.1.1.1'))->toBeFalse();
+});
+
+it('refuses the form when cloudflare answers with an error', function () {
+    config(['franccino.turnstile.secret_key' => 'my-secret']);
+    Http::fake(['challenges.cloudflare.com/*' => Http::response(['success' => true], 500)]);
+
+    expect(app(Turnstile::class)->verify('visitor-token', '1.1.1.1'))->toBeFalse();
+});

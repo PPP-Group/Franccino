@@ -25,15 +25,20 @@ it('creates a new subscriber on first subscription', function () {
 it('reactivates an existing subscriber with the same response body, without duplicating', function () {
     $subscriber = NewsletterSubscriber::factory()->create([
         'email' => 'assine@exemplo.com',
+        'locale' => 'pt',
+        'consent_at' => now()->subYear(),
         'unsubscribed_at' => now(),
     ]);
 
-    $this->postJson('/api/v1/newsletter', validNewsletter())
+    $this->postJson('/api/v1/newsletter', validNewsletter(['locale' => 'en']))
         ->assertOk()
         ->assertExactJson(['data' => ['subscribed' => true]]);
 
     expect(NewsletterSubscriber::count())->toBe(1);
-    expect($subscriber->refresh()->unsubscribed_at)->toBeNull();
+    $subscriber->refresh();
+    expect($subscriber->unsubscribed_at)->toBeNull()
+        ->and($subscriber->consent_at->isToday())->toBeTrue()
+        ->and($subscriber->locale)->toBe('en');
 });
 
 it('requires consent and a valid email', function () {

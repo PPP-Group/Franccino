@@ -52,6 +52,7 @@ class DesignerResource extends DesignerCardResource
             'media_links' => MediaLinkResource::collection($designer->mediaLinks)->resolve(),
             'files' => DownloadFileResource::collection($designer->files)->resolve(),
             'seo' => Refs::seo($designer, $designer->getFirstMedia('portrait'), $designer->name),
+            'locale_fallback' => Localized::missing($designer, ['short_bio', 'bio']),
         ]);
     }
 }
