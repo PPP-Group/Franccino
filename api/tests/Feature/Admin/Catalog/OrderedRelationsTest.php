@@ -32,7 +32,10 @@ it('adds pieces to the end of a collection and keeps the order they are dragged 
 
     expect($collection->products()->pluck('products.id')->all())->toBe([$first->id, $second->id, $third->id]);
 
+    // The drag mode lists the pieces by the pivot column too: unqualified, MySQL refuses it as ambiguous.
     livewire(OrderedProductsRelationManager::class, ['ownerRecord' => $collection, 'pageClass' => EditCollection::class])
+        ->call('toggleTableReordering')
+        ->assertCanSeeTableRecords([$first, $second, $third], inOrder: true)
         ->call('reorderTable', [(string) $third->id, (string) $first->id, (string) $second->id]);
 
     expect($collection->products()->pluck('products.id')->all())->toBe([$third->id, $first->id, $second->id])

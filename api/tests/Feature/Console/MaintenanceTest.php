@@ -6,17 +6,25 @@ use App\Models\DownloadLog;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
-/** The backup reads the database file: a small one stands in for the preview's SQLite. */
+/**
+ * The backup reads the database file: a small one stands in for the preview's SQLite, also when the suite runs on MySQL
+ * (CI). Only the default connection's name changes; the test data stays in the suite's connection.
+ */
 function useSqliteFileForBackup(): void
 {
     $path = storage_path('framework/testing/backup-source.sqlite');
     File::ensureDirectoryExists(dirname($path));
     File::delete($path);
     (new PDO('sqlite:'.$path))->exec("create table produtos (nome text); insert into produtos values ('Cadeira Aura')");
-    config(['database.connections.sqlite.database' => $path]);
+    config(['database.default' => 'sqlite', 'database.connections.sqlite.database' => $path]);
 }
 
+beforeEach(function () {
+    $this->suiteConnection = config('database.default');
+});
+
 afterEach(function () {
+    config(['database.default' => $this->suiteConnection]);
     File::deleteDirectory(storage_path('app/backups'));
     File::delete(storage_path('framework/testing/backup-source.sqlite'));
 });

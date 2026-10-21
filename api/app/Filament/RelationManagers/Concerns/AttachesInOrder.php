@@ -18,10 +18,14 @@ trait AttachesInOrder
 {
     protected function orderedTable(Table $table, string $recordTitleAttribute): Table
     {
+        // Qualified by the pivot table: the related tables have a `sort_order` of their own, and MySQL refuses the
+        // ambiguous column (SQLite, in the preview, silently picks one).
+        $column = $this->pivotRelationship()->getTable().'.sort_order';
+
         return $table
             ->recordTitleAttribute($recordTitleAttribute)
-            ->reorderable('sort_order')
-            ->defaultSort('sort_order')
+            ->reorderable($column)
+            ->defaultSort($column)
             ->headerActions([
                 AttachAction::make()
                     ->multiple()
@@ -41,12 +45,20 @@ trait AttachesInOrder
     /** @param  array<int, int|string>  $ids */
     private function appendInOrder(array $ids): void
     {
-        /** @var BelongsToMany<Model, Model> $relationship */
-        $relationship = $this->getRelationship();
+        $relationship = $this->pivotRelationship();
         $next = (int) $relationship->newPivotQuery()->max('sort_order');
 
         foreach ($ids as $id) {
             $relationship->updateExistingPivot($id, ['sort_order' => ++$next]);
         }
+    }
+
+    /** @return BelongsToMany<Model, Model> */
+    private function pivotRelationship(): BelongsToMany
+    {
+        /** @var BelongsToMany<Model, Model> $relationship */
+        $relationship = $this->getRelationship();
+
+        return $relationship;
     }
 }
