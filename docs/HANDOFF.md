@@ -253,7 +253,8 @@ Fora do código:
 
 ### 5.1 Mês 1 fechado (21/10/2026)
 
-O primeiro mês era o backend 100% pronto e testado. Entrou em três PRs para a `develop`:
+O primeiro mês era o backend 100% pronto e testado. Entrou em três PRs para a `develop` (mais o #43, de
+documentação), e na `main` pelo #44:
 
 | PR                                                    | Conteúdo                                                                                                                                                                                                                         |
 | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
