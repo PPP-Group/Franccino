@@ -1,5 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\File;
+
+beforeEach(fn () => useScratchDownloadsDisk());
+
+afterEach(fn () => File::deleteDirectory(storage_path('framework/testing/downloads')));
+
 it('returns the product detail in portuguese by default', function () {
     publishedProduct();
 
@@ -68,14 +74,45 @@ it('omits the 3d model when disabled', function () {
     $this->getJson('/api/v1/products/cadeira-aura')->assertJsonPath('data.model_3d', null);
 });
 
-it('exposes the 3d model when enabled', function () {
+it('says the 3d model exists without exposing its address', function () {
     $product = publishedProduct(['is_3d_enabled' => true]);
     $product->addMediaFromString(minimalGlb())->usingFileName('aura.glb')->toMediaCollection('model_3d');
 
     $response = $this->getJson('/api/v1/products/cadeira-aura')->assertOk();
 
-    expect($response->json('data.model_3d.url'))->toContain('aura.glb');
-    expect($response->json('data.model_3d.size'))->not->toBeNull();
+    expect($response->json('data.model_3d'))->toBe(['size' => 12])
+        ->and($product->getFirstMedia('model_3d')->disk)->toBe('downloads');
+});
+
+it('creates a temporary link to the private 3d model', function () {
+    $product = publishedProduct(['is_3d_enabled' => true]);
+    $product->addMediaFromString(minimalGlb())->usingFileName('aura.glb')->toMediaCollection('model_3d');
+
+    $url = $this->postJson('/api/v1/products/cadeira-aura/model-3d/link')
+        ->assertCreated()
+        ->assertJsonStructure(['data' => ['url', 'expires_at']])
+        ->json('data.url');
+
+    expect($url)->toContain('aura.glb')->toContain('signature=');
+    $this->withHeaders(['Origin' => 'http://localhost:3000'])->get($url)
+        ->assertOk()
+        ->assertHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    $this->get(str_replace('signature=', 'signature=x', $url))->assertForbidden();
+    $this->postJson('/api/v1/products/aura-chair/model-3d/link?locale=en')->assertCreated();
+});
+
+it('refuses a 3d link for a product with the 3d off, without a model or unpublished', function () {
+    $product = publishedProduct(['is_3d_enabled' => false]);
+    $product->addMediaFromString(minimalGlb())->usingFileName('aura.glb')->toMediaCollection('model_3d');
+
+    $this->postJson('/api/v1/products/cadeira-aura/model-3d/link')->assertNotFound();
+
+    $product->update(['is_3d_enabled' => true]);
+    $product->clearMediaCollection('model_3d');
+    $this->postJson('/api/v1/products/cadeira-aura/model-3d/link')->assertNotFound();
+
+    $product->update(['is_published' => false]);
+    $this->postJson('/api/v1/products/cadeira-aura/model-3d/link')->assertNotFound();
 });
 
 it('rejects unsupported locales', function () {

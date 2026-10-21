@@ -162,3 +162,26 @@ export async function requestDownloadLink(fileId: number): Promise<{ url: string
   const json = (await response.json()) as { data: { url: string; expires_at: string } };
   return json.data;
 }
+
+/**
+ * `POST /products/{slug}/model-3d/link` (contrato 13.2): link temporário do GLB, pedido quando o visitante abre o 3D.
+ * A página é estática, então a URL assinada nunca vai no HTML.
+ */
+export async function requestModelLink(
+  slug: string,
+  locale: string,
+): Promise<{ url: string; expires_at: string }> {
+  const path = `/products/${encodeURIComponent(slug)}/model-3d/link?locale=${encodeURIComponent(locale)}`;
+  const response = await fetch(apiUrl(path), { method: 'POST', headers: { Accept: 'application/json' } });
+
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      await readJsonBody(response),
+      `A API respondeu ${response.status} para ${path}.`,
+    );
+  }
+
+  const json = (await response.json()) as { data: { url: string; expires_at: string } };
+  return json.data;
+}

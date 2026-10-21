@@ -10,6 +10,7 @@ import { TILE_URL } from './src/lib/stores/map-view';
 const CSP_SOURCES = {
   apiUrl: process.env.NEXT_PUBLIC_API_URL ?? '',
   mediaUrl: process.env.NEXT_PUBLIC_MEDIA_URL,
+  downloadsUrl: process.env.NEXT_PUBLIC_DOWNLOADS_URL,
   tileUrl: TILE_URL,
   gtm: Boolean(process.env.NEXT_PUBLIC_GTM_ID),
   turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),

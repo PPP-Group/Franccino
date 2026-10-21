@@ -44,4 +44,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
     Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])
         ->middleware('throttle:api-downloads')
         ->name('downloads.link');
+    Route::post('products/{slug}/model-3d/link', [V1\ProductModelController::class, 'link'])
+        ->middleware('throttle:api-downloads')
+        ->name('products.model-3d.link');
 });

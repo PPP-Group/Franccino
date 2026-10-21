@@ -12,13 +12,18 @@ type Mode = 'photo' | '3d';
 const subscribeNoop = () => () => {};
 const wants3dFromUrl = () => new URLSearchParams(window.location.search).get('view') === '3d';
 
-type ProductStageProps = { images: Image[]; name: string; model: ProductDetail['model_3d'] };
+type ProductStageProps = {
+  images: Image[];
+  name: string;
+  slug: string;
+  model: ProductDetail['model_3d'];
+};
 
 /**
  * Galeria com alternância Fotos/3D. `?view=3d` é lido no cliente (useSyncExternalStore)
  * para a página de produto continuar estática.
  */
-export function ProductStage({ images, name, model }: ProductStageProps) {
+export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   const t = useTranslations('product.stage');
   const wants3d = useSyncExternalStore(subscribeNoop, wants3dFromUrl, () => false);
   const [chosen, setChosen] = useState<Mode | null>(null);
@@ -34,7 +39,7 @@ export function ProductStage({ images, name, model }: ProductStageProps) {
         ) : null}
         {model && mode === '3d' ? (
           <div className="stage-3d">
-            <ModelViewer src={model.url} alt={t('modelAlt', { name })} />
+            <ModelViewer slug={slug} alt={t('modelAlt', { name })} />
           </div>
         ) : null}
         {model ? (

@@ -84,7 +84,8 @@ export type ProductDetail = ProductCard & {
     items: { id: number; name: string; code: string | null; swatch: Image | null }[];
   }[];
   gallery: Image[];
-  model_3d: { url: string; size: number | null } | null;
+  /** O GLB fica em disco privado: o visualizador pede o link na hora (`requestModelLink`). */
+  model_3d: { size: number | null } | null;
   files: DownloadFile[];
   media_links: MediaLink[];
   line_products: ProductCard[];

@@ -6,21 +6,6 @@ use App\Models\ProductFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * `Storage::fake('downloads')` does not support `temporaryUrl()` (no signed
- * routes wired up), so these tests point the real local `downloads` disk at
- * a scratch directory under `storage/framework/testing` instead — see
- * task-12 brief.
- */
-function useScratchDownloadsDisk(): string
-{
-    $root = storage_path('framework/testing/downloads');
-    File::ensureDirectoryExists($root);
-    config(['filesystems.disks.downloads.root' => $root]);
-
-    return $root;
-}
-
 afterEach(function () {
     File::deleteDirectory(storage_path('framework/testing/downloads'));
 });

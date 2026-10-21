@@ -186,6 +186,8 @@ class ProductForm
             SpatieMediaLibraryFileUpload::make('model_3d')
                 ->label(__('3D model'))
                 ->collection('model_3d')
+                ->disk('downloads')
+                ->visibility('private')
                 ->acceptedFileTypes(['model/gltf-binary', 'application/octet-stream'])
                 ->maxSize(config('franccino.uploads.model_3d_max_kb')),
             Toggle::make('is_3d_enabled')

@@ -61,7 +61,7 @@ src/
   lib/
     api/{types,client,catalog,content,forms,empty,errors,listing-params}.ts
     catalog/{area,area-href,card,technical,view}.ts
-    product/{finish-selection,gallery,dimension-drawing,model-source}.ts
+    product/{finish-selection,gallery,dimension-drawing}.ts
     quote/{types,list,store,hooks,message,snapshot}.ts
     planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
     forms/contact.ts

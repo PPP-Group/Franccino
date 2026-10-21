@@ -61,8 +61,9 @@ it('requires portuguese name and a unique slug per locale', function () {
         ->assertHasFormErrors(['name.pt' => 'required', 'slug.pt' => 'unique']);
 });
 
-it('stores panel uploads on the public media disk, so the site can load them', function () {
+it('stores photos on the public media disk and the 3d model on the private downloads disk', function () {
     Storage::fake('media');
+    Storage::fake('downloads');
     Storage::fake('local');
     $product = Product::factory()->create();
 
@@ -79,8 +80,9 @@ it('stores panel uploads on the public media disk, so the site can load them', f
     $model = $product->getFirstMedia('model_3d');
 
     expect($cover?->disk)->toBe('media')
-        ->and($model?->disk)->toBe('media');
-    Storage::disk('media')->assertExists($model->getPathRelativeToRoot());
+        ->and($model?->disk)->toBe('downloads');
+    Storage::disk('downloads')->assertExists($model->getPathRelativeToRoot());
+    Storage::disk('media')->assertMissing($model->getPathRelativeToRoot());
     Storage::disk('local')->assertDirectoryEmpty('/');
 });
 

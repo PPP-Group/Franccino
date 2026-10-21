@@ -5,18 +5,16 @@ import { ProductStage } from './ProductStage';
 
 describe('ProductStage', () => {
   it('shows only photos when there is no 3d model, with the first image eager', () => {
-    const html = renderWithIntl(<ProductStage images={[image()]} name="Cadeira Aura" model={null} />);
+    const html = renderWithIntl(
+      <ProductStage images={[image()]} name="Cadeira Aura" slug="cadeira-aura" model={null} />,
+    );
     expect(html).not.toContain('aria-pressed');
     expect(html).toContain('loading="eager"');
   });
 
   it('offers the 3d toggle but starts on photos on the server', () => {
     const html = renderWithIntl(
-      <ProductStage
-        images={[image()]}
-        name="Cadeira Aura"
-        model={{ url: 'https://cdn.test/aura.glb', size: null }}
-      />,
+      <ProductStage images={[image()]} name="Cadeira Aura" slug="cadeira-aura" model={{ size: null }} />,
     );
     expect(html).toContain('aria-pressed="true"');
     expect(html).not.toContain('<model-viewer');
@@ -24,7 +22,7 @@ describe('ProductStage', () => {
 
   it('shows thumbnails only when there is more than one image', () => {
     const html = renderWithIntl(
-      <ProductStage images={[image({ id: 1 }), image({ id: 2 })]} name="Aura" model={null} />,
+      <ProductStage images={[image({ id: 1 }), image({ id: 2 })]} name="Aura" slug="aura" model={null} />,
     );
     expect(html).toContain('class="thumbs"');
     expect(html).toContain('aria-label="Foto 2 de 2"');

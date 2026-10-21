@@ -44,6 +44,16 @@ describe('buildCsp', () => {
     expect(directive(csp, 'connect-src')).toContain('https://media.franccino.com.br');
   });
 
+  it('lets the 3d viewer fetch the temporary link of the private downloads bucket', () => {
+    const csp = buildCsp({
+      ...base,
+      downloadsUrl: 'https://conta.r2.cloudflarestorage.com/franccino-downloads',
+    });
+
+    expect(directive(csp, 'connect-src')).toContain('https://conta.r2.cloudflarestorage.com');
+    expect(directive(csp, 'img-src')).not.toContain('r2.cloudflarestorage.com');
+  });
+
   it('opens Tag Manager and Analytics only when GTM is on', () => {
     const csp = buildCsp({ ...base, gtm: true });
 

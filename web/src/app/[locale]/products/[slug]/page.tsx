@@ -96,7 +96,12 @@ export default async function ProductPage({ params }: Props) {
       <div className="wrap">
         <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
         <div className="product">
-          <ProductStage images={galleryImages(product)} name={product.name} model={product.model_3d} />
+          <ProductStage
+            images={galleryImages(product)}
+            name={product.name}
+            slug={product.slug}
+            model={product.model_3d}
+          />
           <div className="panel">
             <div className="panel__head">
               <h1>{product.name}</h1>
