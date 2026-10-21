@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\HelpCenter;
 use App\Filament\Support\PanelGuides;
+use App\Http\Middleware\RequireAdminMultiFactor;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -38,9 +39,11 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->profile(isSimple: false)
+            // 2FA required for administrators only (RequireAdminMultiFactor); everyone else may turn it on.
             ->multiFactorAuthentication([
                 AppAuthentication::make()->recoverable(),
-            ])
+            ], isRequired: (bool) config('franccino.panel.admin_mfa_required'))
+            ->multiFactorAuthenticationRequiredMiddlewareName(RequireAdminMultiFactor::class)
             ->colors([
                 // Madeira do site (web/src/styles/tokens.css, --wood) no tom 600, que é o dos botões; cinzas quentes
                 // como o fundo do site. A paleta é fixa porque a gerada a partir do hex sai alaranjada.

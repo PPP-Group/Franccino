@@ -23,7 +23,12 @@ class CreateDownloadLink
     {
         $expiresAt = now()->addMinutes((int) config('franccino.downloads.link_ttl_minutes'));
 
-        $url = Storage::disk($file->disk)->temporaryUrl($file->path, $expiresAt);
+        // On R2 the file downloads with the name it had when it was uploaded, not the internal one. The local disk
+        // (preview) ignores the option and keeps the internal name.
+        $name = str_replace(['"', '\\'], '', (string) ($file->original_name ?: basename($file->path)));
+        $url = Storage::disk($file->disk)->temporaryUrl($file->path, $expiresAt, [
+            'ResponseContentDisposition' => 'attachment; filename="'.$name.'"',
+        ]);
 
         DownloadLog::create([
             'product_file_id' => $file->id,

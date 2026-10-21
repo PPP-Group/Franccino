@@ -36,6 +36,7 @@ use App\Policies\AdminOnlyPolicy;
 use App\Policies\ContentPolicy;
 use App\Policies\FixedRecordPolicy;
 use App\Policies\InboxPolicy;
+use App\Policies\UserPolicy;
 use App\Support\ContentLocale;
 use App\Support\FrontendRevalidator;
 use App\Support\Locales;
@@ -49,6 +50,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 use Spatie\LaravelSettings\Events\SettingsSaved;
 use Spatie\MediaLibrary\Conversions\Events\ConversionHasBeenCompletedEvent;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
@@ -75,7 +77,10 @@ class AppServiceProvider extends ServiceProvider
         // the panel fell back to `en` (the app's fallback locale) and lists showed the English names.
         app(Translatable::class)->fallback(fallbackLocale: Locales::default());
 
-        Gate::policy(User::class, AdminOnlyPolicy::class);
+        // Panel passwords (user form and profile): at least 12 characters, with letters and numbers (PPP-95).
+        Password::defaults(fn () => Password::min(12)->letters()->numbers());
+
+        Gate::policy(User::class, UserPolicy::class);
         Gate::policy(ActivityLog::class, AdminOnlyPolicy::class);
 
         Gate::policy(Area::class, FixedRecordPolicy::class);

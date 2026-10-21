@@ -20,6 +20,9 @@ class ProductFile extends Model
 
     protected $guarded = [];
 
+    /** Same as the column default, so a new record knows its disk before it is saved (`fillFileDetails`). */
+    protected $attributes = ['disk' => 'downloads'];
+
     /** @var list<string> */
     public $translatable = ['title'];
 
@@ -36,16 +39,33 @@ class ProductFile extends Model
 
     protected static function booted(): void
     {
-        // The panel upload only stores the path: read the size from the disk so the site can show it.
         static::saving(function (ProductFile $file): void {
-            if ($file->isDirty('path') || $file->size === null) {
-                try {
-                    $file->size = Storage::disk($file->disk)->size($file->path);
-                } catch (Throwable) {
-                    // A missing file keeps the size unknown; the download link reports it.
-                }
+            if ($file->isDirty('path') || $file->size === null || $file->mime_type === null) {
+                $file->fillFileDetails();
             }
         });
+
+        // A replaced or deleted file leaves nothing behind on the private disk.
+        static::updated(function (ProductFile $file): void {
+            if ($file->wasChanged('path') && filled($old = $file->getOriginal('path'))) {
+                Storage::disk($file->getOriginal('disk') ?? $file->disk)->delete($old);
+            }
+        });
+        static::deleted(fn (ProductFile $file) => Storage::disk($file->disk)->delete($file->path));
+    }
+
+    /** Size and type read from the disk: the panel upload only stores the path, and the site shows both. */
+    public function fillFileDetails(): static
+    {
+        try {
+            $disk = Storage::disk($this->disk);
+            $this->size = $disk->size($this->path);
+            $this->mime_type = $disk->mimeType($this->path) ?: null;
+        } catch (Throwable) {
+            // A missing file keeps the size unknown; the download link reports it.
+        }
+
+        return $this;
     }
 
     /** @return BelongsTo<Product, $this> */

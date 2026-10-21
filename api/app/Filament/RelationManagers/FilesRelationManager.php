@@ -53,7 +53,8 @@ class FilesRelationManager extends RelationManager
                     ->disk('downloads')
                     ->directory(fn (): string => Str::plural(Str::kebab(class_basename($this->getOwnerRecord()))))
                     ->storeFileNamesIn('original_name')
-                    ->maxSize(51200)
+                    ->maxSize(config('franccino.uploads.downloads_max_kb'))
+                    ->rule('extensions:'.implode(',', config('franccino.uploads.downloads_extensions')))
                     ->live()
                     ->afterStateUpdated(function (Set $set, mixed $state): void {
                         if ($state instanceof TemporaryUploadedFile) {

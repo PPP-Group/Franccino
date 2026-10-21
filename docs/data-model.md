@@ -432,6 +432,8 @@ filtra, sem editar.
 | Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    | sim                   |
 | Excluir mensagens e inscritos                         | sim   | não    | não                   |
 | Logs de download (ver)                                | sim   | sim    | sim                   |
+| Registro de cookies (ver)                             | sim   | sim    | sim                   |
+| Central de ajuda                                      | sim   | sim    | sim                   |
 | Redirects                                             | sim   | não    | não                   |
 | Configurações                                         | sim   | não    | não                   |
 | Usuários                                              | sim   | não    | não                   |
@@ -439,6 +441,15 @@ filtra, sem editar.
 
 `support` (acrescentado em 2026-10-01, PPP-54) é o perfil de atendimento: entra no painel só para ler e
 responder mensagens, newsletter e downloads; não vê nem edita conteúdo.
+
+Segurança do painel (PPP-95, 2026-10-21):
+
+- o 2FA é obrigatório para `admin` (`PANEL_ADMIN_MFA_REQUIRED`, ligado por padrão) e opcional para os demais;
+- a senha tem no mínimo 12 caracteres, com letras e números;
+- o painel nunca fica sem administrador ativo: o último não pode ser excluído, desativado nem rebaixado, e ninguém
+  exclui a própria conta.
+
+A matriz completa é conferida em `tests/Feature/Security/AuthorizationMatrixTest.php`.
 
 ### activity_logs
 

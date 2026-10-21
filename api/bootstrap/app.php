@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\NoStoreCache;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetContentLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,7 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withEvents(discover: false)
     ->withMiddleware(function (Middleware $middleware): void {
         // Atrás do proxy do EasyPanel/Cloudflare (HTTPS termina antes do PHP): sem isso o painel gera links http://.
-        $middleware->trustProxies(at: '*');
+        // Em produção, TRUSTED_PROXIES lista os IPs dos proxies (os da Cloudflare e o do balanceador), para o IP do
+        // visitante (limite de requisições, ip_hash) não poder ser forjado no X-Forwarded-For.
+        $proxies = (string) env('TRUSTED_PROXIES', '*');
+        $middleware->trustProxies(at: $proxies === '*' ? '*' : array_map('trim', explode(',', $proxies)));
+        $middleware->append(SecurityHeaders::class);
 
         $middleware->alias([
             'content.locale' => SetContentLocale::class,
