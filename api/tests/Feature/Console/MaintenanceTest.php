@@ -54,6 +54,7 @@ it('puts the database, the photos and the private files in the weekly backup', f
     File::ensureDirectoryExists($media);
     File::put("{$media}/foto.webp", 'foto');
 
+    $this->artisan('franccino:backup')->assertSuccessful();
     $this->artisan('franccino:backup', ['--with-files' => true])->assertSuccessful();
 
     $zip = new ZipArchive;
@@ -62,7 +63,8 @@ it('puts the database, the photos and the private files in the weekly backup', f
         ->and($zip->locateName('media/backup-test/foto.webp'))->not->toBeFalse();
     $zip->close();
     File::deleteDirectory($media);
-    expect(File::glob(storage_path('app/backups/database-*.sqlite')))->toBeEmpty();
+    expect(File::glob(storage_path('app/backups/database-*.sqlite')))->toHaveCount(1)
+        ->and(File::glob(storage_path('app/backups/.tmp-*')))->toBeEmpty();
 });
 
 it('schedules the pruning, the failed jobs cleanup and the backups', function () {

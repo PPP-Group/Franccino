@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use PDO;
 use Symfony\Component\Finder\SplFileInfo;
 use ZipArchive;
@@ -33,7 +34,10 @@ class Backup extends Command
         $dir = storage_path('app/backups');
         File::ensureDirectoryExists($dir);
         $stamp = now()->format('Y-m-d-His');
-        $database = "{$dir}/database-{$stamp}.sqlite";
+        // With files, the database copy is only a step towards the zip: a name of its own, so it never meets the daily
+        // copy of the same second.
+        $database = $this->option('with-files') ? "{$dir}/.tmp-".Str::uuid().'.sqlite' : "{$dir}/database-{$stamp}.sqlite";
+        File::delete($database);
 
         // VACUUM INTO writes a consistent copy while the panel and the queue keep using the database. Its own connection
         // to the file: it can't run inside a transaction of the app's connection.
