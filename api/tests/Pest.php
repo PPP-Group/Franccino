@@ -5,6 +5,7 @@ use App\Models\Category;
 use App\Models\Designer;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 pest()->extend(TestCase::class)
@@ -52,4 +53,19 @@ function publishedProduct(array $attributes = []): Product
 function minimalGlb(): string
 {
     return pack('a4VV', 'glTF', 2, 12);
+}
+
+/**
+ * `Storage::fake('downloads')` does not support `temporaryUrl()` (no signed
+ * routes wired up), so tests that need a link point the real local `downloads`
+ * disk at a scratch directory under `storage/framework/testing` instead.
+ * Tests using it delete that directory in `afterEach`.
+ */
+function useScratchDownloadsDisk(): string
+{
+    $root = storage_path('framework/testing/downloads');
+    File::ensureDirectoryExists($root);
+    config(['filesystems.disks.downloads.root' => $root]);
+
+    return $root;
 }

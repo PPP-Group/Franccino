@@ -102,7 +102,9 @@ type ProductDetail = ProductCard & {
     items: { id: number; name: string; code: string | null; swatch: Image | null }[];
   }[];
   gallery: Image[];
-  model_3d: { url: string; size: number | null } | null; // null se não houver GLB ou 3D desligado
+  // null se não houver GLB ou 3D desligado. O GLB fica em disco privado (contrato 13.2): o endereço vem de
+  // POST /products/{slug}/model-3d/link, pedido quando o visitante abre o 3D.
+  model_3d: { size: number | null } | null;
   files: DownloadFile[];
   media_links: MediaLink[]; // vídeos (YouTube/Vimeo) e links externos, na ordem do painel
   line_products: ProductCard[]; // outras peças da mesma linha (até 8)
@@ -317,12 +319,20 @@ Sem corpo. Gera URL temporária (10 minutos) para o arquivo e grava `download_lo
 Arquivo inexistente, não publicado, ou cujo dono (peça, designer ou lançamento) não está publicado: `404`.
 Limite: 30 por minuto por IP.
 
+### `POST /products/{slug}/model-3d/link`
+
+Sem corpo; `slug` no idioma de `?locale=`. Gera URL temporária (10 minutos) para o GLB da peça, que fica no disco
+privado `downloads`. `201 { "data": { "url": "...", "expires_at": "..." } }`. Peça não publicada, com o 3D desligado ou
+sem modelo: `404`. Limite: o mesmo dos downloads (30 por minuto por IP). A página do produto é estática: o site pede o
+link no navegador, quando o visitante abre o 3D, e nunca grava a URL no HTML.
+
 ## Limites e cabeçalhos
 
 - Leitura: 300 requisições por minuto por IP. Requisições com `X-Frontend-Key` válido (servidor do Next)
   não têm limite.
 - Toda resposta de leitura envia `Cache-Control: no-store`; o cache fica no Next (tags + revalidação).
-- CORS (`config/cors.php`): liberado só para `api/*`, métodos `GET, POST, OPTIONS`, cabeçalhos
+- CORS (`config/cors.php`): liberado para `api/*` e para `downloads/*` (links temporários do disco privado local, que o
+  visualizador 3D baixa com `fetch`), métodos `GET, POST, OPTIONS`, cabeçalhos
   `Content-Type, Accept, X-Requested-With`, origens = `FRONTEND_URL` (separado por vírgula para múltiplos
   ambientes). `OPTIONS` (preflight) é respondido antes de chegar nas rotas.
 

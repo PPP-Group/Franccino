@@ -49,6 +49,7 @@ Preview com senha (EasyPanel/Docker) e revisão local com o conteúdo real: ver 
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`                         | Cloudflare Turnstile                        |
 | `NEXT_PUBLIC_GTM_ID`                                     | Google Tag Manager (vazio = sem analytics)  |
 | `NEXT_PUBLIC_MEDIA_URL`                                  | domínio do R2 de mídia, só para a CSP       |
+| `NEXT_PUBLIC_DOWNLOADS_URL`                              | endpoint do R2 de downloads, só para a CSP  |
 | `CSP_ENFORCE`                                            | `false` (só relata) até validar; `true`     |
 
 ### Política de segurança de conteúdo (CSP)
@@ -84,6 +85,10 @@ o bucket de mídia do R2 (ou o servidor que entrega `/storage` no disco local) p
 `Access-Control-Allow-Origin` para as origens de `FRONTEND_URL` em `GET`/`HEAD`. O `config/cors.php` da API cobre só
 `api/*`; arquivos estáticos não passam por ele. Sem isso o 3D falha com erro de CORS (inclusive no ambiente local,
 onde a mídia vem de `http://localhost:8000/storage`).
+
+O GLB fica no bucket privado de downloads e chega por link temporário. O bucket de downloads do R2 também precisa de CORS
+`GET`/`HEAD` para as origens de `FRONTEND_URL`, e a CSP do site precisa de `NEXT_PUBLIC_DOWNLOADS_URL` com o endpoint do
+R2. No disco local, os links passam pelo Laravel (`/downloads/...`) e o `config/cors.php` cobre o caminho.
 
 ## Deploy do site
 

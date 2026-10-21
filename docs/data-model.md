@@ -156,7 +156,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 
 `label` é opcional (produto de medida única). Todos os valores em mm e opcionais individualmente.
 
-Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem conversões).
+Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
 Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`.
 
 ### finish_groups / finishes
@@ -432,6 +432,8 @@ filtra, sem editar.
 | Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    | sim                   |
 | Excluir mensagens e inscritos                         | sim   | não    | não                   |
 | Logs de download (ver)                                | sim   | sim    | sim                   |
+| Registro de cookies (ver)                             | sim   | sim    | sim                   |
+| Central de ajuda                                      | sim   | sim    | sim                   |
 | Redirects                                             | sim   | não    | não                   |
 | Configurações                                         | sim   | não    | não                   |
 | Usuários                                              | sim   | não    | não                   |
@@ -439,6 +441,15 @@ filtra, sem editar.
 
 `support` (acrescentado em 2026-10-01, PPP-54) é o perfil de atendimento: entra no painel só para ler e
 responder mensagens, newsletter e downloads; não vê nem edita conteúdo.
+
+Segurança do painel (PPP-95, 2026-10-21):
+
+- o 2FA é obrigatório para `admin` (`PANEL_ADMIN_MFA_REQUIRED`, ligado por padrão) e opcional para os demais;
+- a senha tem no mínimo 12 caracteres, com letras e números;
+- o painel nunca fica sem administrador ativo: o último não pode ser excluído, desativado nem rebaixado, e ninguém
+  exclui a própria conta.
+
+A matriz completa é conferida em `tests/Feature/Security/AuthorizationMatrixTest.php`.
 
 ### activity_logs
 
@@ -467,5 +478,7 @@ Guarda só o **nome** dos campos alterados, nunca os valores; mensagens e inscri
 - Conversões de imagem (fila): `w480`, `w960`, `w1440`, `w1920`, `w2560` em WebP, sem ampliar a
   original. Conversão `lqip` (24 px) vira `blur_data_url` (data URL) nas custom properties.
 - Largura e altura da original ficam nas custom properties (`width`, `height`) para o front reservar espaço.
-- GLB (`model_3d`) vai para o disco `media` sem conversões; o visualizador carrega direto do CDN.
+- GLB (`model_3d`) vai para o disco privado `downloads`, sem conversões (contrato 13.2). O visualizador pede um link
+  temporário (`POST /products/{slug}/model-3d/link`). A migration `2026_10_21_100000` levou os GLB já enviados do disco
+  `media` para o `downloads`.
 - Texto alternativo: por enquanto derivado do nome do item dono da imagem; edição por imagem fica para depois.

@@ -60,7 +60,9 @@ class Product extends Model implements HasMedia
     {
         $this->addMediaCollection('cover')->singleFile();
         $this->addMediaCollection('gallery');
+        // Private disk: the viewer gets a temporary link (`CreateModelLink`, contract 13.2).
         $this->addMediaCollection('model_3d')
+            ->useDisk('downloads')
             ->singleFile()
             ->acceptsMimeTypes(['model/gltf-binary', 'application/octet-stream']);
     }

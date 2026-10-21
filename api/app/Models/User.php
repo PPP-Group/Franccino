@@ -58,6 +58,15 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
         return $this->role === UserRole::Admin;
     }
 
+    /** The panel must always keep one active administrator: this one can't be deleted, deactivated or demoted. */
+    public function isLastActiveAdmin(): bool
+    {
+        return $this->exists
+            && $this->getOriginal('role') === UserRole::Admin
+            && (bool) $this->getOriginal('is_active')
+            && ! static::query()->whereKeyNot($this->getKey())->where('role', UserRole::Admin)->where('is_active', true)->exists();
+    }
+
     /** Admins and editors manage the catalog and editorial content; customer service only reads the inbox. */
     public function canEditContent(): bool
     {

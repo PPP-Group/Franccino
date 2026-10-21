@@ -13,6 +13,8 @@ export type CspOptions = {
   apiUrl: string;
   /** Public media origin when it differs from the API (Cloudflare R2), or empty. */
   mediaUrl?: string;
+  /** Origin of the temporary links to private files (R2 downloads bucket), fetched by the 3D viewer, or empty. */
+  downloadsUrl?: string;
   /** Store map tiles template (`TILE_URL`). */
   tileUrl?: string;
   /** Google Tag Manager enabled (`NEXT_PUBLIC_GTM_ID`). */
@@ -66,6 +68,7 @@ export function buildCsp(options: CspOptions): string {
       'data:',
       'blob:',
       ...media,
+      ...unique([originOf(options.downloadsUrl)]).filter((origin) => !media.includes(origin)),
       MODEL_DECODERS,
       ...(gtm ? [GTM, ...ANALYTICS] : []),
       ...(dev ? ['ws:'] : []),

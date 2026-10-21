@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mapValidationErrors, submitContact, subscribeNewsletter } from './forms';
+import { mapValidationErrors, requestModelLink, submitContact, subscribeNewsletter } from './forms';
 import type { ContactPayload, NewsletterPayload } from './forms';
 
 const jsonResponse = (body: unknown, status: number) =>
@@ -131,5 +131,41 @@ describe('subscribeNewsletter', () => {
   it('rejects (does not resolve to a FormResult) on a network failure', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('Failed to fetch'));
     await expect(subscribeNewsletter(newsletterPayload)).rejects.toThrow();
+  });
+});
+
+describe('requestModelLink', () => {
+  beforeEach(() => {
+    vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://api.test');
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('asks the api for a temporary link in the page locale', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        jsonResponse(
+          { data: { url: 'http://api.test/downloads/1/aura.glb?signature=x', expires_at: 'x' } },
+          201,
+        ),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(requestModelLink('aura-chair', 'en')).resolves.toMatchObject({
+      url: expect.stringContaining('aura.glb'),
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://api.test/api/v1/products/aura-chair/model-3d/link?locale=en',
+      expect.objectContaining({ method: 'POST' }),
+    );
+  });
+
+  it('throws when the product has no model', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ message: 'Not Found' }, 404)));
+
+    await expect(requestModelLink('x', 'pt')).rejects.toMatchObject({ status: 404 });
   });
 });
