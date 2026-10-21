@@ -598,14 +598,14 @@ desempenho e segurança. Nesta sessão:
   - Turnstile com prazo, e-mail de contato sem Markdown do visitante, avatar sem serviço externo, snapshot sem
     dados pessoais.
   - O CI em MySQL pegou a ordem ambígua das listas (o SQLite aceitava); corrigido antes do merge.
-- **#42, CI e testes (aberto):**
+- **#42, CI e testes (mergeado):**
   - `composer audit` e `pnpm audit` no CI;
   - workflow `docker`, que sobe as duas imagens com o `compose.preview.yaml` e confere o que o EasyPanel confere;
   - `compose.staging.yaml` com MySQL 8.4;
   - relatório da CSP em `/api/csp-report`, validação das variáveis do build e `pnpm check:redirects`;
   - o bootstrap gera a chave do front e o segredo de revalidação;
   - testes que faltavam (API 422, site 309).
-- **Arrumação (PR de docs):**
+- **#43, arrumação (mergeado):**
   - este arquivo e o `docs/HANDOFF.md` atualizados;
   - `AGENTS.md` aponta para o `CLAUDE.md`, sem cópia;
   - `web/DESIGN.md` e `web/CLAUDE.md` com as fontes Garamond e o fundo branco;
@@ -618,6 +618,8 @@ desempenho e segurança. Nesta sessão:
   - é escopo novo, com orçamento à parte. Nada foi implementado.
 - **Documento "Alterações primeira versão" do cliente:** serve só como base do redesenho do mês 2; a versão enviada
   era um beta.
+
+Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
 
 ### 17.1 Depois do merge na `main`, no VPS
 
