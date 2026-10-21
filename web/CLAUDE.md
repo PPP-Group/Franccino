@@ -38,11 +38,11 @@ src/
   app/
     [locale]/layout.tsx, not-found.tsx, error.tsx, page.tsx
     [locale]/(rotas internas em inglês)/.../page.tsx
-    api/revalidate/route.ts
+    api/revalidate/route.ts, api/csp-report/route.ts
     sitemap.ts, robots.ts, not-found.tsx (global)
     fonts.ts, globals.css
   components/
-    layout/{SiteHeader,HeaderNav,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead}.tsx, nav.ts
+    layout/{SiteHeader,HeaderNav,HeaderSearch,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead,PageBanner}.tsx, nav.ts, area-menu.ts
     ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
     media/{ApiImage,MediaLinks,VideoFacade}.tsx
     content/{RichText,Blocks,Tile,EmptyNotice}.tsx
@@ -69,12 +69,14 @@ src/
     media/links.ts
     consent/{store,gtm}.ts
     projects/type.ts
-    stores/{filter,map-link}.ts
+    stores/{filter,map-link,map-view}.ts
+    search/{suggest,actions}.ts
+    redirects/{match,store}.ts
     contact-links.ts, settings.ts, env.ts
     format/{dimensions,file-size}.ts
     images/srcset.ts
     seo/{metadata,jsonld,sitemap,site-map}.ts
-    security/basic-auth.ts
+    security/{basic-auth,csp,csp-report}.ts
   styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
@@ -108,7 +110,8 @@ Alias `@/*` aponta para `src/*`.
   protótipo aprovado (`design/prototype/`).
 - Cantos retos, sem sombra em repouso (só no hover do card de produto), madeira = Casa,
   verde = Giardini/sucesso, metadado nunca acima do título.
-- Fonte provisória em `src/app/fonts.ts` (troca pelo manual de marca só ali).
+- Fontes em `src/app/fonts.ts`: Cormorant Garamond nos títulos e EB Garamond no texto (pedido do cliente,
+  licença aberta). Troca de fonte só ali e nos tokens.
 - Lógica de estado (lista de orçamento, planta, acabamentos) em módulos puros de `src/lib/*`
   com testes; componentes só ligam estado a markup.
 - Estado do navegador (lista e planta) só por `src/lib/quote/store.ts` e

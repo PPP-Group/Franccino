@@ -199,7 +199,8 @@ confira os 1.094 endereços do sitemap do WordPress contra o preview:
 docker exec $API php artisan franccino:redirects:generate --dry-run   # só conta
 docker exec $API php artisan franccino:redirects:generate
 # no computador, na raiz do repositório (Node 24):
-pnpm check:redirects --site https://<domínio do site> --user <usuário do preview> --password <senha>
+read -rs CHECK_REDIRECTS_PASSWORD && export CHECK_REDIRECTS_PASSWORD   # digita a senha do preview sem mostrar
+pnpm check:redirects --site https://<domínio do site> --user <usuário do preview>
 ```
 
 O relatório sai em `redirects-relatorio.csv`, com um endereço por linha: `ok` (redirect para uma página que abre, ou
