@@ -13,11 +13,12 @@
 	root * /app/public
 	encode zstd br gzip
 
-	# Static files skip Laravel's SecurityHeaders middleware: same headers here (PPP-95).
+	# Static files skip Laravel's SecurityHeaders middleware: same headers here, only where the response has none
+	# (`?`), so PHP responses don't get them twice (PPP-95).
 	header {
-		X-Content-Type-Options nosniff
-		Referrer-Policy strict-origin-when-cross-origin
-		X-Robots-Tag "noindex, nofollow"
+		?X-Content-Type-Options nosniff
+		?Referrer-Policy strict-origin-when-cross-origin
+		?X-Robots-Tag "noindex, nofollow"
 	}
 
 	@media_cors {
