@@ -13,6 +13,10 @@ updates:
     target-branch: develop
     schedule:
       interval: weekly
+    ignore:
+      # Os tipos do Node acompanham o Node do projeto (24): major novo só junto com a troca do Node.
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
     groups:
       npm-minor:
         update-types: [minor, patch]

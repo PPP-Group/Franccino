@@ -2,8 +2,8 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "API REST e painel administrativo do site da Franccino (Laravel 13 + Filament 5).",
+    "keywords": ["franccino", "laravel", "filament"],
     "license": "MIT",
     "require": {
         "php": "^8.4",

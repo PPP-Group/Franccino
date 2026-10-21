@@ -8,7 +8,8 @@
  * - quebrado: 404, 5xx, redirect para 404 ou erro de rede.
  *
  * Uso (sem dependência nova, Node 24):
- *   node scripts/check-redirects.mjs --site https://preview.exemplo --user franccino --password ... [--out relatorio.csv]
+ *   node scripts/check-redirects.mjs --site https://preview.exemplo --user franccino [--out relatorio.csv]
+ *   --password senha do preview; sem ela, lê CHECK_REDIRECTS_PASSWORD (fica fora do histórico do terminal)
  *   --sitemap  sitemap índice do site antigo (padrão https://franccino.com.br/sitemap_index.xml)
  *   --limit    confere só os N primeiros endereços (teste rápido)
  * Sai com código 1 se algum endereço estiver quebrado.
@@ -35,7 +36,9 @@ if (!args.site) {
 
 const site = args.site.replace(/\/$/, '');
 const auth = args.user
-  ? { Authorization: `Basic ${Buffer.from(`${args.user}:${args.password ?? ''}`).toString('base64')}` }
+  ? {
+      Authorization: `Basic ${Buffer.from(`${args.user}:${args.password ?? process.env.CHECK_REDIRECTS_PASSWORD ?? ''}`).toString('base64')}`,
+    }
   : {};
 const timeout = () => AbortSignal.timeout(20_000);
 

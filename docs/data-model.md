@@ -1,7 +1,8 @@
 # Modelo de dados
 
-Status: proposta v1 (2026-09-23), baseada no roadmap e no inventário do WordPress atual
-([content-inventory.md](content-inventory.md)). Revisão formal do tech lead na semana 1.
+Status: implementado. As migrations de `api/database/migrations` são a fonte da verdade (a última é de
+2026-10-21); este documento muda no mesmo PR de cada migration nova. A proposta v1 (2026-09-23) partiu do roadmap
+e do inventário do WordPress atual ([content-inventory.md](content-inventory.md)).
 
 ## Convenções
 
@@ -134,7 +135,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 | dimensions                            | json                 | lista de variantes, ver abaixo                                    |
 | materials                             | json tr, null        | texto livre ("Tabela técnica > Material")                         |
 | finishes_note                         | json tr, null        | texto livre ("Tabela técnica > Acabamento")                       |
-| is_3d_enabled                         | bool, default `true` | chave do visualizador 3D                                          |
+| is_3d_enabled                         | bool, default `true` | chave do visualizador 3D; o botão só aparece com GLB enviado      |
 | is_featured, is_published, sort_order |                      |                                                                   |
 | seo_title, seo_description            | json tr              |                                                                   |
 | legacy_wp_id, legacy_url              |                      |                                                                   |
