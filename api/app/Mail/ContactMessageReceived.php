@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Models\ContactMessage;
 use App\Models\Finish;
 use App\Models\Product;
@@ -55,7 +56,7 @@ class ContactMessageReceived extends Mailable implements ShouldQueue
                 'contactMessage' => $this->contactMessage,
                 'product' => $productId ? $this->productLabel(Product::find($productId), $productId) : null,
                 'items' => $this->resolveItems(),
-                'panelUrl' => url('/admin/contact-messages/'.$this->contactMessage->id),
+                'panelUrl' => ContactMessageResource::getUrl('view', ['record' => $this->contactMessage], panel: 'admin'),
             ],
         );
     }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Collections;
 
+use App\Filament\RelationManagers\OrderedProductsRelationManager;
 use App\Filament\Resources\Collections\Pages\CreateCollection;
 use App\Filament\Resources\Collections\Pages\EditCollection;
 use App\Filament\Resources\Collections\Pages\ListCollections;
@@ -55,7 +56,7 @@ class CollectionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OrderedProductsRelationManager::class,
         ];
     }
 

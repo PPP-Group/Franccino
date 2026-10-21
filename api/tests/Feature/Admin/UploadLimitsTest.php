@@ -18,7 +18,7 @@ function kilobytes(string $iniValue): int
 }
 
 it('lets the temporary upload and the PHP image take the largest panel file', function () {
-    $largest = max((int) config('franccino.uploads.video_max_kb'), (int) config('franccino.uploads.model_3d_max_kb'), 51200);
+    $largest = max((int) config('franccino.uploads.video_max_kb'), (int) config('franccino.uploads.model_3d_max_kb'), (int) config('franccino.uploads.downloads_max_kb'));
 
     $rule = collect(config('livewire.temporary_file_upload.rules'))->first(fn (string $rule) => str_starts_with($rule, 'max:'));
     $ini = parse_ini_file(base_path('docker/php.ini'));

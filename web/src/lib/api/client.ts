@@ -7,6 +7,9 @@ import type { CacheTag } from './types';
 // importing `ApiError` from `client.ts`. Browser-only modules must import it
 // from `./errors` directly instead, to avoid pulling `serverEnv` in — see
 // `errors.ts` for why.
+/** Tempo máximo de uma chamada à API (build e renderização no servidor). */
+export const API_TIMEOUT_MS = 15_000;
+
 export { ApiError };
 
 const DEFAULT_REVALIDATE = 3600;
@@ -66,7 +69,12 @@ export async function apiGet<T>(path: string, options: ApiGetOptions<T>): Promis
 
   let response: Response;
   try {
-    response = await fetch(url, { headers, next: { tags, revalidate } });
+    // Uma API travada não pode segurar o build nem a página: depois de 15 s a chamada falha como API fora do ar.
+    response = await fetch(url, {
+      headers,
+      next: { tags, revalidate },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
   } catch (error) {
     if (env.ALLOW_BUILD_WITHOUT_API && fallback !== undefined) {
       return fallback;

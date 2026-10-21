@@ -19,13 +19,22 @@ final class Localized
         return $value;
     }
 
-    /** @param list<string> $attributes */
+    /**
+     * `locale_fallback` of a resource (`docs/api.md`): some text written in Portuguese has no version in the requested
+     * language, so the response shows the Portuguese one. A field empty in Portuguese too is not a fallback.
+     *
+     * @param  list<string>  $attributes
+     */
     public static function missing(Model $model, array $attributes, ?string $locale = null): bool
     {
         $locale ??= app(ContentLocale::class)->current();
 
+        if ($locale === Locales::default()) {
+            return false;
+        }
+
         foreach ($attributes as $attribute) {
-            if (self::raw($model, $attribute, $locale) === null) {
+            if (self::raw($model, $attribute, $locale) === null && self::raw($model, $attribute, Locales::default()) !== null) {
                 return true;
             }
         }

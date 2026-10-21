@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\PrunedAfterRetention;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class ActivityLog extends Model
 {
+    use PrunedAfterRetention;
+
     public const ACTIONS = ['created', 'updated', 'deleted', 'login'];
 
     const UPDATED_AT = null;
@@ -36,5 +39,10 @@ class ActivityLog extends Model
     public function subject(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    protected static function retentionKey(): string
+    {
+        return 'activity_logs';
     }
 }

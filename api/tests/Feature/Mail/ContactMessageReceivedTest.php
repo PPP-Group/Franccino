@@ -55,3 +55,16 @@ it('labels an item whose product no longer exists', function () {
 
     (new ContactMessageReceived($message))->assertSeeInText('Produto removido');
 });
+
+it('shows the visitor text as typed, never as a disguised link', function () {
+    $message = ContactMessage::factory()->create([
+        'name' => 'Ana **Souza**',
+        'message' => 'Veja [o desconto](https://golpe.example) e <b>responda</b>',
+    ]);
+
+    $mail = new ContactMessageReceived($message);
+
+    $mail->assertDontSeeInHtml('href="https://golpe.example"', false)
+        ->assertDontSeeInHtml('<strong>Souza</strong>', false)
+        ->assertSeeInHtml('[o desconto]', false);
+});

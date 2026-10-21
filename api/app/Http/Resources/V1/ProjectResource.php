@@ -30,6 +30,7 @@ class ProjectResource extends ProjectCardResource
             'gallery' => ImagePresenter::presentMany($project->getMedia('gallery'), $title),
             'products' => ProductCardResource::collection($project->products)->toArray($request),
             'seo' => Refs::seo($project, $project->getFirstMedia('cover'), $title),
+            'locale_fallback' => Localized::missing($project, ['title', 'summary', 'description']),
             'slugs' => collect(Locales::all())
                 ->mapWithKeys(fn (string $locale) => [$locale => $project->getTranslation('slug', $locale, false) ?: null])
                 ->all(),

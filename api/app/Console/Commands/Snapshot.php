@@ -22,8 +22,11 @@ class Snapshot extends Command
     public const PRIVATE_TABLES = [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks', 'jobs', 'job_batches',
         'failed_jobs', 'contact_messages', 'newsletter_subscribers', 'consent_records', 'download_logs',
-        'activity_logs',
+        'activity_logs', 'notifications', 'exports', 'imports', 'failed_import_rows',
     ];
+
+    /** Settings that are about people (the team's e-mails), not content: emptied in the copy, kept on import. */
+    public const PRIVATE_SETTINGS = [['general', 'contact_recipients']];
 
     protected $signature = 'franccino:snapshot
         {action : export ou import}
@@ -56,6 +59,12 @@ class Snapshot extends Command
         $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(PDO::FETCH_COLUMN);
         foreach (array_intersect(self::PRIVATE_TABLES, $tables) as $table) {
             $pdo->exec("DELETE FROM \"{$table}\"");
+        }
+        if (in_array('settings', $tables, true)) {
+            $blank = $pdo->prepare('UPDATE settings SET payload = ? WHERE "group" = ? AND name = ?');
+            foreach (self::PRIVATE_SETTINGS as [$group, $name]) {
+                $blank->execute(['[]', $group, $name]);
+            }
         }
         $pdo->exec('VACUUM');
         $pdo = null;
@@ -202,9 +211,14 @@ class Snapshot extends Command
         $db->statement('PRAGMA foreign_keys = OFF');
         $db->statement('ATTACH DATABASE ? AS snapshot', [$source]);
 
+        // The team's own e-mails stay as they are in this environment.
+        $keptSettings = collect(self::PRIVATE_SETTINGS)
+            ->map(fn (array $key) => $db->table('settings')->where('group', $key[0])->where('name', $key[1])->first())
+            ->filter();
+
         try {
             $snapshotTables = $tablesOf('snapshot');
-            $db->transaction(function () use ($db, $tablesOf, $columnsOf, $skip, $snapshotTables, $withConversions): void {
+            $db->transaction(function () use ($db, $tablesOf, $columnsOf, $skip, $snapshotTables, $withConversions, $keptSettings): void {
                 foreach (array_diff($tablesOf('main'), $skip) as $table) {
                     $db->statement("DELETE FROM main.\"{$table}\"");
                     if (! in_array($table, $snapshotTables, true)) {
@@ -213,6 +227,10 @@ class Snapshot extends Command
                     $columns = array_intersect($columnsOf('main', $table), $columnsOf('snapshot', $table));
                     $list = implode(', ', array_map(fn (string $column): string => "\"{$column}\"", $columns));
                     $db->statement("INSERT INTO main.\"{$table}\" ({$list}) SELECT {$list} FROM snapshot.\"{$table}\"");
+                }
+
+                foreach ($keptSettings as $setting) {
+                    $db->table('settings')->where('group', $setting->group)->where('name', $setting->name)->update(['payload' => $setting->payload]);
                 }
 
                 if (! $withConversions) {

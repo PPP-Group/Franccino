@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 
 /**
  * Stores a `POST /newsletter` subscription. Re-subscribing an existing,
- * unsubscribed e-mail simply clears `unsubscribed_at` instead of creating a
- * duplicate row (`email` is unique) — see `docs/api.md` (R4).
+ * unsubscribed e-mail clears `unsubscribed_at` instead of creating a
+ * duplicate row (`email` is unique) — see `docs/api.md` (R4) — and records
+ * the new consent (date, language and IP hash), which is what LGPD asks for.
  */
 class SubscribeToNewsletter
 {
@@ -22,7 +23,13 @@ class SubscribeToNewsletter
         $existing = NewsletterSubscriber::where('email', $data['email'])->first();
 
         if ($existing) {
-            $existing->update(['unsubscribed_at' => null]);
+            $existing->update(array_filter([
+                'unsubscribed_at' => null,
+                'consent_at' => now(),
+                'locale' => $data['locale'],
+                'name' => $data['name'] ?? null,
+                'ip_hash' => IpHasher::hash($request->ip()),
+            ], fn (mixed $value, string $key): bool => $value !== null || $key === 'unsubscribed_at', ARRAY_FILTER_USE_BOTH));
 
             return false;
         }

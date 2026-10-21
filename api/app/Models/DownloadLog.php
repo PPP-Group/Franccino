@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\PrunedAfterRetention;
 use Database\Factories\DownloadLogFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DownloadLog extends Model
 {
     /** @use HasFactory<DownloadLogFactory> */
-    use HasFactory;
+    use HasFactory, PrunedAfterRetention;
 
     /**
      * Download logs are never updated after creation (see docs/data-model.md).
@@ -29,5 +30,10 @@ class DownloadLog extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    protected static function retentionKey(): string
+    {
+        return 'download_logs';
     }
 }

@@ -34,8 +34,6 @@ class ProductForm
                             ->schema(self::contentFields()),
                         Tab::make(__('Dimensions'))
                             ->schema(self::dimensionsFields()),
-                        Tab::make(__('Finishes'))
-                            ->schema(self::finishesFields()),
                         Tab::make(__('Media and 3D'))
                             ->schema(self::mediaFields()),
                         Tab::make(__('SEO'))
@@ -157,19 +155,6 @@ class ProductForm
     }
 
     /** @return array<int, mixed> */
-    private static function finishesFields(): array
-    {
-        return [
-            Select::make('finishes')
-                ->label(__('Finishes'))
-                ->relationship('finishes', 'name')
-                ->multiple()
-                ->searchable()
-                ->preload(),
-        ];
-    }
-
-    /** @return array<int, mixed> */
     private static function mediaFields(): array
     {
         return [
@@ -186,6 +171,8 @@ class ProductForm
             SpatieMediaLibraryFileUpload::make('model_3d')
                 ->label(__('3D model'))
                 ->collection('model_3d')
+                ->disk('downloads')
+                ->visibility('private')
                 ->acceptedFileTypes(['model/gltf-binary', 'application/octet-stream'])
                 ->maxSize(config('franccino.uploads.model_3d_max_kb')),
             Toggle::make('is_3d_enabled')

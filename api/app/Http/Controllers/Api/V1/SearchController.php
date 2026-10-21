@@ -7,13 +7,11 @@ use App\Http\Resources\V1\ProductCardResource;
 use App\Models\Collection as CollectionModel;
 use App\Models\Designer;
 use App\Queries\ProductQuery;
-use App\Support\ContentLocale;
 use App\Support\ImagePresenter;
 use App\Support\LikeSearch;
 use App\Support\Localized;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 /**
  * `GET /search`: up to 12 products, 6 designers and 6 collections matching
@@ -29,33 +27,22 @@ class SearchController extends Controller
             'q' => ['required', 'string', 'min:2'],
         ]);
 
-        $locale = app(ContentLocale::class)->current();
         $term = $validated['q'];
-        $pattern = LikeSearch::contains(Str::lower($term));
 
         $products = ProductQuery::make(['q' => $term])->limit(12)->get();
 
+        // Names compared without accents or case (`HasSearchText`): "colecao" finds "Coleção".
+        $normalized = LikeSearch::contains(Designer::normalizeSearch($term));
+
         $designers = Designer::published()
-            ->whereRaw('LOWER(name) LIKE ? ESCAPE ?', [$pattern, LikeSearch::ESCAPE_CHARACTER])
+            ->whereRaw('search_text LIKE ? ESCAPE ?', [$normalized, LikeSearch::ESCAPE_CHARACTER])
             ->ordered()
             ->with('media')
             ->limit(6)
             ->get();
 
-        // `name` is a translatable JSON column: MySQL's `JSON_EXTRACT` returns a
-        // JSON-quoted string (needs `JSON_UNQUOTE`) while SQLite's `json_extract`
-        // already returns the plain scalar — so, unlike the plain `name` column
-        // above, this one needs a driver-specific expression to wrap in `LOWER()`.
-        // `ConnectionInterface` doesn't expose `getDriverName()`, so the driver
-        // is read from config instead of the connection instance.
-        $connection = (new CollectionModel)->getConnectionName() ?? config('database.default');
-        $driver = config("database.connections.{$connection}.driver");
-        $nameColumn = $driver === 'sqlite'
-            ? "json_extract(name, '$.\"{$locale}\"')"
-            : "JSON_UNQUOTE(JSON_EXTRACT(name, '$.\"{$locale}\"'))";
-
         $collections = CollectionModel::published()
-            ->whereRaw("LOWER({$nameColumn}) LIKE ? ESCAPE ?", [$pattern, LikeSearch::ESCAPE_CHARACTER])
+            ->whereRaw('search_text LIKE ? ESCAPE ?', [$normalized, LikeSearch::ESCAPE_CHARACTER])
             ->withCount(['products' => fn ($query) => $query->published()])
             ->ordered()
             ->with('media')

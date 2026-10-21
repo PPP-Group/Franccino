@@ -14,7 +14,8 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    // `downloads/*`: temporary links of the local private disk; the 3D viewer fetches the GLB from the site's origin.
+    'paths' => ['api/*', 'downloads/*'],
 
     'allowed_methods' => ['GET', 'POST', 'OPTIONS'],
 

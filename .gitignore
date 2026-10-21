@@ -24,7 +24,7 @@ Thumbs.db
 *.key
 
 # ---------------------------------------------
-# api/ — Laravel 11 + Filament
+# api/ — Laravel 13 + Filament 5
 # ---------------------------------------------
 /api/vendor/
 /api/node_modules/
@@ -48,6 +48,9 @@ Thumbs.db
 /api/.rr.yaml
 /api/database/*.sqlite
 /api/database/*.sqlite-journal
+/api/storage/*.sqlite*
+/api/storage/.migrate.lock
+/api/storage/.snapshot-imported
 
 # Manter as pastas de storage no repo, ignorando o conteudo
 !/api/storage/app/public/.gitignore
@@ -118,3 +121,4 @@ docker-compose.override.yml
 # Snapshots de conteúdo (php artisan franccino:snapshot): dados do cliente, nunca no repositório
 /snapshots/
 *.snapshot.zip
+redirects-relatorio.csv

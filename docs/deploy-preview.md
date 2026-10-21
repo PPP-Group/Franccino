@@ -80,7 +80,26 @@ O resto já vem de fábrica na imagem e não precisa de configuração no EasyPa
 - `APP_KEY` vazia: a imagem gera uma e guarda no volume.
 - `APP_LOCALE=pt_BR`, SQLite e fila.
 - Dois workers da fila (`QUEUE_WORKERS`).
-- Healthcheck na rota `/up`.
+- Agendador (`RUN_SCHEDULER`, ligado): limpa os logs pelo prazo de retenção, os jobs com falha e as exportações, e faz o
+  backup do SQLite.
+- Healthcheck na rota `/up`, que também confere o banco.
+- 2FA obrigatório para administradores (`PANEL_ADMIN_MFA_REQUIRED`, ligado) e cookie de sessão seguro.
+
+### Backup do preview
+
+O agendador grava uma cópia do banco todo dia às 02:40 (as 14 mais novas ficam) e, aos domingos, um zip com o banco,
+as fotos e os arquivos técnicos (os 2 mais novos ficam), em `storage/app/backups` do volume. Para fazer na hora e baixar
+pelo terminal do VPS:
+
+```bash
+API=$(docker ps -q -f name=sites_api-site-franccino | head -1)
+docker exec $API php artisan franccino:backup --with-files
+docker exec $API ls -lh storage/app/backups
+docker cp $API:/app/storage/app/backups/<arquivo> .
+```
+
+A cópia fica no mesmo servidor: protege contra uma edição errada ou um banco corrompido, não contra a perda do VPS.
+Guarde uma cópia fora (Drive) até existir o backup do provedor ou do R2.
 
 ### Serviço do site
 
@@ -170,6 +189,23 @@ docker cp $API:/app/storage/app/faltando-en.json .
 ```
 
 `--force` sobrescreve também o que já tem tradução (use só para corrigir uma tradução importada antes).
+
+### Redirects do site antigo
+
+Depois do deploy da API, gere as regras a partir dos endereços antigos gravados no banco, faça Deploy do site e
+confira os 1.094 endereços do sitemap do WordPress contra o preview:
+
+```bash
+docker exec $API php artisan franccino:redirects:generate --dry-run   # só conta
+docker exec $API php artisan franccino:redirects:generate
+# no computador, na raiz do repositório (Node 24):
+read -rs CHECK_REDIRECTS_PASSWORD && export CHECK_REDIRECTS_PASSWORD   # digita a senha do preview sem mostrar
+pnpm check:redirects --site https://<domínio do site> --user <usuário do preview>
+```
+
+O relatório sai em `redirects-relatorio.csv`, com um endereço por linha: `ok` (redirect para uma página que abre, ou
+410 de propósito), `pagina` (abre direto) e `quebrado`. O comando termina com erro se houver algum quebrado; os 20
+primeiros aparecem na tela.
 
 ### Problemas comuns
 

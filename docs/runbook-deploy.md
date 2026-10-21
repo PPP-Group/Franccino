@@ -49,18 +49,22 @@ Preview com senha (EasyPanel/Docker) e revisão local com o conteúdo real: ver 
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`                         | Cloudflare Turnstile                        |
 | `NEXT_PUBLIC_GTM_ID`                                     | Google Tag Manager (vazio = sem analytics)  |
 | `NEXT_PUBLIC_MEDIA_URL`                                  | domínio do R2 de mídia, só para a CSP       |
+| `NEXT_PUBLIC_DOWNLOADS_URL`                              | endpoint do R2 de downloads, só para a CSP  |
 | `CSP_ENFORCE`                                            | `false` (só relata) até validar; `true`     |
 
 ### Política de segurança de conteúdo (CSP)
 
-Montada em `web/src/lib/security/csp.ts` a partir de `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MEDIA_URL`, `NEXT_PUBLIC_GTM_ID`,
+Montada em `web/src/lib/security/csp.ts` a partir de `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MEDIA_URL`,
+`NEXT_PUBLIC_DOWNLOADS_URL`, `NEXT_PUBLIC_GTM_ID`,
 `NEXT_PUBLIC_TURNSTILE_SITE_KEY` e dos ladrilhos do mapa (`TILE_URL`). Os valores entram no build (`next.config.ts`):
 mudou alguma dessas variáveis, faça o build de novo.
 
 1. Staging com `CSP_ENFORCE=false` por uma semana: o navegador só relata (`Content-Security-Policy-Report-Only`), e o
    `frame-ancestors 'none'` continua valendo à parte.
-2. Conferir no console (Ferramentas do desenvolvedor) que home, produto com 3D, formulário com Turnstile e o GTM depois
-   do aceite de cookies não mostram `[Report Only] Refused to…`.
+2. Conferir que home, produto com 3D, formulário com Turnstile e o GTM depois do aceite de cookies não geram violação.
+   Cada violação aparece no console do navegador (`[Report Only] Refused to…`) e no log do container do site, numa
+   linha `[csp] diretiva | endereço bloqueado | página` (`/api/csp-report`). No VPS:
+   `docker service logs sites_site-franccino 2>&1 | grep '\[csp\]'`.
 3. Sem violação, `CSP_ENFORCE=true` em staging e depois em produção. Registrar a data no ledger da P5b.
 
 ## Deploy da API
@@ -76,14 +80,24 @@ php artisan queue:restart     # recarrega o worker
 ```
 
 Serviços permanentes: worker da fila (`php artisan queue:work --tries=3`) e agendador (`* * * * * php artisan
-schedule:run`). PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
-equivalente no servidor web (ex.: `client_max_body_size` no nginx).
+schedule:run`; a imagem Docker roda `schedule:work`). O agendador (`routes/console.php`) faz:
+
+- `model:prune` dos logs com dados pessoais pelo prazo de `RETENTION_ACTIVITY_LOGS_DAYS` (365),
+  `RETENTION_DOWNLOAD_LOGS_DAYS` (365) e `RETENTION_CONSENT_RECORDS_DAYS` (1825). Vazio guarda para sempre. O prazo é
+  decisão jurídica da Franccino;
+- limpeza dos jobs com falha (30 dias) e das exportações CSV do painel (7 dias);
+- `franccino:backup` do SQLite (preview). Com MySQL, o backup do banco é o do provedor. PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
+  equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 
 CORS da mídia: o visualizador 3D (`@google/model-viewer`) baixa o GLB com `fetch` a partir do domínio do site, então
 o bucket de mídia do R2 (ou o servidor que entrega `/storage` no disco local) precisa responder
 `Access-Control-Allow-Origin` para as origens de `FRONTEND_URL` em `GET`/`HEAD`. O `config/cors.php` da API cobre só
 `api/*`; arquivos estáticos não passam por ele. Sem isso o 3D falha com erro de CORS (inclusive no ambiente local,
 onde a mídia vem de `http://localhost:8000/storage`).
+
+O GLB fica no bucket privado de downloads e chega por link temporário. O bucket de downloads do R2 também precisa de CORS
+`GET`/`HEAD` para as origens de `FRONTEND_URL`, e a CSP do site precisa de `NEXT_PUBLIC_DOWNLOADS_URL` com o endpoint do
+R2. No disco local, os links passam pelo Laravel (`/downloads/...`) e o `config/cors.php` cobre o caminho.
 
 ## Deploy do site
 

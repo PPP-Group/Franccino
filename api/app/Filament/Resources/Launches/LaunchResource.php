@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Launches;
 
 use App\Filament\RelationManagers\FilesRelationManager;
 use App\Filament\RelationManagers\MediaLinksRelationManager;
+use App\Filament\RelationManagers\OrderedProductsRelationManager;
 use App\Filament\Resources\Launches\Pages\CreateLaunch;
 use App\Filament\Resources\Launches\Pages\EditLaunch;
 use App\Filament\Resources\Launches\Pages\ListLaunches;
@@ -57,6 +58,7 @@ class LaunchResource extends Resource
     public static function getRelations(): array
     {
         return [
+            OrderedProductsRelationManager::class,
             MediaLinksRelationManager::class,
             FilesRelationManager::class,
         ];

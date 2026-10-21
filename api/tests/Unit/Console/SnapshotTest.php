@@ -87,6 +87,28 @@ it('imports into a database in use, keeping its private data and pointing photos
         ->and(DB::selectOne('PRAGMA foreign_keys')->foreign_keys)->toBe(1);
 });
 
+it('leaves the team e-mails out of the copy and keeps the ones of the environment that imports it', function () {
+    $recipients = fn () => DB::table('settings')->where('group', 'general')->where('name', 'contact_recipients')->value('payload');
+    ($this->useDatabase)('source');
+    DB::table('settings')->where('group', 'general')->where('name', 'contact_recipients')->update(['payload' => '["equipe@franccino.com.br"]']);
+    $this->artisan('franccino:snapshot', ['action' => 'export', 'file' => $this->zip])->assertSuccessful();
+
+    ($this->useDatabase)('target');
+    DB::table('settings')->where('group', 'general')->where('name', 'contact_recipients')->update(['payload' => '["preview@franccino.test"]']);
+    $this->artisan('franccino:snapshot', ['action' => 'import', 'file' => $this->zip, '--force' => true])->assertSuccessful();
+
+    DB::purge('sqlite');
+    expect($recipients())->toBe('["preview@franccino.test"]')
+        ->and(Snapshot::PRIVATE_TABLES)->toContain('notifications', 'exports', 'imports');
+
+    $zip = new ZipArchive;
+    $zip->open($this->zip);
+    File::put("{$this->dir}/copy.sqlite", $zip->getFromName('database.sqlite'));
+    $zip->close();
+    $copy = new PDO("sqlite:{$this->dir}/copy.sqlite");
+    expect($copy->query("SELECT payload FROM settings WHERE \"group\" = 'general' AND name = 'contact_recipients'")->fetchColumn())->toBe('[]');
+});
+
 it('only replaces the folders of the configured disks', function () {
     ($this->useDatabase)('source');
     File::ensureDirectoryExists("{$this->dir}/media/1");

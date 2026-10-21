@@ -1,7 +1,7 @@
 # API
 
-Backend Laravel 13 + Filament do site da Franccino: API REST versionada (`/api/v1`, tasks
-seguintes) e painel administrativo (`/admin`). Ver `CLAUDE.md` (convenções deste app) e, na raiz do
+Backend Laravel 13 + Filament do site da Franccino: API REST versionada (`/api/v1`)
+e painel administrativo (`/admin`). Ver `CLAUDE.md` (convenções deste app) e, na raiz do
 monorepo, `CLAUDE.md` e `docs/` (spec, modelo de dados, contrato da API).
 
 ## Instalação local

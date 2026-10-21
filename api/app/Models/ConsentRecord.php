@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\PrunedAfterRetention;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,9 +11,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ConsentRecord extends Model
 {
+    use PrunedAfterRetention;
+
     public const CHOICES = ['granted', 'denied'];
 
     const UPDATED_AT = null;
 
     protected $guarded = [];
+
+    protected static function retentionKey(): string
+    {
+        return 'consent_records';
+    }
 }

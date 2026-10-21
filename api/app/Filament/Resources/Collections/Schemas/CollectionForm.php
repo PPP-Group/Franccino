@@ -6,7 +6,6 @@ use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Support\Locales;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -40,12 +39,6 @@ class CollectionForm
                 TextInput::make('year')
                     ->label(__('Year'))
                     ->numeric(),
-                Select::make('products')
-                    ->label(__('Products'))
-                    ->relationship('products', 'name')
-                    ->multiple()
-                    ->searchable()
-                    ->preload(),
                 Toggle::make('is_featured')
                     ->label(__('Featured')),
                 ...CommonFields::publication(),

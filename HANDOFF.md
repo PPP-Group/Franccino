@@ -1,7 +1,9 @@
 # HANDOFF da sessão — Projeto Franccino
 
-Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. Fecha a sessão de
-trabalho de 2026-09-30 a 2026-10-04 com o Claude Code.
+Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
+sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
+descreve o estado do dia dela: **o estado atual é o da última seção** (17, de 21/10/2026). Quando uma seção antiga
+diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
   [`docs/HANDOFF.md`](docs/HANDOFF.md). Este arquivo não repete aquele; complementa.
@@ -343,7 +345,7 @@ Os conectores ClickUp, Apollo, Slack, Fathom, Miro, n8n e Supabase estavam dispo
 
 ---
 
-## 9. Branches e PRs
+## 9. Branches e PRs (estado de 04/10; o atual está na seção 17)
 
 | Branch    | Estado                                              |
 | --------- | --------------------------------------------------- |
@@ -571,3 +573,74 @@ foi mergeado nesta sessão (merge e deploy ficam com o tech lead).
     `composer.lock` na referência exata;
   - o Docker Hub devolveu 429. A imagem do Node veio de `mirror.gcr.io/library/node:24-bookworm-slim`, com o
     certificado do proxy num `FROM` local (só para teste, nada disso foi para o repositório).
+
+## 17. Sessão de 21/10/2026: fechamento do mês 1
+
+O mês 1 do contrato era o backend 100% pronto e testado; o mês 2 é o redesenho do site, e o mês 3, as auditorias de
+desempenho e segurança. Nesta sessão:
+
+- **Revisão do repositório** e lista do que dava para fazer sem o cliente:
+  - a auditoria do backend ficou na área temporária da sessão e foi entregue ao Pedro Ivo;
+  - o que ela apontou entrou nos PRs abaixo.
+- **#40, 3D e segurança (mergeado):**
+  - o GLB foi para o disco privado, e o site pede um link assinado no clique (contrato 13.2). Uma migration move
+    os GLB antigos;
+  - 2FA obrigatório para admin (`PANEL_ADMIN_MFA_REQUIRED`), cabeçalhos de segurança e cookie seguro;
+  - senha com 12 caracteres, letras e números; o último admin ativo não pode ser apagado nem desativado;
+  - arquivos técnicos com extensão e tamanho conferidos, e o nome original no download.
+- **#41, regras do painel e da API (mergeado):**
+  - ordem por arrastar nas peças de coleção e lançamento e nos acabamentos;
+  - descadastro da newsletter no painel; `locale_fallback` em todos os recursos da API (`docs/api.md`);
+  - retenção dos logs com dados pessoais (`RETENTION_*`) e scheduler na imagem (`RUN_SCHEDULER`);
+  - backup diário do SQLite e semanal com fotos e arquivos (`franccino:backup`, em `storage/app/backups`);
+  - e-mail aos admins quando um job falha, e o `/up` passou a testar o banco;
+  - busca de designers e coleções sem acento (`search_text`);
+  - Turnstile com prazo, e-mail de contato sem Markdown do visitante, avatar sem serviço externo, snapshot sem
+    dados pessoais.
+  - O CI em MySQL pegou a ordem ambígua das listas (o SQLite aceitava); corrigido antes do merge.
+- **#42, CI e testes (mergeado):**
+  - `composer audit` e `pnpm audit` no CI;
+  - workflow `docker`, que sobe as duas imagens com o `compose.preview.yaml` e confere o que o EasyPanel confere;
+  - `compose.staging.yaml` com MySQL 8.4;
+  - relatório da CSP em `/api/csp-report`, validação das variáveis do build e `pnpm check:redirects`;
+  - o bootstrap gera a chave do front e o segredo de revalidação;
+  - testes que faltavam (API 422, site 309).
+- **#43, arrumação (mergeado):**
+  - este arquivo e o `docs/HANDOFF.md` atualizados;
+  - `AGENTS.md` aponta para o `CLAUDE.md`, sem cópia;
+  - `web/DESIGN.md` e `web/CLAUDE.md` com as fontes Garamond e o fundo branco;
+  - status do `docs/data-model.md`, `.gitignore` e regra do Dependabot para o major do `@types/node`.
+  - O `name` do `api/composer.json` continua `laravel/laravel`: ele entra no hash do `composer.lock`, e trocar pede
+    `composer update --lock`.
+- **3D com troca de acabamento** (pedido de pesquisa, exemplo do configurador do arqbrunomaciel):
+  - PDF para o cliente entregue ao Pedro Ivo, com a opção A recomendada: model-viewer, uma aparência 3D por
+    acabamento e partes por peça;
+  - é escopo novo, com orçamento à parte. Nada foi implementado.
+- **Documento "Alterações primeira versão" do cliente:** serve só como base do redesenho do mês 2; a versão enviada
+  era um beta.
+
+Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
+
+### 17.1 Depois do merge na `main`, no VPS
+
+1. Deploy da API e do site no EasyPanel. Em 16/10 o deploy automático estava desligado; confira.
+2. No próximo login, o admin configura o 2FA (app autenticador).
+3. Rodar, nesta ordem (passo a passo em `docs/deploy-preview.md`):
+   1. `php artisan franccino:redirects:generate`;
+   2. `php artisan franccino:translations:import database/data/translations/en.json --dry-run`, depois sem
+      `--dry-run`;
+   3. o redeploy do site.
+4. De uma máquina com Node: `pnpm check:redirects --site https://preview-franccino.valenteai.cloud --user <usuário>`,
+   com a senha do preview na variável `CHECK_REDIRECTS_PASSWORD` (fora do histórico do terminal; passo a passo em
+   `docs/deploy-preview.md`).
+
+### 17.2 Para o Pedro Ivo fazer no GitHub
+
+- Apagar as branches já mergeadas. A sessão não tem permissão para apagar:
+  - `docs/handoff-2026-10-13`;
+  - `feature/ajustes-cliente-rodada-1`, `feature/busca-com-imagens`, `feature/csp-completa`;
+  - `feature/painel-organizacao`, `feature/painel-personalizado`, `feature/redirects-301`;
+  - `feature/regras-painel-api`, `feature/seguranca-e-arquivos`, `feature/traducao-en`;
+  - `feature/video-proprio-fabrica`, `fix/404-com-layout`.
+- Dependabot: o #39 (Laravel 13.37) foi mergeado na `develop`; o #22 (`@types/node` 26) foi fechado, e a regra nova
+  impede que ele volte.

@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-10-13 (resumo e seção 5.1; o resto descreve o estado de 2026-10-01). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-10-21 (seções 1 e 5 a 8; as seções 3 e 4 descrevem o histórico até 2026-10-02). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -11,19 +11,31 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 
 ## 1. Resumo
 
-| Item            | Situação                                                                                              |
-| --------------- | ----------------------------------------------------------------------------------------------------- |
-| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`)                                      |
-| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4    |
-| P1 Fundação     | **Concluída**                                                                                         |
-| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble)            |
-| P3 Web base     | **Concluída** (6/6 tarefas + revisão final)                                                           |
-| P4 Páginas web  | **Concluída** (T1–T12 revisadas + revisão final da branch)                                            |
-| P5a Páginas     | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5)   |
-| P5b Go-live     | T4, T7 no `develop`; T2+T3 (redirects, PR #29) e T8 (CSP, PR #30) em revisão; resto depende de contas |
-| PRs abertos     | #29 a #32 para `develop` (seção 5.1), mais os do Dependabot                                           |
-| Testes          | `develop` em 13/10: API 273 testes Pest · Web 281 testes Vitest, todos verdes                         |
-| Rodando         | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5)               |
+| Item            | Situação                                                                                                    |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`; preview: `main`)                           |
+| Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4          |
+| Mês 1 (backend) | **Fechado em 21/10** (PRs #40, #41 e #42): API, painel, segurança, manutenção, CI e testes                  |
+| P1 a P4         | **Concluídas**                                                                                              |
+| P2 T15          | Bloqueada: aprovação de `laravel/boost` e `dedoc/scramble`                                                  |
+| P5a Páginas     | Todas as páginas construídas (beta). O redesenho completo é o mês 2                                         |
+| P5b Go-live     | Feito o que não depende de conta (redirects, CSP, cookies, importador, backup, alertas); o resto, seção 6.2 |
+| Preview         | VPS (EasyPanel), deploy da `main` (`docs/deploy-preview.md`); em 16/10 o automático estava desligado        |
+| Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · Web 309 testes Vitest · imagens testadas no CI            |
+| PRs abertos     | Seção 5.1                                                                                                   |
+
+--------------- | ----------------------------------------------------------------------------------------------------- |
+| Repositório | `https://github.com/PPP-Group/Franccino` (integração: `develop`) |
+| Stack | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4 |
+| P1 Fundação | **Concluída** |
+| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble) |
+| P3 Web base | **Concluída** (6/6 tarefas + revisão final) |
+| P4 Páginas web | **Concluída** (T1–T12 revisadas + revisão final da branch) |
+| P5a Páginas | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5) |
+| P5b Go-live | T4, T7 no `develop`; T2+T3 (redirects, PR #29) e T8 (CSP, PR #30) em revisão; resto depende de contas |
+| PRs abertos | #29 a #32 para `develop` (seção 5.1), mais os do Dependabot |
+| Testes | `develop` em 13/10: API 273 testes Pest · Web 281 testes Vitest, todos verdes |
+| Rodando | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5) |
 
 ---
 
@@ -80,14 +92,14 @@ quebradas.
 
 ### 2.5 Problemas comuns
 
-| Sintoma                               | Solução                                                                                                                                                                               |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `php` não reconhecido                 | PHP fora do PATH: adicione a pasta ao PATH do usuário e reabra o terminal                                                                                                             |
-| `Could not open input file: artisan`  | Rode dentro de `api/` ou use `php api/artisan ...` a partir da raiz                                                                                                                   |
-| Site com erro 500                     | API fora do ar ou `FRONTEND_API_KEY` diferente entre `api/.env` e `web/.env.local`                                                                                                    |
-| Porta 8000/3000 ocupada após `Ctrl+C` | Processo `php`/`node` órfão: finalize no Gerenciador de Tarefas e rode `pnpm dev`                                                                                                     |
-| Commit recusado                       | Mensagem fora de Conventional Commits (ex.: `feat(web): ...`)                                                                                                                         |
-| `pnpm dev` cai sozinho no Windows     | `queue:listen` estoura 60 s (`ProcessTimedOutException`) e o `concurrently -k` derruba tudo; suba a fila com `php api/artisan queue:listen --tries=1 --timeout=0` (ledger da P4, T11) |
+| Sintoma                               | Solução                                                                                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `php` não reconhecido                 | PHP fora do PATH: adicione a pasta ao PATH do usuário e reabra o terminal                                                                                    |
+| `Could not open input file: artisan`  | Rode dentro de `api/` ou use `php api/artisan ...` a partir da raiz                                                                                          |
+| Site com erro 500                     | API fora do ar ou `FRONTEND_API_KEY` diferente entre `api/.env` e `web/.env.local`                                                                           |
+| Porta 8000/3000 ocupada após `Ctrl+C` | Processo `php`/`node` órfão: finalize no Gerenciador de Tarefas e rode `pnpm dev`                                                                            |
+| Commit recusado                       | Mensagem fora de Conventional Commits (ex.: `feat(web): ...`)                                                                                                |
+| `pnpm dev` cai sozinho no Windows     | Corrigido em 21/10: a fila do `pnpm dev` sobe com `--timeout=0`. Se ainda cair, suba a fila à parte com `php api/artisan queue:listen --tries=1 --timeout=0` |
 
 ---
 
@@ -239,103 +251,73 @@ Fora do código:
 
 ## 5. Em andamento
 
-O trabalho de 2026-10-01 está em `develop` e `main` (seção 3). O resto abaixo espera decisão.
+### 5.1 Mês 1 fechado (21/10/2026)
 
-### 5.1 PRs abertos para `develop` (13/10/2026)
+O primeiro mês era o backend 100% pronto e testado. Entrou em três PRs para a `develop` (mais o #43, de
+documentação), e na `main` pelo #44:
 
-| PR                                                    | Branch                       | Conteúdo                                                                                   |
-| ----------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
-| [#29](https://github.com/PPP-Group/Franccino/pull/29) | `feature/redirects-301`      | P5b T2 e T3: redirects 301 do site antigo (comando na API + `proxy.ts`), PPP-94            |
-| [#30](https://github.com/PPP-Group/Franccino/pull/30) | `feature/csp-completa`       | P5b T8: CSP completa, em Report-Only até `CSP_ENFORCE=true`                                |
-| [#31](https://github.com/PPP-Group/Franccino/pull/31) | `fix/404-com-layout`         | Revisão técnica (PPP-118): 404 com layout e 33 links do `/en` sem slug em inglês           |
-| [#32](https://github.com/PPP-Group/Franccino/pull/32) | `feature/painel-organizacao` | PPP-117: painel em português, menus reorganizados, filtros nas listas de produto e coleção |
+| PR                                                    | Conteúdo                                                                                                                                                                                                                         |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#40](https://github.com/PPP-Group/Franccino/pull/40) | 3D por link assinado (contrato 13.2, GLB no disco privado); 2FA obrigatório para admin; cabeçalhos de segurança; senha forte; último admin protegido; arquivos técnicos com tipo e tamanho conferidos                            |
+| [#41](https://github.com/PPP-Group/Franccino/pull/41) | Ordem por arrastar (peças de coleção e lançamento, acabamentos); descadastro da newsletter; `locale_fallback` em todos os recursos; retenção dos logs; backup diário e semanal; alertas de fila; busca sem acento; e-mail seguro |
+| [#42](https://github.com/PPP-Group/Franccino/pull/42) | Auditoria de dependências no CI; teste das imagens do preview no CI; `compose.staging.yaml` (MySQL); relatório da CSP; `check:redirects`; testes que faltavam                                                                    |
 
-Todos partem do `develop` de 13/10 e não dependem um do outro. O #29 e o #30 acrescentam uma entrada no fim de
-`docs/handoff/p5b-ledger.md`: o segundo a entrar tem um conflito trivial nesse arquivo (manter as duas entradas).
-Depois do merge na `main`, rodar `php artisan franccino:redirects:generate` no preview.
+Depois do deploy no preview: 2FA do admin no próximo login, `franccino:redirects:generate`,
+`franccino:translations:import` (com `--dry-run` antes) e `pnpm check:redirects` (passo a passo em
+`docs/deploy-preview.md`).
 
 ### 5.2 O que precisa ser aprovado ou providenciado
 
-| #   | Item                                                                                        | Quem                  | O que destrava                                                                                             |
-| --- | ------------------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 1   | Revisar e mergear os PRs #9, #10, #11 e #12                                                 | Tech lead             | Todo o resto; P5a e P5b só começam com os planos aprovados e #9/#10 no `develop`                           |
-| 2   | Dependências `laravel/boost` e `dedoc/scramble`                                             | Tech lead             | P2 T15 e a revisão final da P2                                                                             |
-| 3   | Layout das telas restantes (P5a, Task 1)                                                    | Tech lead + Franccino | P5a Tasks 2–11 (construção das páginas)                                                                    |
-| 4   | Escopo da sala para montar e da lista de orçamento (A1 da P4)                               | Tech lead / cliente   | Lançamento dessas funções                                                                                  |
-| 5   | Fonte definitiva e manual de marca (logo em SVG)                                            | Cliente / design      | Troca da fonte provisória e do logo em texto                                                               |
-| 6   | Números oficiais do Lighthouse para o PR #10                                                | Quem revisa           | Critério de performance da P4 (a medição aproximada ficou acima)                                           |
-| 7   | Decisões registradas como "finding" nos ledgers                                             | Tech lead             | `queue:listen` no Windows (2.5), segredo de revalidação no `pnpm bootstrap`, CORS da mídia local para o 3D |
-| 8   | Proteção de branch no GitHub (plano Team)                                                   | Tech lead             | Regra de PR aplicada pelo GitHub                                                                           |
-| 9   | Contas: hospedagem, Cloudflare (DNS, R2, Turnstile), e-mail, Sentry, GA/GTM/Search Console  | Tech lead / cliente   | P5b (staging, produção, go-live)                                                                           |
-| 10  | Material: fotos em alta, textos pt/en, fichas técnicas, GLB, acabamentos, dump do WordPress | Cliente               | Carga do catálogo real e migração (P5b)                                                                    |
-| 11  | Importador de planilha do catálogo (decisão do roadmap, semana 2)                           | Tech lead             | Forma da carga do catálogo (P5b)                                                                           |
+| #   | Item                                                                                                      | Quem                  | O que destrava                                     |
+| --- | --------------------------------------------------------------------------------------------------------- | --------------------- | -------------------------------------------------- |
+| 1   | Dependências `laravel/boost` e `dedoc/scramble`                                                           | Tech lead             | P2 T15 (OpenAPI e revisão final da P2)             |
+| 2   | Logo em vetor (SVG)                                                                                       | Cliente               | Troca do logo em texto                             |
+| 3   | Escopo da sala para montar e da lista de orçamento (A1 da P4)                                             | Tech lead / cliente   | Lançamento dessas funções                          |
+| 4   | Configurador 3D com troca de acabamento e preparo do banco de ideias (fotos por acabamento, hotspots…)    | Cliente (orçamento)   | Escopo novo, fora do contrato                      |
+| 5   | Proteção de branch no GitHub (plano Team)                                                                 | Tech lead             | Regra de PR aplicada pelo GitHub                   |
+| 6   | Contas: hospedagem, Cloudflare (DNS, R2, Turnstile), e-mail, Sentry, GA/GTM/Search Console                | Tech lead / cliente   | Staging, produção e go-live                        |
+| 7   | Material: fotos em alta, descrições, fichas técnicas, GLB, acabamentos, logos de clientes, fotos de lojas | Cliente (PPP-62)      | Carga do catálogo real                             |
+| 8   | Revisão do inglês no próprio site (980 textos traduzidos, `reviewed: false`)                              | Cliente, mais adiante | Texto final do `/en`                               |
+| 9   | Importador de planilha do catálogo                                                                        | Tech lead             | Forma da carga do catálogo, se o painel não bastar |
 
 ---
 
 ## 6. O que falta
 
-### 6.1 P2 — API
+### 6.1 Por mês
 
-| Tarefa | O que é                                                                              |
-| ------ | ------------------------------------------------------------------------------------ |
-| T15    | Laravel Boost (MCP), OpenAPI (Scramble), revisão de `docs/api.md`, verificação final |
-| Final  | Revisão da branch inteira da P2 e uma rodada de correção                             |
+- **Mês 2, frontend e design:** redesenho completo do site. O documento "Alterações primeira versão" do cliente
+  entra só como base; a versão enviada era um beta.
+- **Mês 3, desempenho e segurança:** auditoria de desempenho (Lighthouse, Core Web Vitals, imagens, cache) e de
+  segurança (painel, API, cabeçalhos, dependências, CSP em bloqueio).
 
-### 6.2 P4 — Web
+### 6.2 P5b, o que depende de conta ou material
 
-Concluída. O que o plano deixou para a P5 está em "Próximo plano (P5)", no fim do
-[plano da P4](plans/2026-09-24-p4-web-paginas.md).
+Staging e produção, R2 para mídia e arquivos técnicos, e-mail transacional, Sentry, backup fora do servidor, CSP em
+bloqueio (`CSP_ENFORCE=true`, `docs/runbook-deploy.md`), carga do catálogo real, testes de ponta a ponta, QA e
+go-live. Plano: [`plans/2026-09-29-p5b-migracao-infra-go-live.md`](plans/2026-09-29-p5b-migracao-infra-go-live.md).
 
-### 6.3 P5a — Páginas restantes (plano em revisão, PR #11)
+### 6.3 Pendências menores
 
-Plano: [`plans/2026-09-29-p5a-web-paginas-restantes.md`](plans/2026-09-29-p5a-web-paginas-restantes.md) · Ledger:
-[`handoff/p5a-ledger.md`](handoff/p5a-ledger.md) (os dois chegam ao `develop` com o PR #11).
+Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tarefa. Os que continuam valendo:
 
-Coleções, designers, projetos, corporativo, fábrica, acabamentos, lojas, downloads, contato com FAQ, busca,
-privacidade, termos e páginas de erro, hoje com o esqueleto da P3, sem estilo. A Task 1 desenha essas telas no
-protótipo para aprovação por escrito; as Tasks 2–11 só começam depois dela.
-
-A Task 1 foi adiantada em 2026-09-29 (PR #13, rascunho): 11 telas em `design/prototype/`, com o `pages.css` da Task 2.
-O desvio de base (B4 ainda não cumprido) está registrado no ledger. Falta o Step 4: o tech lead envia as telas à
-Franccino e registra a aprovação no ledger.
-
-### 6.4 P5b — Migração, infraestrutura e go-live (plano em revisão, PR #12)
-
-Plano: [`plans/2026-09-29-p5b-migracao-infra-go-live.md`](plans/2026-09-29-p5b-migracao-infra-go-live.md) · Ledger:
-[`handoff/p5b-ledger.md`](handoff/p5b-ledger.md) (os dois chegam ao `develop` com o PR #12).
-
-14 tarefas: ajustes do P4 (bootstrap e fila), redirects do site antigo no `proxy.ts` e gerados na API, migração do
-WordPress (REST e dump), importador de planilha (se aprovado), cookies com Tag Manager, CSP completa, monitoramento e
-backup, ambientes e deploy, carga do catálogo real, testes de ponta a ponta, QA e go-live. Os itens C1–C5 do plano
-dizem o que depende de aprovação, conta ou material do cliente; T1–T4 e T7 podem começar logo depois de #9 e #10.
-
-### 6.5 Pendências menores
-
-Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tarefa. Principais:
-
-- Web sem ambiente DOM nos testes: teclado, foco e menus foram conferidos no navegador na P4 T12, mas não têm
-  teste automatizado.
+- Web sem ambiente DOM nos testes: teclado, foco e menus foram conferidos no navegador, sem teste automatizado.
 - `local-store`: `dispatchEvent` sem guarda fora do navegador; fallback permanente em memória após falha.
-- Lista de orçamento: CLS ≈ 0,3 quando o "Carregando…" (exigido pelo plano) dá lugar à lista ou ao estado vazio.
-- 404 global sempre em português (R24 da P4).
-- Painel: limite de upload 50MB fixo no `FilesRelationManager`; faltam testes de publicação em massa.
-- Textos provisórios em `web/messages/{pt,en}.json` precisam de revisão de copy.
+- Lista de orçamento: CLS ≈ 0,3 quando o "Carregando…" dá lugar à lista ou ao estado vazio.
+- Textos de interface em `web/messages/{pt,en}.json` precisam de revisão de copy (entra no redesenho).
 
 ---
 
 ## 7. Impedimentos
 
-| Impedimento                                                                                                                       | Dono                 | Impacto                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------------ |
-| Modelos 3D em GLB                                                                                                                 | Cliente              | 3D desligado por produto até existir arquivo (hoje há 1 SKP) |
-| Traduções em inglês                                                                                                               | Cliente              | `/en` usa fallback para pt                                   |
-| Dump do banco do WordPress                                                                                                        | Cliente / hospedagem | Migração completa (P5)                                       |
-| Contas: Cloudflare (DNS, R2, Turnstile), hospedagem, e-mail, Sentry, GA/GTM/Search Console                                        | Cliente / tech lead  | Staging e produção                                           |
-| Aprovação de dependências novas (ex.: `filament/spatie-laravel-media-library-plugin`, `spatie/laravel-settings`, `laravel/boost`) | Tech lead            | Citar no PR                                                  |
-| Aprovação de `laravel/boost` e Scramble (`dedoc/scramble`)                                                                        | Tech lead            | Bloqueia a P2 T15                                            |
-| Aprovação de escopo: lista de orçamento e sala para montar                                                                        | Tech lead / cliente  | Adicionadas a pedido do product owner; passar por orçamento  |
-| Fonte definitiva                                                                                                                  | Design / cliente     | Archivo (Google Fonts) é provisória                          |
-| Proteção de branch no GitHub                                                                                                      | Tech lead            | Org no plano Free: regras não são aplicadas em repo privado  |
+| Impedimento                                                | Dono                | Impacto                                                      |
+| ---------------------------------------------------------- | ------------------- | ------------------------------------------------------------ |
+| Modelos 3D em GLB                                          | Cliente             | 3D só aparece nas peças com GLB enviado (hoje, nenhuma real) |
+| Material do catálogo (PPP-62, prazo 19/10)                 | Cliente             | Catálogo do preview segue com o conteúdo do WordPress        |
+| Contas de infraestrutura                                   | Cliente / tech lead | Staging, produção e go-live                                  |
+| Aprovação de dependências novas                            | Tech lead           | P2 T15                                                       |
+| Aprovação de escopo: sala para montar, lista, configurador | Tech lead / cliente | Passam por orçamento antes                                   |
+| Proteção de branch no GitHub                               | Tech lead           | Org no plano Free: regras não são aplicadas em repo privado  |
 
 ---
 
@@ -344,13 +326,10 @@ Cada ledger em [`handoff/`](handoff/) lista os itens "minor (deferred)" por tare
 ### 8.1 Fluxo
 
 1. `git checkout develop && git pull`
-2. Próximos passos: merge dos PRs #9–#12; aprovação das telas do PR #13 (P5a Task 1, B1) e as tarefas da
-   P5b que não dependem de conta (T1–T4, T7), a P2 T15 (quando as dependências forem aprovadas) e a revisão final da P2.
-3. Siga a tarefa do plano: cada uma tem arquivos, interfaces, testes e mensagem de commit.
-4. Antes do commit: `pnpm test`, `pnpm lint`, `cd api && composer analyse`, `pnpm --filter web typecheck`.
-5. PR para `develop` com aprovação do tech lead.
-
-Trabalho fora dos planos: branch `feature/nome-curto` ou `fix/nome-curto` a partir de `develop`.
+2. Branch `feature/nome-curto` ou `fix/nome-curto` a partir da `develop`.
+3. Antes do commit: `pnpm test`, `pnpm lint`, `cd api && composer analyse`, `pnpm --filter web typecheck`.
+4. PR para `develop`; o CI roda a API em MySQL 8.4, o site e as imagens do preview. Merge com CI verde.
+5. PR da `develop` para a `main` e deploy no EasyPanel (confira se o deploy automático está ligado).
 
 ### 8.2 Decisões de execução (valem sobre o texto do plano)
 

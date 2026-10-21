@@ -1,7 +1,8 @@
 # Modelo de dados
 
-Status: proposta v1 (2026-09-23), baseada no roadmap e no inventário do WordPress atual
-([content-inventory.md](content-inventory.md)). Revisão formal do tech lead na semana 1.
+Status: implementado. As migrations de `api/database/migrations` são a fonte da verdade (a última é de
+2026-10-21); este documento muda no mesmo PR de cada migration nova. A proposta v1 (2026-09-23) partiu do roadmap
+e do inventário do WordPress atual ([content-inventory.md](content-inventory.md)).
 
 ## Convenções
 
@@ -87,32 +88,34 @@ linha Pinot, linha Bloco). Sem página própria no site; usadas em "outras peça
 
 ### designers
 
-| Coluna                     | Tipo          | Notas                           |
-| -------------------------- | ------------- | ------------------------------- |
-| name                       | string        |                                 |
-| slug                       | string, único | igual nos dois idiomas          |
-| short_bio                  | json tr       | uma ou duas frases (cards)      |
-| bio                        | json tr       | HTML (rich text)                |
-| location                   | string, null  | "Belo Horizonte, MG", "Espanha" |
-| website_url, instagram_url | string, null  |                                 |
-| is_published, sort_order   |               |                                 |
-| seo_title, seo_description | json tr       |                                 |
-| legacy_wp_id, legacy_url   |               |                                 |
+| Coluna                     | Tipo          | Notas                                                                                            |
+| -------------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| name                       | string        |                                                                                                  |
+| slug                       | string, único | igual nos dois idiomas                                                                           |
+| short_bio                  | json tr       | uma ou duas frases (cards)                                                                       |
+| bio                        | json tr       | HTML (rich text)                                                                                 |
+| location                   | string, null  | "Belo Horizonte, MG", "Espanha"                                                                  |
+| website_url, instagram_url | string, null  |                                                                                                  |
+| is_published, sort_order   |               |                                                                                                  |
+| seo_title, seo_description | json tr       |                                                                                                  |
+| legacy_wp_id, legacy_url   |               |                                                                                                  |
+| search_text                | text, null    | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
 Mídia: `portrait` (1).
 
 ### collections
 
-| Coluna                                | Tipo           | Notas       |
-| ------------------------------------- | -------------- | ----------- |
-| name                                  | json tr        |             |
-| slug                                  | json tr        |             |
-| year                                  | smallint, null |             |
-| summary                               | json tr        | texto curto |
-| description                           | json tr        | HTML        |
-| is_featured, is_published, sort_order |                |             |
-| seo_title, seo_description            | json tr        |             |
-| legacy_wp_id, legacy_url              |                |             |
+| Coluna                                | Tipo           | Notas                                                                                            |
+| ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| name                                  | json tr        |                                                                                                  |
+| slug                                  | json tr        |                                                                                                  |
+| year                                  | smallint, null |                                                                                                  |
+| summary                               | json tr        | texto curto                                                                                      |
+| description                           | json tr        | HTML                                                                                             |
+| is_featured, is_published, sort_order |                |                                                                                                  |
+| seo_title, seo_description            | json tr        |                                                                                                  |
+| legacy_wp_id, legacy_url              |                |                                                                                                  |
+| search_text                           | text, null     | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`, `product_id`, `sort_order`).
 
@@ -132,7 +135,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 | dimensions                            | json                 | lista de variantes, ver abaixo                                    |
 | materials                             | json tr, null        | texto livre ("Tabela técnica > Material")                         |
 | finishes_note                         | json tr, null        | texto livre ("Tabela técnica > Acabamento")                       |
-| is_3d_enabled                         | bool, default `true` | chave do visualizador 3D                                          |
+| is_3d_enabled                         | bool, default `true` | chave do visualizador 3D; o botão só aparece com GLB enviado      |
 | is_featured, is_published, sort_order |                      |                                                                   |
 | seo_title, seo_description            | json tr              |                                                                   |
 | legacy_wp_id, legacy_url              |                      |                                                                   |
@@ -156,7 +159,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 
 `label` é opcional (produto de medida única). Todos os valores em mm e opcionais individualmente.
 
-Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem conversões).
+Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
 Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`.
 
 ### finish_groups / finishes
@@ -432,6 +435,8 @@ filtra, sem editar.
 | Mensagens de contato e newsletter (ver, exportar CSV) | sim   | sim    | sim                   |
 | Excluir mensagens e inscritos                         | sim   | não    | não                   |
 | Logs de download (ver)                                | sim   | sim    | sim                   |
+| Registro de cookies (ver)                             | sim   | sim    | sim                   |
+| Central de ajuda                                      | sim   | sim    | sim                   |
 | Redirects                                             | sim   | não    | não                   |
 | Configurações                                         | sim   | não    | não                   |
 | Usuários                                              | sim   | não    | não                   |
@@ -439,6 +444,15 @@ filtra, sem editar.
 
 `support` (acrescentado em 2026-10-01, PPP-54) é o perfil de atendimento: entra no painel só para ler e
 responder mensagens, newsletter e downloads; não vê nem edita conteúdo.
+
+Segurança do painel (PPP-95, 2026-10-21):
+
+- o 2FA é obrigatório para `admin` (`PANEL_ADMIN_MFA_REQUIRED`, ligado por padrão) e opcional para os demais;
+- a senha tem no mínimo 12 caracteres, com letras e números;
+- o painel nunca fica sem administrador ativo: o último não pode ser excluído, desativado nem rebaixado, e ninguém
+  exclui a própria conta.
+
+A matriz completa é conferida em `tests/Feature/Security/AuthorizationMatrixTest.php`.
 
 ### activity_logs
 
@@ -467,5 +481,7 @@ Guarda só o **nome** dos campos alterados, nunca os valores; mensagens e inscri
 - Conversões de imagem (fila): `w480`, `w960`, `w1440`, `w1920`, `w2560` em WebP, sem ampliar a
   original. Conversão `lqip` (24 px) vira `blur_data_url` (data URL) nas custom properties.
 - Largura e altura da original ficam nas custom properties (`width`, `height`) para o front reservar espaço.
-- GLB (`model_3d`) vai para o disco `media` sem conversões; o visualizador carrega direto do CDN.
+- GLB (`model_3d`) vai para o disco privado `downloads`, sem conversões (contrato 13.2). O visualizador pede um link
+  temporário (`POST /products/{slug}/model-3d/link`). A migration `2026_10_21_100000` levou os GLB já enviados do disco
+  `media` para o `downloads`.
 - Texto alternativo: por enquanto derivado do nome do item dono da imagem; edição por imagem fica para depois.

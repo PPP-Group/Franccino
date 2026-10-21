@@ -47,3 +47,14 @@ it('treats % and _ in designer/collection search terms as literal characters', f
     $response = $this->getJson('/api/v1/search?'.http_build_query(['q' => 'art_deco']))->assertOk();
     expect($response->json('data.collections'))->toHaveCount(1);
 });
+
+it('finds designers and collections typed without accents', function () {
+    Designer::factory()->create(['name' => 'Estúdio Franccino', 'is_published' => true]);
+    CollectionModel::factory()->create(['name' => ['pt' => 'Coleção Gerais', 'en' => 'Gerais Collection'], 'is_published' => true]);
+
+    $response = $this->getJson('/api/v1/search?q=estudio')->assertOk();
+    expect($response->json('data.designers.0.name'))->toBe('Estúdio Franccino');
+
+    $response = $this->getJson('/api/v1/search?q=colecao')->assertOk();
+    expect($response->json('data.collections.0.name'))->toBe('Coleção Gerais');
+});

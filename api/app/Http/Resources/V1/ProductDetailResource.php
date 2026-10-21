@@ -97,7 +97,12 @@ class ProductDetailResource extends ProductCardResource
             ->all();
     }
 
-    /** @return array{url: string, size: int|null}|null */
+    /**
+     * Only says that a model exists: the GLB is on a private disk and the viewer asks for a temporary link
+     * (`POST /products/{slug}/model-3d/link`), so the static page never carries an expiring URL.
+     *
+     * @return array{size: int|null}|null
+     */
     private function model3d(Product $product): ?array
     {
         if (! $product->is_3d_enabled) {
@@ -110,7 +115,7 @@ class ProductDetailResource extends ProductCardResource
             return null;
         }
 
-        return ['url' => $media->getFullUrl(), 'size' => $media->size];
+        return ['size' => $media->size];
     }
 
     /**

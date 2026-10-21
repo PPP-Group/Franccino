@@ -2,13 +2,18 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Cloudflare Turnstile verification (`docs/api.md`, "Escrita"). Verification
  * is skipped entirely — always `true`, no HTTP call — when
  * `franccino.turnstile.secret_key` is empty, which is the local/testing
  * default (see `TURNSTILE_SECRET_KEY` in `.env.example`).
+ *
+ * If Cloudflare doesn't answer in 5 seconds, the form is refused like a failed challenge (the visitor sees the
+ * validation message and can try again), never accepted without a check and never a server error.
  */
 final class Turnstile
 {
@@ -22,12 +27,18 @@ final class Turnstile
             return true;
         }
 
-        $response = Http::asForm()->post(self::VERIFY_URL, [
-            'secret' => $secret,
-            'response' => (string) $token,
-            'remoteip' => (string) $ip,
-        ]);
+        try {
+            $response = Http::asForm()->timeout(5)->connectTimeout(3)->post(self::VERIFY_URL, [
+                'secret' => $secret,
+                'response' => (string) $token,
+                'remoteip' => (string) $ip,
+            ]);
+        } catch (ConnectionException $exception) {
+            Log::warning('Turnstile sem resposta; envio recusado.', ['error' => $exception->getMessage()]);
 
-        return (bool) $response->json('success');
+            return false;
+        }
+
+        return $response->successful() && (bool) $response->json('success');
     }
 }
