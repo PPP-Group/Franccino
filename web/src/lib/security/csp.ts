@@ -32,6 +32,7 @@ const ANALYTICS = ['https://*.google-analytics.com', 'https://*.analytics.google
 const TURNSTILE = 'https://challenges.cloudflare.com';
 const MODEL_DECODERS = 'https://www.gstatic.com';
 const VIDEO_PLAYERS = ['https://www.youtube-nocookie.com', 'https://player.vimeo.com'];
+export const CSP_REPORT_PATH = '/api/csp-report';
 
 /** Origin of an URL or template (`https://tile.example/{z}/{x}/{y}.png`), or null when empty or invalid. */
 export function originOf(url: string | undefined): string | null {
@@ -80,6 +81,8 @@ export function buildCsp(options: CspOptions): string {
     'base-uri': ["'self'"],
     'form-action': ["'self'"],
     ...(reportOnly ? {} : { 'frame-ancestors': ["'none'"] }),
+    // Violations go to the site's own log (`/api/csp-report`), to review on staging before `CSP_ENFORCE=true`.
+    'report-uri': [CSP_REPORT_PATH],
   };
 
   return Object.entries(directives)

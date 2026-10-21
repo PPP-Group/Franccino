@@ -54,14 +54,17 @@ Preview com senha (EasyPanel/Docker) e revisão local com o conteúdo real: ver 
 
 ### Política de segurança de conteúdo (CSP)
 
-Montada em `web/src/lib/security/csp.ts` a partir de `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MEDIA_URL`, `NEXT_PUBLIC_GTM_ID`,
+Montada em `web/src/lib/security/csp.ts` a partir de `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MEDIA_URL`,
+`NEXT_PUBLIC_DOWNLOADS_URL`, `NEXT_PUBLIC_GTM_ID`,
 `NEXT_PUBLIC_TURNSTILE_SITE_KEY` e dos ladrilhos do mapa (`TILE_URL`). Os valores entram no build (`next.config.ts`):
 mudou alguma dessas variáveis, faça o build de novo.
 
 1. Staging com `CSP_ENFORCE=false` por uma semana: o navegador só relata (`Content-Security-Policy-Report-Only`), e o
    `frame-ancestors 'none'` continua valendo à parte.
-2. Conferir no console (Ferramentas do desenvolvedor) que home, produto com 3D, formulário com Turnstile e o GTM depois
-   do aceite de cookies não mostram `[Report Only] Refused to…`.
+2. Conferir que home, produto com 3D, formulário com Turnstile e o GTM depois do aceite de cookies não geram violação.
+   Cada violação aparece no console do navegador (`[Report Only] Refused to…`) e no log do container do site, numa
+   linha `[csp] diretiva | endereço bloqueado | página` (`/api/csp-report`). No VPS:
+   `docker service logs sites_site-franccino 2>&1 | grep '\[csp\]'`.
 3. Sem violação, `CSP_ENFORCE=true` em staging e depois em produção. Registrar a data no ledger da P5b.
 
 ## Deploy da API

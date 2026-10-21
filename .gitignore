@@ -118,3 +118,4 @@ docker-compose.override.yml
 # Snapshots de conteúdo (php artisan franccino:snapshot): dados do cliente, nunca no repositório
 /snapshots/
 *.snapshot.zip
+redirects-relatorio.csv

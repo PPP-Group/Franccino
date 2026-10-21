@@ -1,0 +1,65 @@
+# A mesma imagem do preview, agora com MySQL 8.4, como em staging e produção (spec D10, docs/runbook-deploy.md).
+# Serve para testar a imagem com MySQL antes de existir a hospedagem:
+#   docker compose -f compose.staging.yaml up --build
+# Variáveis em .env.preview (as mesmas do preview); o banco vem daqui. Disco local no volume: o R2 entra com as contas.
+name: franccino-staging
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: franccino
+      MYSQL_USER: franccino
+      MYSQL_PASSWORD: ${STAGING_DB_PASSWORD:-franccinostaging}
+      MYSQL_ROOT_PASSWORD: ${STAGING_DB_ROOT_PASSWORD:-franccinoroot}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-p${STAGING_DB_ROOT_PASSWORD:-franccinoroot}']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  api:
+    build:
+      context: ./api
+    restart: unless-stopped
+    env_file: .env.preview
+    environment:
+      APP_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+      FRONTEND_URL: ${SITE_PUBLIC_URL:-http://localhost:3000}
+      FRONTEND_REVALIDATE_URL: http://web:3000/api/revalidate
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: franccino
+      DB_USERNAME: franccino
+      DB_PASSWORD: ${STAGING_DB_PASSWORD:-franccinostaging}
+    ports:
+      - '${API_PORT:-8000}:80'
+    volumes:
+      - api-storage:/app/storage
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    env_file: .env.preview
+    environment:
+      API_URL: http://api
+      NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+      SITE_URL: ${SITE_PUBLIC_URL:-http://localhost:3000}
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  mysql-data:
+  api-storage:

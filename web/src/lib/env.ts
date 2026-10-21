@@ -49,12 +49,24 @@ const publicSchema = z.object({
   NEXT_PUBLIC_GTM_ID: optionalString(),
 });
 
+/** Read once by `next.config.ts` for the CSP: a wrong value fails the build instead of shipping a broken policy. */
+const buildSchema = z.object({
+  CSP_ENFORCE: bool,
+  NEXT_PUBLIC_MEDIA_URL: z.preprocess(emptyToUndefined, z.url().optional()),
+  NEXT_PUBLIC_DOWNLOADS_URL: z.preprocess(emptyToUndefined, z.url().optional()),
+});
+
 export type ServerEnv = z.infer<typeof serverSchema>;
+export type BuildEnv = z.infer<typeof buildSchema>;
 export type PublicEnv = z.infer<typeof publicSchema>;
 export type SiteLocale = PublicEnv['NEXT_PUBLIC_SITE_LOCALES'][number];
 
 export function parseServerEnv(source: Record<string, string | undefined>): ServerEnv {
   return serverSchema.parse(source);
+}
+
+export function parseBuildEnv(source: Record<string, string | undefined>): BuildEnv {
+  return buildSchema.parse(source);
 }
 
 export function parsePublicEnv(source: Record<string, string | undefined>): PublicEnv {

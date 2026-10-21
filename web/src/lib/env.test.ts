@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
-import { getSiteLocales, parsePublicEnv, parseServerEnv } from './env';
+import { getSiteLocales, parseBuildEnv, parsePublicEnv, parseServerEnv } from './env';
 
 /** Minimal `.env` parser (`KEY=value` lines, `#` comments) — enough for `.env.example`. */
 function parseDotEnv(content: string): Record<string, string> {
@@ -117,5 +117,18 @@ describe('.env.example', () => {
 
   it('parses as a valid public env, with its blank optional keys treated as absent', () => {
     expect(() => parsePublicEnv(source)).not.toThrow();
+  });
+});
+
+describe('parseBuildEnv', () => {
+  it('reads the csp switch and the media origins, and fails the build on an invalid address', () => {
+    expect(parseBuildEnv({ CSP_ENFORCE: 'true', NEXT_PUBLIC_MEDIA_URL: '' })).toEqual({
+      CSP_ENFORCE: true,
+      NEXT_PUBLIC_MEDIA_URL: undefined,
+      NEXT_PUBLIC_DOWNLOADS_URL: undefined,
+    });
+    expect(parseBuildEnv({}).CSP_ENFORCE).toBe(false);
+    expect(() => parseBuildEnv({ NEXT_PUBLIC_MEDIA_URL: 'media.franccino' })).toThrow();
+    expect(() => parseBuildEnv({ CSP_ENFORCE: 'sim' })).toThrow();
   });
 });
