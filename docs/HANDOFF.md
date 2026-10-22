@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-10-21 (seções 1 e 5 a 8; as seções 3 e 4 descrevem o histórico até 2026-10-02). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-10-22 (seções 1 e 5 a 8; as seções 3 e 4 descrevem o histórico até 2026-10-02). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -15,27 +15,14 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | Repositório     | `https://github.com/PPP-Group/Franccino` (integração: `develop`; preview: `main`)                           |
 | Stack           | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4          |
-| Mês 1 (backend) | **Fechado em 21/10** (PRs #40, #41 e #42): API, painel, segurança, manutenção, CI e testes                  |
+| Mês 1 (backend) | **Código pronto em 21/10** (PRs #40 a #42); falta publicar no preview e conferir (PPP-119)                  |
 | P1 a P4         | **Concluídas**                                                                                              |
 | P2 T15          | Bloqueada: aprovação de `laravel/boost` e `dedoc/scramble`                                                  |
 | P5a Páginas     | Todas as páginas construídas (beta). O redesenho completo é o mês 2                                         |
 | P5b Go-live     | Feito o que não depende de conta (redirects, CSP, cookies, importador, backup, alertas); o resto, seção 6.2 |
 | Preview         | VPS (EasyPanel), deploy da `main` (`docs/deploy-preview.md`); em 16/10 o automático estava desligado        |
 | Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · Web 309 testes Vitest · imagens testadas no CI            |
-| PRs abertos     | Seção 5.1                                                                                                   |
-
---------------- | ----------------------------------------------------------------------------------------------------- |
-| Repositório | `https://github.com/PPP-Group/Franccino` (integração: `develop`) |
-| Stack | `api/` Laravel 13 + Filament 5 (PHP 8.4) · `web/` Next.js 16 + React 19 + next-intl 4 + Tailwind 4 |
-| P1 Fundação | **Concluída** |
-| P2 API + painel | **T1–T14 concluídas e revisadas**; T15 bloqueada (aprovação de `laravel/boost` e Scramble) |
-| P3 Web base | **Concluída** (6/6 tarefas + revisão final) |
-| P4 Páginas web | **Concluída** (T1–T12 revisadas + revisão final da branch) |
-| P5a Páginas | **Tasks 2–11 executadas** na branch `claude/awesome-keller-iv02zw` (antes da aprovação B1; ver 4.5) |
-| P5b Go-live | T4, T7 no `develop`; T2+T3 (redirects, PR #29) e T8 (CSP, PR #30) em revisão; resto depende de contas |
-| PRs abertos | #29 a #32 para `develop` (seção 5.1), mais os do Dependabot |
-| Testes | `develop` em 13/10: API 273 testes Pest · Web 281 testes Vitest, todos verdes |
-| Rodando | Local com o catálogo real importado (`franccino:wordpress:import --publish`, seção 4.5) |
+| Próximo passo   | Publicar no preview e conferir a fase 1 (Linear PPP-119, seção 5.1)                                         |
 
 ---
 
@@ -262,9 +249,22 @@ documentação), e na `main` pelo #44:
 | [#41](https://github.com/PPP-Group/Franccino/pull/41) | Ordem por arrastar (peças de coleção e lançamento, acabamentos); descadastro da newsletter; `locale_fallback` em todos os recursos; retenção dos logs; backup diário e semanal; alertas de fila; busca sem acento; e-mail seguro |
 | [#42](https://github.com/PPP-Group/Franccino/pull/42) | Auditoria de dependências no CI; teste das imagens do preview no CI; `compose.staging.yaml` (MySQL); relatório da CSP; `check:redirects`; testes que faltavam                                                                    |
 
-Depois do deploy no preview: 2FA do admin no próximo login, `franccino:redirects:generate`,
-`franccino:translations:import` (com `--dry-run` antes) e `pnpm check:redirects` (passo a passo em
-`docs/deploy-preview.md`).
+**Ainda não publicado no preview (22/10).** O checklist para fechar a fase está no Linear (PPP-119):
+
+1. Deploy da API e do site; 2FA dos administradores no primeiro login.
+2. `franccino:redirects:generate` e `franccino:translations:import` (com `--dry-run` antes); depois, deploy do site de novo.
+3. Conferir:
+   - `pnpm check:redirects`, com zero quebrados;
+   - um produto completo, do painel à página;
+   - o 3D no computador e em celulares;
+   - o backup do dia seguinte;
+   - o `/en`.
+4. Decidir:
+   - `laravel/boost` e `dedoc/scramble`;
+   - o importador de planilha;
+   - o provedor do mapa das lojas.
+
+Passo a passo em `docs/deploy-preview.md`.
 
 ### 5.2 O que precisa ser aprovado ou providenciado
 
