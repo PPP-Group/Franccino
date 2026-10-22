@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (17, de 21/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (18, de 22/10/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -644,3 +644,30 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
   - `feature/video-proprio-fabrica`, `fix/404-com-layout`.
 - Dependabot: o #39 (Laravel 13.37) foi mergeado na `develop`; o #22 (`@types/node` 26) foi fechado, e a regra nova
   impede que ele volte.
+
+## 18. Sessão de 22/10/2026: o que falta da fase 1 e Linear limpo
+
+- **Nada da seção 17.1 foi feito ainda:**
+  - o preview continua sem a entrega de 21/10;
+  - os comandos não rodaram;
+  - as branches da 17.2 continuam no GitHub, mais `feature/docs-arrumacao`, `feature/infra-ci-testes` e
+    `fix/handoff-merges`.
+- **PDF para a equipe** "Franccino - Fase 1, o que falta (22-10)": publicar, rodar, conferir, GitHub e decisões. Foi
+  entregue ao Pedro Ivo e não está no repositório. O mesmo checklist está no Linear, no **PPP-119**.
+- **Linear limpo** (é visível para o cliente; comentários neutros em cada item):
+  - **Done:** o que já estava entregue no código:
+    - PPP-64, 67, 70, 71, 73, 75 e 108;
+    - PPP-51 (o bucket fica no PPP-11);
+    - PPP-20 (formato GLB);
+    - PPP-41 e 42 (apresentação e rodada 1);
+    - PPP-36 a 40 (telas da beta).
+  - **Atualizados:**
+    - PPP-43 virou "Rodada 2 do design: redesenho do site";
+    - PPP-105: fonte aplicada, falta o logo em SVG;
+    - PPP-94 e 96 em andamento, com o que falta;
+    - PPP-57 e 77 em Todo, dentro do PPP-119;
+    - PPP-23 aguarda a lista de acabamentos.
+  - **Notas de estado:** PPP-15, 59, 62, 79, 93 e 95.
+  - **Duplicado:** PPP-82 foi juntado ao PPP-92.
+  - **Novo:** PPP-119, "Publicar no preview e conferir a entrega do backend".
+- **`docs/HANDOFF.md`:** as linhas que sobraram da tabela antiga no resumo foram removidas.
