@@ -83,7 +83,18 @@ O resto já vem de fábrica na imagem e não precisa de configuração no EasyPa
 - Agendador (`RUN_SCHEDULER`, ligado): limpa os logs pelo prazo de retenção, os jobs com falha e as exportações, e faz o
   backup do SQLite.
 - Healthcheck na rota `/up`, que também confere o banco.
-- 2FA obrigatório para administradores (`PANEL_ADMIN_MFA_REQUIRED`, ligado) e cookie de sessão seguro.
+- Cookie de sessão seguro.
+- 2FA obrigatório para administradores: ligado por padrão na imagem (`PANEL_ADMIN_MFA_REQUIRED`). **No preview fica
+  desligado** (`PANEL_ADMIN_MFA_REQUIRED=false` nas variáveis da API), para a Franccino testar sem depender de quem
+  tem o app autenticador. Volta a ser ligado no staging e na produção.
+
+Se um administrador já tinha configurado o app autenticador, o painel continua pedindo o código mesmo com a variável
+desligada. Para zerar o 2FA de todos os usuários do preview:
+
+```bash
+API=$(docker ps -q -f name=sites_api-site-franccino | head -1)
+docker exec $API php artisan tinker --execute="App\Models\User::query()->update(['app_authentication_secret' => null, 'app_authentication_recovery_codes' => null]);"
+```
 
 ### Backup do preview
 
