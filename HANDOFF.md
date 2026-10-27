@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (18, de 22/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (19, de 27/10/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -624,7 +624,7 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
 ### 17.1 Depois do merge na `main`, no VPS
 
 1. Deploy da API e do site no EasyPanel. Em 16/10 o deploy automático estava desligado; confira.
-2. No próximo login, o admin configura o 2FA (app autenticador).
+2. ~~No próximo login, o admin configura o 2FA.~~ Em 27/10 ficou decidido: 2FA desligado no preview (seção 19).
 3. Rodar, nesta ordem (passo a passo em `docs/deploy-preview.md`):
    1. `php artisan franccino:redirects:generate`;
    2. `php artisan franccino:translations:import database/data/translations/en.json --dry-run`, depois sem
@@ -671,3 +671,13 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
   - **Duplicado:** PPP-82 foi juntado ao PPP-92.
   - **Novo:** PPP-119, "Publicar no preview e conferir a entrega do backend".
 - **`docs/HANDOFF.md`:** as linhas que sobraram da tabela antiga no resumo foram removidas.
+
+## 19. 27/10/2026: 2FA desligado no preview
+
+- O Pedro Ivo publicou a entrega no preview, e o login do painel passou a pedir o código do app autenticador. Ninguém
+  tinha configurado o app, e isso também travaria os testes da Franccino.
+- **Decisão:** no preview, 2FA desligado (`PANEL_ADMIN_MFA_REQUIRED=false` nas variáveis da API no EasyPanel). No
+  staging e na produção, ligado (é o padrão da imagem).
+- Se o painel ainda pedir o código depois da variável, zerar o 2FA dos usuários do preview com o comando de
+  `docs/deploy-preview.md` (seção "Serviço da API").
+- `.env.preview.example` já traz a variável desligada.

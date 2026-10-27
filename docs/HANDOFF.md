@@ -251,7 +251,7 @@ documentação), e na `main` pelo #44:
 
 **Ainda não publicado no preview (22/10).** O checklist para fechar a fase está no Linear (PPP-119):
 
-1. Deploy da API e do site; 2FA dos administradores no primeiro login.
+1. Deploy da API e do site, com `PANEL_ADMIN_MFA_REQUIRED=false` na API (2FA desligado no preview, decisão de 27/10).
 2. `franccino:redirects:generate` e `franccino:translations:import` (com `--dry-run` antes); depois, deploy do site de novo.
 3. Conferir:
    - `pnpm check:redirects`, com zero quebrados;
