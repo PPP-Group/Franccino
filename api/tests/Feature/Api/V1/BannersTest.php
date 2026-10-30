@@ -26,7 +26,9 @@ it('rejects an unknown placement', function () {
 it('serves the looping video by its public url, and null without one', function () {
     Storage::fake('media');
     $withVideo = Banner::factory()->create(['placement' => 'home_hero', 'sort_order' => 1]);
-    $withVideo->addMedia(UploadedFile::fake()->create('loop.mp4', 512, 'video/mp4'))->toMediaCollection('video');
+    // The media library checks the real type of the file, so the fake carries an MP4 header ("ftyp" box).
+    $mp4 = "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 64);
+    $withVideo->addMedia(UploadedFile::fake()->createWithContent('loop.mp4', $mp4))->toMediaCollection('video');
     Banner::factory()->create(['placement' => 'home_hero', 'sort_order' => 2]);
 
     $banners = $this->getJson('/api/v1/banners')->assertOk()->json('data');
