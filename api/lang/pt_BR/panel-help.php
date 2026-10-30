@@ -57,9 +57,17 @@ return [
     'designer.bio' => 'Texto completo, para a página do designer.',
     'designer.portrait' => 'Retrato vertical (ideal 1200 × 1600 px). O site mostra em preto e branco.',
 
+    // Ambiente com pontos clicáveis
+    'scene.title' => 'Nome do ambiente, ex.: Varanda com a coleção Tempo. Aparece para leitores de tela e no painel.',
+    'scene.image' => 'Foto horizontal do ambiente montado (ideal 2400 × 1400 px), com as peças bem visíveis.',
+    'scene.hotspots' => 'Um ponto para cada peça da foto. A ordem dos pontos é a ordem em que o teclado passa por eles.',
+    'scene_hotspot.product_id' => 'A peça que o ponto abre. Só peças publicadas aparecem no site.',
+    'scene_hotspot.x' => 'Onde está a peça, da esquerda para a direita: 0 é a borda esquerda da foto, 50 o meio, 100 a borda direita.',
+    'scene_hotspot.y' => 'Onde está a peça, de cima para baixo: 0 é o topo da foto, 50 o meio, 100 a base.',
+
     // Banner da página inicial
     'banner.placement' => 'Onde o banner aparece. "Destaque da home" é o banner grande que troca de imagem na página inicial.',
-    'banner.title' => 'Frase principal sobre a foto, ex.: Design para viver o tempo. Pode ficar vazia.',
+    'banner.title' => 'Frase principal sobre a foto, ex.: Design para viver o tempo. Se a arte do banner já tem texto, deixe vazio: o site não escreve nada por cima.',
     'banner.subtitle' => 'Frase menor, embaixo do título.',
     'banner.cta_label' => 'Texto do botão, ex.: Conheça as peças. Vazio, o botão não aparece.',
     'banner.cta_url' => 'Para onde o botão leva, ex.: /pt/produtos',
@@ -67,6 +75,7 @@ return [
     'banner.ends_at' => 'Opcional: o banner some depois desta data.',
     'banner.image' => 'Foto horizontal de alta qualidade (ideal 2400 × 1200 px). O texto fica por cima, então prefira fotos com área mais calma.',
     'banner.image_mobile' => 'Opcional: versão vertical para celular (ideal 1080 × 1350 px). Vazio, o site usa a foto principal.',
+    'banner.video' => 'Opcional: vídeo curto em loop, sem som (MP4, 10 a 20 segundos, até 20 MB). Toca no lugar da foto, que aparece enquanto ele carrega e para quem pediu menos movimento.',
 
     // Páginas do site
     'page.key' => 'Qual página do site é esta. Não muda.',

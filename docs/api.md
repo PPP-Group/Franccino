@@ -138,6 +138,7 @@ type ProductDetail = ProductCard & {
 | `GET /stores`             | `state?` `type?`                                                                                         | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                            |
 | `GET /finishes`           |                                                                                                          | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                              |
 | `GET /banners`            | `placement` (default `home_hero`)                                                                        | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                                   |
+| `GET /scenes`             |                                                                                                          | `Scene[]` (ver abaixo): ambientes publicados com foto, cada ponto com o `ProductCard` da peça                                                                                 |
 | `GET /pages/{key}`        |                                                                                                          | `{ key, title, intro, content: Block[], cover, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo)                                                             |
 | `GET /settings`           |                                                                                                          | configurações públicas (ver shape completo abaixo)                                                                                                                            |
 | `GET /downloads`          | `area?` `category?` `q?` `page` `per_page`                                                               | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado)                                                                                        |
@@ -183,7 +184,8 @@ Nos demais tipos (`product`, `collection`, `designer`, `launch`, `project`) `key
 (`docs/data-model.md`), então todos podem vir `null` — a API nunca inventa conteúdo para
 preencher um banner incompleto. `image` e `image_mobile` vêm como estão cadastrados (`image_mobile`
 é opcional; `image` normalmente é obrigatória no cadastro, mas também pode ser `null` se o banner
-ainda não tiver a imagem de desktop).
+ainda não tiver a imagem de desktop). `video` é a URL absoluta de um MP4 curto, sem som, que o site toca em loop
+no lugar da foto (a foto vira o pôster e é o que aparece para quem pediu menos movimento); `null` sem vídeo.
 
 ```ts
 type Banner = {
@@ -193,6 +195,22 @@ type Banner = {
   cta_url: string | null;
   image: Image | null;
   image_mobile: Image | null;
+  video: string | null;
+};
+```
+
+### `Scene` (`GET /scenes`)
+
+Ambiente com pontos clicáveis. `x` e `y` são a posição do ponto na foto, em porcentagem (0–100; `x` a partir da
+esquerda, `y` a partir do topo), para valer em qualquer tamanho de tela. Só saem ambientes publicados com foto, e só os
+pontos de peças publicadas, na ordem do painel.
+
+```ts
+type Scene = {
+  id: number;
+  title: string;
+  image: Image;
+  hotspots: { x: number; y: number; product: ProductCard }[];
 };
 ```
 
@@ -345,5 +363,5 @@ link no navegador, quando o visitante abre o 3D, e nunca grava a URL no HTML.
 Ao salvar ou excluir conteúdo no painel, o back-end enfileira um POST para
 `{FRONTEND_REVALIDATE_URL}` com cabeçalho `x-revalidate-secret` e corpo `{ "tags": ["products", "home"] }`.
 Tags são por tipo de recurso: `home`, `areas`, `categories`, `products`, `lines`, `designers`,
-`collections`, `launches`, `projects`, `clients`, `stores`, `finishes`, `banners`, `pages`, `settings`,
+`collections`, `launches`, `projects`, `clients`, `stores`, `finishes`, `banners`, `scenes`, `pages`, `settings`,
 `redirects`. Sem URL configurada, nada é enviado.

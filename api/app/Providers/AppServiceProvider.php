@@ -29,6 +29,7 @@ use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
 use App\Models\Redirect;
+use App\Models\Scene;
 use App\Models\Store;
 use App\Models\User;
 use App\Observers\RecordsActivity;
@@ -108,6 +109,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Client::class, ContentPolicy::class);
         Gate::policy(Store::class, ContentPolicy::class);
         Gate::policy(Banner::class, ContentPolicy::class);
+        Gate::policy(Scene::class, ContentPolicy::class);
 
         Gate::policy(Redirect::class, AdminOnlyPolicy::class);
 

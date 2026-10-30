@@ -14,6 +14,7 @@ use App\Filament\Resources\NewsletterSubscribers\NewsletterSubscriberResource;
 use App\Filament\Resources\Pages\PageResource;
 use App\Filament\Resources\Products\ProductResource;
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\Scenes\SceneResource;
 use App\Filament\Resources\Stores\StoreResource;
 use App\Filament\Resources\Users\UserResource;
 use App\Settings\GeneralSettings;
@@ -39,6 +40,7 @@ final class PanelGuides
         'launches' => [LaunchResource::class],
         'designers' => [DesignerResource::class],
         'banners' => [BannerResource::class],
+        'scenes' => [SceneResource::class],
         'pages' => [PageResource::class],
         'projects' => [ProjectResource::class],
         'stores' => [StoreResource::class],

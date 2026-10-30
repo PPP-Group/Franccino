@@ -59,6 +59,11 @@ class BannerForm
                     ->label(__('Image (mobile)'))
                     ->collection('image_mobile')
                     ->image(),
+                SpatieMediaLibraryFileUpload::make('video')
+                    ->label(__('Looping video (MP4)'))
+                    ->collection('video')
+                    ->acceptedFileTypes(['video/mp4'])
+                    ->maxSize(config('franccino.uploads.banner_video_max_kb')),
             ]);
     }
 }

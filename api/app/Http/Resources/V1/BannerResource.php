@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * `Banner` from docs/api.md (`title`, `subtitle`, `cta_label`, `cta_url`,
- * `image`, `image_mobile`), for `GET /banners`.
+ * `image`, `image_mobile`, `video`), for `GET /banners`.
  *
  * @property-read Banner $resource
  */
@@ -29,6 +29,7 @@ class BannerResource extends JsonResource
             'cta_url' => Localized::value($banner, 'cta_url'),
             'image' => ImagePresenter::present($banner->getFirstMedia('image'), (string) $title),
             'image_mobile' => ImagePresenter::present($banner->getFirstMedia('image_mobile'), (string) $title),
+            'video' => $banner->getFirstMedia('video')?->getUrl(),
         ];
     }
 }
