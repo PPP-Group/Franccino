@@ -60,7 +60,7 @@ return [
     // Ambiente com pontos clicáveis
     'scene.title' => 'Nome do ambiente, ex.: Varanda com a coleção Tempo. Aparece para leitores de tela e no painel.',
     'scene.image' => 'Foto horizontal do ambiente montado (ideal 2400 × 1400 px), com as peças bem visíveis.',
-    'scene.hotspots' => 'Um ponto para cada peça da foto. A ordem dos pontos é a ordem em que o teclado passa por eles.',
+    'scene.hotspots' => 'Um ponto para cada peça da foto. Depois de salvar com a foto, dá para marcar a posição clicando nela, logo acima. A ordem dos pontos é a ordem em que o teclado passa por eles.',
     'scene_hotspot.product_id' => 'A peça que o ponto abre. Só peças publicadas aparecem no site.',
     'scene_hotspot.x' => 'Onde está a peça, da esquerda para a direita: 0 é a borda esquerda da foto, 50 o meio, 100 a borda direita.',
     'scene_hotspot.y' => 'Onde está a peça, de cima para baixo: 0 é o topo da foto, 50 o meio, 100 a base.',

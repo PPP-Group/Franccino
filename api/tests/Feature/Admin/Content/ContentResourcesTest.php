@@ -14,6 +14,7 @@ use App\Filament\Resources\Launches\Pages\ListLaunches;
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
 use App\Filament\Resources\Scenes\Pages\CreateScene;
+use App\Filament\Resources\Scenes\Pages\EditScene;
 use App\Filament\Resources\Scenes\Pages\ListScenes;
 use App\Filament\Resources\Stores\Pages\CreateStore;
 use App\Filament\Resources\Stores\Pages\ListStores;
@@ -185,6 +186,17 @@ it('creates a scene with a point on a piece', function () {
     expect($scene->getTranslation('title', 'en'))->toBe('Porch')
         ->and($scene->hotspots)->toHaveCount(1)
         ->and($scene->hotspots->first())->product_id->toBe($product->id)->x->toBe(42.5);
+});
+
+it('offers to place the points by clicking the saved photo', function () {
+    Storage::fake('media');
+    $scene = Scene::factory()->create();
+    $scene->addMedia(UploadedFile::fake()->image('varanda.jpg', 1600, 900))->toMediaCollection('image');
+
+    livewire(EditScene::class, ['record' => $scene->getRouteKey()])
+        ->assertOk()
+        ->assertSee(__('Use on the last point'))
+        ->assertSee($scene->getFirstMediaUrl('image'), false);
 });
 
 it('keeps a point inside the photo', function () {

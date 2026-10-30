@@ -4,11 +4,13 @@ namespace App\Filament\Resources\Scenes\Schemas;
 
 use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
+use App\Models\Scene;
 use App\Support\Locales;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Schema;
 
 /**
@@ -33,6 +35,13 @@ class SceneForm
                     ->collection('image')
                     ->image()
                     ->required(),
+                // Click-to-place helper: needs the saved photo, so it shows up on the edit page only.
+                ViewField::make('point_picker')
+                    ->view('filament.scenes.point-picker')
+                    ->viewData(fn (?Scene $record): array => ['imageUrl' => $record?->getFirstMediaUrl('image')])
+                    ->visible(fn (?Scene $record): bool => (bool) $record?->hasMedia('image'))
+                    ->dehydrated(false)
+                    ->columnSpanFull(),
                 Repeater::make('hotspots')
                     ->label(__('Points'))
                     ->relationship()
