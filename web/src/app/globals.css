@@ -11,6 +11,7 @@
 @import '../styles/home.css' layer(components);
 @import '../styles/quote.css' layer(components);
 @import '../styles/pages.css' layer(components);
+@import '../styles/motion.css' layer(components);
 
 @theme inline {
   --color-*: initial;

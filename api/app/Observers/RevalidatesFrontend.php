@@ -18,6 +18,8 @@ use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
 use App\Models\Redirect;
+use App\Models\Scene;
+use App\Models\SceneHotspot;
 use App\Models\Store;
 use App\Support\FrontendRevalidator;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +38,7 @@ class RevalidatesFrontend
         Line::class => ['lines', 'products'],
         Designer::class => ['designers', 'products', 'home'],
         Collection::class => ['collections', 'products', 'home'],
-        Product::class => ['products', 'home'],
+        Product::class => ['products', 'home', 'scenes'],
         FinishGroup::class => ['finishes', 'products'],
         Finish::class => ['finishes', 'products'],
         ProductFile::class => ['products', 'designers', 'launches'],
@@ -46,6 +48,8 @@ class RevalidatesFrontend
         Client::class => ['clients'],
         Store::class => ['stores'],
         Banner::class => ['banners', 'home'],
+        Scene::class => ['scenes'],
+        SceneHotspot::class => ['scenes'],
         Page::class => ['pages'],
         Redirect::class => ['redirects'],
     ];

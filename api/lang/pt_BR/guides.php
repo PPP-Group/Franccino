@@ -101,6 +101,22 @@ return [
             'tips' => [],
         ],
 
+        'scenes' => [
+            'title' => 'Ambientes com pontos clicáveis',
+            'summary' => 'Fotos de ambientes montados, com um ponto em cada peça que leva à página dela. Aparecem na página inicial.',
+            'steps' => [
+                'Menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
+                'Em Pontos, clique em "Adicionar ponto" para cada peça: escolha a peça e diga onde ela está na foto.',
+                'Salve uma vez com a foto. Na edição, adicione o ponto, escolha a peça, clique na foto em cima dela e depois em "Usar no último ponto": a posição é preenchida sozinha.',
+                'A posição também pode ser digitada, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
+                'Ligue "Publicado" e salve. Abra a página inicial e confira se cada ponto caiu em cima da peça; ajuste os números se precisar.',
+            ],
+            'tips' => [
+                'Ponha o ponto no meio da peça, longe da borda da foto.',
+                'Peça despublicada some do ambiente sozinha; o ponto volta quando ela for publicada de novo.',
+            ],
+        ],
+
         'banners' => [
             'title' => 'Banner da página inicial',
             'summary' => 'As fotos grandes que trocam sozinhas no topo da página inicial.',

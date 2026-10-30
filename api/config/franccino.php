@@ -52,6 +52,8 @@ return [
         // Page video blocks (e.g. the factory film), served by the site itself. Keep in step with `config/livewire.php`
         // and `docker/php.ini`.
         'video_max_kb' => 153600,
+        // Home banner loop (muted, autoplay): short on purpose, it loads with the page on every visit.
+        'banner_video_max_kb' => 20480,
     ],
 
     'demo' => [

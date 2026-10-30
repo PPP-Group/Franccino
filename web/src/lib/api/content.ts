@@ -25,6 +25,7 @@ import type {
   ProjectCard,
   ProjectDetail,
   RedirectRule,
+  Scene,
   Settings,
   SitemapEntry,
   Store,
@@ -174,6 +175,16 @@ export async function getClients(locale: Locale): Promise<Client[]> {
   const { data } = await apiGet<Item<Client[]>>('/clients', {
     locale,
     tags: ['clients'],
+    fallback: { data: [] },
+  });
+  return data;
+}
+
+/** Ambientes com pontos clicáveis da home (banco de ideias, ideia 7). */
+export async function getScenes(locale: Locale): Promise<Scene[]> {
+  const { data } = await apiGet<Item<Scene[]>>('/scenes', {
+    locale,
+    tags: ['scenes'],
     fallback: { data: [] },
   });
   return data;

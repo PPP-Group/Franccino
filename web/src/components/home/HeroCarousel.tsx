@@ -1,31 +1,18 @@
 'use client';
 
-import { Children, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { Children, useEffect, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { Icon } from '@/components/ui/Icon';
 import { CAROUSEL_INTERVAL_MS, shouldAutoplay, wrapIndex } from '@/lib/ui/carousel';
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-
-/** `true` no servidor: nada gira antes da hidratação, e quem pediu menos movimento nunca vê girar. */
-function useReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => true,
-  );
-}
+import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
 
 /**
  * Carrossel dos banners da home (Anexo I: banner principal em carrossel). Os slides chegam prontos do
- * servidor (`HeroSection`); aqui só se escolhe qual aparece. Gira sozinho a cada 7 s, pausa no foco,
- * no hover e no botão, e respeita `prefers-reduced-motion`.
+ * servidor (`HeroSection`); aqui só se escolhe qual aparece, com uma troca suave a cada 7 s.
+ *
+ * Retorno do banco de ideias (26/10/2026, ideia 14): sem setas, pontos nem botão de pausa na tela. A troca para
+ * no hover e no foco, nunca acontece para quem pediu menos movimento, e o botão de pausa continua no teclado e no
+ * leitor de tela (aparece só com o foco, como o "pular para o conteúdo"), para a troca automática poder ser parada
+ * (WCAG 2.2.2).
  */
 export function HeroCarousel({ children }: { children: ReactNode }) {
   const t = useTranslations('home.hero.carousel');
@@ -58,6 +45,14 @@ export function HeroCarousel({ children }: { children: ReactNode }) {
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
     >
+      <button
+        type="button"
+        className="hero-carousel__pause"
+        aria-pressed={paused}
+        onClick={() => setPaused((value) => !value)}
+      >
+        {paused ? t('play') : t('pause')}
+      </button>
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -70,45 +65,6 @@ export function HeroCarousel({ children }: { children: ReactNode }) {
           {slide}
         </div>
       ))}
-      <div className="hero-carousel__controls">
-        <button
-          type="button"
-          className="hero-carousel__button"
-          aria-label={paused ? t('play') : t('pause')}
-          onClick={() => setPaused((value) => !value)}
-        >
-          <Icon name={paused ? 'play' : 'pause'} />
-        </button>
-        <button
-          type="button"
-          className="hero-carousel__button hero-carousel__button--previous"
-          aria-label={t('previous')}
-          onClick={() => setActive((index) => wrapIndex(index - 1, total))}
-        >
-          <Icon name="arrow" />
-        </button>
-        <ol className="hero-carousel__dots">
-          {slides.map((_, index) => (
-            <li key={index}>
-              <button
-                type="button"
-                className="hero-carousel__dot"
-                aria-label={t('goTo', { current: index + 1, total })}
-                aria-current={index === active ? 'true' : undefined}
-                onClick={() => setActive(index)}
-              />
-            </li>
-          ))}
-        </ol>
-        <button
-          type="button"
-          className="hero-carousel__button"
-          aria-label={t('next')}
-          onClick={() => setActive((index) => wrapIndex(index + 1, total))}
-        >
-          <Icon name="arrow" />
-        </button>
-      </div>
     </section>
   );
 }

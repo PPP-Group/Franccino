@@ -24,6 +24,7 @@ use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
 use App\Models\Redirect;
+use App\Models\Scene;
 use App\Models\Store;
 use App\Models\User;
 
@@ -51,6 +52,7 @@ $matrix = [
     'clients' => [Client::class, $content],
     'stores' => [Store::class, $content],
     'banners' => [Banner::class, $content],
+    'scenes' => [Scene::class, $content],
     'areas' => [Area::class, $fixed],
     'pages' => [Page::class, $fixed],
     'contact messages' => [ContactMessage::class, $inbox],

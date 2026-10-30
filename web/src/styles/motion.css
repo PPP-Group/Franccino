@@ -1,0 +1,104 @@
+/*
+  Movimento da rodada 2 (banco de ideias, retorno de 26/10/2026). Tudo num arquivo só para poder tirar ou ajustar de
+  uma vez ("se não gostar, tira"): apagar o @import em globals.css desliga as quatro coisas abaixo.
+
+  1. Revelação na rolagem (ideia 4): blocos grandes sobem e aparecem ao entrar na tela, e a peça em destaque da home
+     "vira um pouquinho e se desfaz" ao sair. Só CSS (animation-timeline: view()); navegador sem suporte mostra tudo
+     parado, como antes.
+  2. Carregamento (ideia 12): faixa em degradê passando na foto do card até a imagem chegar.
+  3. Imagem que cresce (ideia 10): a foto do card vira a foto grande da página da peça (ViewTransition do React).
+
+  Quem pediu menos movimento não vê nenhuma delas.
+*/
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .collection-tile,
+    .project-row,
+    .factory,
+    .line-panel,
+    .designer,
+    .block-image-text,
+    .block-gallery {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+
+    .feature__media img {
+      transform-origin: 50% 60%;
+      animation: feature-drift linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes feature-drift {
+  to {
+    opacity: 0.15;
+    transform: perspective(1400px) rotateY(-9deg) scale(0.94) translateY(-6%);
+  }
+}
+
+/* ---------- carregamento das fotos ---------- */
+
+/* `ImageLoadWatcher` marca o <html> e cada foto que terminou de carregar; sem JavaScript, nada disso aparece. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-image-watch] .plate__media:has(> img:not([data-loaded])),
+  [data-image-watch] .collection-tile__media:has(> img:not([data-loaded])) {
+    background-image: linear-gradient(
+      100deg,
+      var(--shimmer-base) 30%,
+      var(--shimmer-light) 50%,
+      var(--shimmer-base) 70%
+    );
+    background-size: 300% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* ---------- card → página da peça ---------- */
+
+::view-transition-group(.product-morph) {
+  animation-duration: 460ms;
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-image-pair(.product-morph) {
+  animation-name: morph-soften;
+}
+
+@keyframes morph-soften {
+  30% {
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

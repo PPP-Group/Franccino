@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { areaMenus } from '@/components/layout/area-menu';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { ImageLoadWatcher } from '@/components/ui/ImageLoadWatcher';
 import { ToastRegion } from '@/components/ui/ToastRegion';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { htmlLang, locales } from '@/i18n/config';
@@ -62,6 +63,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           <SiteFooter settings={settings} />
           <ToastRegion />
           <ConsentBanner />
+          <ImageLoadWatcher />
         </NextIntlClientProvider>
       </body>
     </html>

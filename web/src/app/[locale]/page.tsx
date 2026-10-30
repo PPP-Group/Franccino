@@ -8,11 +8,12 @@ import { HeroSection } from '@/components/home/HeroSection';
 import { LaunchesSection } from '@/components/home/LaunchesSection';
 import { LinesSection } from '@/components/home/LinesSection';
 import { PlannerTeaser } from '@/components/home/PlannerTeaser';
+import { ScenesSection } from '@/components/home/ScenesSection';
 import { StoresSection } from '@/components/home/StoresSection';
 import { TechnicalTeaser } from '@/components/home/TechnicalTeaser';
 import type { Locale } from '@/i18n/config';
 import { getAreas, getProductDetails, getProducts } from '@/lib/api/catalog';
-import { getDesigners, getHome, getPage, getSettings, getStores } from '@/lib/api/content';
+import { getDesigners, getHome, getPage, getScenes, getSettings, getStores } from '@/lib/api/content';
 import { emptyPage } from '@/lib/api/empty';
 import type { ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
@@ -39,13 +40,14 @@ export default async function HomePage({ params }: Props) {
   const locale = raw as Locale;
   setRequestLocale(locale);
 
-  const [home, areas, designers, factory, storeList, settings] = await Promise.all([
+  const [home, areas, designers, factory, storeList, settings, scenes] = await Promise.all([
     getHome(locale),
     getAreas(locale),
     getDesigners(locale),
     getPage(locale, 'factory'),
     getStores(locale),
     getSettings(locale),
+    getScenes(locale),
   ]);
   const launch = home.current_launch;
   const [launchPage, featured] = await Promise.all([
@@ -85,6 +87,7 @@ export default async function HomePage({ params }: Props) {
         <LaunchesSection launch={launch} products={launchPage.data} />
       ) : null}
       {areas.length > 0 ? <LinesSection areas={areas} /> : null}
+      {scenes.length > 0 ? <ScenesSection scenes={scenes} /> : null}
       {feature ? <FeatureSection product={feature} /> : null}
       <PlannerTeaser />
       {home.designers.length > 0 ? <DesignersSection designers={home.designers} /> : null}

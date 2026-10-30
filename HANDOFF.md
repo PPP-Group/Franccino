@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (17, de 21/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (20, de 30/10/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -624,7 +624,7 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
 ### 17.1 Depois do merge na `main`, no VPS
 
 1. Deploy da API e do site no EasyPanel. Em 16/10 o deploy automático estava desligado; confira.
-2. No próximo login, o admin configura o 2FA (app autenticador).
+2. ~~No próximo login, o admin configura o 2FA.~~ Em 27/10 ficou decidido: 2FA desligado no preview (seção 19).
 3. Rodar, nesta ordem (passo a passo em `docs/deploy-preview.md`):
    1. `php artisan franccino:redirects:generate`;
    2. `php artisan franccino:translations:import database/data/translations/en.json --dry-run`, depois sem
@@ -644,3 +644,80 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
   - `feature/video-proprio-fabrica`, `fix/404-com-layout`.
 - Dependabot: o #39 (Laravel 13.37) foi mergeado na `develop`; o #22 (`@types/node` 26) foi fechado, e a regra nova
   impede que ele volte.
+
+## 18. Sessão de 22/10/2026: o que falta da fase 1 e Linear limpo
+
+- **Nada da seção 17.1 foi feito ainda:**
+  - o preview continua sem a entrega de 21/10;
+  - os comandos não rodaram;
+  - as branches da 17.2 continuam no GitHub, mais `feature/docs-arrumacao`, `feature/infra-ci-testes` e
+    `fix/handoff-merges`.
+- **PDF para a equipe** "Franccino - Fase 1, o que falta (22-10)": publicar, rodar, conferir, GitHub e decisões. Foi
+  entregue ao Pedro Ivo e não está no repositório. O mesmo checklist está no Linear, no **PPP-119**.
+- **Linear limpo** (é visível para o cliente; comentários neutros em cada item):
+  - **Done:** o que já estava entregue no código:
+    - PPP-64, 67, 70, 71, 73, 75 e 108;
+    - PPP-51 (o bucket fica no PPP-11);
+    - PPP-20 (formato GLB);
+    - PPP-41 e 42 (apresentação e rodada 1);
+    - PPP-36 a 40 (telas da beta).
+  - **Atualizados:**
+    - PPP-43 virou "Rodada 2 do design: redesenho do site";
+    - PPP-105: fonte aplicada, falta o logo em SVG;
+    - PPP-94 e 96 em andamento, com o que falta;
+    - PPP-57 e 77 em Todo, dentro do PPP-119;
+    - PPP-23 aguarda a lista de acabamentos.
+  - **Notas de estado:** PPP-15, 59, 62, 79, 93 e 95.
+  - **Duplicado:** PPP-82 foi juntado ao PPP-92.
+  - **Novo:** PPP-119, "Publicar no preview e conferir a entrega do backend".
+- **`docs/HANDOFF.md`:** as linhas que sobraram da tabela antiga no resumo foram removidas.
+
+## 19. 27/10/2026: 2FA desligado no preview
+
+- O Pedro Ivo publicou a entrega no preview, e o login do painel passou a pedir o código do app autenticador. Ninguém
+  tinha configurado o app, e isso também travaria os testes da Franccino.
+- **Decisão:** no preview, 2FA desligado (`PANEL_ADMIN_MFA_REQUIRED=false` nas variáveis da API no EasyPanel). No
+  staging e na produção, ligado (é o padrão da imagem).
+- Se o painel ainda pedir o código depois da variável, zerar o 2FA dos usuários do preview com o comando de
+  `docs/deploy-preview.md` (seção "Serviço da API").
+- `.env.preview.example` já traz a variável desligada.
+
+## 20. 30/10/2026: banco de ideias aprovado e início da rodada 2 do design
+
+- **Retorno do banco de ideias (26/10):** reunião com o Matheus e texto do Marcelo, registrados ideia por ideia em
+  [`docs/reunioes/2026-10-26-retorno-banco-de-ideias.md`](docs/reunioes/2026-10-26-retorno-banco-de-ideias.md). Quando
+  as duas respostas divergem, vale a da Franccino. O PDF do banco de ideias e o PDF de respostas não estavam no
+  repositório nem no Linear: a numeração foi reconstruída pela conversa e precisa ser conferida.
+- **Plano e o que já foi feito:** [`docs/plans/2026-10-30-rodada-2-banco-de-ideias.md`](docs/plans/2026-10-30-rodada-2-banco-de-ideias.md).
+  Branch `claude/banner-cover-images-vcdpmb`, saída da `develop`. Entraram as ideias aprovadas:
+  - esteira só com foto e nome (1); o nome vem para frente com a peça (2); cabeçalho branco sólido (5);
+  - banner sem texto por cima quando a arte já tem texto, carrossel sem botões na tela (3, 14);
+  - vídeo curto em loop no banner, enviado no painel (14);
+  - revelação na rolagem e a peça em destaque que "vira e se desfaz" (4), tudo em `web/src/styles/motion.css`;
+  - **ambientes com pontos clicáveis (7):** painel Conteúdo → Ambientes, `GET /scenes`, seção na home;
+  - acabamento em detalhe na página Acabamentos (9); a foto do card cresce até a página da peça (10);
+  - números que contam e faixa de carregamento nas fotos (12).
+- **Migration nova:** `2026_10_30_100000_create_scenes_tables` (`scenes` e `scene_hotspots`). O banner ganhou a mídia
+  `video` (sem migration). `docs/api.md` e `docs/data-model.md` atualizados.
+- **Para o tech lead decidir:** a pausa do carrossel ficou só para teclado e leitor de tela (o cliente pediu sem botões);
+  o `docs/HANDOFF.md` §5.2 listava "hotspots" como escopo novo, e a ideia 7 entrou por ter sido aprovada no banco de
+  ideias da etapa 2 (a ideia 8 e o configurador 3D seguem fora).
+- **Depois do merge, no preview:** cadastrar um ambiente de teste e, se houver, um vídeo curto num banner, antes de
+  mostrar à Franccino. O Matheus recebe o acesso ao painel.
+
+### 20.1 Complemento (30/10): Linear limpo e o que faltava das ideias
+
+- **Linear** (visível para o cliente, texto neutro):
+  - PPP-43 em andamento, com as sub-tarefas da rodada 2: PPP-120 (esteira, cards e cabeçalho), PPP-121 (banner limpo
+    com vídeo), PPP-122 (ambientes com pontos), PPP-123 (acabamento em detalhe), PPP-124 (animações) e PPP-125
+    (publicar no preview e consolidar o retorno, com o Pedro Ivo);
+  - PPP-98 marcada como duplicada da PPP-116, que passou para em andamento (acesso ao painel para o Matheus);
+  - descrições vazias ou desatualizadas preenchidas: PPP-10, 13, 15, 59, 61, 84 a 88, 91, 93 (agora "Enviar o sitemap
+    ao Search Console") e 99;
+  - dependências ligadas: PPP-28 bloqueia 56 e 63; PPP-11 bloqueia 59 e 79; PPP-10 bloqueia 13 e 15; PPP-16 bloqueia 93;
+    PPP-13 e 18 bloqueiam 97; PPP-43 bloqueia 44 e 87; PPP-23 bloqueia 84;
+  - retorno de 26/10 registrado em PPP-62, 23 e 105; PPP-119 com o deploy de 27/10 e o 2FA desligado marcados.
+  - Os marcos ("Sprint 0" a "Sprint 5") continuam com as datas do plano original; a rodada 2 está no "Sprint 2". Mudar
+    as datas é decisão do tech lead.
+- **Código:** marcar o ponto clicando na foto, no painel do ambiente; "Ver em detalhe" do acabamento escolhido na página
+  da peça.

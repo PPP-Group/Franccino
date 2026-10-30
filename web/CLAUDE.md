@@ -54,7 +54,7 @@ src/
     products/{ProductPlate,ProductRail,QuickAddButton,ProductStage,ModelViewer,ProductConfigurator,...}.tsx
     planner/{RoomPlanner,PlannerLibrary,PlanSvg}.tsx
     quote/QuoteListView.tsx
-    home/{HeroSection,HeroCarousel,LaunchesSection,LinesSection,FeatureSection,PlannerTeaser,...}.tsx
+    home/{HeroSection,HeroCarousel,HeroVideo,SceneViewer,ScenesSection,LaunchesSection,LinesSection,FeatureSection,...}.tsx
     stores/StoreFinder.tsx
     seo/JsonLd.tsx
   i18n/{config,routing,navigation,request}.ts
@@ -65,7 +65,8 @@ src/
     quote/{types,list,store,hooks,message,snapshot}.ts
     planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
     forms/contact.ts
-    ui/{local-store,toast,roving,use-is-client,carousel}.ts
+    ui/{local-store,toast,roving,use-is-client,use-reduced-motion,carousel,count-up}.ts
+    scenes/hotspot.ts
     media/links.ts
     consent/{store,gtm}.ts
     projects/type.ts
@@ -77,7 +78,7 @@ src/
     images/srcset.ts
     seo/{metadata,jsonld,sitemap,site-map}.ts
     security/{basic-auth,csp,csp-report}.ts
-  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages}.css
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,motion}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts
@@ -117,3 +118,5 @@ Alias `@/*` aponta para `src/*`.
 - Estado do navegador (lista e planta) só por `src/lib/quote/store.ts` e
   `src/lib/planner/plan-store.ts`; componentes leem com os hooks, nunca direto do `localStorage`.
 - Nunca inventar preço, prazo, contagem ou especificação: sem dado da API, a seção some.
+- Movimento novo (rolagem, carregamento, transição entre páginas) fica em `src/styles/motion.css`, que se desliga
+  apagando o `@import`; nada se mexe com `prefers-reduced-motion: reduce` (hook `useReducedMotion`).

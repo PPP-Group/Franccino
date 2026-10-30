@@ -455,18 +455,22 @@
       "fallbackTitle": "Authorial design furniture",
       "catalog": "See the catalogue",
       "planner": "Plan a room",
+      "open": "Open the highlight",
       "designers": "{count, plural, one {# designer} other {# designers}}",
       "carousel": {
         "label": "Highlights",
         "roleDescription": "carousel",
         "slideRoleDescription": "highlight",
         "slide": "{current} of {total}",
-        "goTo": "Go to highlight {current} of {total}",
-        "previous": "Previous highlight",
-        "next": "Next highlight",
         "pause": "Pause automatic rotation",
         "play": "Resume automatic rotation"
       }
+    },
+    "scenes": {
+      "title": "Rooms",
+      "lead": "Tap the points to meet each piece.",
+      "points": "Pieces in {title}",
+      "point": "See {name}"
     },
     "launches": {
       "title": "Novelties",
@@ -550,7 +554,15 @@
   },
   "finishes": {
     "title": "Finishes",
-    "count": "{count, plural, one {# finish} other {# finishes}}"
+    "count": "{count, plural, one {# finish} other {# finishes}}",
+    "zoom": {
+      "detail": "See in detail",
+      "open": "See {name} in detail",
+      "dialog": "{name} in detail",
+      "actual": "See at actual size",
+      "fit": "See it whole",
+      "hint": "Scroll the image to move across the texture."
+    }
   },
   "storesPage": {
     "title": "Stores",
