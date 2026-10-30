@@ -11,6 +11,11 @@ type FinishZoomProps = {
   code: string | null;
   description: string | null;
   swatch: Image;
+  /**
+   * `swatch`: a própria amostra é o botão (página Acabamentos). `link`: um "Ver em detalhe" discreto ao lado do
+   * acabamento escolhido, na página da peça, onde a amostra pequena já é o botão de escolha.
+   */
+  variant?: 'swatch' | 'link';
 };
 
 /**
@@ -18,7 +23,7 @@ type FinishZoomProps = {
  * que segue o mouse, uma imagem fixa em alta qualidade: primeiro inteira, e com um clique no tamanho real, para
  * percorrer a textura rolando (no celular, com o dedo e o gesto de pinça). A imagem grande só é pedida ao abrir.
  */
-export function FinishZoom({ name, code, description, swatch }: FinishZoomProps) {
+export function FinishZoom({ name, code, description, swatch, variant = 'swatch' }: FinishZoomProps) {
   const t = useTranslations('finishes.zoom');
   const common = useTranslations('common');
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -34,17 +39,24 @@ export function FinishZoom({ name, code, description, swatch }: FinishZoomProps)
 
   return (
     <>
-      <button
-        type="button"
-        className="finish-card__swatch finish-card__open"
-        onClick={show}
-        aria-label={t('open', { name })}
-      >
-        <ApiImage image={swatch} sizes="(max-width: 35rem) 50vw, 180px" />
-        <span className="finish-card__zoom-icon" aria-hidden="true">
-          <Icon name="plus" />
-        </span>
-      </button>
+      {variant === 'link' ? (
+        <button type="button" className="finish-zoom__open-link" onClick={show}>
+          {t('detail')}
+          <span className="visually-hidden"> {name}</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="finish-card__swatch finish-card__open"
+          onClick={show}
+          aria-label={t('open', { name })}
+        >
+          <ApiImage image={swatch} sizes="(max-width: 35rem) 50vw, 180px" />
+          <span className="finish-card__zoom-icon" aria-hidden="true">
+            <Icon name="plus" />
+          </span>
+        </button>
+      )}
       <dialog
         ref={dialogRef}
         className="finish-zoom"

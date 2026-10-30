@@ -556,6 +556,7 @@
     "title": "Acabamentos",
     "count": "{count, plural, one {# acabamento} other {# acabamentos}}",
     "zoom": {
+      "detail": "Ver em detalhe",
       "open": "Ver {name} em detalhe",
       "dialog": "{name} em detalhe",
       "actual": "Ver no tamanho real",

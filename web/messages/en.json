@@ -556,6 +556,7 @@
     "title": "Finishes",
     "count": "{count, plural, one {# finish} other {# finishes}}",
     "zoom": {
+      "detail": "See in detail",
       "open": "See {name} in detail",
       "dialog": "{name} in detail",
       "actual": "See at actual size",

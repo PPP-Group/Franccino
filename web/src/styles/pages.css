@@ -373,6 +373,19 @@
   opacity: 1;
 }
 
+.finish-zoom__open-link {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: zoom-in;
+}
+
 .finish-zoom {
   width: min(960px, calc(100% - 2 * var(--gutter)));
   max-height: calc(100dvh - 2 * var(--gutter));

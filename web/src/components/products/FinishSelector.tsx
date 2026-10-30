@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
+import { FinishZoom } from '@/components/catalog/FinishZoom';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { FinishGroup, FinishSelection } from '@/lib/product/finish-selection';
 import { nextRovingIndex } from '@/lib/ui/roving';
@@ -129,6 +130,17 @@ export function FinishSelector({ groups, selection, onSelect, note }: FinishSele
             <span className="meta">{t('choose', { group: group.group })}</span>
           )}
         </p>
+        {selectedItem?.swatch ? (
+          // Acabamento em detalhe (banco de ideias, ideia 9): a amostra digitalizada em alta, fora do aria-live acima.
+          <FinishZoom
+            key={selectedItem.id}
+            name={selectedItem.name}
+            code={selectedItem.code}
+            description={null}
+            swatch={selectedItem.swatch}
+            variant="link"
+          />
+        ) : null}
       </div>
       {note ? <p className="meta">{note}</p> : null}
     </section>
