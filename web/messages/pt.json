@@ -455,18 +455,22 @@
       "fallbackTitle": "Móveis de design autoral",
       "catalog": "Ver o catálogo",
       "planner": "Montar uma sala",
+      "open": "Abrir o destaque",
       "designers": "{count, plural, one {# designer} other {# designers}}",
       "carousel": {
         "label": "Destaques",
         "roleDescription": "carrossel",
         "slideRoleDescription": "destaque",
         "slide": "{current} de {total}",
-        "goTo": "Ir para o destaque {current} de {total}",
-        "previous": "Destaque anterior",
-        "next": "Próximo destaque",
         "pause": "Pausar a troca automática",
         "play": "Retomar a troca automática"
       }
+    },
+    "scenes": {
+      "title": "Ambientes",
+      "lead": "Toque nos pontos para conhecer cada peça.",
+      "points": "Peças em {title}",
+      "point": "Ver {name}"
     },
     "launches": {
       "title": "Lançamentos",
@@ -550,7 +554,14 @@
   },
   "finishes": {
     "title": "Acabamentos",
-    "count": "{count, plural, one {# acabamento} other {# acabamentos}}"
+    "count": "{count, plural, one {# acabamento} other {# acabamentos}}",
+    "zoom": {
+      "open": "Ver {name} em detalhe",
+      "dialog": "{name} em detalhe",
+      "actual": "Ver no tamanho real",
+      "fit": "Ver inteiro",
+      "hint": "Role a imagem para percorrer a textura."
+    }
   },
   "storesPage": {
     "title": "Lojas",

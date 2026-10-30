@@ -19,7 +19,7 @@ export function LaunchesSection({ launch, products }: { launch: LaunchCard; prod
             <Icon name="arrow" />
           </Link>
         </div>
-        <ProductRail label={launch.title} products={products} showNew />
+        <ProductRail label={launch.title} products={products} />
       </div>
     </section>
   );

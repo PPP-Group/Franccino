@@ -4,6 +4,7 @@ import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Banner } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
+import { HeroVideo } from './HeroVideo';
 
 type HeroSectionProps = {
   banner: Banner | null;
@@ -14,26 +15,86 @@ type HeroSectionProps = {
 };
 
 /**
- * Hero do primeiro banner. Todos os campos do banner podem vir `null` (R19): sem imagem de desktop
- * vira a placa sem foto, e texto ausente não é inventado (o título cai no `fallbackTitle` da placa).
+ * Banner da home. Todos os campos podem vir `null` (R19).
+ *
+ * - Com foto (ou vídeo): o site só escreve o que foi cadastrado. Retorno do banco de ideias (26/10/2026, ideias 3 e
+ *   14): a arte do banner já traz o texto do marketing, então sem título nada é escrito por cima, nem botão nem
+ *   sombra. O título da seção fica só para leitores de tela, e com `cta_url` o banner inteiro vira o link.
+ * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
  */
 export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
-  const hasMeta = brandNames.length > 0 || designerCount > 0;
   const first = index === 0;
   const titleId = first ? 'hero-title' : `hero-title-${index + 1}`;
   const Heading = first ? 'h1' : 'h2';
+
+  if (!banner || !photo) {
+    return (
+      <PlainHero
+        banner={banner}
+        brandNames={brandNames}
+        designerCount={designerCount}
+        titleId={titleId}
+        heading={Heading}
+      />
+    );
+  }
+
+  const hasText = Boolean(banner.title || banner.subtitle);
+  const cta = banner.cta_url ? { url: banner.cta_url, label: banner.cta_label } : null;
   return (
-    <section className={photo ? 'hero' : 'hero hero--plain'} aria-labelledby={titleId}>
-      {photo ? (
-        <picture className="hero__picture">
-          {banner?.image_mobile ? (
-            <source media="(max-width: 47.99rem)" srcSet={buildSrcSet(banner.image_mobile)} sizes="100vw" />
+    <section className={hasText ? 'hero' : 'hero hero--clean'} aria-labelledby={titleId}>
+      <picture className="hero__picture">
+        {banner.image_mobile ? (
+          <source media="(max-width: 47.99rem)" srcSet={buildSrcSet(banner.image_mobile)} sizes="100vw" />
+        ) : null}
+        <ApiImage image={photo} sizes="100vw" priority={first} className="hero__img" />
+      </picture>
+      {banner.video ? <HeroVideo src={banner.video} /> : null}
+      {hasText ? (
+        <div className="hero__plate">
+          <Heading className={banner.title ? 'display' : 'visually-hidden'} id={titleId}>
+            {banner.title ?? t('fallbackTitle')}
+          </Heading>
+          {banner.subtitle ? <p className="lead">{banner.subtitle}</p> : null}
+          {cta?.label ? (
+            <div className="hero__actions">
+              <a className="btn" href={cta.url}>
+                {cta.label}
+              </a>
+            </div>
           ) : null}
-          <ApiImage image={photo} sizes="100vw" priority={first} className="hero__img" />
-        </picture>
+        </div>
+      ) : (
+        <Heading className="visually-hidden" id={titleId}>
+          {t('fallbackTitle')}
+        </Heading>
+      )}
+      {cta && !(hasText && cta.label) ? (
+        <a className="hero__link" href={cta.url} aria-label={cta.label ?? (photo.alt || t('open'))} />
       ) : null}
+    </section>
+  );
+}
+
+function PlainHero({
+  banner,
+  brandNames,
+  designerCount,
+  titleId,
+  heading: Heading,
+}: {
+  banner: Banner | null;
+  brandNames: string[];
+  designerCount: number;
+  titleId: string;
+  heading: 'h1' | 'h2';
+}) {
+  const t = useTranslations('home.hero');
+  const hasMeta = brandNames.length > 0 || designerCount > 0;
+  return (
+    <section className="hero hero--plain" aria-labelledby={titleId}>
       <div className="hero__plate">
         <Heading className="display" id={titleId}>
           {banner?.title ?? t('fallbackTitle')}

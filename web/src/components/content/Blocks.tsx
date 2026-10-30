@@ -7,6 +7,7 @@
 
 import { useTranslations } from 'next-intl';
 import { VideoFacade } from '@/components/media/VideoFacade';
+import { CountUp } from '@/components/ui/CountUp';
 import { Rail } from '@/components/ui/Rail';
 import type {
   Block,
@@ -115,7 +116,9 @@ function StatsBlock({ data }: { data: StatsBlockData }) {
     <dl className="stats">
       {data.items.map((item, index) => (
         <div key={index}>
-          <dt className="num">{item.value}</dt>
+          <dt className="num">
+            <CountUp value={item.value} />
+          </dt>
           <dd>{item.label}</dd>
         </div>
       ))}

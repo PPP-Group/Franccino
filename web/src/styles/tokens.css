@@ -26,6 +26,9 @@
   --on-photo-muted: rgba(255, 255, 255, 0.86);
   --on-photo-rule: rgba(255, 255, 255, 0.4);
   --portrait-ground: #e4e1da;
+  /* Faixa de carregamento das fotos (motion.css). */
+  --shimmer-base: #f2f0eb;
+  --shimmer-light: #fbfaf8;
   --row-hover: #fafaf8;
   --status-ok-bg: #f2f5f2;
 

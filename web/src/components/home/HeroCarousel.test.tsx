@@ -3,7 +3,7 @@ import { renderWithIntl } from '@/test/intl';
 import { HeroCarousel } from './HeroCarousel';
 
 describe('HeroCarousel', () => {
-  it('shows the first slide and hides the others, with labelled controls', () => {
+  it('shows the first slide and hides the others, with only a keyboard pause control', () => {
     const html = renderWithIntl(
       <HeroCarousel>
         <p>slide-a</p>
@@ -15,11 +15,10 @@ describe('HeroCarousel', () => {
     expect(html).toContain('aria-label="1 de 3"');
     expect(html.match(/hidden=""/g)).toHaveLength(2);
     expect(html.indexOf('slide-a')).toBeLessThan(html.indexOf('hidden=""'));
-    expect(html).toContain('aria-label="Próximo destaque"');
-    expect(html).toContain('aria-label="Destaque anterior"');
-    expect(html).toContain('aria-label="Pausar a troca automática"');
-    expect(html).toContain('aria-current="true"');
-    expect(html.match(/hero-carousel__dot"/g)).toHaveLength(3);
+    expect(html).toContain('Pausar a troca automática');
+    expect(html).toContain('hero-carousel__pause');
+    expect(html).not.toContain('hero-carousel__dot');
+    expect(html).not.toContain('Próximo destaque');
   });
 
   it('renders a single slide without carousel chrome', () => {

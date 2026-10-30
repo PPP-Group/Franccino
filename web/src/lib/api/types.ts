@@ -233,6 +233,17 @@ export type FinishGroup = {
   }[];
 };
 
+/**
+ * Ambiente com pontos clicáveis (banco de ideias, ideia 7). `x` e `y` em % da foto (0–100), a partir da esquerda e do
+ * topo; só vêm pontos de peças publicadas.
+ */
+export type Scene = {
+  id: number;
+  title: string;
+  image: Image;
+  hotspots: { x: number; y: number; product: ProductCard }[];
+};
+
 /** Todos os campos são opcionais no painel; a API não preenche banner incompleto (docs/api.md). */
 export type Banner = {
   title: string | null;
@@ -241,6 +252,8 @@ export type Banner = {
   cta_url: string | null;
   image: Image | null;
   image_mobile: Image | null;
+  /** MP4 curto, sem som, tocado em loop no lugar da foto (banco de ideias, ideia 14); a foto vira o pôster. */
+  video: string | null;
 };
 
 /**
@@ -409,6 +422,7 @@ export type CacheTag =
   | 'stores'
   | 'finishes'
   | 'banners'
+  | 'scenes'
   | 'pages'
   | 'settings'
   | 'redirects';
