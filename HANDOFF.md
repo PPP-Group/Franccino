@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (19, de 27/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (20, de 30/10/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -681,3 +681,43 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
 - Se o painel ainda pedir o código depois da variável, zerar o 2FA dos usuários do preview com o comando de
   `docs/deploy-preview.md` (seção "Serviço da API").
 - `.env.preview.example` já traz a variável desligada.
+
+## 20. 30/10/2026: banco de ideias aprovado e início da rodada 2 do design
+
+- **Retorno do banco de ideias (26/10):** reunião com o Matheus e texto do Marcelo, registrados ideia por ideia em
+  [`docs/reunioes/2026-10-26-retorno-banco-de-ideias.md`](docs/reunioes/2026-10-26-retorno-banco-de-ideias.md). Quando
+  as duas respostas divergem, vale a da Franccino. O PDF do banco de ideias e o PDF de respostas não estavam no
+  repositório nem no Linear: a numeração foi reconstruída pela conversa e precisa ser conferida.
+- **Plano e o que já foi feito:** [`docs/plans/2026-10-30-rodada-2-banco-de-ideias.md`](docs/plans/2026-10-30-rodada-2-banco-de-ideias.md).
+  Branch `claude/banner-cover-images-vcdpmb`, saída da `develop`. Entraram as ideias aprovadas:
+  - esteira só com foto e nome (1); o nome vem para frente com a peça (2); cabeçalho branco sólido (5);
+  - banner sem texto por cima quando a arte já tem texto, carrossel sem botões na tela (3, 14);
+  - vídeo curto em loop no banner, enviado no painel (14);
+  - revelação na rolagem e a peça em destaque que "vira e se desfaz" (4), tudo em `web/src/styles/motion.css`;
+  - **ambientes com pontos clicáveis (7):** painel Conteúdo → Ambientes, `GET /scenes`, seção na home;
+  - acabamento em detalhe na página Acabamentos (9); a foto do card cresce até a página da peça (10);
+  - números que contam e faixa de carregamento nas fotos (12).
+- **Migration nova:** `2026_10_30_100000_create_scenes_tables` (`scenes` e `scene_hotspots`). O banner ganhou a mídia
+  `video` (sem migration). `docs/api.md` e `docs/data-model.md` atualizados.
+- **Para o tech lead decidir:** a pausa do carrossel ficou só para teclado e leitor de tela (o cliente pediu sem botões);
+  o `docs/HANDOFF.md` §5.2 listava "hotspots" como escopo novo, e a ideia 7 entrou por ter sido aprovada no banco de
+  ideias da etapa 2 (a ideia 8 e o configurador 3D seguem fora).
+- **Depois do merge, no preview:** cadastrar um ambiente de teste e, se houver, um vídeo curto num banner, antes de
+  mostrar à Franccino. O Matheus recebe o acesso ao painel.
+
+### 20.1 Complemento (30/10): Linear limpo e o que faltava das ideias
+
+- **Linear** (visível para o cliente, texto neutro):
+  - PPP-43 em andamento, com as sub-tarefas da rodada 2: PPP-120 (esteira, cards e cabeçalho), PPP-121 (banner limpo
+    com vídeo), PPP-122 (ambientes com pontos), PPP-123 (acabamento em detalhe), PPP-124 (animações) e PPP-125
+    (publicar no preview e consolidar o retorno, com o Pedro Ivo);
+  - PPP-98 marcada como duplicada da PPP-116, que passou para em andamento (acesso ao painel para o Matheus);
+  - descrições vazias ou desatualizadas preenchidas: PPP-10, 13, 15, 59, 61, 84 a 88, 91, 93 (agora "Enviar o sitemap
+    ao Search Console") e 99;
+  - dependências ligadas: PPP-28 bloqueia 56 e 63; PPP-11 bloqueia 59 e 79; PPP-10 bloqueia 13 e 15; PPP-16 bloqueia 93;
+    PPP-13 e 18 bloqueiam 97; PPP-43 bloqueia 44 e 87; PPP-23 bloqueia 84;
+  - retorno de 26/10 registrado em PPP-62, 23 e 105; PPP-119 com o deploy de 27/10 e o 2FA desligado marcados.
+  - Os marcos ("Sprint 0" a "Sprint 5") continuam com as datas do plano original; a rodada 2 está no "Sprint 2". Mudar
+    as datas é decisão do tech lead.
+- **Código:** marcar o ponto clicando na foto, no painel do ambiente; "Ver em detalhe" do acabamento escolhido na página
+  da peça.

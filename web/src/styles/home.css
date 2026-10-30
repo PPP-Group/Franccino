@@ -118,6 +118,42 @@
   color: var(--ink);
 }
 
+/*
+  Banner sem texto cadastrado (a arte já traz o texto do marketing): sem sombra e sem placa; com `cta_url`, o banner
+  inteiro é o link.
+*/
+.hero--clean::after {
+  display: none;
+}
+
+.hero__link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hero__link:focus-visible {
+  outline-offset: -6px;
+  outline-color: var(--paper);
+}
+
+/* Vídeo em loop por cima da foto: entra com um fade quando o primeiro quadro chega. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 62%;
+  opacity: 0;
+  transition: opacity var(--t-mid) ease;
+  pointer-events: none;
+}
+
+.hero__video.is-playing {
+  opacity: 1;
+}
+
 @keyframes plate-in {
   from {
     clip-path: inset(0 0 100% 0);
@@ -436,69 +472,188 @@
   display: none;
 }
 
-.hero-carousel__controls {
-  position: absolute;
-  z-index: 2;
-  right: var(--gutter);
-  bottom: var(--gutter);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  color: var(--paper);
+/* Troca suave entre os slides (sem controles na tela, retorno de 26/10/2026). */
+.hero-carousel__slide:not([hidden]) {
+  animation: hero-fade 900ms var(--ease-out) both;
 }
 
-.hero-carousel__button {
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Pausa só para o teclado e o leitor de tela: aparece com o foco, como o "pular para o conteúdo". */
+.hero-carousel__pause {
+  position: absolute;
+  z-index: 3;
+  right: var(--gutter);
+  top: 12px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  transform: translateY(-200%);
+}
+
+.hero-carousel__pause:focus-visible {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel__slide:not([hidden]) {
+    animation: none;
+  }
+}
+
+/* ---------- ambientes com pontos clicáveis (banco de ideias, ideia 7) ---------- */
+
+.scenes__list {
+  display: grid;
+  gap: clamp(40px, 6vw, 88px);
+}
+
+.scenes__item {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.scene {
+  position: relative;
+}
+
+.scene > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.scene__points {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.scene__point {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.scene__point.is-open {
+  z-index: 2;
+}
+
+/* Área de toque de 44px com um ponto branco pequeno no meio, que pulsa de leve para mostrar que é clicável. */
+.scene__dot {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-.hero-carousel__button:hover,
-.hero-carousel__button:focus-visible {
-  background: var(--on-photo-rule);
-}
-
-.hero-carousel__button--previous .icon {
-  transform: scaleX(-1);
-}
-
-.hero-carousel__dots {
-  display: flex;
-  list-style: none;
-  margin: 0;
   padding: 0;
-}
-
-.hero-carousel__dot {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 44px;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-.hero-carousel__dot::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border: 1px solid currentColor;
+.scene__dot-core {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  background: var(--on-photo-rule);
+  box-shadow: 0 0 0 0 var(--on-photo-muted);
+  transition:
+    transform var(--t-fast) ease,
+    background var(--t-fast) ease;
 }
 
-.hero-carousel__dot[aria-current='true']::before {
-  background: currentColor;
+.scene__dot:hover .scene__dot-core,
+.scene__dot:focus-visible .scene__dot-core,
+.scene__dot[aria-expanded='true'] .scene__dot-core {
+  transform: scale(1.2);
+  background: var(--paper);
 }
 
-@media (max-width: 47.99rem) {
-  .hero-carousel__controls {
-    top: calc(var(--header) + 12px);
-    bottom: auto;
+.scene__dot:focus-visible {
+  outline-color: var(--paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene__dot-core {
+    animation: scene-pulse 2.4s ease-out infinite;
+  }
+}
+
+@keyframes scene-pulse {
+  70% {
+    box-shadow: 0 0 0 12px var(--hero-shade-clear);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--hero-shade-clear);
+  }
+}
+
+/* Cartão da peça: só foto e nome, abre para o lado do meio da foto. */
+.scene__card {
+  position: absolute;
+  width: 200px;
+  background: var(--paper);
+  box-shadow: var(--shadow-lift);
+}
+
+.scene__point[data-horizontal='start'] .scene__card {
+  left: 50%;
+}
+
+.scene__point[data-horizontal='end'] .scene__card {
+  right: 50%;
+}
+
+.scene__point[data-vertical='below'] .scene__card {
+  top: calc(100% + 4px);
+}
+
+.scene__point[data-vertical='above'] .scene__card {
+  bottom: calc(100% + 4px);
+}
+
+.scene__card-link {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.scene__card-media {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.scene__card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.scene__card-name {
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (max-width: 35rem) {
+  .scene__card {
+    width: 160px;
   }
 }

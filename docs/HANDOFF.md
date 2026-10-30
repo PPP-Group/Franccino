@@ -1,6 +1,6 @@
 # Franccino — documento de continuidade (handoff)
 
-Atualizado em 2026-10-22 (seções 1 e 5 a 8; as seções 3 e 4 descrevem o histórico até 2026-10-02). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
+Atualizado em 2026-10-30 (seções 1 e 5 a 8; as seções 3 e 4 descrevem o histórico até 2026-10-02). Ponto de partida para quem assume o projeto: o que já foi feito, o que está em
 andamento, o que falta, os impedimentos e como colocar tudo para rodar.
 
 Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código), a
@@ -21,7 +21,7 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P5a Páginas     | Todas as páginas construídas (beta). O redesenho completo é o mês 2                                         |
 | P5b Go-live     | Feito o que não depende de conta (redirects, CSP, cookies, importador, backup, alertas); o resto, seção 6.2 |
 | Preview         | VPS (EasyPanel), deploy da `main` (`docs/deploy-preview.md`); em 16/10 o automático estava desligado        |
-| Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · Web 309 testes Vitest · imagens testadas no CI            |
+| Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · 30/10: Web 322 testes Vitest · imagens testadas no CI     |
 | Próximo passo   | Publicar no preview e conferir a fase 1 (Linear PPP-119, seção 5.1)                                         |
 
 ---

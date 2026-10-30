@@ -86,6 +86,10 @@ export default async function ProductPage({ params }: Props) {
       url: crumb.href ? absoluteUrl(getPathname({ href: crumb.href as Href, locale })) : url,
     })),
   );
+  // Cada peça aparece uma vez só na página: a foto dela é o alvo da transição do card (ideia 10), e dois cards com o
+  // mesmo nome cancelariam a transição.
+  const shown = new Set([product.id, ...product.line_products.map((item) => item.id)]);
+  const related = product.related.filter((item) => !shown.has(item.id));
   // Conteúdo sem tradução volta em português (locale_fallback): marcar o idioma para leitores de tela.
   const contentLang = product.locale_fallback && locale !== 'pt' ? 'pt-BR' : undefined;
 
@@ -173,7 +177,7 @@ export default async function ProductPage({ params }: Props) {
         </section>
       ) : null}
 
-      {product.related.length > 0 ? (
+      {related.length > 0 ? (
         <section className="section" aria-labelledby="related-title">
           <div className="wrap">
             <div className="section-head">
@@ -183,10 +187,7 @@ export default async function ProductPage({ params }: Props) {
                 <Icon name="arrow" />
               </Link>
             </div>
-            <ProductRail
-              label={t('related', { category: product.category.name })}
-              products={product.related}
-            />
+            <ProductRail label={t('related', { category: product.category.name })} products={related} />
           </div>
         </section>
       ) : null}

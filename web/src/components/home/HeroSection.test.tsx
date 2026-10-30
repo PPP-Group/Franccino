@@ -16,6 +16,7 @@ describe('HeroSection', () => {
           cta_url: 'https://franccino.com.br/pt/colecoes/tempo',
           image: image(),
           image_mobile: image({ id: 2 }),
+          video: null,
         }}
         brandNames={['Franccino Casa', 'Franccino Giardini']}
         designerCount={16}
@@ -26,8 +27,36 @@ describe('HeroSection', () => {
     expect(html).toContain('href="https://franccino.com.br/pt/colecoes/tempo"');
     expect(html).toContain('<source media=');
     expect(html).toContain('loading="eager"');
-    expect(html).toContain('href="/room-planner"');
-    expect(html).toContain('16 designers');
+    // Banner com foto: só o que foi cadastrado, sem os atalhos e a contagem da placa sem foto.
+    expect(html).not.toContain('href="/room-planner"');
+    expect(html).not.toContain('16 designers');
+    expect(html).not.toContain('hero__link');
+  });
+
+  it('writes nothing over a banner without text, keeps the title for screen readers and links the whole banner', () => {
+    const html = renderWithIntl(
+      <HeroSection
+        banner={{
+          title: null,
+          subtitle: null,
+          cta_label: null,
+          cta_url: '/pt/lancamentos',
+          image: image({ alt: 'Coleção Tempo' }),
+          image_mobile: null,
+          video: 'https://media.example.com/banners/tempo.mp4',
+        }}
+        brandNames={['Franccino Casa']}
+        designerCount={16}
+      />,
+    );
+    expect(html).toContain('hero--clean');
+    expect(html).toMatch(/<h1 class="visually-hidden" id="hero-title">Móveis de design autoral<\/h1>/);
+    expect(html).not.toContain('hero__plate');
+    expect(html).not.toContain('class="btn');
+    expect(html).toContain('class="hero__link" href="/pt/lancamentos" aria-label="Coleção Tempo"');
+    // O vídeo só entra depois da hidratação (movimento reduzido é o padrão no servidor): a foto é o que vai no HTML.
+    expect(html).not.toContain('<video');
+    expect(html).toContain('<img');
   });
 
   it('falls back to a plain plate without inventing an image', () => {
@@ -48,6 +77,7 @@ describe('HeroSection', () => {
           cta_url: null,
           image: null,
           image_mobile: null,
+          video: null,
         }}
         brandNames={[]}
         designerCount={0}

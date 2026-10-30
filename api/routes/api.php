@@ -27,6 +27,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('stores', [V1\StoreController::class, 'index'])->name('stores.index');
         Route::get('finishes', [V1\FinishController::class, 'index'])->name('finishes.index');
         Route::get('banners', [V1\BannerController::class, 'index'])->name('banners.index');
+        Route::get('scenes', [V1\SceneController::class, 'index'])->name('scenes.index');
         Route::get('pages/{key}', [V1\PageController::class, 'show'])->name('pages.show');
         Route::get('settings', V1\SettingsController::class)->name('settings');
         Route::get('downloads', [V1\DownloadController::class, 'index'])->name('downloads.index');

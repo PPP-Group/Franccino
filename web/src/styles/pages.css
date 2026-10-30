@@ -342,6 +342,125 @@
   color: var(--ink-muted);
 }
 
+/* Amostra que abre em detalhe (ideia 9): o botão é a própria amostra, com um "+" discreto no canto. */
+.finish-card__open {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  cursor: zoom-in;
+}
+
+.finish-card__zoom-icon {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: var(--paper);
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.finish-card__zoom-icon .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.finish-card__open:hover .finish-card__zoom-icon,
+.finish-card__open:focus-visible .finish-card__zoom-icon {
+  opacity: 1;
+}
+
+.finish-zoom__open-link {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: zoom-in;
+}
+
+.finish-zoom {
+  width: min(960px, calc(100% - 2 * var(--gutter)));
+  max-height: calc(100dvh - 2 * var(--gutter));
+  padding: 0;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.finish-zoom::backdrop {
+  background: var(--hero-shade);
+}
+
+.finish-zoom__panel {
+  display: grid;
+  gap: 16px;
+  padding: clamp(16px, 3vw, 32px);
+}
+
+.finish-zoom__head,
+.finish-zoom__foot {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.finish-zoom__foot {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.finish-zoom__title {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.finish-zoom__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.finish-zoom__stage {
+  height: min(62dvh, 640px);
+  overflow: hidden;
+  background: var(--stone);
+}
+
+.finish-zoom__stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Tamanho real: a imagem passa a ter os próprios pixels e o quadro rola nos dois sentidos. */
+.finish-zoom__stage.is-actual {
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.finish-zoom__stage.is-actual img {
+  width: auto;
+  height: auto;
+  max-width: none;
+}
+
+.finish-zoom__hint {
+  margin: 0;
+}
+
 /* ---------- busca e downloads ---------- */
 
 .search-form {

@@ -25,6 +25,7 @@ const CACHE_TAGS = [
   'stores',
   'finishes',
   'banners',
+  'scenes',
   'pages',
   'settings',
   'redirects',

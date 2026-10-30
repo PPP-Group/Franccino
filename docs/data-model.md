@@ -1,7 +1,7 @@
 # Modelo de dados
 
 Status: implementado. As migrations de `api/database/migrations` são a fonte da verdade (a última é de
-2026-10-21); este documento muda no mesmo PR de cada migration nova. A proposta v1 (2026-09-23) partiu do roadmap
+2026-10-30); este documento muda no mesmo PR de cada migration nova. A proposta v1 (2026-09-23) partiu do roadmap
 e do inventário do WordPress atual ([content-inventory.md](content-inventory.md)).
 
 ## Convenções
@@ -310,7 +310,21 @@ Mídia: `image` (1), foto da loja (acrescentada em 2026-10-01; Anexo I pede imag
 | starts_at, ends_at       | timestamp, null | janela de exibição       |
 | is_published, sort_order |                 |                          |
 
-Mídia: `image` (1, desktop), `image_mobile` (1, opcional).
+Mídia: `image` (1, desktop), `image_mobile` (1, opcional), `video` (1, opcional, MP4 em loop sem som; até 20 MB).
+
+### scenes / scene_hotspots
+
+Ambientes com pontos clicáveis (2026-10-30, banco de ideias, ideia 7): a foto de um ambiente montado e, por cima, um
+ponto em cada peça que leva à página dela. Aparecem na home.
+
+`scenes`: `title` (json tr), `is_published`, `sort_order`. Mídia: `image` (1).
+
+| Coluna (`scene_hotspots`) | Tipo         | Notas                                                  |
+| ------------------------- | ------------ | ------------------------------------------------------ |
+| scene_id                  | FK scenes    | cascade on delete                                      |
+| product_id                | FK products  | cascade on delete; peça despublicada não sai na API    |
+| x, y                      | decimal(5,2) | posição na foto em %, 0–100 (x da esquerda, y do topo) |
+| sort_order                | int          | ordem de leitura (teclado e leitor de tela)            |
 
 ### pages
 

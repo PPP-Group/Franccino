@@ -1,11 +1,12 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState, useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore, ViewTransition } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import type { Image, ProductDetail } from '@/lib/api/types';
 import { ModelViewer } from './ModelViewer';
+import { productMorphName } from './ProductPlate';
 
 type Mode = 'photo' | '3d';
 
@@ -34,8 +35,13 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   return (
     <div className="gallery">
       <div className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage'}>
-        {current ? (
-          <ApiImage image={current} sizes="(max-width: 61.25rem) 100vw, 58vw" priority={index === 0} />
+        {current && index === 0 ? (
+          // Só a primeira foto recebe a foto do card que foi clicado (ideia 10); as outras trocam sem transição.
+          <ViewTransition name={productMorphName(slug)} share="product-morph" default="none">
+            <ApiImage image={current} sizes="(max-width: 61.25rem) 100vw, 58vw" priority />
+          </ViewTransition>
+        ) : current ? (
+          <ApiImage image={current} sizes="(max-width: 61.25rem) 100vw, 58vw" />
         ) : null}
         {model && mode === '3d' ? (
           <div className="stage-3d">
