@@ -704,3 +704,20 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
   ideias da etapa 2 (a ideia 8 e o configurador 3D seguem fora).
 - **Depois do merge, no preview:** cadastrar um ambiente de teste e, se houver, um vídeo curto num banner, antes de
   mostrar à Franccino. O Matheus recebe o acesso ao painel.
+
+### 20.1 Complemento (30/10): Linear limpo e o que faltava das ideias
+
+- **Linear** (visível para o cliente, texto neutro):
+  - PPP-43 em andamento, com as sub-tarefas da rodada 2: PPP-120 (esteira, cards e cabeçalho), PPP-121 (banner limpo
+    com vídeo), PPP-122 (ambientes com pontos), PPP-123 (acabamento em detalhe), PPP-124 (animações) e PPP-125
+    (publicar no preview e consolidar o retorno, com o Pedro Ivo);
+  - PPP-98 marcada como duplicada da PPP-116, que passou para em andamento (acesso ao painel para o Matheus);
+  - descrições vazias ou desatualizadas preenchidas: PPP-10, 13, 15, 59, 61, 84 a 88, 91, 93 (agora "Enviar o sitemap
+    ao Search Console") e 99;
+  - dependências ligadas: PPP-28 bloqueia 56 e 63; PPP-11 bloqueia 59 e 79; PPP-10 bloqueia 13 e 15; PPP-16 bloqueia 93;
+    PPP-13 e 18 bloqueiam 97; PPP-43 bloqueia 44 e 87; PPP-23 bloqueia 84;
+  - retorno de 26/10 registrado em PPP-62, 23 e 105; PPP-119 com o deploy de 27/10 e o 2FA desligado marcados.
+  - Os marcos ("Sprint 0" a "Sprint 5") continuam com as datas do plano original; a rodada 2 está no "Sprint 2". Mudar
+    as datas é decisão do tech lead.
+- **Código:** marcar o ponto clicando na foto, no painel do ambiente; "Ver em detalhe" do acabamento escolhido na página
+  da peça.

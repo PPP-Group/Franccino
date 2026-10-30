@@ -36,8 +36,11 @@ Contrato e modelo atualizados no mesmo PR: `docs/api.md` (`Banner.video`, `GET /
   acabamento, hotspots…)" como escopo novo. Como o banco de ideias foi apresentado como parte da etapa 2 e o tech lead
   pediu para adiantar o que foi aprovado, o ambiente com pontos entrou. O que continua fora do contrato: a troca de
   acabamento por foto (ideia 8) e o configurador 3D com troca de acabamento.
-- **Posição do ponto por número.** No painel, cada ponto leva "Da esquerda (%)" e "Do topo (%)". Um seletor visual
-  (clicar na foto para marcar o ponto) é o próximo passo (seção 2).
+- **Posição do ponto.** No painel, cada ponto leva "Da esquerda (%)" e "Do topo (%)". Na edição (o ambiente já salvo
+  com a foto), a foto aparece com os pontos numerados: o clique em cima da peça mostra a posição, e "Usar no último
+  ponto" preenche os dois campos do último ponto da lista (`resources/views/filament/scenes/point-picker.blade.php`).
+- **Acabamento em detalhe também na página da peça.** Ao lado do acabamento escolhido aparece "Ver em detalhe", que abre
+  a mesma janela da página Acabamentos (`FinishZoom` com `variant="link"`), só quando a amostra tem foto.
 
 ## 2. Próximos passos da rodada 2
 
@@ -45,10 +48,9 @@ Contrato e modelo atualizados no mesmo PR: `docs/api.md` (`Banner.video`, `GET /
    alguma resposta do PDF muda a tabela da reunião.
 2. **Publicar no preview e mostrar à Franccino**, com um ambiente de teste cadastrado (foto do Drive) e um banner com
    vídeo curto. Recolher o retorno numa lista só.
-3. **Ambientes:** seletor visual de pontos no painel; decidir se os ambientes também aparecem em Projetos e
-   Lançamentos (o componente já serve para qualquer página).
-4. **Acabamento em detalhe também na página da peça** (a "aba de acabamento" da conversa), quando houver as fotos
-   digitalizadas.
+3. **Ambientes:** decidir se também aparecem em Projetos e Lançamentos (o componente já serve para qualquer página).
+4. **Fotos digitalizadas dos acabamentos** (PPP-23 e PPP-84): o visualizador já está na página Acabamentos e na página
+   da peça.
 5. **Redesenho do resto do site** (PPP-43), tomando como base o documento "Alterações primeira versão".
 6. **Imagens definitivas** (banners, capas, Fábrica): só depois que mapa do site e páginas fecharem, como pediu o
    marketing. Até lá, o painel usa as fotos do Drive.
