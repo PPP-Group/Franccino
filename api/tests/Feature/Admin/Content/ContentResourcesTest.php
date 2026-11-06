@@ -188,14 +188,16 @@ it('creates a scene with a point on a piece', function () {
         ->and($scene->hotspots->first())->product_id->toBe($product->id)->x->toBe(42.5);
 });
 
-it('offers to place the points by clicking the saved photo', function () {
+it('offers to place a point by clicking the saved photo and choosing the piece there', function () {
     Storage::fake('media');
+    publishedProduct();
     $scene = Scene::factory()->create();
     $scene->addMedia(UploadedFile::fake()->image('varanda.jpg', 1600, 900))->toMediaCollection('image');
 
     livewire(EditScene::class, ['record' => $scene->getRouteKey()])
         ->assertOk()
-        ->assertSee(__('Use on the last point'))
+        ->assertSee(__('Which piece is here?'))
+        ->assertSee('Cadeira Aura', false)
         ->assertSee($scene->getFirstMediaUrl('image'), false);
 });
 

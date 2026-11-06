@@ -295,8 +295,14 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
   `--t-mid` (320) e `--t-slow` (700, só para movimento grande: foto que cresce, blocos que aparecem, zoom de foto),
   curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
 - Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
-- Aparecer ao rolar: `data-reveal` no bloco, ou `data-reveal="stagger"` num grupo (filhos em sequência). Dispara uma
-  vez (RevealObserver), nunca preso à rolagem.
+- Aparecer ao rolar (ideia 04): `data-reveal` no bloco de texto (sobe 20 px enquanto aparece), `data-reveal="stagger"`
+  num grupo (filhos em sequência), `data-reveal="curtain"` em volta de uma foto (os filhos diretos abrem como cortina,
+  da esquerda para a direita) e `data-reveal="curtain-stagger"` num mosaico ou grade de fotos. Dispara uma vez
+  (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
+  não conta como visível e nunca abriria.
+- Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
+  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`, no máximo 40 px na foto e 20 px no
+  texto (metade no celular). Não usar em arte com texto (faixas das coleções), porque a foto ganha 10% de sobra.
 - Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
   outra coleção, chamada) ou a grade muda o número de colunas.
 - Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
@@ -309,3 +315,22 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
 - Cada `ApiImage` declara um `sizes` igual à largura real em que é desenhada (contando o recorte de `object-fit:
 cover`), para o navegador baixar a versão certa em tela retina.
 - Arte de banner com texto (faixa larga do marketing) não é recortada: o banner segue a proporção da imagem.
+
+### Movimento: o que dá para desligar
+
+Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no comentário. Apagar o `@import` em
+`globals.css` desliga tudo; apagar um bloco desliga só aquele item. Com `prefers-reduced-motion: reduce`, nada se mexe.
+
+| Item                                                                                                         | Bloco em motion.css                                   | Sem o bloco                                           |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- |
+| 04 Revelação ao rolar (texto sobe, foto abre como cortina)                                                   | "Ideia 04 — revelação ao rolar"                       | Tudo aparece pronto                                   |
+| 04 Paralaxe (três camadas)                                                                                   | "Ideia 04 — paralaxe suave"                           | Fotos e textos rolam juntos                           |
+| 12a Seta que anda no hover (botão, `.link-arrow`)                                                            | "12a"                                                 | A seta fica parada                                    |
+| 12b Sublinhado que cresce da esquerda (cabeçalho, rodapé, `.link-grow`; o fio do `.link-arrow` se redesenha) | "12b"                                                 | O fio aparece de uma vez                              |
+| 12c Cursor "Arraste" no carrossel                                                                            | em `carousel.css`                                     | Cursor normal                                         |
+| 12d Peça adicionada: o visto entra e o ícone e o contador da lista pulsam uma vez                            | "12d"                                                 | O visto e "Adicionada à lista" aparecem sem movimento |
+| 12e Números que contam (`CountUp`)                                                                           | é o componente: trocar `<CountUp value=…>` pelo valor | O número aparece pronto                               |
+| 12f Faixa de carregamento (fotos e `.skeleton`)                                                              | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
+
+A Franccino escolhe quais microinterações ficam (PDF de retorno: "validar quais serão utilizados"); cada uma está
+sozinha em `/pt/ideias`, ideia 12.

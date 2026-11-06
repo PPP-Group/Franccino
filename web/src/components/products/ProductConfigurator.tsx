@@ -97,8 +97,8 @@ export function ProductConfigurator({
       {/*
         Orçamento em dois níveis (retorno de 06/11/2026): a ação principal (quantidade e "Adicionar à lista de
         orçamento", os dois com 48 px) e, separada por um fio, a linha das outras formas de pedir, com o mesmo espaço
-        entre elas e um divisor. O botão principal confirma com o visto por 1,5 s; o contador da lista no cabeçalho sobe
-        junto.
+        entre elas e um divisor. O botão principal confirma com o visto e "Adicionada à lista" por 1,5 s; o ícone e o
+        contador da lista no cabeçalho pulsam uma vez (microinteração 12d, motion.css).
       */}
       <section className="buy block" aria-label={t('buyLabel')}>
         {pending.length > 0 ? (
@@ -111,10 +111,10 @@ export function ProductConfigurator({
             className={justAdded ? 'btn buy__add is-added' : 'btn buy__add'}
             onClick={handleAdd}
           >
-            <span className="buy__add-icon" key={justAdded ? 'check' : 'list'}>
+            <span className="buy__add-icon add-icon" key={justAdded ? 'check' : 'list'}>
               <Icon name={justAdded ? 'check' : 'list'} />
             </span>
-            <span>{justAdded ? t('inList') : t('addToList')}</span>
+            <span>{justAdded ? t('addedToList') : t('addToList')}</span>
           </button>
         </div>
         <p className={feedback?.kind === 'full' ? 'feedback feedback--alert' : 'feedback'} role="status">

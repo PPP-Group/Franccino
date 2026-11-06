@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { ProductRail } from '@/components/products/ProductRail';
+import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { LaunchCard, ProductCard } from '@/lib/api/types';
@@ -23,7 +23,7 @@ export function LaunchesSection({ launch, products, tone }: LaunchesSectionProps
           </Link>
         </div>
         <div data-reveal="">
-          <ProductRail label={launch.title} products={products} />
+          <FeatureCarousel label={launch.title} products={products} />
         </div>
       </div>
     </section>

@@ -14,6 +14,7 @@
 @import '../styles/factory.css' layer(components);
 @import '../styles/stores.css' layer(components);
 @import '../styles/ideas.css' layer(components);
+@import '../styles/carousel.css' layer(components);
 @import '../styles/motion.css' layer(components);
 
 @theme inline {

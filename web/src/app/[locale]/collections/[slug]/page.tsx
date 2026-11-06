@@ -9,10 +9,12 @@ import { neighbours } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { PageCoverArt } from '@/components/layout/PageBanner';
 import { PageHead } from '@/components/layout/PageHead';
+import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getCollection, getCollections, getDesigners } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
+import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -85,7 +87,11 @@ export default async function CollectionPage({ params }: Props) {
             <h2 id="collection-pieces" className="section-title">
               {t('piecesTitle')}
             </h2>
-            <ProductGrid products={collection.products} />
+            {fitsFeatureCarousel(collection.products.length) ? (
+              <FeatureCarousel label={t('piecesTitle')} products={collection.products} />
+            ) : (
+              <ProductGrid products={collection.products} />
+            )}
           </section>
         ) : null}
       </div>

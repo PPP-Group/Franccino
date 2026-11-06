@@ -76,8 +76,9 @@ export function ModelViewer({ slug, alt }: { slug: string; alt: string }) {
         />
       ) : null}
       {status === 'loading' ? (
-        <p className="stage-3d__status meta" role="status">
-          {t('modelLoading')}
+        // Faixa de carregamento no lugar do texto (microinteração 12f, motion.css); o texto fica para o leitor de tela.
+        <p className="stage-3d__status skeleton" role="status">
+          <span className="visually-hidden">{t('modelLoading')}</span>
         </p>
       ) : null}
       {status === 'error' ? (

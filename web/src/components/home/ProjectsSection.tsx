@@ -59,18 +59,22 @@ export function ProjectsSection({ projects, tone }: { projects: ProjectCard[]; t
               className={['mosaic', `mosaic--${group.length}`, groupIndex % 2 === 1 ? 'mosaic--flip' : '']
                 .filter(Boolean)
                 .join(' ')}
-              data-reveal="stagger"
+              data-reveal="curtain-stagger"
             >
               {group.map((project, index) => {
                 const meta = [project.client_name, project.location].filter(Boolean).join(' · ');
                 return (
-                  <li key={project.id} className="mosaic__item">
+                  <li key={project.id} className="mosaic__item" data-parallax="">
                     <Link
                       className="mosaic__link hover-zoom"
                       href={{ pathname: '/projects/[slug]', params: { slug: project.slug } }}
                     >
-                      <ApiImage image={project.cover} sizes={tileSizes(project, index === 0, group.length)} />
-                      <div className="mosaic__copy">
+                      <ApiImage
+                        image={project.cover}
+                        sizes={tileSizes(project, index === 0, group.length)}
+                        parallax
+                      />
+                      <div className="mosaic__copy" data-parallax-layer="front" data-reveal="">
                         <h3 className="mosaic__title">{project.title}</h3>
                         {meta ? <p className="mosaic__meta">{meta}</p> : null}
                       </div>

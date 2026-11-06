@@ -25,11 +25,11 @@ function panelSizes(cover: Image): string {
 export function LinesSection({ areas }: { areas: Area[] }) {
   const t = useTranslations('home.lines');
   return (
-    <section className="lines" aria-label={t('label')}>
+    <section className="lines" aria-label={t('label')} data-reveal="curtain-stagger">
       {areas.map((area) => (
-        <Link key={area.key} className="line-panel hover-zoom" href={areaPath(area.key)}>
-          {area.cover ? <ApiImage image={area.cover} sizes={panelSizes(area.cover)} /> : null}
-          <div className="line-panel__copy" data-reveal="">
+        <Link key={area.key} className="line-panel hover-zoom" href={areaPath(area.key)} data-parallax="">
+          {area.cover ? <ApiImage image={area.cover} sizes={panelSizes(area.cover)} parallax /> : null}
+          <div className="line-panel__copy" data-parallax-layer="front" data-reveal="">
             <h2 className="line-panel__title">{area.brand_name}</h2>
             {area.description ? <p className="lead">{area.description}</p> : null}
             <span className="link-arrow">

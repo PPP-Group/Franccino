@@ -62,7 +62,7 @@ describe('CollectionsSection', () => {
     expect(html).not.toContain('Coleção 7');
     expect(html).toContain('4 peças');
     expect(html).toContain('hover-zoom');
-    expect(html).toContain('data-reveal="stagger"');
+    expect(html).toContain('data-reveal="curtain"');
   });
 });
 

@@ -66,6 +66,37 @@ function QuoteItemRow({ item, onRemoved }: { item: QuoteItem; onRemoved: () => v
   );
 }
 
+const SKELETON_ROWS = [0, 1, 2];
+
+/**
+ * Antes de ler a lista salva no navegador: blocos no lugar do título e das linhas, com a faixa de carregamento por
+ * cima (microinteração 12f, motion.css), em vez de um "Carregando…" escrito. O texto fica para o leitor de tela.
+ */
+function QuoteListSkeleton({ label }: { label: string }) {
+  return (
+    <div className="wrap quote-page" aria-busy="true">
+      <p className="visually-hidden" role="status">
+        {label}
+      </p>
+      <div className="quote-skeleton" aria-hidden="true">
+        <span className="skeleton quote-skeleton__title" />
+        <span className="skeleton quote-skeleton__lead" />
+        <ul className="quote-items">
+          {SKELETON_ROWS.map((row) => (
+            <li key={row} className="quote-item">
+              <span className="skeleton quote-skeleton__thumb" />
+              <span className="quote-skeleton__lines">
+                <span className="skeleton" />
+                <span className="skeleton" />
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
   const t = useTranslations('quote');
   const common = useTranslations('common');
@@ -75,11 +106,7 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
   const titleRef = useRef<HTMLHeadingElement | null>(null);
 
   if (!isClient) {
-    return (
-      <div className="wrap quote-page" aria-busy="true">
-        <p className="meta">{common('loading')}</p>
-      </div>
-    );
+    return <QuoteListSkeleton label={common('loading')} />;
   }
 
   if (sent) {

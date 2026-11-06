@@ -13,17 +13,24 @@ type ProjectRowProps = {
 /**
  * Projeto em faixa, como no site antigo (ajustes do cliente, 06/10/2026): foto de um lado e texto do outro,
  * com "Saiba mais" quadrado. A troca de lado a cada projeto fica no CSS (`.project-rows`). Rodada 3: o hover é o zoom
- * da foto (`.hover-zoom`), sem sublinhado no título; cada faixa aparece ao entrar na tela.
+ * da foto (`.hover-zoom`), sem sublinhado no título. Ao entrar na tela, a foto abre como cortina e o texto sobe (ideia
+ * 04); a primeira faixa (`priority`) já abre à vista.
  */
 export function ProjectRow({ project, meta = [], priority = false }: ProjectRowProps) {
   const common = useTranslations('common');
   const href = { pathname: '/projects/[slug]', params: { slug: project.slug } } as const;
   return (
-    <article className="project-row" data-reveal>
-      <Link className="project-row__media hover-zoom" href={href} tabIndex={-1} aria-hidden="true">
+    <article className="project-row">
+      <Link
+        className="project-row__media hover-zoom"
+        href={href}
+        tabIndex={-1}
+        aria-hidden="true"
+        data-reveal={priority ? undefined : 'curtain'}
+      >
         <ApiImage image={project.cover} sizes="(max-width: 56.25rem) 100vw, 50vw" priority={priority} />
       </Link>
-      <div className="project-row__copy">
+      <div className="project-row__copy" data-reveal="">
         <h2 className="project-row__title">
           <Link href={href}>{project.title}</Link>
         </h2>

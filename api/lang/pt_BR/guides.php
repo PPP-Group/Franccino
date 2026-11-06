@@ -107,9 +107,9 @@ return [
             'summary' => 'Fotos de ambientes montados, com um ponto em cada peça que leva à página dela. Aparecem na página inicial.',
             'steps' => [
                 'Menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
-                'Em Pontos, clique em "Adicionar ponto" para cada peça: escolha a peça e diga onde ela está na foto.',
-                'Salve uma vez com a foto. Na edição, adicione o ponto, escolha a peça, clique na foto em cima dela e depois em "Usar no último ponto": a posição é preenchida sozinha.',
-                'A posição também pode ser digitada, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
+                'Salve uma vez com a foto. Na edição, a foto aparece grande: clique em cima de cada peça e escolha qual é na busca que abre ali mesmo. O ponto entra na lista Pontos com a posição preenchida.',
+                'Clique num ponto já marcado para trocar a peça, mover o ponto (clique depois no novo lugar) ou remover.',
+                'A posição também pode ser digitada na lista, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
                 'Ligue "Publicado" e salve. Abra a página inicial e confira se cada ponto caiu em cima da peça; ajuste os números se precisar.',
             ],
             'tips' => [

@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import type { CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
@@ -45,11 +46,18 @@ export function CollectionsSection({ collections, tone }: { collections: Collect
             <Icon name="arrow" />
           </Link>
         </div>
-        <ul className="strips" data-reveal="stagger">
+        {/* Cada faixa abre como cortina ao entrar na tela; a segunda meia faixa vem logo depois da primeira. */}
+        <ul className="strips">
           {shown.map((collection, index) => {
             const size = layout[index];
+            const second = size === 'half' && layout[index - 1] === 'half';
             return (
-              <li key={collection.id} className={`strip strip--${size}`}>
+              <li
+                key={collection.id}
+                className={`strip strip--${size}`}
+                data-reveal="curtain"
+                style={second ? ({ '--reveal-index': 1 } as CSSProperties) : undefined}
+              >
                 <Link
                   className="strip__link"
                   href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}

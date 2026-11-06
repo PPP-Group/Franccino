@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import type { ProductCard } from '@/lib/api/types';
@@ -17,7 +17,13 @@ const CLASS_BY_VARIANT: Record<QuickAddVariant, string> = {
   button: 'btn btn--ghost',
 };
 
-/** Adiciona 1 unidade sem acabamento escolhido ("a definir", conflito C2). */
+/** Quanto tempo o botão mostra a confirmação ("Adicionada à lista") antes de voltar a "Na lista". */
+const CONFIRM_MS = 1500;
+
+/**
+ * Adiciona 1 unidade sem acabamento escolhido ("a definir", conflito C2). Ao adicionar, o visto entra e, no botão com
+ * texto, "Adicionada à lista" aparece por um instante (microinteração 12d, motion.css); depois fica "Na lista".
+ */
 export function QuickAddButton({
   product,
   variant = 'plate',
@@ -28,6 +34,10 @@ export function QuickAddButton({
   const t = useTranslations('quote');
   const locale = useLocale() as Locale;
   const [added, setAdded] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   function handleClick() {
     const status = quoteActions.add(toQuoteSnapshot(product, locale));
@@ -36,6 +46,9 @@ export function QuickAddButton({
       return;
     }
     setAdded(true);
+    setConfirming(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setConfirming(false), CONFIRM_MS);
     showToast({ text: t('addedPendingFinish', { name: product.name }), quoteLink: true });
   }
 
@@ -53,8 +66,12 @@ export function QuickAddButton({
       }
       onClick={handleClick}
     >
-      <Icon name={added ? 'check' : 'plus'} />
-      {variant === 'button' ? <span>{added ? t('inList') : t('addShort')}</span> : null}
+      <span className="add-icon" key={added ? 'check' : 'plus'}>
+        <Icon name={added ? 'check' : 'plus'} />
+      </span>
+      {variant === 'button' ? (
+        <span>{confirming ? t('addedToList') : added ? t('inList') : t('addShort')}</span>
+      ) : null}
     </button>
   );
 }
