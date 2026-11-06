@@ -4,6 +4,9 @@
   em vez de hex direto (C6), wordmark maiúsculo, animação do contador via
   `@keyframes` (não classe transitória) e `.footer-title` no lugar de
   `.footer-grid h3`. A regra `.icon` já está em `components.css` (Task 1).
+  Rodada 2 (06/11/2026): tokens de tipo e espaço, área de toque de 44 px em todo controle do cabeçalho e do rodapé,
+  ferramentas sempre encostadas à direita (também com o menu recolhido), contador quadrado e títulos do rodapé como
+  rótulo curto em caixa alta.
 */
 
 /* ---------- header ---------- */
@@ -21,14 +24,15 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 32px;
+  gap: var(--space-6);
   height: var(--header);
 }
 
 .wordmark {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: var(--fs-lead);
   font-weight: 600;
+  line-height: var(--lh-ui);
   letter-spacing: 0.3em;
   text-decoration: none;
   text-transform: uppercase;
@@ -39,20 +43,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(14px, 1.6vw, 26px);
-  font-size: 0.95rem;
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
 }
 
 .nav > a,
 .nav-area__trigger {
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
   color: var(--ink-muted);
   white-space: nowrap;
-  padding-block: 6px;
-  border-bottom: 1px solid transparent;
-  transition:
-    color var(--t-fast) ease,
-    border-color var(--t-fast) ease;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.45em;
 }
 
 .nav > a:hover,
@@ -61,17 +67,14 @@
 .nav-area__trigger[data-active='true'],
 .nav-area.is-open .nav-area__trigger {
   color: var(--ink);
-  border-color: var(--ink);
+  text-decoration-line: underline;
 }
 
 /* Casa e Giardini: painel de categorias em colunas (ajustes do cliente, 06/10/2026, "estilo Saccaro"). */
 .nav-area__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   background: none;
-  border-top: 0;
-  border-inline: 0;
+  border: 0;
   font: inherit;
   cursor: pointer;
 }
@@ -79,7 +82,7 @@
 .nav-area__trigger .icon {
   width: 14px;
   height: 14px;
-  transition: transform var(--t-fast) ease;
+  transition: transform var(--t-fast) var(--ease-out);
 }
 
 .nav-area.is-open .nav-area__trigger .icon {
@@ -101,15 +104,19 @@
 
 .nav-panel__inner {
   display: grid;
-  gap: 18px;
-  padding-block: 28px 36px;
+  gap: var(--space-4);
+  padding-block: var(--space-6) var(--space-7);
 }
 
 .nav-panel__all {
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
+  line-height: var(--lh-h3);
   text-decoration: none;
   color: var(--ink);
 }
@@ -123,7 +130,7 @@
   margin: 0;
   padding: 0;
   columns: 5 170px;
-  column-gap: 32px;
+  column-gap: var(--space-6);
 }
 
 .nav-panel__list li {
@@ -131,8 +138,9 @@
 }
 
 .nav-panel__list a {
-  display: block;
-  padding-block: 6px;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-muted);
   text-decoration: none;
 }
@@ -143,24 +151,38 @@
   text-decoration: underline;
 }
 
+/* Busca, idioma, lista e menu: sempre na última coluna, encostados à direita. */
 .tools {
+  grid-column: 3;
+  justify-self: end;
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: 0.875rem;
+  gap: var(--space-3);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
 }
 
-.tools a,
-.tools button {
+/* Só os controles do próprio cabeçalho; o painel de sugestões (dentro de .header-search) tem regras próprias. */
+.tools > a,
+.tools > button,
+.header-search > button,
+.lang a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: 0;
-  padding: 6px 0;
+  padding: 0;
   cursor: pointer;
   text-decoration: none;
   color: var(--ink);
+}
+
+.tools > a:hover .label-optional {
+  text-decoration: underline;
 }
 
 .lang {
@@ -171,7 +193,7 @@
 
 .lang > * + *::before {
   content: '/';
-  margin-inline: 6px;
+  margin-inline: var(--space-2);
   color: var(--ink-muted);
 }
 
@@ -180,18 +202,28 @@
   font-weight: 600;
 }
 
+.lang a {
+  min-width: 0;
+  color: var(--ink-muted);
+}
+
+.lang a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Contador da lista: quadrado, como o resto da marca. */
 .list-count {
   min-width: 22px;
   height: 22px;
-  padding-inline: 6px;
-  border-radius: 11px;
+  padding-inline: var(--space-1);
   background: var(--ink);
   color: var(--paper);
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
+  line-height: 1;
   display: inline-grid;
   place-items: center;
-  transition: background var(--t-fast) ease;
   animation: count-bump var(--t-mid) var(--ease-out);
 }
 
@@ -220,30 +252,37 @@
     display: inline-flex;
   }
 
-  .site-header__bar {
-    grid-template-columns: auto 1fr auto;
-  }
-
   .nav.is-open {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    align-items: stretch;
+    gap: 0;
     position: absolute;
     top: var(--header);
     left: 0;
     right: 0;
-    padding: 12px var(--gutter) 24px;
-    background: var(--stone);
+    padding: var(--space-3) var(--gutter) var(--space-6);
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
-    font-size: 1.125rem;
+    font-size: var(--fs-lead);
     max-height: calc(100dvh - var(--header));
     overflow-y: auto;
+  }
+
+  .nav.is-open > a,
+  .nav.is-open .nav-area__trigger {
+    min-height: 48px;
+    color: var(--ink);
   }
 
   /* No menu recolhido, as categorias abrem como sanfona embaixo de Casa e Giardini. */
   .nav-area {
     width: 100%;
+  }
+
+  .nav-area__trigger {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .nav-panel {
@@ -257,18 +296,19 @@
   }
 
   .nav-panel__inner {
-    gap: 6px;
-    padding-block: 4px 12px;
-    padding-left: 16px;
+    gap: 0;
+    padding-block: 0 var(--space-3);
+    padding-left: var(--space-4);
   }
 
   .nav-panel__all {
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
   }
 
   .nav-panel__list {
     columns: 2 140px;
-    font-size: 1rem;
+    column-gap: var(--space-4);
+    font-size: var(--fs-ui);
   }
 }
 
@@ -279,15 +319,31 @@
   }
 
   .site-header__bar {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .tools {
-    gap: 14px;
+    gap: var(--space-1);
   }
 
   .wordmark {
     letter-spacing: 0.22em;
+  }
+}
+
+/* 320 px: o nome e as três ferramentas cabem numa linha. */
+@media (max-width: 360px) {
+  .site-header__bar {
+    gap: var(--space-2);
+  }
+
+  .site-header .wordmark {
+    font-size: var(--fs-body);
+    letter-spacing: 0.16em;
+  }
+
+  .tools {
+    gap: 0;
   }
 }
 
@@ -296,8 +352,9 @@
 .site-footer {
   background: var(--ink);
   color: var(--footer-text);
-  padding-block: clamp(56px, 7vw, 96px) 32px;
-  font-size: 0.9375rem;
+  padding-block: clamp(var(--space-8), 7vw, var(--space-9)) var(--space-6);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
 }
 
 .site-footer a {
@@ -309,18 +366,26 @@
   text-decoration: underline;
 }
 
+.site-footer :focus-visible {
+  outline-color: var(--stone);
+}
+
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
-  gap: 40px;
+  gap: var(--space-7) var(--space-6);
 }
 
+/* Título de coluna do rodapé: rótulo curto em caixa alta, abaixo do branco dos links na hierarquia. */
 .footer-title {
-  color: var(--stone);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-variation-settings: 'wdth' var(--text);
-  margin-bottom: 14px;
+  margin-bottom: var(--space-4);
+  font-family: var(--font);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--footer-muted);
 }
 
 .footer-grid ul {
@@ -328,69 +393,20 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
-}
-
-.newsletter {
-  display: flex;
-  border-bottom: 1px solid var(--line-field);
-}
-
-.newsletter input {
-  flex: 1;
-  background: transparent;
-  border: 0;
-  padding: 12px 0;
-  color: var(--stone);
-  min-width: 0;
-}
-
-.newsletter input::placeholder {
-  color: var(--footer-muted);
-}
-
-.newsletter button {
-  background: none;
-  border: 0;
-  color: var(--stone);
-  cursor: pointer;
-  padding-inline: 8px;
-}
-
-.footer-base {
-  margin-top: 56px;
-  padding-top: 24px;
-  border-top: 1px solid var(--footer-rule);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 0.8125rem;
-  color: var(--footer-muted);
-}
-
-@media (max-width: 900px) {
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- acrescentados (Task 4) ---------- */
-
-.site-footer :focus-visible {
-  outline-color: var(--stone);
+  gap: var(--space-2);
 }
 
 .footer-brand {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   align-content: start;
+}
+
+/* O nome no rodapé alinha o topo com os títulos das colunas. */
+.footer-brand .wordmark {
+  justify-self: start;
+  line-height: 1;
+  margin-bottom: var(--space-2);
 }
 
 .footer-muted {
@@ -400,41 +416,149 @@
 .footer-contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
-}
-
-.footer-legal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: var(--space-1) var(--space-4);
 }
 
 .newsletter-form {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
+}
+
+.newsletter {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line-field);
+}
+
+.newsletter input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--stone);
+  font-size: var(--fs-ui);
+}
+
+.newsletter input::placeholder {
+  color: var(--footer-muted);
+}
+
+.newsletter button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--space-3));
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--stone);
+  cursor: pointer;
+}
+
+.newsletter button .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .newsletter button:hover .icon {
+    transform: translateX(3px);
+  }
 }
 
 .newsletter__consent {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 8px;
-  font-size: 0.8125rem;
+  gap: var(--space-3);
+  font-size: var(--fs-caption);
   color: var(--footer-muted);
+  cursor: pointer;
 }
 
 .newsletter__consent input {
-  margin-top: 3px;
+  margin: 0;
+  margin-top: 0.125em;
+  width: 18px;
+  height: 18px;
   accent-color: var(--stone);
 }
 
 .newsletter__status {
   min-height: 1.4em;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--footer-text);
 }
+
+/* Sem mensagem, o espaço do aviso não fica vazio embaixo do formulário (o elemento continua no lugar para o leitor de tela). */
+.newsletter__status:empty {
+  min-height: 0;
+}
+
+.footer-base {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--footer-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-size: var(--fs-caption);
+  color: var(--footer-muted);
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Toque: cada link do rodapé com 44 px de altura. */
+  .footer-grid ul {
+    gap: 0;
+  }
+
+  .footer-grid ul a,
+  .footer-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-legal {
+    row-gap: 0;
+  }
+
+  .footer-base {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+/* Celular: nome e novidades ocupam a largura; Catálogo e Atendimento lado a lado. */
+@media (max-width: 560px) {
+  .footer-grid {
+    column-gap: var(--space-4);
+  }
+
+  .footer-brand,
+  .footer-grid > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- busca do cabeçalho ---------- */
 
 /* Busca do cabeçalho com sugestões. O painel abre logo abaixo do cabeçalho, como o painel de categorias. */
 .header-search__panel {
@@ -451,20 +575,31 @@
 
 .header-search__inner {
   display: grid;
-  gap: 12px;
-  padding-block: 20px 28px;
+  gap: var(--space-4);
+  padding-block: var(--space-5) var(--space-6);
 }
 
 .header-search__inner input {
   width: 100%;
   min-height: 48px;
-  padding: 0 14px;
+  padding: 0 var(--space-4);
   font: inherit;
-  font-size: 1.125rem;
+  font-size: var(--fs-lead);
   color: var(--ink);
   background: var(--paper);
   border: 1px solid var(--line-field);
   border-radius: 0;
+}
+
+.header-search__inner input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+}
+
+/* O X azul nativo do campo de busca destoa; fechar e limpar ficam no X do cabeçalho. */
+.header-search__inner input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .header-search__list {
@@ -472,6 +607,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: 1px solid var(--line);
 }
 
 /* Cada sugestão: miniatura à esquerda, nome e tipo. Peça em `contain` sobre o papel, como nas plates. */
@@ -479,13 +615,12 @@
   display: grid;
   grid-template-columns: 88px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: 44px;
-  padding: 8px;
+  padding: var(--space-2);
   border-bottom: 1px solid var(--line);
   color: var(--ink);
   text-decoration: none;
-  transition: background-color var(--t-mid) var(--ease-out);
 }
 
 .header-search__list a:hover,
@@ -528,18 +663,20 @@
   background: var(--portrait-ground);
 }
 
-.header-search__list a:hover .header-search__thumb img {
-  transform: scale(1.06);
+@media (hover: hover) {
+  .header-search__list a:hover .header-search__thumb img {
+    transform: scale(1.06);
+  }
 }
 
 .header-search__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: var(--fs-body);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header-search__list a,
   .header-search__thumb img {
     transition: none;
   }
@@ -551,17 +688,17 @@
 
 .header-search__list small,
 .header-search__empty {
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
 
 .header-search__all {
   justify-self: start;
-  min-height: 44px;
-  padding: 0 18px;
-  font: inherit;
-  color: var(--paper);
-  background: var(--ink);
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .header-search__list a {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: var(--space-3);
+  }
 }

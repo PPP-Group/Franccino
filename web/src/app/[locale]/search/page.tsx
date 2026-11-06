@@ -50,11 +50,14 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
   const total = results ? results.products.length + results.designers.length + results.collections.length : 0;
 
   return (
-    <main className="wrap">
+    <main className="wrap page-end">
       <PageHead title={t('title')} />
       <form className="search-form" role="search">
         <div className="field">
-          <label htmlFor="search-q">{tSearch('label')}</label>
+          {/* O título da página já diz "Busca": o rótulo fica só para o leitor de tela. */}
+          <label className="visually-hidden" htmlFor="search-q">
+            {tSearch('label')}
+          </label>
           <input
             id="search-q"
             name="q"

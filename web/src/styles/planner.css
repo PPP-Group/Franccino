@@ -8,46 +8,126 @@
   - Cores fixas das peças → `--plan-piece`, `--plan-selected`, `--plan-conflict`.
   - `.canvas-bar button` com `border-color: var(--line-field)`.
   - R17: botões de adicionar peça e da barra da planta com alvo de 44px.
+  Rodada 2 (06/11/2026): tokens de tipo e espaço; as colunas laterais sem recuo interno (fundo branco, sem caixa),
+  alinhadas à margem da página; os títulos das colunas com um só estilo (`.planner__heading`).
 */
 
 .planner {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr) 300px;
-  gap: 16px;
+  grid-template-columns: 300px minmax(0, 1fr) 280px;
+  gap: var(--space-6);
   align-items: start;
-  padding-bottom: 64px;
+  padding-bottom: var(--section-y);
 }
 
 .planner__side {
-  background: var(--paper);
-  padding: 20px;
   display: grid;
-  gap: 18px;
+  gap: var(--space-5);
   position: sticky;
-  top: calc(var(--header) + 16px);
-  max-height: calc(100vh - var(--header) - 32px);
+  top: calc(var(--header) + var(--space-4));
+  max-height: calc(100vh - var(--header) - var(--space-6));
   overflow: auto;
+  /* Espaço para o contorno de foco dos campos não ser cortado pela rolagem. */
+  padding: var(--space-1);
+  margin: calc(-1 * var(--space-1));
+}
+
+/* Título de cada grupo das colunas (medidas, peças do catálogo, conferência, peças na sala). */
+.planner__heading,
+.room-fieldset legend,
+.library summary {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.room-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.room-fieldset legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+}
+
+.library {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.library summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.library summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Seta própria da sanfona (a nativa é um triângulo cheio, pesado ao lado da serifa). */
+.library summary::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.library[open] summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.library > .meta:empty {
+  display: none;
 }
 
 .piece-list {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .piece-option {
   display: grid;
-  grid-template-columns: 56px 1fr auto;
-  gap: 10px;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: var(--space-3);
   align-items: center;
   border: 1px solid var(--line);
-  padding: 6px 8px 6px 6px;
+  padding: var(--space-2);
   background: var(--paper);
 }
 
-.piece-option img {
+.piece-option img,
+.piece-option__blank {
   width: 56px;
-  aspect-ratio: 4/3;
+  aspect-ratio: 4 / 3;
   object-fit: contain;
+}
+
+.piece-option__blank {
+  background: var(--portrait-ground);
+}
+
+.piece-option__name {
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  line-height: var(--lh-ui);
 }
 
 .piece-option button {
@@ -71,6 +151,11 @@
   position: relative;
 }
 
+.planner__canvas:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 .plan-svg {
   display: block;
   width: 100%;
@@ -82,24 +167,41 @@
 .canvas-bar {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
   flex-wrap: wrap;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--line);
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
   color: var(--ink-muted);
 }
 
+.canvas-bar__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
 .canvas-bar button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-3);
   background: none;
   border: 1px solid var(--line-field);
-  padding: 6px 10px;
-  min-height: 44px;
+  color: var(--ink);
   cursor: pointer;
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
+}
+
+.canvas-bar button .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.canvas-bar button:hover:not(:disabled) {
+  border-color: var(--ink);
 }
 
 .canvas-bar button:disabled {
@@ -121,7 +223,6 @@
   stroke: var(--ink);
   stroke-width: 1.6;
   vector-effect: non-scaling-stroke;
-  transition: fill var(--t-fast) ease;
 }
 
 .piece.is-selected rect,
@@ -137,63 +238,25 @@
   stroke: var(--alert);
 }
 
+/* Texto dentro do SVG: em unidades do desenho (centímetros), não segue a escala de tipos da página. */
 .piece text {
   font-size: 11px;
   fill: var(--ink);
   pointer-events: none;
 }
 
-.checks {
-  display: grid;
-  gap: 8px;
-  font-size: 0.875rem;
+.piece__size {
+  fill: var(--ink-muted);
 }
 
-.checks li {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
+.piece:focus-visible {
+  outline: none;
 }
 
-.checks .bad {
-  color: var(--alert);
-}
-
-.checks .good {
-  color: var(--garden);
-}
-
-.summary-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-  font-size: 0.875rem;
-}
-
-.summary-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 6px;
-}
-
-.library {
-  display: grid;
-  gap: 14px;
-}
-
-.library summary {
-  cursor: pointer;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  padding-block: 4px;
-}
-
-.library[open] summary {
-  margin-bottom: 12px;
+.piece:focus-visible rect,
+.piece:focus-visible ellipse {
+  stroke: var(--ink);
+  stroke-width: 3;
 }
 
 .plan-floor {
@@ -224,67 +287,63 @@
   font-size: 13px;
 }
 
-.piece__size {
-  fill: var(--ink-muted);
-}
-
-.piece:focus-visible {
-  outline: none;
-}
-
-.piece:focus-visible rect,
-.piece:focus-visible ellipse {
-  stroke: var(--ink);
-  stroke-width: 3;
-}
-
-.room-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
+.checks {
   display: grid;
-  gap: 6px;
-}
-
-.planner__heading {
-  font-size: 1.1rem;
-}
-
-.piece-list {
+  gap: var(--space-2);
   list-style: none;
   margin: 0;
   padding: 0;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
 }
 
-.piece-option__name {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.piece-option__blank {
-  width: 56px;
-  aspect-ratio: 4 / 3;
-  background: var(--stone);
-}
-
-.canvas-bar__actions {
+.checks li {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
+  align-items: flex-start;
 }
 
-.planner__canvas:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+.checks .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.checks .bad {
+  color: var(--alert);
+}
+
+.checks .good {
+  color: var(--garden);
+}
+
+.summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  border-top: 1px solid var(--line);
+}
+
+.summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--line);
 }
 
 @media (max-width: 1200px) {
   .planner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
   }
 
   .planner__side {
     position: static;
     max-height: none;
+    overflow: visible;
   }
 
   .planner__canvas {

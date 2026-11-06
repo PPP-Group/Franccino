@@ -152,7 +152,7 @@ export function HeaderSearch() {
               ) : null}
             </div>
             {items.length > 0 ? (
-              <button type="submit" className="header-search__all">
+              <button type="submit" className="btn header-search__all">
                 {tSearch('seeAll')}
               </button>
             ) : null}
