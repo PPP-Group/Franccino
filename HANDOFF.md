@@ -813,3 +813,18 @@ MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o pi
 - **Depois do deploy:** enviar a foto sem fundo das 15 peças de lançamento (recortes prontos na área temporária da
   sessão; script de envio pelo painel em `painel/enviar-recorte.js` dessa área). O usuário de teste do painel criado
   para isso deve ser apagado pelo Pedro Ivo.
+
+### 21.5 Complemento (06/11, noite): auditoria do Drive, logo e Corporativo (PR #68)
+
+- **Auditoria do Drive** (planilha "Auditoria_Drive_Site_Franccino.xlsx", de outra sessão; não está no repositório):
+  532 arquivos para subir ou substituir, 518 marcados "Usar". **Ainda não subidos:** o conector do Drive só entrega
+  arquivos até ~4 MB, e os pequenos voltam inteiros na conversa (gasto alto). O caminho barato é pôr
+  "Qualquer pessoa com o link: Leitor" nas pastas `_PEDRO VAI EXTRAIR DO SITE`, `_FOTOS E VÍDEOS FRANCCINO` e nas pastas
+  de produto da raiz (nunca na `_A PLANILHA`); aí um script baixa tudo de uma vez. Nem o Pedro Ivo nem a conta da
+  sessão são gerentes do Drive compartilhado: o pedido foi feito à Franccino.
+- **Logo:** FRANCCINO em SVG (`web/src/components/layout/Logo.tsx`), com as letras da Adobe Garamond Pro do Drive e o
+  espaçamento da logo do site atual. Só os contornos entram no site, nunca o arquivo da fonte.
+- **Fontes:** as alternativas que a Franccino mandou (pasta `_FONTES ALTERNATIVAS`): Cormorant Garamond nos títulos e
+  EB Garamond no texto, as mesmas que o site já usava.
+- **Projetos virou "Corporativo"** (menu, título, rodapé e seção da home), sem os filtros Todos e Residencial.
+- **Movimento:** saiu a faixa de carregamento das fotos; a cortina da esquerda para a direita ficou só nas coleções.
