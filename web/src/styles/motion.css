@@ -1,61 +1,277 @@
 /*
-  Movimento da rodada 2 (banco de ideias, retorno de 26/10/2026). Tudo num arquivo só para poder tirar ou ajustar de
-  uma vez ("se não gostar, tira"): apagar o @import em globals.css desliga as quatro coisas abaixo.
+  Movimento do site. Tudo num arquivo só para poder tirar ou ajustar de uma vez: apagar o @import em globals.css
+  desliga tudo. Cada bloco abaixo tem um título e se desliga sozinho (apagar o bloco); a lista está em
+  web/DESIGN.md, "Movimento: o que dá para desligar".
 
-  1. Revelação na rolagem (ideia 4): blocos grandes sobem e aparecem ao entrar na tela, e a peça em destaque da home
-     "vira um pouquinho e se desfaz" ao sair. Só CSS (animation-timeline: view()); navegador sem suporte mostra tudo
-     parado, como antes.
-  2. Carregamento (ideia 12): faixa em degradê passando na foto do card até a imagem chegar.
-  3. Imagem que cresce (ideia 10): a foto do card vira a foto grande da página da peça (ViewTransition do React).
+  Banco de ideias (PDF de retorno da Franccino):
+  - ideia 04, aprovada: paralaxe suave (três camadas em velocidades diferentes) e revelação ao rolar (a foto abre como
+    uma cortina, o título sobe 20 px enquanto aparece);
+  - ideia 10, aprovada: a foto do card cresce até a página da peça (ViewTransition do React);
+  - ideia 12, aprovada com ajustes ("validar quais serão utilizados"): as microinterações 12a a 12f, cada uma no seu
+    bloco, para a Franccino escolher quais ficam. A 12c (cursor "Arraste" no carrossel) vive em carousel.css.
 
-  Quem pediu menos movimento não vê nenhuma delas.
-
-  Tempos e curvas pelos tokens (--t-*, --ease-*). As exceções são laços contínuos, que não são transição: a faixa de
-  carregamento (1,4 s) e o pulso dos pontos dos ambientes (home.css).
+  Quem pediu menos movimento não vê nenhuma delas. Tempos e curvas pelos tokens (--t-*, --ease-*). As exceções são
+  laços contínuos, que não são transição: a faixa de carregamento (1,4 s) e o pulso dos pontos dos ambientes
+  (home.css).
 */
+
+/* ======================================================================================================== */
+/* Ideia 04 — revelação ao rolar                                                                            */
+/* ======================================================================================================== */
 
 /*
-  Aparecer ao entrar na tela (RevealObserver): uma vez só, por transição, sem ficar preso à rolagem. Só com
-  JavaScript ativo ([data-reveal-ready]) os blocos começam escondidos.
+  RevealObserver marca `.is-revealed` quando o bloco entra na tela, uma vez só (transição, nunca presa à rolagem). Só
+  com JavaScript ativo ([data-reveal-ready]) os blocos começam escondidos.
+
+  - `data-reveal`: o bloco (título de seção, texto) sobe 20 px enquanto aparece.
+  - `data-reveal="stagger"`: os filhos fazem o mesmo, em sequência.
+  - `data-reveal="curtain"`: o que está dentro (os filhos diretos: a foto, o link da foto) abre como uma cortina, da
+    esquerda para a direita (clip-path). O recorte fica nos filhos, nunca no próprio bloco: um bloco recortado por
+    inteiro não conta como visível para o IntersectionObserver, e nunca abriria.
+  - `data-reveal="curtain-stagger"`: o mesmo, com os filhos em sequência (mosaicos e grades de fotos).
+  Texto marcado com `data-reveal` dentro de uma cortina sobe um pouco depois dela.
 */
+[data-reveal] {
+  --reveal-rise: calc(var(--space-4) + var(--space-1));
+  --reveal-step: 70ms;
+}
+
+/*
+  A cortina recorta 6 px além da caixa, para não cortar o contorno de foco dos links. Os dois estados são inset()
+  (sem `none` no fim): só assim o navegador anima a passagem.
+*/
+[data-reveal^='curtain'] {
+  --reveal-step: 140ms;
+  --curtain-bleed: calc(-1 * (var(--space-1) + var(--space-1) / 2));
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']),
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger'], [data-reveal^='curtain']),
   [data-reveal-ready] [data-reveal='stagger'] > * {
     transition:
       opacity var(--t-slow) var(--ease-out),
       transform var(--t-slow) var(--ease-out);
-    transition-delay: calc(var(--reveal-index, 0) * 70ms);
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step));
   }
 
-  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']):not(.is-revealed),
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger'], [data-reveal^='curtain']):not(.is-revealed),
   [data-reveal-ready] [data-reveal='stagger']:not(.is-revealed) > * {
     opacity: 0;
-    transform: translateY(var(--space-5));
+    transform: translateY(var(--reveal-rise));
   }
 
+  [data-reveal-ready] [data-reveal^='curtain'] > * {
+    clip-path: inset(var(--curtain-bleed));
+    transition: clip-path calc(var(--t-slow) + var(--t-press)) var(--ease-in-out);
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step));
+  }
+
+  [data-reveal-ready] [data-reveal^='curtain']:not(.is-revealed) > * {
+    clip-path: inset(var(--curtain-bleed) 100% var(--curtain-bleed) var(--curtain-bleed));
+  }
+
+  /* Duas por linha (blocos das coleções): o da direita abre logo depois do da esquerda. */
+  .collection-grid > :nth-child(even) {
+    --reveal-index: 1;
+  }
+
+  /* O texto sobre a foto (projetos, linhas) sobe quando a cortina já passou por ele. */
+  [data-reveal-ready] [data-reveal^='curtain'] [data-reveal] {
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step) + var(--t-mid));
+  }
+}
+
+/* ======================================================================================================== */
+/* Ideia 04 — paralaxe suave                                                                                */
+/* ======================================================================================================== */
+
+/*
+  Três camadas, cada uma numa velocidade (só `translate`, sem mexer no layout): o texto anda um pouco mais rápido que
+  a página (camada `front`), a peça e o quadro andam com a página, e a foto de fundo anda mais devagar dentro do quadro
+  (camada `back`). Movimento curto: no máximo 40 px de ponta a ponta na foto e 20 px no texto (metade no celular).
+
+  - `data-parallax` no bloco: é ele que mede a rolagem (view-timeline com nome, que vale para os descendentes). Por
+    isso a camada pode ficar dentro de um quadro com overflow escondido (`.hover-zoom`), que sozinho viraria a
+    referência de um `view()` e pararia o movimento.
+  - `data-parallax-layer="back"` na foto (ou no quadro dela): ganha 10% de sobra (`scale`) para nunca mostrar a borda.
+  - `data-parallax-layer="front"` no texto.
+  Só CSS (animation-timeline): navegador sem suporte mostra tudo parado.
+*/
+[data-parallax] {
+  --parallax-back: 20px;
+  --parallax-front: 10px;
+}
+
+@media (max-width: 56.25rem) {
+  [data-parallax] {
+    --parallax-back: 12px;
+    --parallax-front: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .feature__media img {
-      transform-origin: 50% 60%;
-      animation: feature-drift linear both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
+    [data-parallax] {
+      view-timeline: --parallax block;
+    }
+
+    [data-parallax-layer='back'] {
+      scale: 1.1;
+      animation: parallax-back linear both;
+      animation-timeline: --parallax;
+      animation-range: cover 0% cover 100%;
+    }
+
+    [data-parallax-layer='front'] {
+      animation: parallax-front linear both;
+      animation-timeline: --parallax;
+      animation-range: cover 0% cover 100%;
     }
   }
 }
 
-@keyframes feature-drift {
+@keyframes parallax-back {
+  from {
+    translate: 0 calc(-1 * var(--parallax-back));
+  }
   to {
-    opacity: 0.15;
-    transform: perspective(1400px) rotateY(-9deg) scale(0.94) translateY(-6%);
+    translate: 0 var(--parallax-back);
   }
 }
 
-/* ---------- carregamento das fotos ---------- */
+@keyframes parallax-front {
+  from {
+    translate: 0 var(--parallax-front);
+  }
+  to {
+    translate: 0 calc(-1 * var(--parallax-front));
+  }
+}
 
-/* `ImageLoadWatcher` marca o <html> e cada foto que terminou de carregar; sem JavaScript, nada disso aparece. */
+/* ======================================================================================================== */
+/* Ideia 12 — microinterações. Cada bloco se desliga sozinho: apague o bloco inteiro.                        */
+/* ======================================================================================================== */
+
+/* ---------- 12a. Botão e link com seta: a seta anda 4 px para a direita no hover ---------- */
+
+.btn > .icon:last-child:not(:first-child),
+.link-arrow .icon,
+.hero__cta .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn:hover:not(:disabled) > .icon:last-child:not(:first-child),
+  .link-arrow:hover .icon,
+  a:hover .link-arrow .icon,
+  a:hover .hero__cta .icon {
+    transform: translateX(var(--space-1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link-arrow:focus-visible .icon,
+  a:focus-visible .link-arrow .icon {
+    transform: translateX(var(--space-1));
+  }
+}
+
+/* ---------- 12b. Link: sublinhado que cresce da esquerda ---------- */
+
+/*
+  Links de texto do cabeçalho, dos painéis e do rodapé (o fio está em chrome.css) e `.link-grow` (components.css): o
+  fio cresce da esquerda em vez de aparecer de uma vez. No link com seta, que já tem o fio à vista, o fio recolhe para a direita e volta a crescer da
+  esquerda.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .nav > a::after,
+  .nav-area__trigger::after,
+  .nav-panel__all::after,
+  .nav-panel__list a::after,
+  .tools > a .label-optional::after,
+  .lang a::after,
+  .site-footer a:not(.wordmark)::after,
+  .link-grow::after {
+    transition: transform var(--t-base) var(--ease-out);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .link-arrow:hover::before,
+  a:hover .link-arrow::before {
+    animation: underline-redraw calc(2 * var(--t-mid)) var(--ease-in-out);
+  }
+}
+
+@keyframes underline-redraw {
+  0% {
+    transform-origin: right;
+    transform: scaleX(1);
+  }
+  50% {
+    transform-origin: right;
+    transform: scaleX(0);
+  }
+  50.1% {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  100% {
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 12c. Cursor "Arraste" no carrossel: em carousel.css ---------- */
+
+/* ---------- 12d. Peça adicionada à lista: o visto entra e o ícone da lista no cabeçalho pulsa uma vez ---------- */
+
+/*
+  O botão troca o ícone pelo visto e o texto por "Adicionada à lista" por um instante (QuickAddButton e
+  ProductConfigurator); o visto entra pela escala. No cabeçalho, QuoteListLink marca `data-pulse` no ícone e no
+  contador quando a quantidade sobe (nunca ao abrir a página nem ao tirar peças).
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .is-added > .add-icon {
+    animation: add-check var(--t-mid) var(--ease-out);
+  }
+
+  .list-icon[data-pulse],
+  .list-count[data-pulse] {
+    animation: list-pulse calc(2 * var(--t-mid)) var(--ease-out);
+  }
+
+  .list-count[data-pulse] {
+    animation-delay: var(--t-press);
+  }
+}
+
+@keyframes add-check {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes list-pulse {
+  35% {
+    transform: scale(1.28);
+  }
+}
+
+/* ---------- 12e. Números que contam até o valor (CountUp): o movimento é do componente, sem CSS ---------- */
+
+/* ---------- 12f. Carregamento: faixa suave no lugar de "Carregando…" ---------- */
+
+/*
+  Fotos: `ImageLoadWatcher` marca o <html> e cada foto que terminou de carregar; sem JavaScript, nada disso aparece.
+  Esqueletos (`.skeleton`, components.css): a lista de orçamento antes de ler o navegador e o 3D da peça enquanto o
+  modelo carrega. Sem este bloco, os esqueletos ficam parados, na cor de fundo.
+*/
 @media (prefers-reduced-motion: no-preference) {
   [data-image-watch] .plate__media:has(> img:not([data-loaded])),
-  [data-image-watch] .collection-tile__media:has(> img:not([data-loaded])) {
+  [data-image-watch] .collection-tile__media:has(> img:not([data-loaded])),
+  .skeleton {
     background-image: linear-gradient(
       100deg,
       var(--shimmer-base) 30%,

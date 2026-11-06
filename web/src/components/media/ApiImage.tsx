@@ -14,9 +14,11 @@ type ApiImageProps = {
   sizes: string;
   priority?: boolean;
   className?: string;
+  /** Camada da paralaxe (motion.css, ideia 04): a foto anda mais devagar que o quadro em volta. */
+  parallax?: boolean;
 };
 
-export function ApiImage({ image, sizes, priority = false, className }: ApiImageProps) {
+export function ApiImage({ image, sizes, priority = false, className, parallax = false }: ApiImageProps) {
   if (!image) {
     return null;
   }
@@ -53,6 +55,7 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
       decoding="async"
       className={className}
       style={hasStyle ? style : undefined}
+      data-parallax-layer={parallax ? 'back' : undefined}
     />
   );
 }

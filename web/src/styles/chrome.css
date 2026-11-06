@@ -160,8 +160,9 @@ body:has(.hero--full) #conteudo {
 }
 
 /*
-  Sublinhado que cresce da esquerda (rodada 3): um fio de 1 px por transform, no lugar do text-decoration. Vale
-  para os links de texto do cabeçalho, dos painéis e do rodapé; a página atual fica sublinhada.
+  Sublinhado dos links de texto do cabeçalho, dos painéis e do rodapé: um fio de 1 px por transform, no lugar do
+  text-decoration; a página atual fica sublinhada. O fio crescer da esquerda é a microinteração 12b de motion.css
+  (sem ela, o fio aparece de uma vez).
 */
 .nav > a::after,
 .nav-area__trigger::after,
@@ -179,7 +180,6 @@ body:has(.hero--full) #conteudo {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--t-base) var(--ease-out);
   pointer-events: none;
 }
 
@@ -358,13 +358,11 @@ body:has(.hero--full) #conteudo {
   line-height: 1;
   display: inline-grid;
   place-items: center;
-  animation: count-bump var(--t-mid) var(--ease-out);
 }
 
-@keyframes count-bump {
-  50% {
-    transform: scale(1.28);
-  }
+/* O ícone da lista e o contador pulsam uma vez quando uma peça entra na lista: microinteração 12d de motion.css. */
+.list-icon {
+  display: inline-grid;
 }
 
 .list-count[data-empty='true'] {

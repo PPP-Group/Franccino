@@ -409,22 +409,9 @@
   height: 48px;
 }
 
-/* O ícone troca (lista → visto) com um pequeno pulo: entra pela escala, só no momento da troca. */
+/* O ícone troca (lista → visto); o pulo do visto é a microinteração 12d de motion.css. */
 .buy__add-icon {
   display: inline-grid;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .buy__add.is-added .buy__add-icon {
-    animation: buy-check var(--t-mid) var(--ease-out);
-  }
-}
-
-@keyframes buy-check {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
-  }
 }
 
 .feedback:empty {

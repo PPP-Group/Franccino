@@ -4,8 +4,11 @@ import { useEffect } from 'react';
 
 const SELECTOR = '[data-reveal]';
 
+/** Variantes em que os filhos aparecem em sequência (o atraso de cada um vem de `--reveal-index`). */
+const SEQUENCES = new Set(['stagger', 'curtain-stagger']);
+
 function prepare(element: Element) {
-  if (element.getAttribute('data-reveal') === 'stagger') {
+  if (SEQUENCES.has(element.getAttribute('data-reveal') ?? '')) {
     Array.from(element.children).forEach((child, index) => {
       (child as HTMLElement).style.setProperty('--reveal-index', String(Math.min(index, 8)));
     });
@@ -13,8 +16,9 @@ function prepare(element: Element) {
 }
 
 /**
- * Faz os blocos marcados com `data-reveal` aparecerem quando entram na tela, uma vez só (sobem um pouco e ganham
- * opacidade). `data-reveal="stagger"` num grupo faz os filhos aparecerem em sequência. Substitui a animação presa à
+ * Faz os blocos marcados com `data-reveal` aparecerem quando entram na tela, uma vez só (banco de ideias, ideia 04):
+ * o texto sobe 20 px e ganha opacidade; `data-reveal="curtain"` abre a foto como uma cortina. `data-reveal="stagger"`
+ * e `data-reveal="curtain-stagger"` num grupo fazem os filhos aparecerem em sequência (motion.css). Substitui a animação presa à
  * rolagem, que parava no meio quando a pessoa parava de rolar (retorno de 06/11/2026). Observa também o que entra
  * depois, na troca de página. Sem JavaScript, ou com movimento reduzido, tudo aparece pronto (motion.css).
  */
