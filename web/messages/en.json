@@ -694,5 +694,8 @@
       "glass": "Frosted glass header (idea 5): left for later; for now, the solid white header.",
       "discarded": "Light and gradient per piece (6), 360° spin (11) and menu with image preview (15): discarded by you."
     }
+  },
+  "recent": {
+    "title": "Pieces you have seen"
   }
 }

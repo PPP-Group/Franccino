@@ -174,3 +174,23 @@ p {
     animation-duration: 1ms !important;
   }
 }
+
+/*
+  Hover padrão de foto clicável em todo o site (retorno de 06/11/2026): a foto aproxima devagar dentro do próprio
+  quadro, sem sombra e sem mover a caixa. Use .hover-zoom no quadro da foto; o gatilho é o link ou o card em volta.
+*/
+.hover-zoom {
+  overflow: hidden;
+}
+
+.hover-zoom img {
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a:hover .hover-zoom img,
+  a:focus-visible .hover-zoom img,
+  .hover-zoom:hover img {
+    transform: scale(1.05);
+  }
+}

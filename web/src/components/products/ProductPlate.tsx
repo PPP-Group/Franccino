@@ -4,6 +4,9 @@ import { ApiImage } from '@/components/media/ApiImage';
 import { Link } from '@/i18n/navigation';
 import type { ProductCard } from '@/lib/api/types';
 
+/** O que o card usa: foto, nome e o sinal de lançamento (também serve às peças guardadas em "Peças que você viu"). */
+export type PlateProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>;
+
 /**
  * Nome da transição que leva a foto do card até a foto grande da página da peça (banco de ideias, ideia 10: "você
  * clica e a imagem vai crescendo"). O mesmo nome fica na primeira foto de `ProductStage`.
@@ -19,7 +22,7 @@ export function productMorphName(slug: string): string {
 export const PLATE_SIZES = '(max-width: 73.75rem) 48vw, (min-width: 97.5rem) 470px, 30vw';
 
 type ProductPlateProps = {
-  product: ProductCard;
+  product: PlateProduct;
   showNew?: boolean;
   sizes?: string;
   priority?: boolean;

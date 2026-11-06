@@ -8,6 +8,7 @@ import { areaMenus } from '@/components/layout/area-menu';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ImageLoadWatcher } from '@/components/ui/ImageLoadWatcher';
+import { RevealObserver } from '@/components/ui/RevealObserver';
 import { ToastRegion } from '@/components/ui/ToastRegion';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { htmlLang, locales } from '@/i18n/config';
@@ -49,7 +50,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   ]);
 
   return (
-    <html lang={htmlLang(locale)} className={fontVariables}>
+    // data-scroll-behavior: o Next tira a rolagem suave durante a troca de página, para a nova página abrir no topo.
+    <html lang={htmlLang(locale)} className={fontVariables} data-scroll-behavior="smooth">
       <body>
         <NextIntlClientProvider>
           <a className="skip-link" href="#conteudo">
@@ -64,6 +66,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           <ToastRegion />
           <ConsentBanner />
           <ImageLoadWatcher />
+          <RevealObserver />
         </NextIntlClientProvider>
       </body>
     </html>

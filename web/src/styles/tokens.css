@@ -96,6 +96,8 @@
   --t-fast: 180ms;
   --t-base: 240ms;
   --t-mid: 320ms;
+  /* Movimento grande e lento: foto que cresce até a peça, blocos que aparecem, zoom das fotos no hover. */
+  --t-slow: 700ms;
   --shadow-plate: 0 18px 40px -28px rgba(23, 23, 23, 0.35);
   --shadow-lift: 0 24px 48px -24px rgba(23, 23, 23, 0.32);
 }

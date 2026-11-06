@@ -694,5 +694,8 @@
       "glass": "Vidro fosco no cabeçalho (ideia 5): ficou para mais tarde; por enquanto, o cabeçalho branco sólido.",
       "discarded": "Luz e gradiente por peça (6), giro 360° (11) e menu com prévia de imagem (15): descartados por vocês."
     }
+  },
+  "recent": {
+    "title": "Peças que você viu"
   }
 }

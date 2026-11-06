@@ -40,7 +40,7 @@ return [
     'product.finishes_note' => 'Observação sobre acabamentos, ex.: Disponível em outras cores sob consulta.',
     'product.dimensions' => 'Medidas em milímetros (1 metro = 1000 mm). Para peças com mais de um tamanho, use "Adicionar" e dê um nome a cada versão.',
     'product.finishes' => 'Acabamentos em que a peça é feita. Eles aparecem como amostras na página do produto.',
-    'product.cover' => 'Foto principal da peça: fundo branco, peça centralizada e todas no mesmo ângulo. Pelo menos 1600 px. Obrigatória para publicar.',
+    'product.cover' => 'Foto principal da peça, sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda; fundo branco e peça centralizada. Pelo menos 2000 px. Obrigatória para publicar.',
     'product.gallery' => 'Outras fotos da peça (detalhes, ambientes). Arraste para mudar a ordem.',
     'product.model_3d' => 'Arquivo 3D em GLB, até 5 MB. Ele aparece no botão "3D" da página do produto.',
     'product.is_3d_enabled' => 'Liga ou desliga o visualizador 3D desta peça, sem apagar o arquivo.',

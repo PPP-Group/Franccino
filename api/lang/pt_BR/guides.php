@@ -48,6 +48,7 @@ return [
                 'Aba Medidas: clique em "Adicionar" e informe largura, profundidade e altura em milímetros. Peça com mais de um tamanho ganha uma linha por versão (ex.: "2,00 m" e "2,70 m").',
                 'Depois de salvar, na lista Acabamentos (abaixo do formulário): "Anexar" para escolher os acabamentos da peça e arraste para mudar a ordem.',
                 'Aba Mídia e 3D: envie a foto de capa (obrigatória para publicar) e, se tiver, as fotos da galeria e o arquivo 3D em GLB.',
+                'Capa sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda, em fundo branco. As outras vistas vão para a galeria.',
                 'Aba SEO: opcional. Vazio, o site usa o nome e a descrição.',
                 'Ligue "Publicado" (aba Geral) e clique em "Criar".',
                 'Para fichas técnicas e blocos SketchUp/DWG, abra o produto salvo e use a área "Arquivos" no fim da página.',

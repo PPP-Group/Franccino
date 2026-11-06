@@ -291,8 +291,16 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
 ### Interação e movimento
 
 - Área de toque de 44 px em todo controle; foco visível com contorno de 2 px.
-- Movimento só com `transform` e `opacity`, nos tempos `--t-press` (120), `--t-fast` (180), `--t-base` (240) e
-  `--t-mid` (320), curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
+- Movimento só com `transform` e `opacity`, nos tempos `--t-press` (120), `--t-fast` (180), `--t-base` (240),
+  `--t-mid` (320) e `--t-slow` (700, só para movimento grande: foto que cresce, blocos que aparecem, zoom de foto),
+  curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
+- Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
+- Aparecer ao rolar: `data-reveal` no bloco, ou `data-reveal="stagger"` num grupo (filhos em sequência). Dispara uma
+  vez (RevealObserver), nunca preso à rolagem.
+- Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
+  outra coleção, chamada) ou a grade muda o número de colunas.
+- Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
+  viu"), sem obrigar a voltar à home.
 - `prefers-reduced-motion`: nada se mexe; o conteúdo aparece pronto.
 - Lei de Tesler (VTX): a interface não mostra o que não se aplica agora (seção sem dado some; sem botão sem ação).
 

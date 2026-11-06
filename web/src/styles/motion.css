@@ -14,37 +14,32 @@
   carregamento (1,4 s) e o pulso dos pontos dos ambientes (home.css).
 */
 
+/*
+  Aparecer ao entrar na tela (RevealObserver): uma vez só, por transição, sem ficar preso à rolagem. Só com
+  JavaScript ativo ([data-reveal-ready]) os blocos começam escondidos.
+*/
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .collection-tile,
-    .project-row,
-    .factory,
-    .line-panel,
-    .designer,
-    .block-image-text,
-    .block-gallery {
-      animation: reveal-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 70%;
-    }
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']),
+  [data-reveal-ready] [data-reveal='stagger'] > * {
+    transition:
+      opacity var(--t-slow) var(--ease-out),
+      transform var(--t-slow) var(--ease-out);
+    transition-delay: calc(var(--reveal-index, 0) * 70ms);
+  }
 
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']):not(.is-revealed),
+  [data-reveal-ready] [data-reveal='stagger']:not(.is-revealed) > * {
+    opacity: 0;
+    transform: translateY(var(--space-5));
+  }
+
+  @supports (animation-timeline: view()) {
     .feature__media img {
       transform-origin: 50% 60%;
       animation: feature-drift linear both;
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
-  }
-}
-
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(var(--space-6));
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -83,9 +78,10 @@
 
 /* ---------- card → página da peça ---------- */
 
+/* Mais lenta e suave que uma transição de interface (retorno de 06/11/2026: "está abrindo muito rápido"). */
 ::view-transition-group(.product-morph) {
-  animation-duration: var(--t-mid);
-  animation-timing-function: var(--ease-out);
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-in-out);
 }
 
 ::view-transition-image-pair(.product-morph) {
