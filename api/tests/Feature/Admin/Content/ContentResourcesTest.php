@@ -198,6 +198,8 @@ it('offers to place a point by clicking the saved photo and choosing the piece t
         ->assertOk()
         ->assertSee(__('Which piece is here?'))
         ->assertSee('Cadeira Aura', false)
+        // The click gives one decimal (e.g. 49.8); a coarser step would make the browser refuse to save.
+        ->assertSeeHtml('step="0.1"')
         ->assertSee($scene->getFirstMediaUrl('image'), false);
 });
 
