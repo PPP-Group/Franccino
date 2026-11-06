@@ -271,8 +271,13 @@
       "thumbsLabel": "Photos of the piece",
       "showImage": "Photo {index} of {total}"
     },
-    "downloads": { "title": "Technical files", "secureLink": "Secure link valid for 10 min" },
-    "designer": { "piecesBy": "Pieces by {name}" }
+    "downloads": {
+      "title": "Technical files",
+      "secureLink": "Secure link valid for 10 min"
+    },
+    "designer": {
+      "piecesBy": "Pieces by {name}"
+    }
   },
   "catalog": {
     "filters": {
@@ -307,8 +312,15 @@
     "newTag": "New releases",
     "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
     "resultsLabel": "Results",
-    "view": { "label": "View", "grid": "Grid", "table": "Technical table" },
-    "products": { "title": "All pieces", "intro": "The complete Casa and Giardini catalogue." },
+    "view": {
+      "label": "View",
+      "grid": "Grid",
+      "table": "Technical table"
+    },
+    "products": {
+      "title": "All pieces",
+      "intro": "The complete Casa and Giardini catalogue."
+    },
     "technical": {
       "title": "Technical area",
       "intro": "Pieces with dimensions and files for specification. Open a piece to see its finishes."
@@ -357,11 +369,19 @@
     "noResults": "No results found.",
     "resultsFor": "Results for “{query}”",
     "seeAll": "See all results",
-    "kind": { "product": "Piece", "designer": "Designer", "collection": "Collection" }
+    "kind": {
+      "product": "Piece",
+      "designer": "Designer",
+      "collection": "Collection"
+    }
   },
   "pages": {
-    "indoor": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" }
+    "indoor": {
+      "title": "Indoor"
+    },
+    "outdoor": {
+      "title": "Outdoor"
+    }
   },
   "dimensions": {
     "width": "W",

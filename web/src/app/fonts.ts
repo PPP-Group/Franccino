@@ -8,13 +8,15 @@ import { Cormorant_Garamond, EB_Garamond } from 'next/font/google';
  */
 export const ebGaramond = EB_Garamond({
   subsets: ['latin'],
+  // Itálico de verdade: sem ele, o <em> do texto rico saía com a fonte normal inclinada pelo navegador.
+  style: ['normal', 'italic'],
   variable: '--font-serif-text',
   display: 'swap',
 });
 
+// Sem lista de pesos: carrega a versão variável num arquivo só, em vez de um arquivo por peso.
 export const cormorantGaramond = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
   variable: '--font-serif-display',
   display: 'swap',
 });

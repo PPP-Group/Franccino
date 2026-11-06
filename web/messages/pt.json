@@ -271,8 +271,13 @@
       "thumbsLabel": "Fotos da peça",
       "showImage": "Foto {index} de {total}"
     },
-    "downloads": { "title": "Arquivos técnicos", "secureLink": "Link seguro por 10 min" },
-    "designer": { "piecesBy": "Peças de {name}" }
+    "downloads": {
+      "title": "Arquivos técnicos",
+      "secureLink": "Link seguro por 10 min"
+    },
+    "designer": {
+      "piecesBy": "Peças de {name}"
+    }
   },
   "catalog": {
     "filters": {
@@ -307,8 +312,15 @@
     "newTag": "Lançamentos",
     "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
     "resultsLabel": "Resultados",
-    "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
-    "products": { "title": "Todas as peças", "intro": "O catálogo completo das linhas Casa e Giardini." },
+    "view": {
+      "label": "Visualização",
+      "grid": "Grade",
+      "table": "Tabela técnica"
+    },
+    "products": {
+      "title": "Todas as peças",
+      "intro": "O catálogo completo das linhas Casa e Giardini."
+    },
     "technical": {
       "title": "Área técnica",
       "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
@@ -357,11 +369,19 @@
     "noResults": "Nenhum resultado encontrado.",
     "resultsFor": "Resultados para “{query}”",
     "seeAll": "Ver todos os resultados",
-    "kind": { "product": "Peça", "designer": "Designer", "collection": "Coleção" }
+    "kind": {
+      "product": "Peça",
+      "designer": "Designer",
+      "collection": "Coleção"
+    }
   },
   "pages": {
-    "indoor": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" }
+    "indoor": {
+      "title": "Indoor"
+    },
+    "outdoor": {
+      "title": "Outdoor"
+    }
   },
   "dimensions": {
     "width": "L",
