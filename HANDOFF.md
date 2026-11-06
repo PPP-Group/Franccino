@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (20, de 30/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (21, de 06/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -721,3 +721,51 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
     as datas é decisão do tech lead.
 - **Código:** marcar o ponto clicando na foto, no painel do ambiente; "Ver em detalhe" do acabamento escolhido na página
   da peça.
+
+## 21. 06/11/2026: novo preview revisado (rodada 3 do layout)
+
+Pedido do Pedro Ivo: preview novo, revisado página por página, com a hierarquia de fonte e os espaços padronizados,
+mais premium (quadrado, preto no branco) e com os 31 pontos de retorno dele e o pedido de mais imagem e fundos
+alternados na home. Branch `claude/banner-cover-images-vcdpmb`, PR para a `develop` e depois `develop` → `main`.
+
+- **Escala única** (`web/src/styles/tokens.css`, regras em `web/DESIGN.md`): 9 tamanhos de texto, espaços na grade de
+  4 px, 5 tempos de movimento, tom areia (`--sand`) para alternar fundos. Sem sombra em lugar nenhum: o hover de foto é o
+  zoom (`.hover-zoom`). Aparecer ao rolar por `data-reveal` (`RevealObserver`), uma vez só.
+- **Global:** tela de abertura com o logo (uma vez por sessão), troca de página com fade, cabeçalho transparente sobre o
+  banner que fica branco no hover e ao rolar, menus por clique e por hover com atraso (Coleções ganhou submenu), busca
+  animada, ícones oficiais (`@tabler/icons-react`, dependência nova pedida pelo tech lead), página abre no topo.
+- **Home:** banner em tela cheia (100svh), fixo enquanto o conteúdo sobe; seções novas de coleções e projetos com fotos
+  grandes; fundos alternando branco e areia.
+- **Catálogo e peça:** card sem sombra, etiqueta "Lançamento" em versalete abaixo do nome, grade sempre completa
+  (célula vazia vira outro conteúdo), quantidade e botões da peça refeitos, tabela técnica com a linha inteira marcada e
+  2 a 3 fotos perto do cursor, "Peças que você viu" no fim das páginas.
+- **Coleções, projetos e designers:** retratos dos designers na coleção, "Outras coleções", filtros de projeto em chips
+  quadrados, página do projeto editorial, foto do topo fixa.
+- **Fábrica, lojas e sala:** fábrica editorial, linha do tempo horizontal de verdade, clique no mapa destaca a loja e
+  rola até ela, a sala para montar mostra a foto da peça.
+- **Fotos:** a API passou a servir a original quando nenhuma conversão cobre a largura (até 2560 px) e as conversões
+  grandes saem com qualidade 90 (`ImagePresenter`, `HasImageConversions`). A maior parte da perda vem das próprias
+  fontes: os banners e capas do WordPress têm 1920×500 e as fotos de produto vieram comprimidas.
+- **Página das ideias aprovadas** (`/pt/ideias`, `noindex`, fora do sitemap): cada ideia com o exemplo funcionando e o
+  que falta para entrar de vez.
+- **Pesquisa** (`docs/pesquisas/2026-11-06-fonte-fundo-e-capas.md`): fonte oficial (PPP-129), fundo branco sem perder
+  qualidade (PPP-130) e capa sempre na diagonal virada para a esquerda (dica no painel já entrou).
+- **Verificação local:** lint, typecheck, 374 testes do site e o build como no CI. O PHP 8.4 não roda nesta máquina:
+  Pest e Larastan só no CI.
+- **Linear:** PPP-126 (layout), PPP-127 (fotos), PPP-128 (microinterações), PPP-129 (fonte) e PPP-130 (fundo branco).
+
+### 21.1 Do Pedro Ivo, depois do merge na `main`
+
+1. Conferir o deploy da API e do site no EasyPanel (o automático pode estar desligado).
+2. Painel → Páginas → Fábrica: bloco "Vídeo" com `https://youtu.be/OG_GNCn0HoQ` (ou um MP4 de até 150 MB).
+3. Painel → Conteúdo → Ambientes: um ambiente de teste com 2 ou 3 pontos.
+4. Conteúdo a corrigir: bio da Andrea Zanocchi começa em minúscula; banners sem texto alternativo; a capa da Fábrica é
+   uma sala, não a fábrica; a capa da Coleção Caminhos responde 403; a descrição do Clara Arte repete parágrafos.
+5. Opcional, com os workers parados: `php artisan media-library:regenerate --force` para gerar as fotos na qualidade
+   nova.
+
+### 21.2 Da Franccino
+
+Banners em 16:9 (2560 px) e em 4:5; capas das coleções e das páginas; fotos originais das peças em fundo branco e na
+diagonal; fotos de ambientes com as peças de cada um; acabamentos digitalizados (2500 px ou mais); números da fábrica;
+MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o piloto do fundo branco (PPP-130).

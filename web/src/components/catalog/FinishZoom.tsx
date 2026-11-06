@@ -51,7 +51,7 @@ export function FinishZoom({ name, code, description, swatch, variant = 'swatch'
           onClick={show}
           aria-label={t('open', { name })}
         >
-          <ApiImage image={swatch} sizes="(max-width: 35rem) 50vw, 180px" />
+          <ApiImage image={swatch} sizes="(max-width: 35rem) 46vw, 220px" />
           <span className="finish-card__zoom-icon" aria-hidden="true">
             <Icon name="plus" />
           </span>

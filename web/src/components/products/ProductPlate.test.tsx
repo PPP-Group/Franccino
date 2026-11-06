@@ -20,10 +20,10 @@ describe('ProductPlate', () => {
   });
 
   it('shows the new tag only when asked and the product is new', () => {
-    expect(renderWithIntl(<ProductPlate product={productCard()} showNew />)).toContain('tag--new');
-    expect(renderWithIntl(<ProductPlate product={productCard()} />)).not.toContain('tag--new');
+    expect(renderWithIntl(<ProductPlate product={productCard()} showNew />)).toContain('plate__flag');
+    expect(renderWithIntl(<ProductPlate product={productCard()} />)).not.toContain('plate__flag');
     expect(renderWithIntl(<ProductPlate product={productCard({ is_new: false })} showNew />)).not.toContain(
-      'tag--new',
+      'plate__flag',
     );
   });
 

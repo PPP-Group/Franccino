@@ -3,7 +3,11 @@ import { ApiImage } from '@/components/media/ApiImage';
 import { Rail } from '@/components/ui/Rail';
 import type { Client } from '@/lib/api/types';
 
-/** Faixa "Alguns de nossos clientes" no fim de Projetos e Corporativo, em carrossel como no site antigo. */
+/**
+ * Faixa "Alguns de nossos clientes" no fim de Projetos e Corporativo, em carrossel como no site antigo. Rodada 3: a
+ * seção vai na largura toda, em fundo areia (alternância branco e areia entre as seções), com a margem da página por
+ * dentro; fica fora do `.wrap` da página.
+ */
 export function ClientsRail({ clients }: { clients: Client[] }) {
   const t = useTranslations('corporate');
   const common = useTranslations('common');
@@ -11,33 +15,35 @@ export function ClientsRail({ clients }: { clients: Client[] }) {
     return null;
   }
   return (
-    <section className="clients" aria-labelledby="clients-title">
-      <h2 id="clients-title" className="section-title clients__title">
-        {t('clients')}
-      </h2>
-      <Rail label={t('clients')}>
-        <ul className="clients__list">
-          {clients.map((client) => {
-            const mark = client.logo ? (
-              <ApiImage image={client.logo} sizes="200px" />
-            ) : (
-              <span className="clients__name">{client.name}</span>
-            );
-            return (
-              <li key={client.id} className="clients__item">
-                {client.url ? (
-                  <a href={client.url} target="_blank" rel="noopener noreferrer" aria-label={client.name}>
-                    {mark}
-                    <span className="visually-hidden">{common('opensInNewWindow')}</span>
-                  </a>
-                ) : (
-                  mark
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </Rail>
+    <section className="clients band band--sand" aria-labelledby="clients-title">
+      <div className="wrap" data-reveal>
+        <h2 id="clients-title" className="section-title">
+          {t('clients')}
+        </h2>
+        <Rail label={t('clients')}>
+          <ul className="clients__list">
+            {clients.map((client) => {
+              const mark = client.logo ? (
+                <ApiImage image={client.logo} sizes="160px" />
+              ) : (
+                <span className="clients__name">{client.name}</span>
+              );
+              return (
+                <li key={client.id} className="clients__item">
+                  {client.url ? (
+                    <a href={client.url} target="_blank" rel="noopener noreferrer" aria-label={client.name}>
+                      {mark}
+                      <span className="visually-hidden">{common('opensInNewWindow')}</span>
+                    </a>
+                  ) : (
+                    mark
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </Rail>
+      </div>
     </section>
   );
 }

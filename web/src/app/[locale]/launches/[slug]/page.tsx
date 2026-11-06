@@ -8,6 +8,7 @@ import { ViewToggle } from '@/components/catalog/ViewToggle';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
@@ -65,44 +66,54 @@ export default async function LaunchPage({ params, searchParams }: Props) {
       : [];
 
   return (
-    <main className="wrap catalog">
-      <Breadcrumbs
-        label={common('breadcrumb')}
-        items={[
-          { label: common('home'), href: '/' },
-          { label: t('launches.title'), href: '/launches' },
-          { label: launch.title },
-        ]}
-      />
-      <div className="catalog-head">
-        <div className="catalog-head__copy">
-          <h1>{launch.title}</h1>
-          {launch.year ? <p className="meta num">{launch.year}</p> : null}
-          {launch.summary ? <p className="lead">{launch.summary}</p> : null}
-        </div>
-        <p className="meta num">{t('count', { count: launch.products.length })}</p>
-      </div>
-      {launch.description ? <RichText html={launch.description} className="catalog-description" /> : null}
-      <FileDownloads
-        files={launch.files}
-        title={t('launches.downloads')}
-        headingId="launch-downloads"
-        className="media-links--wide block"
-      />
-      <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
-      <div className="toolbar toolbar--end">
-        <ViewToggle
-          view={view}
-          hrefFor={(next) => ({ ...launchHref(slug), query: next === 'table' ? { view: 'table' } : {} })}
+    <main>
+      <div className="wrap catalog">
+        <Breadcrumbs
+          label={common('breadcrumb')}
+          items={[
+            { label: common('home'), href: '/' },
+            { label: t('launches.title'), href: '/launches' },
+            { label: launch.title },
+          ]}
         />
+        <div className="catalog-head">
+          <div className="catalog-head__copy">
+            <h1>{launch.title}</h1>
+            {launch.summary ? <p className="lead">{launch.summary}</p> : null}
+          </div>
+          {/* O ano só aparece quando o título não o traz ("Lançamentos 2026" já diz o ano). */}
+          {launch.year && !launch.title.includes(String(launch.year)) ? (
+            <p className="meta num">{launch.year}</p>
+          ) : null}
+        </div>
+        {launch.description ? (
+          <RichText html={launch.description} className="prose catalog-description" />
+        ) : null}
+        <div className="toolbar">
+          <p className="meta num">{t('count', { count: launch.products.length })}</p>
+          <ViewToggle
+            view={view}
+            hrefFor={(next) => ({ ...launchHref(slug), query: next === 'table' ? { view: 'table' } : {} })}
+          />
+        </div>
+        <section className="catalog-results" aria-label={t('resultsLabel')}>
+          {view === 'table' ? (
+            <TechTable rows={rows} />
+          ) : (
+            // Toda peça aqui é lançamento: sem o rótulo no card (lei de Tesler).
+            <ProductGrid products={launch.products} priorityCount={3} />
+          )}
+        </section>
+        {/* Arquivos e vídeos depois das peças, como na página Lançamentos. */}
+        <FileDownloads
+          files={launch.files}
+          title={t('launches.downloads')}
+          headingId="launch-downloads"
+          className="media-links--wide block"
+        />
+        <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
       </div>
-      <section className="catalog-results" aria-label={t('resultsLabel')}>
-        {view === 'table' ? (
-          <TechTable rows={rows} />
-        ) : (
-          <ProductGrid products={launch.products} showNew priorityCount={4} />
-        )}
-      </section>
+      <RecentlyViewed excludeIds={launch.products.map((product) => product.id)} />
     </main>
   );
 }

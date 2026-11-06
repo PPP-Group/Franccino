@@ -196,7 +196,7 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
     <div className="planner">
       <aside className="planner__side" aria-label={t('sideLabel')}>
         <fieldset className="room-fieldset">
-          <legend className="label">{t('roomSize')}</legend>
+          <legend className="planner__heading">{t('roomSize')}</legend>
           <div className="pair">
             <div className="field">
               <label htmlFor={`${baseId}-w`}>{t('roomWidth')}</label>
@@ -282,10 +282,16 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
         </p>
       </div>
 
-      <aside className="planner__side" aria-labelledby={`${baseId}-checks`}>
-        <h2 id={`${baseId}-checks`} className="planner__heading">
-          {t('checks.title')}
-        </h2>
+      {/* A conferência só aparece com peças na sala (sem peça, não há o que conferir). */}
+      <aside
+        className="planner__side"
+        aria-labelledby={plan.pieces.length > 0 ? `${baseId}-checks` : `${baseId}-summary`}
+      >
+        {plan.pieces.length > 0 ? (
+          <h2 id={`${baseId}-checks`} className="planner__heading">
+            {t('checks.title')}
+          </h2>
+        ) : null}
         {plan.pieces.length > 0 ? (
           <ul className="checks">
             {conflicts.size > 0 ? (
@@ -309,7 +315,9 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
             </li>
           </ul>
         ) : null}
-        <h2 className="planner__heading">{t('summary.title')}</h2>
+        <h2 id={`${baseId}-summary`} className="planner__heading">
+          {t('summary.title')}
+        </h2>
         <ul className="summary-list num">
           {counts.length > 0 ? (
             counts.map(({ productId, count }) => (

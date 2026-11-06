@@ -4,31 +4,120 @@
   em vez de hex direto (C6), wordmark maiúsculo, animação do contador via
   `@keyframes` (não classe transitória) e `.footer-title` no lugar de
   `.footer-grid h3`. A regra `.icon` já está em `components.css` (Task 1).
+  Rodada 2 (06/11/2026): tokens de tipo e espaço, área de toque de 44 px em todo controle do cabeçalho e do rodapé,
+  ferramentas sempre encostadas à direita (também com o menu recolhido), contador quadrado e títulos do rodapé como
+  rótulo curto em caixa alta.
 */
 
 /* ---------- header ---------- */
 
+/*
+  Cores do cabeçalho por variável: branco sólido no normal (banco de ideias, ideia 5: contraste forte, sem vidro
+  fosco) e transparente, com texto branco, sobre o banner de tela cheia da home (rodada 3, 06/11/2026). O fundo e a
+  linha ficam no ::before, que aparece e some só por opacidade.
+*/
 .site-header {
+  --header-fg: var(--ink);
+  --header-fg-muted: var(--ink-muted);
+  --header-bg: var(--paper);
+  --header-line: var(--line-strong);
+  --header-solid: 1;
   position: sticky;
   top: 0;
   z-index: 40;
-  /* Branco sólido, sem vidro fosco (banco de ideias, ideia 5, retorno de 26/10/2026: contraste forte, sem erro). */
+  color: var(--header-fg);
+}
+
+.site-header::before,
+.site-header::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+.site-header::before {
+  inset: 0;
   background: var(--paper);
   border-bottom: 1px solid var(--line);
+  opacity: var(--header-solid);
+}
+
+/* Sombra suave no alto da foto, só no modo transparente, para o texto branco ler em qualquer foto. */
+.site-header::after {
+  inset: 0 0 calc(-1 * var(--space-7));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--hero-shade) 70%, transparent),
+    var(--hero-shade-clear)
+  );
+  opacity: calc(1 - var(--header-solid));
+}
+
+/*
+  Transparente só com o banner de tela cheia (`.hero--full`, da home), com JavaScript (`data-header-watch`, do
+  BootScript), no topo da página (sem `data-scrolled`) e sem o mouse, o foco do teclado, um menu ou a busca no
+  cabeçalho. O conteúdo sobe para baixo do cabeçalho, para a foto começar no alto da tela.
+*/
+html[data-header-watch]:not([data-scrolled]) body:has(.hero--full) .site-header {
+  --header-fg: var(--paper);
+  --header-fg-muted: var(--on-photo-muted);
+  --header-bg: var(--ink);
+  --header-line: var(--on-photo-rule);
+  --header-solid: 0;
+}
+
+/* Volta ao branco: menu, busca ou foco do teclado no cabeçalho, e o mouse por cima (só onde há mouse). */
+html[data-header-watch]:not([data-scrolled])
+  body:has(.hero--full)
+  .site-header:has(:focus-visible, [aria-expanded='true']) {
+  --header-fg: var(--ink);
+  --header-fg-muted: var(--ink-muted);
+  --header-bg: var(--paper);
+  --header-line: var(--line-strong);
+  --header-solid: 1;
+}
+
+@media (hover: hover) {
+  html[data-header-watch]:not([data-scrolled]) body:has(.hero--full) .site-header:hover {
+    --header-fg: var(--ink);
+    --header-fg-muted: var(--ink-muted);
+    --header-bg: var(--paper);
+    --header-line: var(--line-strong);
+    --header-solid: 1;
+  }
+}
+
+body:has(.hero--full) #conteudo {
+  margin-top: calc(-1 * var(--header));
+}
+
+.site-header .wordmark,
+.nav > a,
+.nav-area__trigger,
+.tools > a,
+.tools > button,
+.header-search > button,
+.lang,
+.lang a,
+.lang strong {
+  transition: color var(--t-base) var(--ease-out);
 }
 
 .site-header__bar {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 32px;
+  gap: var(--space-6);
   height: var(--header);
 }
 
 .wordmark {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: var(--fs-lead);
   font-weight: 600;
+  line-height: var(--lh-ui);
   letter-spacing: 0.3em;
   text-decoration: none;
   text-transform: uppercase;
@@ -36,23 +125,30 @@
 }
 
 .nav {
+  /* Altura toda da barra: o item do menu encosta no painel, sem vão para o mouse cair ao descer. */
+  align-self: stretch;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: clamp(14px, 1.6vw, 26px);
-  font-size: 0.95rem;
+  align-items: stretch;
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
+}
+
+.nav-area {
+  display: flex;
 }
 
 .nav > a,
 .nav-area__trigger {
-  text-decoration: none;
-  color: var(--ink-muted);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  color: var(--header-fg-muted);
   white-space: nowrap;
-  padding-block: 6px;
-  border-bottom: 1px solid transparent;
-  transition:
-    color var(--t-fast) ease,
-    border-color var(--t-fast) ease;
+  text-decoration: none;
 }
 
 .nav > a:hover,
@@ -60,18 +156,61 @@
 .nav-area__trigger:hover,
 .nav-area__trigger[data-active='true'],
 .nav-area.is-open .nav-area__trigger {
-  color: var(--ink);
-  border-color: var(--ink);
+  color: var(--header-fg);
+}
+
+/*
+  Sublinhado que cresce da esquerda (rodada 3): um fio de 1 px por transform, no lugar do text-decoration. Vale
+  para os links de texto do cabeçalho, dos painéis e do rodapé; a página atual fica sublinhada.
+*/
+.nav > a::after,
+.nav-area__trigger::after,
+.nav-panel__all::after,
+.nav-panel__list a::after,
+.tools > a .label-optional::after,
+.lang a::after,
+.site-footer a:not(.wordmark)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(50% - 0.85em);
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.nav > a:hover::after,
+.nav > a:focus-visible::after,
+.nav > a[aria-current='page']::after,
+.nav-area__trigger:hover::after,
+.nav-area__trigger[data-active='true']::after,
+.nav-area.is-open .nav-area__trigger::after,
+.nav-panel__all:hover::after,
+.nav-panel__all:focus-visible::after,
+.nav-panel__list a:hover::after,
+.nav-panel__list a:focus-visible::after,
+.tools > a:hover .label-optional::after,
+.lang a:hover::after,
+.lang a:focus-visible::after,
+.site-footer a:not(.wordmark):hover::after,
+.site-footer a:not(.wordmark):focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* O fio do Casa/Giardini/Coleções vai só até o texto, sem passar por baixo da seta. */
+.nav-area__trigger::after {
+  right: calc(14px + var(--space-1));
 }
 
 /* Casa e Giardini: painel de categorias em colunas (ajustes do cliente, 06/10/2026, "estilo Saccaro"). */
 .nav-area__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   background: none;
-  border-top: 0;
-  border-inline: 0;
+  border: 0;
   font: inherit;
   cursor: pointer;
 }
@@ -79,7 +218,7 @@
 .nav-area__trigger .icon {
   width: 14px;
   height: 14px;
-  transition: transform var(--t-fast) ease;
+  transition: transform var(--t-fast) var(--ease-out);
 }
 
 .nav-area.is-open .nav-area__trigger .icon {
@@ -101,21 +240,22 @@
 
 .nav-panel__inner {
   display: grid;
-  gap: 18px;
-  padding-block: 28px 36px;
+  gap: var(--space-4);
+  padding-block: var(--space-6) var(--space-7);
 }
 
 .nav-panel__all {
+  position: relative;
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
+  line-height: var(--lh-h3);
   text-decoration: none;
   color: var(--ink);
-}
-
-.nav-panel__all:hover {
-  text-decoration: underline;
 }
 
 .nav-panel__list {
@@ -123,7 +263,7 @@
   margin: 0;
   padding: 0;
   columns: 5 170px;
-  column-gap: 32px;
+  column-gap: var(--space-6);
 }
 
 .nav-panel__list li {
@@ -131,67 +271,93 @@
 }
 
 .nav-panel__list a {
-  display: block;
-  padding-block: 6px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-muted);
   text-decoration: none;
+  transition: color var(--t-fast) var(--ease-out);
 }
 
 .nav-panel__list a:hover,
 .nav-panel__list a:focus-visible {
   color: var(--ink);
-  text-decoration: underline;
 }
 
+/* Busca, idioma, lista e menu: sempre na última coluna, encostados à direita. */
 .tools {
+  grid-column: 3;
+  justify-self: end;
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: 0.875rem;
+  gap: var(--space-3);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
 }
 
-.tools a,
-.tools button {
+/* Só os controles do próprio cabeçalho; o painel de sugestões (dentro de .header-search) tem regras próprias. */
+.tools > a,
+.tools > button,
+.header-search > button,
+.lang a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: 0;
-  padding: 6px 0;
+  padding: 0;
   cursor: pointer;
   text-decoration: none;
-  color: var(--ink);
+  color: var(--header-fg);
+}
+
+.tools > a .label-optional {
+  position: relative;
 }
 
 .lang {
   display: inline-flex;
   align-items: center;
-  color: var(--ink-muted);
+  color: var(--header-fg-muted);
 }
 
 .lang > * + *::before {
   content: '/';
-  margin-inline: 6px;
-  color: var(--ink-muted);
+  margin-inline: var(--space-2);
+  color: var(--header-fg-muted);
 }
 
 .lang strong {
-  color: var(--ink);
+  color: var(--header-fg);
   font-weight: 600;
 }
 
+.lang a {
+  position: relative;
+  min-width: 0;
+  color: var(--header-fg-muted);
+}
+
+.lang a:hover {
+  color: var(--header-fg);
+}
+
+/* Contador da lista: quadrado, como o resto da marca. */
 .list-count {
   min-width: 22px;
   height: 22px;
-  padding-inline: 6px;
-  border-radius: 11px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 0.75rem;
+  padding-inline: var(--space-1);
+  background: var(--header-fg);
+  color: var(--header-bg);
+  font-size: var(--fs-label);
   font-weight: 600;
+  line-height: 1;
   display: inline-grid;
   place-items: center;
-  transition: background var(--t-fast) ease;
   animation: count-bump var(--t-mid) var(--ease-out);
 }
 
@@ -203,8 +369,8 @@
 
 .list-count[data-empty='true'] {
   background: transparent;
-  color: var(--ink-muted);
-  box-shadow: inset 0 0 0 1px var(--line-strong);
+  color: var(--header-fg-muted);
+  box-shadow: inset 0 0 0 1px var(--header-line);
 }
 
 .tools .menu-toggle {
@@ -220,30 +386,44 @@
     display: inline-flex;
   }
 
-  .site-header__bar {
-    grid-template-columns: auto 1fr auto;
-  }
-
   .nav.is-open {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    align-items: stretch;
+    gap: 0;
     position: absolute;
     top: var(--header);
     left: 0;
     right: 0;
-    padding: 12px var(--gutter) 24px;
-    background: var(--stone);
+    padding: var(--space-3) var(--gutter) var(--space-6);
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
-    font-size: 1.125rem;
+    font-size: var(--fs-lead);
     max-height: calc(100dvh - var(--header));
     overflow-y: auto;
   }
 
+  .nav.is-open > a,
+  .nav.is-open .nav-area__trigger {
+    min-height: 48px;
+    color: var(--ink);
+  }
+
+  /* No menu recolhido, a linha inteira é o alvo: sem o fio embaixo. */
+  .nav.is-open > a::after,
+  .nav.is-open .nav-area__trigger::after {
+    display: none;
+  }
+
   /* No menu recolhido, as categorias abrem como sanfona embaixo de Casa e Giardini. */
   .nav-area {
+    display: block;
     width: 100%;
+  }
+
+  .nav-area__trigger {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .nav-panel {
@@ -257,18 +437,19 @@
   }
 
   .nav-panel__inner {
-    gap: 6px;
-    padding-block: 4px 12px;
-    padding-left: 16px;
+    gap: 0;
+    padding-block: 0 var(--space-3);
+    padding-left: var(--space-4);
   }
 
   .nav-panel__all {
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
   }
 
   .nav-panel__list {
     columns: 2 140px;
-    font-size: 1rem;
+    column-gap: var(--space-4);
+    font-size: var(--fs-ui);
   }
 }
 
@@ -279,15 +460,31 @@
   }
 
   .site-header__bar {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .tools {
-    gap: 14px;
+    gap: var(--space-1);
   }
 
   .wordmark {
     letter-spacing: 0.22em;
+  }
+}
+
+/* 320 px: o nome e as três ferramentas cabem numa linha. */
+@media (max-width: 360px) {
+  .site-header__bar {
+    gap: var(--space-2);
+  }
+
+  .site-header .wordmark {
+    font-size: var(--fs-body);
+    letter-spacing: 0.16em;
+  }
+
+  .tools {
+    gap: 0;
   }
 }
 
@@ -296,31 +493,50 @@
 .site-footer {
   background: var(--ink);
   color: var(--footer-text);
-  padding-block: clamp(56px, 7vw, 96px) 32px;
-  font-size: 0.9375rem;
+  padding-block: clamp(var(--space-8), 7vw, var(--space-9)) var(--space-6);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
 }
 
 .site-footer a {
+  position: relative;
+  display: inline-block;
   color: var(--stone);
   text-decoration: none;
 }
 
-.site-footer a:hover {
-  text-decoration: underline;
+/* WhatsApp e redes com o símbolo oficial (BrandIcon) antes do texto. */
+.site-footer .footer-icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* O fio do sublinhado começa no texto, depois do símbolo. */
+.site-footer .footer-icon-link::after {
+  left: calc(18px + var(--space-2));
+}
+
+.site-footer :focus-visible {
+  outline-color: var(--stone);
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
-  gap: 40px;
+  gap: var(--space-7) var(--space-6);
 }
 
+/* Título de coluna do rodapé: rótulo curto em caixa alta, abaixo do branco dos links na hierarquia. */
 .footer-title {
-  color: var(--stone);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-variation-settings: 'wdth' var(--text);
-  margin-bottom: 14px;
+  margin-bottom: var(--space-4);
+  font-family: var(--font);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--footer-muted);
 }
 
 .footer-grid ul {
@@ -328,69 +544,20 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
-}
-
-.newsletter {
-  display: flex;
-  border-bottom: 1px solid var(--line-field);
-}
-
-.newsletter input {
-  flex: 1;
-  background: transparent;
-  border: 0;
-  padding: 12px 0;
-  color: var(--stone);
-  min-width: 0;
-}
-
-.newsletter input::placeholder {
-  color: var(--footer-muted);
-}
-
-.newsletter button {
-  background: none;
-  border: 0;
-  color: var(--stone);
-  cursor: pointer;
-  padding-inline: 8px;
-}
-
-.footer-base {
-  margin-top: 56px;
-  padding-top: 24px;
-  border-top: 1px solid var(--footer-rule);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 0.8125rem;
-  color: var(--footer-muted);
-}
-
-@media (max-width: 900px) {
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- acrescentados (Task 4) ---------- */
-
-.site-footer :focus-visible {
-  outline-color: var(--stone);
+  gap: var(--space-2);
 }
 
 .footer-brand {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   align-content: start;
+}
+
+/* O nome no rodapé alinha o topo com os títulos das colunas. */
+.footer-brand .wordmark {
+  justify-self: start;
+  line-height: 1;
+  margin-bottom: var(--space-2);
 }
 
 .footer-muted {
@@ -400,43 +567,154 @@
 .footer-contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
-}
-
-.footer-legal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: var(--space-1) var(--space-4);
 }
 
 .newsletter-form {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
+}
+
+.newsletter {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line-field);
+}
+
+.newsletter input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--stone);
+  font-size: var(--fs-ui);
+}
+
+.newsletter input::placeholder {
+  color: var(--footer-muted);
+}
+
+.newsletter button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--space-3));
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--stone);
+  cursor: pointer;
+}
+
+.newsletter button .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .newsletter button:hover .icon {
+    transform: translateX(3px);
+  }
 }
 
 .newsletter__consent {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 8px;
-  font-size: 0.8125rem;
+  gap: var(--space-3);
+  font-size: var(--fs-caption);
   color: var(--footer-muted);
+  cursor: pointer;
 }
 
 .newsletter__consent input {
-  margin-top: 3px;
+  margin: 0;
+  margin-top: 0.125em;
+  width: 18px;
+  height: 18px;
   accent-color: var(--stone);
 }
 
 .newsletter__status {
   min-height: 1.4em;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--footer-text);
 }
 
-/* Busca do cabeçalho com sugestões. O painel abre logo abaixo do cabeçalho, como o painel de categorias. */
+/* Sem mensagem, o espaço do aviso não fica vazio embaixo do formulário (o elemento continua no lugar para o leitor de tela). */
+.newsletter__status:empty {
+  min-height: 0;
+}
+
+.footer-base {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--footer-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-size: var(--fs-caption);
+  color: var(--footer-muted);
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Toque: cada link do rodapé com 44 px de altura. */
+  .footer-grid ul {
+    gap: 0;
+  }
+
+  .footer-grid ul a,
+  .footer-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-legal {
+    row-gap: 0;
+  }
+
+  .footer-base {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+/* Celular: nome e novidades ocupam a largura; Catálogo e Atendimento lado a lado. */
+@media (max-width: 560px) {
+  .footer-grid {
+    column-gap: var(--space-4);
+  }
+
+  .footer-brand,
+  .footer-grid > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- busca do cabeçalho ---------- */
+
+/*
+  Busca do cabeçalho com sugestões (rodada 3): uma faixa que desce logo abaixo da barra, como o painel de categorias,
+  com o campo grande e sublinhado (o mesmo desenho do campo da newsletter, sem caixa nem borda pesada).
+*/
 .header-search__panel {
   position: absolute;
   top: 100%;
@@ -447,24 +725,86 @@
   overscroll-behavior: contain;
   background: var(--paper);
   border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.header-search__panel[hidden] {
+  display: none;
 }
 
 .header-search__inner {
   display: grid;
-  gap: 12px;
-  padding-block: 20px 28px;
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-7);
 }
 
-.header-search__inner input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
-  font: inherit;
-  font-size: 1.125rem;
+.header-search__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--line-field);
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+
+.header-search__field:focus-within {
+  border-bottom-color: var(--ink);
+}
+
+.header-search__field > .icon {
+  color: var(--ink-muted);
+}
+
+.header-search__field input {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
   color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line-field);
+  background: transparent;
+  border: 0;
   border-radius: 0;
+}
+
+/* O fio de baixo já mostra o foco; sem o contorno de caixa por cima. */
+.header-search__field input:focus,
+.header-search__field input:focus-visible {
+  outline: none;
+}
+
+.header-search__field input::placeholder {
+  color: var(--ink-muted);
+}
+
+.header-search__submit {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--space-3));
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.header-search__submit .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .header-search__submit:hover .icon {
+    transform: translateX(3px);
+  }
+}
+
+/* O X azul nativo do campo de busca destoa; fechar e limpar ficam no X do cabeçalho. */
+.header-search__field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .header-search__list {
@@ -479,23 +819,22 @@
   display: grid;
   grid-template-columns: 88px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: 44px;
-  padding: 8px;
+  padding-block: var(--space-2);
   border-bottom: 1px solid var(--line);
   color: var(--ink);
   text-decoration: none;
-  transition: background-color var(--t-mid) var(--ease-out);
 }
 
-.header-search__list a:hover,
-.header-search__list a:focus-visible {
-  background: var(--row-hover);
+/* Sem sublinhado no nome (regra da rodada 3): o hover é a miniatura que aproxima e o tipo que escurece. */
+.header-search__list small {
+  transition: color var(--t-fast) var(--ease-out);
 }
 
-.header-search__list a:hover .header-search__name,
-.header-search__list a:focus-visible .header-search__name {
-  text-decoration: underline;
+.header-search__list a:hover small,
+.header-search__list a:focus-visible small {
+  color: var(--ink);
 }
 
 .header-search__thumb {
@@ -528,18 +867,20 @@
   background: var(--portrait-ground);
 }
 
-.header-search__list a:hover .header-search__thumb img {
-  transform: scale(1.06);
+@media (hover: hover) {
+  .header-search__list a:hover .header-search__thumb img {
+    transform: scale(1.05);
+  }
 }
 
 .header-search__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: var(--fs-body);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header-search__list a,
   .header-search__thumb img {
     transition: none;
   }
@@ -551,17 +892,38 @@
 
 .header-search__list small,
 .header-search__empty {
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
 
 .header-search__all {
   justify-self: start;
-  min-height: 44px;
-  padding: 0 18px;
-  font: inherit;
-  color: var(--paper);
-  background: var(--ink);
-  border: 1px solid var(--ink);
-  border-radius: 0;
+  background: none;
+  border-top: 0;
+  border-inline: 0;
+  padding-inline: 0;
+  color: var(--ink);
   cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .header-search__list a {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: var(--space-3);
+  }
+}
+
+/* ---------- tela de abertura ---------- */
+
+/* Escondida por padrão: só aparece pelo motion.css (apagar o @import dele desliga a tela de abertura também). */
+.splash {
+  display: none;
+}
+
+/* Foco do teclado nos ícones do cabeçalho: o contorno de 2 px fica junto do ícone, não numa caixa grande. */
+.tools > a:focus-visible,
+.tools > button:focus-visible,
+.header-search > button:focus-visible {
+  outline-color: currentColor;
+  outline-offset: -6px;
 }

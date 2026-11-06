@@ -1,0 +1,61 @@
+import { ApiImage } from '@/components/media/ApiImage';
+import { Link } from '@/i18n/navigation';
+import type { DesignerCard, DesignerRef } from '@/lib/api/types';
+
+/** Até três designers, retratos grandes lado a lado; mais que isso, lista com retrato pequeno (sem buraco na grade). */
+const GRID_MAX = 3;
+
+/**
+ * Designers de uma coleção, ao lado do texto dela (rodada 3): retrato quadrado em preto e branco e o nome, cada um
+ * levando à página do designer. O retrato vem da lista de designers (`DesignerCard`), casada pelo slug: a coleção só
+ * traz a referência. Sem retrato, fica o quadro de fundo.
+ */
+export function DesignerPortraits({
+  title,
+  designers,
+  portraits,
+}: {
+  title: string;
+  designers: DesignerRef[];
+  portraits: DesignerCard[];
+}) {
+  if (designers.length === 0) {
+    return null;
+  }
+  const bySlug = new Map(portraits.map((designer) => [designer.slug, designer]));
+  const asGrid = designers.length <= GRID_MAX;
+  return (
+    <aside className="designer-portraits" aria-labelledby="designer-portraits-title">
+      <h2 id="designer-portraits-title" className="label">
+        {title}
+      </h2>
+      <ul
+        className={asGrid ? 'designer-portraits__grid' : 'designer-portraits__list'}
+        style={asGrid ? { gridTemplateColumns: `repeat(${designers.length}, minmax(0, 1fr))` } : undefined}
+        data-reveal="stagger"
+      >
+        {designers.map((designer) => {
+          const card = bySlug.get(designer.slug);
+          return (
+            <li key={designer.id}>
+              <Link
+                className="designer-portraits__item"
+                href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+              >
+                <div className="designer-portraits__photo hover-zoom">
+                  {card?.portrait ? (
+                    <ApiImage
+                      image={card.portrait}
+                      sizes={asGrid ? '(max-width: 56.25rem) 33vw, 14vw' : '96px'}
+                    />
+                  ) : null}
+                </div>
+                <span className="designer-portraits__name">{designer.name}</span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </aside>
+  );
+}

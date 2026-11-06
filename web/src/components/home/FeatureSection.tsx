@@ -7,9 +7,14 @@ import type { ProductDetail } from '@/lib/api/types';
 import { toProductCard } from '@/lib/catalog/card';
 import { primaryDimension } from '@/lib/catalog/technical';
 import { formatDimension } from '@/lib/format/dimensions';
+import { sectionClass, type Tone } from './tone';
 
-/** Primeira peça em destaque da API, com fatos que ela mesma traz (nada escrito à mão). */
-export function FeatureSection({ product }: { product: ProductDetail }) {
+/**
+ * Primeira peça em destaque da API, com fatos que ela mesma traz (nada escrito à mão). A foto leva à página da peça;
+ * o hover aproxima a foto pelo quadro interno (`.feature__frame`), porque a própria foto já tem a animação de saída
+ * de motion.css.
+ */
+export function FeatureSection({ product, tone = 'paper' }: { product: ProductDetail; tone?: Tone }) {
   const t = useTranslations('home.feature');
   const tDimensions = useTranslations('dimensions');
   const locale = useLocale() as Locale;
@@ -22,18 +27,31 @@ export function FeatureSection({ product }: { product: ProductDetail }) {
     diameter: tDimensions('diameter'),
   };
   return (
-    <section className="feature" aria-labelledby="feature-title">
+    <section className={sectionClass(tone, 'feature')} aria-labelledby="feature-title">
       <div className="wrap feature__grid">
-        <div className="feature__media">
-          {product.cover ? (
-            <ApiImage image={product.cover} sizes="(max-width: 56.25rem) 100vw, 58vw" />
-          ) : null}
-        </div>
-        <div className="feature__copy">
-          <h2 id="feature-title" className="display">
-            {product.name}
-          </h2>
-          {product.tagline ? <p className="lead">{product.tagline}</p> : null}
+        {product.cover ? (
+          <Link
+            className="feature__media"
+            href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
+            tabIndex={-1}
+            aria-hidden="true"
+            data-reveal=""
+          >
+            <span className="feature__frame">
+              <ApiImage
+                image={product.cover}
+                sizes="(max-width: 56.25rem) 92vw, (max-width: 97.5rem) 52vw, 800px"
+              />
+            </span>
+          </Link>
+        ) : null}
+        <div className="feature__copy" data-reveal="">
+          <div className="feature__head">
+            <h2 id="feature-title" className="display">
+              {product.name}
+            </h2>
+            {product.tagline ? <p className="lead">{product.tagline}</p> : null}
+          </div>
           <dl className="facts num">
             {dimension ? (
               <div>

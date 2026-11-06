@@ -4,6 +4,8 @@ import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view
 import { ViewToggle } from './ViewToggle';
 
 type CatalogToolbarProps = {
+  /** Contagem já formatada ("181 peças"), à esquerda da barra. */
+  count: string;
   view: CatalogView;
   hrefFor: (patch: ListingPatch) => AppHref;
   designerOptions: FilterOption[];
@@ -15,13 +17,15 @@ type CatalogToolbarProps = {
 };
 
 /**
- * Barra do catálogo: filtro de designer e troca Grade/Tabela técnica. Os botões de categoria saíram do meio da
- * página (ajustes do cliente, 06/10/2026): as categorias ficam no painel de Casa/Giardini do menu do topo.
+ * Barra do catálogo: contagem à esquerda; filtro de designer e troca Grade/Tabela técnica à direita (o mesmo arranjo
+ * da página Lançamentos). Os botões de categoria saíram do meio da página (ajustes do cliente, 06/10/2026): as
+ * categorias ficam no painel de Casa/Giardini do menu do topo.
  */
 export function CatalogToolbar(props: CatalogToolbarProps) {
   const t = useTranslations('catalog.filters');
   return (
-    <div className="toolbar">
+    <div className="toolbar toolbar--catalog">
+      <p className="meta num">{props.count}</p>
       <div className="toolbar__end">
         {props.designerOptions.length > 0 ? (
           <form className="filter-form" action={props.formAction} method="get">

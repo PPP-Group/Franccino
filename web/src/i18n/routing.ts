@@ -35,6 +35,7 @@ export const pathnames = {
   '/cookies': { pt: '/politica-de-cookies', en: '/cookie-policy' },
   '/quote-list': { pt: '/lista-de-orcamento', en: '/quote-list' },
   '/room-planner': { pt: '/sala-para-montar', en: '/room-planner' },
+  '/ideas': { pt: '/ideias', en: '/ideas' },
 } as const;
 
 export const routing = defineRouting({

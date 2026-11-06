@@ -54,10 +54,10 @@ export default async function ProjectsPage({ params, searchParams }: Props) {
   ]);
   const typeLabel = (value: string) => (t.has(`types.${value}`) ? t(`types.${value}`) : value);
   return (
-    <main>
+    <main className="page-end">
       <PageBanner image={content?.cover ?? null} title={content?.title ?? t('title')} lead={content?.intro} />
       <div className="wrap">
-        <nav className="chips toolbar" aria-label={t('typeFilter')}>
+        <nav className="chips project-filter" aria-label={t('typeFilter')}>
           <Link className="chip" href={projectsHref(undefined)} aria-current={type ? undefined : 'true'}>
             {t('allTypes')}
           </Link>
@@ -91,8 +91,8 @@ export default async function ProjectsPage({ params, searchParams }: Props) {
           </div>
         )}
         <Pagination meta={list.meta} hrefFor={(next) => projectsHref(type, next)} label={t('pagination')} />
-        <ClientsRail clients={clients} />
       </div>
+      <ClientsRail clients={clients} />
     </main>
   );
 }

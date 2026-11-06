@@ -108,7 +108,7 @@ The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23
 - White plates on a stone ground; paper is the surface color, stone is the field.
 - A Garamond pairing: Cormorant Garamond for headings, EB Garamond for running text (client request, 2026-10-06).
 - Square corners everywhere except two small functional exceptions (badge pill, status dot).
-- Flat by default; a single soft ambient shadow appears only as hover feedback on interactive plates, never as a resting decoration.
+- Flat always: no shadows. Since 06/11/2026 the hover feedback on clickable photos is a slow 5% zoom inside the frame (`.hover-zoom`), never a shadow.
 - Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color.
 
 ## Colors
@@ -172,11 +172,11 @@ Two data-dense screens depart from the fluid container's comfort: the technical 
 
 ## Elevation & Depth
 
-The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The one exception is a soft, ambient shadow (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`) that appears solely on hover/focus of an interactive product plate — it is a state response signaling "this is clickable," not a resting decoration. This is a narrow, deliberate divergence from the direction contract's stated "no decorative shadows": it is used exactly once, as functional hover feedback, never at rest and never on non-interactive cards (tech table rows, store cards, factory facts use borders only). Do not generalize it into a resting card shadow elsewhere.
+The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The plate-hover shadow was removed on 06/11/2026 (it looked cheap and was clipped at the end of rails): clickable photos now answer hover with a slow zoom inside their frame (`.hover-zoom`).
 
 ### Shadow Vocabulary
 
-- **Plate hover** (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`): interactive product plate on `:hover`, signaling affordance only.
+- None. Hover feedback is the photo zoom (`.hover-zoom`), not a shadow.
 
 ### Named Rules
 
@@ -210,7 +210,7 @@ Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips a
 
 - **Corner style:** square (0 radius).
 - **Background:** paper on a stone field.
-- **Shadow strategy:** flat at rest; ambient hover shadow only on interactive plates (see Elevation & Depth).
+- **Shadow strategy:** none; hover is the photo zoom (see Elevation & Depth).
 - **Border:** a single `--stone` divider between media and body; no outer border on the plate itself.
 - **Internal padding:** 16px 18px 20px body padding; 16px gap in card grids.
 - **Area identity:** a small colored dot (wood/garden) precedes the category label to mark Casa vs. Giardini at a glance.
@@ -247,8 +247,65 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 
 ### Don't:
 
-- **Don't** add a resting shadow to a card, table row, or panel — shadow is reserved for interactive-plate hover only.
+- **Don't** add a shadow to a card, table row, or panel, at rest or on hover.
 - **Don't** introduce a third saturated accent color; wood and garden are reserved for Casa/Giardini identity.
 - **Don't** round a button, input, table, or card corner; square corners are the system's form language throughout.
 - **Don't** reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects — daylight photography and one grotesque are the world.
 - **Don't** promote `--ink-3` into use without a real call site; it is declared but unused in the current build.
+
+## Escala de tipos e de espaços (rodada 2, 06/11/2026)
+
+Regra única para o site inteiro. Tokens em `src/styles/tokens.css`; nenhum arquivo de estilo usa `font-size`, `padding`,
+`margin` ou `gap` com valor solto quando existe token para ele. Fontes das regras: as leis de UX usadas no VTX Tap
+(proximidade, Tesler, grade de 4 px, área de toque, 4 tempos de movimento) e o checklist das skills de design
+(Vercel web-interface-guidelines, Anthropic frontend-design, better-typography, impeccable, baseline-ui, web-quality).
+
+### Tipos
+
+| Token          | Tamanho                   | Uso                                                              | Fonte, peso, entrelinha |
+| -------------- | ------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| `--fs-display` | 44 a 80 px                | Uma vez por página, no máximo: banner sem foto, peça em destaque | Cormorant 500, 1.02     |
+| `--fs-h1`      | 36 a 56 px                | Título da página                                                 | Cormorant 500, 1.12     |
+| `--fs-h2`      | 28 a 40 px                | Título de seção                                                  | Cormorant 500, 1.12     |
+| `--fs-h3`      | 22 px                     | Título de item (card de projeto, grupo, coluna)                  | Cormorant 600, 1.25     |
+| `--fs-lead`    | 18 a 20 px                | Uma frase de abertura abaixo do título                           | EB Garamond 400, 1.55   |
+| `--fs-body`    | 17 px                     | Texto corrido, nome de peça no card                              | EB Garamond 400, 1.6    |
+| `--fs-ui`      | 15 px                     | Botões, menu, campos, filtros                                    | EB Garamond 500, 1.4    |
+| `--fs-caption` | 14 px                     | Metadados, legendas, rodapé de tabela                            | EB Garamond 400, 1.4    |
+| `--fs-label`   | 12 px, caixa alta, 0.08em | Etiquetas e cabeçalho de tabela; o único texto em caixa alta     | EB Garamond 600, 1.4    |
+
+- Títulos de 24 px ou mais com `letter-spacing: -0.01em`; `text-wrap: balance` em títulos e `pretty` em parágrafos.
+- Texto corrido com no máximo `--measure` (65 caracteres) por linha. Nada abaixo de 12 px.
+- Metadado nunca acima do título; nada de rótulo em caixa alta acima de cada título.
+- Números que mudam ou ficam em coluna com `.num` (algarismos tabulares).
+
+### Espaços
+
+Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
+
+- **Proximidade:** título → seu conteúdo com `--space-3` a `--space-4`; bloco → próximo bloco da mesma seção com
+  `--space-7`; seção → seção com `--section-y` (64 a 128 px). Uma seção mais densa usa `--section-y-tight`.
+- Entre itens irmãos de uma grade ou lista, sempre `gap`, nunca margem no item.
+- Margem lateral da página: `--gutter`; largura máxima: `--max`.
+
+### Interação e movimento
+
+- Área de toque de 44 px em todo controle; foco visível com contorno de 2 px.
+- Movimento só com `transform` e `opacity`, nos tempos `--t-press` (120), `--t-fast` (180), `--t-base` (240),
+  `--t-mid` (320) e `--t-slow` (700, só para movimento grande: foto que cresce, blocos que aparecem, zoom de foto),
+  curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
+- Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
+- Aparecer ao rolar: `data-reveal` no bloco, ou `data-reveal="stagger"` num grupo (filhos em sequência). Dispara uma
+  vez (RevealObserver), nunca preso à rolagem.
+- Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
+  outra coleção, chamada) ou a grade muda o número de colunas.
+- Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
+  viu"), sem obrigar a voltar à home.
+- `prefers-reduced-motion`: nada se mexe; o conteúdo aparece pronto.
+- Lei de Tesler (VTX): a interface não mostra o que não se aplica agora (seção sem dado some; sem botão sem ação).
+
+### Imagens
+
+- Cada `ApiImage` declara um `sizes` igual à largura real em que é desenhada (contando o recorte de `object-fit:
+cover`), para o navegador baixar a versão certa em tela retina.
+- Arte de banner com texto (faixa larga do marketing) não é recortada: o banner segue a proporção da imagem.

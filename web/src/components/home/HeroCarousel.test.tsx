@@ -3,7 +3,7 @@ import { renderWithIntl } from '@/test/intl';
 import { HeroCarousel } from './HeroCarousel';
 
 describe('HeroCarousel', () => {
-  it('shows the first slide and hides the others, with only a keyboard pause control', () => {
+  it('stacks every slide for the crossfade, with only the first active and only a keyboard pause control', () => {
     const html = renderWithIntl(
       <HeroCarousel>
         <p>slide-a</p>
@@ -13,8 +13,12 @@ describe('HeroCarousel', () => {
     );
     expect(html).toContain('aria-roledescription="carrossel"');
     expect(html).toContain('aria-label="1 de 3"');
-    expect(html.match(/hidden=""/g)).toHaveLength(2);
-    expect(html.indexOf('slide-a')).toBeLessThan(html.indexOf('hidden=""'));
+    expect(html.match(/class="hero-carousel__slide is-active"/g)).toHaveLength(1);
+    // Os outros slides estão no HTML (a fusão precisa deles), mas fora do teclado e do leitor de tela.
+    expect(html.match(/inert=""/g)).toHaveLength(2);
+    expect(html.match(/aria-hidden="true"/g)).toHaveLength(2);
+    expect(html.indexOf('slide-a')).toBeLessThan(html.indexOf('inert=""'));
+    expect(html).toContain('slide-c');
     expect(html).toContain('Pausar a troca automática');
     expect(html).toContain('hero-carousel__pause');
     expect(html).not.toContain('hero-carousel__dot');

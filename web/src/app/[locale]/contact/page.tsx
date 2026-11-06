@@ -39,13 +39,15 @@ export default async function ContactPage({ params }: Props) {
       <PageHead title={page?.title ?? t('title')} lead={page?.intro} />
       <div className="contact-layout">
         <aside aria-labelledby="contact-channels">
-          <h2 id="contact-channels" className="section-title">
+          <h2 id="contact-channels" className="form-title">
             {t('channelsTitle')}
           </h2>
           <ContactChannels settings={settings} />
         </aside>
         <section className="quote-form" aria-labelledby="contact-form-title">
-          <h2 id="contact-form-title">{t('formTitle')}</h2>
+          <h2 id="contact-form-title" className="form-title">
+            {t('formTitle')}
+          </h2>
           <ContactForm typeSelectable />
         </section>
       </div>

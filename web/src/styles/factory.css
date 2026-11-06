@@ -1,0 +1,583 @@
+/* Fábrica e linha do tempo (rodada 3, 06/11/2026). Carregado depois de pages.css: o que estiver aqui vale sobre ele. */
+
+/*
+  Página editorial (Blocks com `editorial`): cada bloco do painel é uma seção da largura da página, com o ritmo de seção
+  e fundos alternados branco e areia (pedido de 06/11: "alternar fundos entre seções, imagens grandes como no site
+  antigo"). O primeiro bloco, logo abaixo do banner, fica no branco.
+*/
+.blocks--editorial {
+  display: block;
+  padding-bottom: 0;
+}
+
+.editorial {
+  padding-block: var(--section-y);
+}
+
+.blocks--editorial > .editorial:nth-child(even) {
+  background: var(--sand);
+}
+
+/* ---------- texto rico: título à esquerda, texto em corpo de abertura à direita ---------- */
+
+.editorial--rich_text .prose > p {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  text-wrap: pretty;
+}
+
+.editorial--rich_text .prose:has(> h2:first-child) {
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: clamp(var(--space-6), 6vw, var(--space-9));
+  align-items: start;
+}
+
+.editorial--rich_text .prose:has(> h2:first-child) > * {
+  grid-column: 2;
+  max-width: var(--measure);
+}
+
+.editorial--rich_text .prose:has(> h2:first-child) > h2:first-child {
+  grid-column: 1;
+  grid-row: 1 / span 40;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* Fio fino sobre o título: marca o começo da seção, como nas páginas editoriais do site antigo. */
+.editorial--rich_text .prose > h2:first-child::before {
+  content: '';
+  display: block;
+  width: var(--space-7);
+  height: 1px;
+  margin-bottom: var(--space-5);
+  background: var(--ink);
+}
+
+/* ---------- foto grande: de ponta a ponta, sem moldura ---------- */
+
+.editorial--image {
+  padding-block: 0;
+}
+
+.editorial--image .block-image img {
+  display: block;
+  width: 100%;
+  max-height: 88vh;
+  object-fit: cover;
+}
+
+.editorial--image .block-image figcaption {
+  padding: var(--space-3) var(--gutter) 0;
+}
+
+/* Foto e texto: a foto maior que o texto, como numa revista. */
+.editorial--image_text .block-image-text {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(var(--space-6), 6vw, var(--space-9));
+}
+
+.editorial--image_text .block-image-text[data-image-position='right'] {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+
+.editorial--image_text .block-image-text img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.editorial--image_text .block-image-text__copy .prose > p {
+  font-size: var(--fs-lead);
+}
+
+/* Galeria: duas colunas largas; com número ímpar de fotos, a primeira ocupa a linha inteira (grade sem buraco). */
+.editorial--gallery .block-gallery ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.editorial--gallery .block-gallery li:first-child:nth-last-child(odd) {
+  grid-column: span 2;
+}
+
+.editorial--gallery .block-gallery img {
+  aspect-ratio: 3 / 2;
+}
+
+.editorial--gallery .block-gallery li:first-child:nth-last-child(odd) img {
+  aspect-ratio: 21 / 9;
+}
+
+/* Citação no meio da página, grande e centrada. */
+.editorial--quote .block-quote {
+  max-width: 40ch;
+  margin-inline: auto;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+
+.editorial--quote .block-quote p {
+  font-size: var(--fs-h1);
+}
+
+@media (max-width: 56.25rem) {
+  .editorial--rich_text .prose:has(> h2:first-child),
+  .editorial--image_text .block-image-text,
+  .editorial--image_text .block-image-text[data-image-position='right'] {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial--rich_text .prose:has(> h2:first-child) > *,
+  .editorial--rich_text .prose:has(> h2:first-child) > h2:first-child {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .editorial--rich_text .prose:has(> h2:first-child) > h2:first-child {
+    margin-bottom: var(--space-4);
+  }
+
+  .editorial--gallery .block-gallery ul {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial--gallery .block-gallery li:first-child:nth-last-child(odd) {
+    grid-column: auto;
+  }
+
+  .editorial--gallery .block-gallery li:first-child:nth-last-child(odd) img {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* ---------- números (bloco "Números", com CountUp) ---------- */
+
+/* Números grandes em Cormorant, separados por fios verticais finos; o rótulo curto embaixo, em caixa alta. */
+.stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-7) 0;
+}
+
+.stats .stats__item {
+  padding: 0 var(--space-6);
+  border-top: 0;
+  border-left: 1px solid var(--line-strong);
+}
+
+.stats dt {
+  font-size: var(--fs-display);
+  font-weight: 400;
+  line-height: var(--lh-display);
+}
+
+.stats dd {
+  margin-top: var(--space-3);
+  max-width: 24ch;
+  color: var(--ink-muted);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-ui);
+  text-transform: uppercase;
+}
+
+/* ---------- vídeo da fábrica ---------- */
+
+.editorial--video .block-video {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.editorial--video .video {
+  gap: var(--space-3);
+}
+
+/* A capa aproxima devagar no hover, como as fotos clicáveis do site (.hover-zoom). */
+.block-video .video__frame {
+  overflow: hidden;
+}
+
+.block-video .video__poster {
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
+/* Botão de play quadrado (nenhum canto arredondado), fino, sobre a capa ou o fundo escuro. */
+.block-video .video__play .icon {
+  width: clamp(72px, 7vw, 104px);
+  height: clamp(72px, 7vw, 104px);
+  padding: clamp(var(--space-5), 2.4vw, var(--space-6));
+  border: 1px solid var(--paper);
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    opacity var(--t-base) var(--ease-out);
+}
+
+.block-video .video__play {
+  color: var(--paper);
+}
+
+.block-video .video__play:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: -6px;
+}
+
+@media (hover: hover) {
+  .block-video .video__play:hover .video__poster {
+    transform: scale(1.05);
+  }
+
+  .block-video .video__play:hover .icon {
+    background: var(--paper);
+    color: var(--ink);
+    transform: scale(1.04);
+  }
+}
+
+/* ---------- "Nossa história": linha do tempo horizontal ---------- */
+
+/*
+  O primeiro e o último ano alinham com a margem da página (a mesma do .wrap): a faixa ocupa a largura toda e a margem
+  vira o recuo da rolagem. `cqw` mede a própria seção (sem a barra de rolagem da janela).
+*/
+.timeline-block {
+  container-type: inline-size;
+  --tl-pad: max(var(--gutter), calc((100cqw - var(--max)) / 2 + var(--gutter)));
+  display: grid;
+  gap: var(--space-7);
+}
+
+.timeline-block__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.timeline-block__head h2 {
+  margin: 0;
+}
+
+.timeline-block__controls {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Setas quadradas junto da linha; a cor troca na hora, só a opacidade anima. */
+.timeline-block__button {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+
+.timeline-block__button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.timeline-block__button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.timeline-block__button--previous .icon {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) {
+  .timeline-block__button:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+.timeline-block__viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--tl-pad);
+  padding: var(--space-2) 0 var(--space-2) var(--tl-pad);
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.timeline-block__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-block__viewport:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+/* Arrastando ou rolando pelas setas, sem encaixe (o encaixe puxaria a faixa a cada quadro). */
+.timeline-block__viewport.is-dragging,
+.timeline-block__viewport.is-animating {
+  scroll-snap-type: none;
+}
+
+.timeline-block__viewport.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.timeline {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Espaço depois do último ano: ele termina na margem direita da página. */
+.timeline::after {
+  content: '';
+  flex: none;
+  width: var(--tl-pad);
+}
+
+.timeline__item {
+  --tl-gap: var(--space-7);
+  flex: none;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  width: clamp(272px, 24vw, 352px);
+  padding: 0 var(--tl-gap) 0 0;
+  border: 0;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.timeline__item--wide {
+  width: clamp(480px, 44vw, 640px);
+}
+
+.timeline__item--wide .timeline__facts {
+  max-width: none;
+  display: block;
+  columns: 2;
+  column-gap: var(--space-6);
+}
+
+.timeline__item--wide .timeline__facts li {
+  break-inside: avoid;
+  margin-bottom: var(--space-2);
+}
+
+.timeline__item:last-child {
+  --tl-gap: 0px;
+  width: clamp(224px, calc(24vw - var(--space-7)), 304px);
+}
+
+/* O fio de cada ano encosta no do próximo: juntos fazem a linha contínua. */
+.timeline__rail {
+  position: relative;
+  display: block;
+  height: 15px;
+  margin: 0 calc(-1 * var(--tl-gap)) var(--space-3) 0;
+}
+
+.timeline__rail::before,
+.timeline__fill {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* O progresso: o fio enche, em tinta, até o ano ativo. */
+.timeline__fill {
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-mid) var(--ease-out);
+}
+
+.timeline__item.is-past .timeline__fill {
+  transform: scaleX(1);
+}
+
+/* Marco quadrado, como tudo no site. */
+.timeline__dot {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--ink-muted);
+  background: var(--paper);
+  transition: transform var(--t-mid) var(--ease-out);
+}
+
+.timeline__dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 1px solid var(--ink);
+  opacity: 0;
+  transition: opacity var(--t-mid) var(--ease-out);
+}
+
+.timeline__item.is-past .timeline__dot,
+.timeline__item.is-active .timeline__dot {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.timeline__item.is-active .timeline__dot {
+  transform: scale(1.18);
+}
+
+.timeline__item.is-active .timeline__dot::after {
+  opacity: 1;
+}
+
+.timeline__year {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--tracking-heading);
+  opacity: 0.42;
+  transition: opacity var(--t-mid) var(--ease-out);
+}
+
+.timeline__item.is-active .timeline__year {
+  opacity: 1;
+}
+
+.timeline__item h3 {
+  margin: 0;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  text-wrap: balance;
+}
+
+.timeline__facts {
+  max-width: 34ch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  text-wrap: pretty;
+}
+
+@media (max-width: 35rem) {
+  .timeline__item--wide {
+    width: min(84vw, 360px);
+  }
+
+  .timeline__item--wide .timeline__facts {
+    columns: 1;
+  }
+}
+
+@media (hover: hover) {
+  .timeline__item:not(.is-active):hover .timeline__year {
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline__fill,
+  .timeline__dot,
+  .timeline__dot::after,
+  .timeline__year,
+  .block-video .video__poster,
+  .block-video .video__play .icon {
+    transition: none;
+  }
+}
+
+/* ---------- fim da página: para onde seguir ---------- */
+
+.factory-next {
+  padding-block: var(--section-y);
+}
+
+.factory-next--sand {
+  background: var(--sand);
+}
+
+.factory-next h2 {
+  margin: 0 0 var(--space-6);
+}
+
+.factory-next__links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+
+.factory-next__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 112px;
+  padding: var(--space-5) var(--space-5) var(--space-5) 0;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  text-decoration: none;
+}
+
+.factory-next__links li + li .factory-next__link {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--line-strong);
+}
+
+.factory-next__link .icon {
+  flex: none;
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.factory-next__link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .factory-next__link:hover .icon {
+    transform: translateX(var(--space-2));
+  }
+}
+
+@media (max-width: 56.25rem) {
+  .factory-next__links {
+    grid-template-columns: 1fr;
+  }
+
+  .factory-next__link {
+    min-height: 72px;
+  }
+
+  .factory-next__links li + li .factory-next__link {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

@@ -8,7 +8,6 @@
 import { useTranslations } from 'next-intl';
 import { VideoFacade } from '@/components/media/VideoFacade';
 import { CountUp } from '@/components/ui/CountUp';
-import { Rail } from '@/components/ui/Rail';
 import type {
   Block,
   CtaBlockData,
@@ -23,6 +22,20 @@ import type {
   VideoBlockData,
 } from '@/lib/api/types';
 import { RichText } from './RichText';
+import { Timeline } from './Timeline';
+
+/**
+ * Texto rico do painel com a fonte e a escala do site, sempre: o conteúdo importado do WordPress pode trazer estilo
+ * em linha (`style="font-family…"`), `<font>` e classes de tamanho do editor antigo, que venceriam o CSS. Aqui saem
+ * esses atributos e o `<font>` (fica o texto dele), e um `<h1>` vira `<h2>` (a página já tem o seu h1). O HTML já
+ * chega sanitizado pela API; isto só tira apresentação.
+ */
+export function cleanCmsHtml(html: string): string {
+  return html
+    .replace(/\s(?:style|face|size|color|class|align)\s*=\s*(?:"[^"]*"|'[^']*')/gi, '')
+    .replace(/<\/?font\b[^>]*>/gi, '')
+    .replace(/<(\/?)h1\b/gi, '<$1h2');
+}
 
 function BlockImage({ src, alt }: { src: string; alt: string }) {
   // eslint-disable-next-line @next/next/no-img-element -- mídia de bloco não tem conversões da API.
@@ -30,7 +43,7 @@ function BlockImage({ src, alt }: { src: string; alt: string }) {
 }
 
 function RichTextBlock({ data }: { data: RichTextBlockData }) {
-  return <RichText html={data.body} className="prose" />;
+  return <RichText html={data.body ? cleanCmsHtml(data.body) : null} className="prose" />;
 }
 
 function ImageBlock({ data }: { data: ImageBlockData }) {
@@ -50,46 +63,18 @@ function ImageTextBlock({ data }: { data: ImageTextBlockData }) {
       </div>
       <div className="block-image-text__copy">
         {data.heading ? <h2>{data.heading}</h2> : null}
-        <RichText html={data.body} className="prose" />
+        <RichText html={data.body ? cleanCmsHtml(data.body) : null} className="prose" />
       </div>
     </section>
   );
 }
 
-/**
- * "Nossa História" na horizontal, como no site antigo (ajustes do cliente, 06/10/2026): anos lado a lado,
- * com setas para avançar. Cada linha do texto do painel vira um fato do ano.
- */
 function TimelineBlock({ data }: { data: TimelineBlockData }) {
   const t = useTranslations('blocks');
   if (data.items.length === 0) {
     return null;
   }
-  return (
-    <Rail label={t('timeline')} className="timeline-rail">
-      <ol className="timeline">
-        {data.items.map((item, index) => {
-          const facts = (item.text ?? '')
-            .split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean);
-          return (
-            <li key={index} className="timeline__item">
-              <span className="timeline__year num">{item.year}</span>
-              <h3>{item.title}</h3>
-              {facts.length > 0 ? (
-                <ul className="timeline__facts">
-                  {facts.map((fact, factIndex) => (
-                    <li key={factIndex}>{fact}</li>
-                  ))}
-                </ul>
-              ) : null}
-            </li>
-          );
-        })}
-      </ol>
-    </Rail>
-  );
+  return <Timeline data={data} title={t('timelineTitle')} />;
 }
 
 function FaqBlock({ data }: { data: FaqBlockData }) {
@@ -113,9 +98,9 @@ function StatsBlock({ data }: { data: StatsBlockData }) {
     return null;
   }
   return (
-    <dl className="stats">
+    <dl className="stats" data-reveal="stagger">
       {data.items.map((item, index) => (
-        <div key={index}>
+        <div key={index} className="stats__item">
           <dt className="num">
             <CountUp value={item.value} />
           </dt>
@@ -218,9 +203,34 @@ function BlockView({ block }: { block: Block }) {
   }
 }
 
-export function Blocks({ blocks }: { blocks: Block[] }) {
+/** Blocos que ocupam a largura toda na página editorial (sem a margem do `.wrap`). */
+const FULL_BLEED: ReadonlySet<Block['type']> = new Set(['timeline', 'image']);
+
+/**
+ * `editorial` (Fábrica): cada bloco vira uma seção da largura da página, com fundo alternado branco e areia, ritmo de
+ * seção (`--section-y`) e aparecimento ao rolar. Sem isso, os blocos ficam empilhados dentro da página (Privacidade,
+ * Termos, Contato).
+ */
+export function Blocks({ blocks, editorial = false }: { blocks: Block[]; editorial?: boolean }) {
   if (blocks.length === 0) {
     return null;
+  }
+  if (editorial) {
+    return (
+      <div className="blocks blocks--editorial">
+        {blocks.map((block, index) => (
+          <div key={index} className={`editorial editorial--${block.type}`}>
+            {FULL_BLEED.has(block.type) ? (
+              <BlockView block={block} />
+            ) : (
+              <div className="wrap" data-reveal>
+                <BlockView block={block} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
   }
   return (
     <div className="blocks">
