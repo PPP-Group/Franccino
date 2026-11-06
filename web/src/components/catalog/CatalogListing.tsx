@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
 import { Link, type AppHref } from '@/i18n/navigation';
@@ -85,46 +86,50 @@ export async function CatalogListing(props: CatalogListingProps) {
   });
 
   return (
-    <main className="wrap catalog">
-      <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
-      <div className="catalog-head">
-        <div className="catalog-head__copy">
-          <h1>{props.title}</h1>
-          {props.intro}
-        </div>
-      </div>
-      <CatalogToolbar
-        count={t('count', { count: page.meta.total })}
-        view={view}
-        hrefFor={hrefFor}
-        designerOptions={facets.designers.map(toFilterOption)}
-        activeDesigner={params.designer}
-        formAction={props.formAction}
-        hiddenQuery={hiddenQuery}
-      />
-      <section className="catalog-results" aria-label={t('resultsLabel')}>
-        {page.data.length === 0 ? (
-          <div className="empty">
-            <h2>{t('emptyState.title')}</h2>
-            <p className="lead">{t('emptyState.body')}</p>
-            <Link
-              className="btn btn--ghost"
-              href={hrefFor({ category: undefined, designer: undefined, q: undefined })}
-            >
-              {t('emptyState.clear')}
-            </Link>
+    <main>
+      <div className="wrap catalog">
+        <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
+        <div className="catalog-head">
+          <div className="catalog-head__copy">
+            <h1>{props.title}</h1>
+            {props.intro}
           </div>
-        ) : view === 'table' ? (
-          <TechTable rows={rows} />
-        ) : (
-          <ProductGrid products={page.data} priorityCount={3} />
-        )}
-      </section>
-      <Pagination
-        meta={page.meta}
-        hrefFor={(next) => hrefFor({ page: next })}
-        label={t('pagination.label')}
-      />
+        </div>
+        <CatalogToolbar
+          count={t('count', { count: page.meta.total })}
+          view={view}
+          hrefFor={hrefFor}
+          designerOptions={facets.designers.map(toFilterOption)}
+          activeDesigner={params.designer}
+          formAction={props.formAction}
+          hiddenQuery={hiddenQuery}
+        />
+        <section className="catalog-results" aria-label={t('resultsLabel')}>
+          {page.data.length === 0 ? (
+            <div className="empty">
+              <h2>{t('emptyState.title')}</h2>
+              <p className="lead">{t('emptyState.body')}</p>
+              <Link
+                className="btn btn--ghost"
+                href={hrefFor({ category: undefined, designer: undefined, q: undefined })}
+              >
+                {t('emptyState.clear')}
+              </Link>
+            </div>
+          ) : view === 'table' ? (
+            <TechTable rows={rows} />
+          ) : (
+            <ProductGrid products={page.data} showNew priorityCount={3} />
+          )}
+        </section>
+        <Pagination
+          meta={page.meta}
+          hrefFor={(next) => hrefFor({ page: next })}
+          label={t('pagination.label')}
+        />
+      </div>
+      {/* Continuidade: o fim da lista leva às peças que a pessoa já abriu (sem repetir as desta página). */}
+      <RecentlyViewed excludeIds={page.data.map((product) => product.id)} />
     </main>
   );
 }

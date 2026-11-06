@@ -34,9 +34,20 @@
   background: var(--stone);
 }
 
+/*
+  Hover da linha em tom areia na linha INTEIRA, inclusive na coluna da foto e do nome (retorno de 06/11/2026: a
+  miniatura de fundo branco deixava essa coluna branca). A foto se mistura ao fundo (`multiply`): o branco dela vira
+  areia junto com a linha.
+*/
 @media (hover: hover) {
-  .tech-table tbody tr:hover > * {
-    background: var(--row-hover);
+  .tech-table tbody tr:hover > td,
+  .tech-table tbody tr:hover > th[scope='row'] {
+    background: var(--sand);
+  }
+
+  .tech-table tbody tr:hover .thumb {
+    background: transparent;
+    mix-blend-mode: multiply;
   }
 }
 
@@ -75,6 +86,115 @@
 
 .tech-table th[scope='row'] strong {
   font-weight: 600;
+}
+
+/*
+  Fotos que saem da linha da tabela no hover (RowPeek): uma camada fixa que segue o ponteiro (o `transform` vem do
+  script), sem eventos de ponteiro. Só desktop com mouse; com "menos movimento", aparece parada e sem crescer.
+*/
+.row-peek {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row-peek {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease-out);
+    will-change: transform, opacity;
+  }
+
+  .row-peek.is-visible {
+    opacity: 1;
+  }
+}
+
+.row-peek__group {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.row-peek__photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  translate: -50% -50%;
+  transform: rotate(var(--peek-rotate, 0deg)) translate(var(--peek-x, 0), var(--peek-y, 0));
+}
+
+.row-peek__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Espalhadas de leve: a primeira (a capa) fica na frente, as outras saem por trás, uma para cada lado. */
+.row-peek__photo:nth-child(1) {
+  z-index: 3;
+}
+
+.row-peek__group--2 .row-peek__photo:nth-child(1) {
+  --peek-rotate: -3deg;
+  --peek-x: -14px;
+}
+
+.row-peek__group--2 .row-peek__photo:nth-child(2) {
+  z-index: 2;
+  --peek-rotate: 5deg;
+  --peek-x: 18px;
+  --peek-y: -10px;
+}
+
+.row-peek__group--3 .row-peek__photo:nth-child(1) {
+  --peek-rotate: -2deg;
+  --peek-y: 8px;
+}
+
+.row-peek__group--3 .row-peek__photo:nth-child(2) {
+  z-index: 2;
+  --peek-rotate: -8deg;
+  --peek-x: -26px;
+  --peek-y: -14px;
+}
+
+.row-peek__group--3 .row-peek__photo:nth-child(3) {
+  z-index: 1;
+  --peek-rotate: 7deg;
+  --peek-x: 26px;
+  --peek-y: -18px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .row-peek__photo {
+    animation: row-peek-in var(--t-mid) var(--ease-out) both;
+  }
+
+  .row-peek__photo:nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  .row-peek__photo:nth-child(3) {
+    animation-delay: 80ms;
+  }
+}
+
+@keyframes row-peek-in {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
 }
 
 .table-scroll {
@@ -283,4 +403,9 @@
   content: '';
   position: absolute;
   inset: calc(-1 * var(--space-3)) calc(-1 * var(--space-2));
+}
+
+/* "Peças que você viu" logo depois da lista: o respiro de baixo da lista já separa as duas (sem somar dois --section-y). */
+.catalog + .recent {
+  padding-top: 0;
 }
