@@ -4,9 +4,10 @@ import { Icon } from '@/components/ui/Icon';
 import { htmlLang, type Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { DEFAULT_ROOM } from '@/lib/planner/types';
+import { sectionClass, type Tone } from './tone';
 
 /** Planta vazia de exemplo (conflito C17): mostra a ferramenta sem inventar composição. */
-export function PlannerTeaser() {
+export function PlannerTeaser({ tone }: { tone: Tone }) {
   const t = useTranslations('home.teaser');
   const planner = useTranslations('planner');
   const locale = useLocale() as Locale;
@@ -14,9 +15,9 @@ export function PlannerTeaser() {
   const width = meters.format(DEFAULT_ROOM.w / 100);
   const depth = meters.format(DEFAULT_ROOM.d / 100);
   return (
-    <section className="section section--paper" aria-labelledby="teaser-title">
+    <section className={sectionClass(tone)} aria-labelledby="teaser-title">
       <div className="wrap teaser">
-        <div className="teaser__copy">
+        <div className="teaser__copy" data-reveal="">
           <h2 id="teaser-title">{t('title')}</h2>
           <p className="lead">{t('body')}</p>
           <div>
@@ -26,7 +27,7 @@ export function PlannerTeaser() {
             </Link>
           </div>
         </div>
-        <div className="teaser__plan">
+        <div className="teaser__plan" data-reveal="">
           <PlanSvg
             room={DEFAULT_ROOM}
             pieces={[]}

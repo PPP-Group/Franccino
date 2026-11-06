@@ -1,27 +1,24 @@
 /**
- * Caixa do banner da home e `sizes` de imagens desenhadas com `object-fit: cover` (rodada 2, revisão de 06/11/2026).
+ * `sizes` de imagens desenhadas com `object-fit: cover` e a regra da arte larga (rodada 3, 06/11/2026).
  *
- * - Arte larga (faixa de marketing do WordPress, ~1920×500, com o texto na própria arte): o banner segue a proporção
- *   da imagem, sem recorte e sem ampliação, no computador e no celular.
- * - Foto comum: banner alto com `cover`. O `sizes` diz a largura em que a foto é realmente desenhada (com o recorte
- *   ela fica mais larga que a tela), para o navegador baixar pixels suficientes.
+ * - Banner da home: sempre a tela inteira (100vh) com `cover`, a pedido do tech lead (vale sobre a regra anterior de
+ *   seguir a proporção da arte). A faixa de ~1920×500 do WordPress é desenhada com a altura da tela e fica bem mais
+ *   larga que ela: o `sizes` conta essa largura, e o navegador baixa o maior arquivo que houver.
+ * - Banner de página (`PageBanner`): arte larga com texto continua sem recorte (`isWideArt`).
  *
- * Lógica pura, sem React: `HeroSection` só liga o resultado ao markup.
+ * Lógica pura, sem React: os componentes só ligam o resultado ao markup.
  */
 
 import type { Image } from '@/lib/api/types';
 
-/** Acima desta proporção (largura ÷ altura) a imagem é tratada como faixa: o banner segue a proporção dela. */
+/** Acima desta proporção (largura ÷ altura) a imagem é tratada como faixa: o banner de página segue a proporção dela. */
 export const WIDE_ART_MIN_RATIO = 2.4;
 
 /**
- * Altura do banner alto. Precisa ser igual a `--hero-h` em `styles/home.css`: o `sizes` do banner é calculado com
- * ela.
+ * Altura do banner da home: a tela inteira. Precisa acompanhar `--hero-h` em `styles/home.css` (lá em `svh`, aqui em
+ * `vh`, a unidade que o `sizes` entende em todo navegador).
  */
-export const HERO_HEIGHT = 'clamp(560px, 82vh, 920px)';
-
-/** Diferença de proporção abaixo da qual a imagem cabe na caixa sem recorte que mereça outro `sizes`. */
-const SAME_RATIO_TOLERANCE = 0.05;
+export const HERO_HEIGHT = '100vh';
 
 type Sized = Pick<Image, 'width' | 'height'>;
 
@@ -36,25 +33,6 @@ export function aspectRatio(image: Sized | null | undefined): number | null {
 export function isWideArt(image: Sized | null | undefined): boolean {
   const ratio = aspectRatio(image);
   return ratio !== null && ratio > WIDE_ART_MIN_RATIO;
-}
-
-/** Caixa do banner. `fit`: a caixa tem a proporção da arte (`width` × `height`). `cover`: banner alto, foto recortada. */
-export type HeroFrame = { kind: 'fit'; width: number; height: number } | { kind: 'cover' };
-
-/**
- * Caixa do banner a partir da imagem do primeiro slide: no carrossel todos os slides usam a mesma caixa, para a página
- * não pular na troca.
- */
-export function heroFrame(image: Sized | null | undefined): HeroFrame {
-  if (image?.width && image.height && isWideArt(image)) {
-    return { kind: 'fit', width: image.width, height: image.height };
-  }
-  return { kind: 'cover' };
-}
-
-/** Valor do `aspect-ratio` do CSS para uma caixa `fit` (ex.: `1920 / 500`). */
-export function frameAspect(frame: HeroFrame): string | null {
-  return frame.kind === 'fit' ? `${frame.width} / ${frame.height}` : null;
 }
 
 function round(value: number): number {
@@ -73,19 +51,7 @@ export function coverSizes(ratio: number | null, box: { width: string; height: s
   return `max(${box.width}, calc(${box.height} * ${round(ratio)}))`;
 }
 
-/**
- * `sizes` da foto principal do banner, que ocupa a largura da tela (`100vw`) na caixa `frame`. Na caixa `fit` a foto
- * com a mesma proporção da arte não é recortada; a de outra proporção (outro slide do carrossel) é recortada como
- * `cover` dentro dela.
- */
-export function heroSizes(image: Sized | null | undefined, frame: HeroFrame): string {
-  const ratio = aspectRatio(image);
-  if (frame.kind === 'fit') {
-    const boxRatio = frame.width / frame.height;
-    if (ratio === null || Math.abs(ratio - boxRatio) < SAME_RATIO_TOLERANCE) {
-      return '100vw';
-    }
-    return coverSizes(ratio, { width: '100vw', height: `calc(100vw / ${round(boxRatio)})` });
-  }
-  return coverSizes(ratio, { width: '100vw', height: HERO_HEIGHT });
+/** `sizes` da foto do banner da home: a tela inteira (`100vw` × `100vh`), com o recorte do `cover`. */
+export function heroSizes(image: Sized | null | undefined): string {
+  return coverSizes(aspectRatio(image), { width: '100vw', height: HERO_HEIGHT });
 }

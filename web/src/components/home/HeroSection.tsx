@@ -1,18 +1,9 @@
-import type { CSSProperties } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Banner } from '@/lib/api/types';
-import {
-  aspectRatio,
-  coverSizes,
-  frameAspect,
-  HERO_HEIGHT,
-  heroFrame,
-  heroSizes,
-  type HeroFrame,
-} from '@/lib/images/cover';
+import { heroSizes } from '@/lib/images/cover';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { HeroVideo } from './HeroVideo';
 
@@ -22,24 +13,20 @@ type HeroSectionProps = {
   designerCount: number;
   /** Posição no carrossel: só o primeiro slide tem `h1` e imagem com prioridade (LCP). */
   index?: number;
-  /**
-   * Caixa do banner (`heroFrame`). No carrossel vem do primeiro slide, para todos terem a mesma caixa; sem ela, vale a
-   * da própria foto.
-   */
-  frame?: HeroFrame;
 };
 
 /**
  * Banner da home. Todos os campos podem vir `null` (R19).
  *
- * - Com foto (ou vídeo): o site só escreve o que foi cadastrado. Retorno do banco de ideias (26/10/2026, ideias 3 e
- *   14): a arte do banner já traz o texto do marketing, então sem título nada é escrito por cima, nem botão nem
- *   sombra. O título da seção fica só para leitores de tela, e com `cta_url` o banner inteiro vira o link.
+ * - Com foto (ou vídeo), rodada 3 (06/11/2026, pedido do tech lead): a foto ocupa a tela inteira (`hero--photo`,
+ *   100svh, `object-fit: cover`), sempre, inclusive a faixa larga do WordPress (vale sobre a regra anterior de seguir a
+ *   proporção da arte). No meio, pequeno, o título cadastrado (ou o título padrão da home), que aparece devagar depois
+ *   da foto; embaixo, uma linha fina que convida a rolar. Com `cta_url`, o banner inteiro é o link. O primeiro banner
+ *   leva `hero--full`, a marca que deixa o cabeçalho transparente por cima dele (chrome.css); a página de ideias usa
+ *   um slide seguinte (`index` 1) e fica com o cabeçalho de sempre. O resto da home rola por cima do banner (home.css).
  * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
- * - Arte larga (faixa de ~1920×500 com o texto do marketing): o banner segue a proporção da arte, sem recortar o texto
- *   nem ampliar a imagem (revisão de 06/11/2026). Com foto própria para celular, o celular continua com o banner alto.
  */
-export function HeroSection({ banner, brandNames, designerCount, index = 0, frame }: HeroSectionProps) {
+export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
   const first = index === 0;
@@ -58,47 +45,34 @@ export function HeroSection({ banner, brandNames, designerCount, index = 0, fram
     );
   }
 
-  const hasText = Boolean(banner.title || banner.subtitle);
   const cta = banner.cta_url ? { url: banner.cta_url, label: banner.cta_label } : null;
-  const box = frame ?? heroFrame(photo);
-  const ratio = frameAspect(box);
-  const classes = ['hero'];
-  if (!hasText) classes.push('hero--clean');
-  if (ratio) classes.push(banner.image_mobile ? 'hero--fit hero--fit-desktop' : 'hero--fit');
-  const style = ratio ? ({ '--hero-ratio': ratio } as CSSProperties) : undefined;
   return (
-    <section className={classes.join(' ')} style={style} aria-labelledby={titleId}>
+    <section className={first ? 'hero hero--photo hero--full' : 'hero hero--photo'} aria-labelledby={titleId}>
       <picture className="hero__picture">
         {banner.image_mobile ? (
           <source
             media="(max-width: 47.99rem)"
             srcSet={buildSrcSet(banner.image_mobile)}
-            sizes={coverSizes(aspectRatio(banner.image_mobile), { width: '100vw', height: HERO_HEIGHT })}
+            sizes={heroSizes(banner.image_mobile)}
           />
         ) : null}
-        <ApiImage image={photo} sizes={heroSizes(photo, box)} priority={first} className="hero__img" />
+        <ApiImage image={photo} sizes={heroSizes(photo)} priority={first} className="hero__img" />
       </picture>
       {banner.video ? <HeroVideo src={banner.video} /> : null}
-      {hasText ? (
-        <div className="hero__plate">
-          <Heading className={banner.title ? 'display' : 'visually-hidden'} id={titleId}>
-            {banner.title ?? t('fallbackTitle')}
-          </Heading>
-          {banner.subtitle ? <p className="lead">{banner.subtitle}</p> : null}
-          {cta?.label ? (
-            <div className="hero__actions">
-              <a className="btn" href={cta.url}>
-                {cta.label}
-              </a>
-            </div>
-          ) : null}
-        </div>
-      ) : (
-        <Heading className="visually-hidden" id={titleId}>
-          {t('fallbackTitle')}
+      <div className="hero__content">
+        <Heading className="hero__title" id={titleId}>
+          {banner.title ?? t('fallbackTitle')}
         </Heading>
-      )}
-      {cta && !(hasText && cta.label) ? (
+        {banner.subtitle ? <p className="hero__subtitle">{banner.subtitle}</p> : null}
+        {cta?.label ? (
+          <span className="hero__cta" aria-hidden="true">
+            <span>{cta.label}</span>
+            <Icon name="arrow" />
+          </span>
+        ) : null}
+      </div>
+      <span className="hero__scroll" aria-hidden="true" />
+      {cta ? (
         <a className="hero__link" href={cta.url} aria-label={cta.label ?? (photo.alt || t('open'))} />
       ) : null}
     </section>

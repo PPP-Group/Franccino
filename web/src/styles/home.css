@@ -1,60 +1,64 @@
 /*
   Home: portado de design/prototype/assets/styles.css (blocos "hero", "planner teaser", "designers", "factory",
   "stores", "linhas em tela cheia" e "peça em destaque"), com os ajustes do plano P4 (Task 11), da rodada 1
-  (06/10/2026) e da revisão de layout da rodada 2 (06/11/2026):
-  - todos os tamanhos de letra, espaços e tempos pelos tokens (web/DESIGN.md, "Escala de tipos e de espaços");
-  - um único ritmo entre as seções da home (`.home`, --section-y entre cada bloco);
-  - banner com arte larga na proporção da própria arte (`lib/images/cover.ts`);
-  - cards de designer só com foto e nome, como os cards de peça;
-  - planta da Sala para montar sem caixa com borda.
+  (06/10/2026), da revisão de layout da rodada 2 e da rodada 3 (06/11/2026, pedidos do tech lead):
+  - banner na tela inteira (100svh, foto com `cover`), parado no lugar enquanto o resto da home rola por cima dele;
+  - fundo das seções alternado entre branco e areia (`components/home/tone.ts`), com --section-y em cima e embaixo;
+  - blocos visuais grandes: coleções em faixas largas, projetos em mosaico, a fábrica numa faixa de foto em largura
+    total que fica parada como uma janela;
+  - hover das fotos clicáveis é o `.hover-zoom` (base.css), sem sombra;
+  - todos os tamanhos de letra, espaços e tempos pelos tokens (web/DESIGN.md, "Escala de tipos e de espaços").
   `.facts`, `.stores`, `.store-list` e `.store` também servem às páginas de coleção, projeto, contato e lojas.
 */
 
-/* ---------- ritmo da home ---------- */
+/* ---------- ritmo e fundos da home ---------- */
 
 /*
-  Fundo branco do começo ao fim: duas seções seguidas somavam os dois paddings (até 224 px de branco). Cada bloco
-  abre com --section-y e só o último fecha com ele; os painéis em tela cheia (Casa e Giardini) ficam a --section-y do
-  bloco de cima.
+  Cada seção com fundo próprio (branco ou areia, alternados pela página) abre e fecha com --section-y; as faixas de
+  foto (Casa e Giardini, Fábrica) encostam nas vizinhas. Tudo depois do banner fica acima dele (z-index) e com fundo
+  opaco: o banner fica parado e a página rola por cima.
 */
-.home > :is(.section, .feature) {
-  padding-block: var(--section-y) 0;
+.home > :not(.hero, .hero-carousel) {
+  position: relative;
+  z-index: 1;
 }
 
-.home > :is(.section, .feature):last-child {
-  padding-bottom: var(--section-y);
+.home > .section {
+  padding-block: var(--section-y);
 }
 
-.home > * + .lines {
-  margin-top: var(--section-y);
+.section--sand {
+  background: var(--sand);
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero em tela cheia ---------- */
 
 .hero {
-  /* Igual a HERO_HEIGHT em src/lib/images/cover.ts (o `sizes` da foto é calculado com ela). */
-  --hero-h: clamp(560px, 82vh, 920px);
   position: relative;
-  height: var(--hero-h);
   overflow: hidden;
   background: var(--hero-ground);
 }
 
 /*
-  Arte larga com o texto do marketing (faixa de ~1920×500): o banner tem a proporção da arte, que aparece inteira e
-  sem ampliação. `--hero-ratio` vem do `HeroSection` (largura / altura da imagem do primeiro slide).
+  Banner com foto: a tela inteira, sempre com `cover` (rodada 3, pedido do tech lead: vale sobre a regra anterior de
+  seguir a proporção da arte). `HERO_HEIGHT` em src/lib/images/cover.ts acompanha esta altura (o `sizes` da foto).
+  O primeiro banner também leva `.hero--full`, que deixa o cabeçalho transparente por cima dele (chrome.css).
 */
-.hero--fit {
-  height: auto;
-  aspect-ratio: var(--hero-ratio);
+.hero--photo {
+  --hero-h: 100vh;
+  height: var(--hero-h);
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  color: var(--paper);
 }
 
-/* Com foto própria para o celular, o celular continua com o banner alto e a foto recortada. */
-@media (max-width: 47.99rem) {
-  .hero--fit-desktop {
-    height: var(--hero-h);
-    aspect-ratio: auto;
-  }
+/* Parado no lugar: o resto da home sobe por cima dele. */
+.home > .hero--photo,
+.home > .hero-carousel {
+  position: sticky;
+  top: 0;
+  z-index: 0;
 }
 
 .hero__picture {
@@ -68,16 +72,194 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 62%;
+  object-position: 50% 50%;
 }
 
-.hero__plate {
+/*
+  Sombra só onde há texto: um halo escuro e suave atrás do título e um véu embaixo (a linha de rolar). O véu do alto,
+  para o cabeçalho transparente, é do próprio cabeçalho (chrome.css). A foto continua clara no resto.
+*/
+.hero--photo::after {
+  content: '';
   position: absolute;
-  left: var(--gutter);
-  bottom: var(--gutter);
-  width: min(780px, calc(100% - 2 * var(--gutter)));
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 46% 34% at 50% 50%,
+      color-mix(in srgb, var(--hero-shade) 58%, transparent),
+      var(--hero-shade-clear)
+    ),
+    linear-gradient(
+      to bottom,
+      var(--hero-shade-clear) 76%,
+      color-mix(in srgb, var(--hero-shade) 40%, transparent)
+    );
+  pointer-events: none;
+}
+
+/* Pequeno e no meio: o título, uma linha fina e, se houver, a frase e o texto do link. */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: min(36rem, calc(100% - 2 * var(--gutter)));
+  text-align: center;
+  animation: hero-in var(--t-slow) var(--ease-out) var(--t-mid) both;
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: var(--lh-h3);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--paper);
+}
+
+.hero__title::after {
+  content: '';
+  display: block;
+  width: var(--space-7);
+  height: 1px;
+  margin: var(--space-4) auto 0;
+  background: var(--on-photo-rule);
+}
+
+.hero__subtitle {
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
+  color: var(--on-photo-muted);
+  text-wrap: pretty;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--on-photo-rule);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.hero__cta .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Linha fina no pé do banner, com um traço que desce devagar: convida a rolar. Decorativa. */
+.hero__scroll {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: var(--space-6);
+  width: 1px;
+  height: var(--space-8);
+  overflow: hidden;
+  background: var(--on-photo-rule);
+  animation: hero-in var(--t-slow) var(--ease-out) var(--t-slow) both;
+  pointer-events: none;
+}
+
+.hero__scroll::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: var(--space-5);
+  background: var(--paper);
+  transform: translateY(-100%);
+}
+
+/*
+  Movimento do banner. Exceções aos tempos de interface, por serem laços lentos e não transições: a aproximação da
+  foto (Ken Burns, 1.04 ao longo do slide) e o traço da linha de rolar.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .hero--photo .hero__img {
+    animation: hero-zoom 9s linear both;
+  }
+
+  .hero__scroll::after {
+    animation: hero-scroll 2.4s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes hero-scroll {
+  to {
+    transform: translateY(calc(var(--space-8) + 100%));
+  }
+}
+
+/* Com `cta_url`, o banner inteiro é o link. */
+.hero__link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hero__link:focus-visible {
+  outline-offset: -6px;
+  outline-color: var(--paper);
+}
+
+/* Vídeo em loop por cima da foto, na mesma caixa: entra com um fade quando o primeiro quadro chega. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--t-mid) var(--ease-out);
+  pointer-events: none;
+}
+
+.hero__video.is-playing {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__content,
+  .hero__scroll {
+    animation: none;
+  }
+}
+
+/* ---------- banner sem foto ---------- */
+
+.hero__plate {
   background: var(--paper);
   padding: clamp(var(--space-5), 3vw, var(--space-7));
+  width: min(780px, calc(100% - 2 * var(--gutter)));
   display: grid;
   gap: var(--space-5);
   animation: plate-in var(--t-mid) var(--ease-out) both;
@@ -97,101 +279,6 @@
   display: flex;
   gap: var(--space-3);
   flex-wrap: wrap;
-}
-
-/*
-  Banner com foto e texto cadastrado, no estilo da "versão do Marcelo" (ajustes do cliente, 06/10/2026): a foto ocupa
-  o banner, escurece na base e o texto fica direto sobre ela. A placa branca continua só no banner sem foto.
-*/
-.hero:not(.hero--plain)::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, var(--hero-shade) 0%, var(--hero-shade-clear) 62%);
-  pointer-events: none;
-}
-
-.hero:not(.hero--plain) .hero__plate {
-  z-index: 1;
-  background: transparent;
-  color: var(--paper);
-  padding: 0;
-  bottom: calc(var(--gutter) + var(--space-8));
-}
-
-/* Na faixa larga o banner é baixo: o texto fica junto da margem. */
-.hero--fit:not(.hero--plain) .hero__plate {
-  bottom: var(--gutter);
-}
-
-.hero:not(.hero--plain) .hero__plate .display {
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  line-height: var(--lh-display);
-}
-
-.hero:not(.hero--plain) .hero__plate .lead {
-  color: var(--on-photo-muted);
-}
-
-.hero:not(.hero--plain) .hero__meta {
-  color: var(--on-photo-muted);
-  border-top-color: var(--on-photo-rule);
-}
-
-.hero:not(.hero--plain) .btn {
-  background: var(--paper);
-  border-color: var(--paper);
-  color: var(--ink);
-}
-
-.hero:not(.hero--plain) .btn--ghost {
-  background: transparent;
-  color: var(--paper);
-}
-
-@media (hover: hover) {
-  .hero:not(.hero--plain) .btn--ghost:hover {
-    background: var(--paper);
-    color: var(--ink);
-  }
-}
-
-/*
-  Banner sem texto cadastrado (a arte já traz o texto do marketing): sem sombra e sem placa; com `cta_url`, o banner
-  inteiro é o link.
-*/
-.hero--clean::after {
-  display: none;
-}
-
-.hero__link {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-.hero__link:focus-visible {
-  outline-offset: -6px;
-  outline-color: var(--paper);
-}
-
-/* Vídeo em loop por cima da foto, na mesma caixa: entra com um fade quando o primeiro quadro chega. */
-.hero__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 62%;
-  opacity: 0;
-  transition: opacity var(--t-mid) var(--ease-out);
-  pointer-events: none;
-}
-
-.hero__video.is-playing {
-  opacity: 1;
 }
 
 /* Banner sem foto: a placa branca no fluxo da página. */
@@ -223,26 +310,38 @@
 
 /* ---------- carrossel do hero (PPP-107) ---------- */
 
+/*
+  Todos os slides empilhados na mesma caixa: o que entra aparece por cima do que sai (fusão), sem a tela piscar. O que
+  saiu (`is-prev`) fica inteiro por baixo durante a fusão e mantém a foto aproximada; os outros ficam escondidos.
+*/
 .hero-carousel {
-  position: relative;
+  display: grid;
 }
 
-.hero-carousel__slide[hidden] {
+.hero-carousel__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--t-slow) var(--ease-in-out);
+}
+
+.hero-carousel__slide.is-prev {
+  opacity: 1;
+}
+
+.hero-carousel__slide.is-active {
+  z-index: 1;
+  opacity: 1;
+}
+
+/* A aproximação recomeça a cada vez que o slide entra; o título reaparece com ele. */
+.hero-carousel__slide:not(.is-active, .is-prev) .hero__img,
+.hero-carousel__slide:not(.is-active) .hero__content {
+  animation: none;
+}
+
+/* Vídeo de slide fora da tela some: o observador do vídeo vê que ele não está na tela e pausa (HeroVideo). */
+.hero-carousel__slide:not(.is-active) .hero__video {
   display: none;
-}
-
-/* Troca suave entre os slides (sem controles na tela, retorno de 26/10/2026); todos os slides na mesma caixa. */
-.hero-carousel__slide:not([hidden]) {
-  animation: hero-fade var(--t-mid) var(--ease-out) both;
-}
-
-@keyframes hero-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 /* Pausa só para o teclado e o leitor de tela: aparece com o foco, como o "pular para o conteúdo". */
@@ -250,7 +349,7 @@
   position: absolute;
   z-index: 3;
   right: var(--gutter);
-  top: var(--space-3);
+  bottom: var(--space-6);
   min-height: 44px;
   padding: var(--space-2) var(--space-4);
   border: 0;
@@ -258,16 +357,18 @@
   color: var(--paper);
   font-size: var(--fs-ui);
   cursor: pointer;
-  transform: translateY(-200%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hero-carousel__pause:focus-visible {
-  transform: none;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-carousel__slide:not([hidden]) {
-    animation: none;
+  .hero-carousel__slide {
+    transition: none;
   }
 }
 
@@ -280,10 +381,9 @@
 
 .line-panel {
   /* Igual a LINE_HEIGHT em components/home/LinesSection.tsx. */
-  --line-h: clamp(460px, 76vh, 820px);
+  --line-h: clamp(520px, 86vh, 920px);
   position: relative;
   height: var(--line-h);
-  overflow: hidden;
   background: var(--ink);
   color: var(--paper);
   text-decoration: none;
@@ -295,7 +395,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--t-mid) var(--ease-out);
 }
 
 .line-panel::after {
@@ -303,12 +402,6 @@
   position: absolute;
   inset: 45% 0 0;
   background: linear-gradient(to top, var(--hero-shade), var(--hero-shade-clear));
-}
-
-@media (hover: hover) {
-  .line-panel:hover img {
-    transform: scale(1.03);
-  }
 }
 
 .line-panel__copy {
@@ -322,7 +415,7 @@
   justify-items: start;
 }
 
-/* Duas linhas lado a lado: título de página (h1), e o display fica para a peça em destaque. */
+/* Duas linhas lado a lado: título de página (h1); o display fica para a peça em destaque. */
 .line-panel__title {
   font-size: var(--fs-h1);
 }
@@ -343,6 +436,61 @@
 
   .line-panel {
     --line-h: clamp(420px, 62svh, 640px);
+  }
+}
+
+/* ---------- coleções em faixas (rodada 3) ---------- */
+
+/*
+  A capa da coleção é a faixa do marketing (~1920×500, com o nome na arte): inteira, na proporção dela. Uma larga e
+  duas lado a lado (`stripLayout` em CollectionsSection.tsx fecha a grade sem buraco).
+*/
+.strips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-7) var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.strip--wide {
+  grid-column: 1 / -1;
+}
+
+.strip__link {
+  display: grid;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+}
+
+.strip__media {
+  display: block;
+  background: var(--sand-strong);
+}
+
+.strip__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.strip__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.strip__name {
+  font-size: var(--fs-h3);
+}
+
+@media (max-width: 48rem) {
+  .strips {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
 }
 
@@ -447,7 +595,6 @@
   position: absolute;
   width: 200px;
   background: var(--paper);
-  box-shadow: var(--shadow-lift);
 }
 
 .scene__point[data-horizontal='start'] .scene__card {
@@ -500,10 +647,6 @@
 
 /* ---------- peça em destaque ---------- */
 
-.feature {
-  padding-block: var(--section-y);
-}
-
 .feature__grid {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
@@ -511,9 +654,27 @@
   align-items: center;
 }
 
+/* O quadro interno aproxima no hover: a própria foto já tem a animação de saída de motion.css. */
+.feature__media {
+  display: block;
+  overflow: hidden;
+}
+
+.feature__frame {
+  display: block;
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
 .feature__media img {
+  display: block;
   width: 100%;
   height: auto;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .feature__media:hover .feature__frame {
+    transform: scale(1.05);
+  }
 }
 
 .feature__copy {
@@ -573,6 +734,121 @@
   font-weight: 500;
 }
 
+/* ---------- projetos em mosaico (rodada 3) ---------- */
+
+.mosaics {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Igual a MOSAIC_HEIGHT em components/home/ProjectsSection.tsx (o `sizes` das fotos é calculado com ela). */
+.mosaic {
+  --mosaic-h: clamp(560px, 82vh, 860px);
+  display: grid;
+  gap: var(--space-5);
+  height: var(--mosaic-h);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Uma foto grande e duas menores; no grupo seguinte, a grande troca de lado. */
+.mosaic--3 {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.mosaic--3 > :first-child {
+  grid-row: 1 / -1;
+}
+
+.mosaic--3.mosaic--flip {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+
+.mosaic--3.mosaic--flip > :first-child {
+  grid-column: 2;
+}
+
+.mosaic--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mosaic__item {
+  min-height: 0;
+}
+
+.mosaic__link {
+  position: relative;
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.mosaic__link img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mosaic__link::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(to top, var(--hero-shade), var(--hero-shade-clear));
+  pointer-events: none;
+}
+
+.mosaic__copy {
+  position: absolute;
+  z-index: 1;
+  left: clamp(var(--space-5), 3vw, var(--space-7));
+  right: clamp(var(--space-5), 3vw, var(--space-7));
+  bottom: clamp(var(--space-5), 3vw, var(--space-7));
+  display: grid;
+  gap: var(--space-2);
+}
+
+.mosaic__title {
+  font-size: var(--fs-h3);
+  text-wrap: balance;
+}
+
+.mosaic--3 > :first-child .mosaic__title,
+.mosaic--1 .mosaic__title {
+  font-size: var(--fs-h2);
+}
+
+.mosaic__meta {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  color: var(--on-photo-muted);
+}
+
+@media (max-width: 56.25rem) {
+  .mosaic,
+  .mosaic--3,
+  .mosaic--3.mosaic--flip {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .mosaic--3 > :first-child,
+  .mosaic--3.mosaic--flip > :first-child {
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  .mosaic__item {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 /* ---------- sala para montar (teaser) ---------- */
 
 .teaser {
@@ -619,10 +895,24 @@
 
 /* ---------- designers ---------- */
 
+/* Uma coluna por retrato com menos de 4 (`designersShown`): a linha nunca fica com buraco. */
 .designers {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-5);
+}
+
+.designers--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.designers--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.designers--1 {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 28rem;
 }
 
 /* Só foto e nome, como o card de peça; `align-content: start` mantém os nomes na mesma linha. */
@@ -636,7 +926,6 @@
 
 .designer__photo {
   aspect-ratio: 4 / 5;
-  overflow: hidden;
   background: var(--portrait-ground);
 }
 
@@ -645,13 +934,6 @@
   height: 100%;
   object-fit: cover;
   filter: grayscale(1) contrast(1.02);
-  transition: transform var(--t-mid) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .designer:hover .designer__photo img {
-    transform: scale(1.03);
-  }
 }
 
 @media (max-width: 56.25rem) {
@@ -659,38 +941,100 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-5) var(--space-4);
   }
+
+  .designers--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .designers--1 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-/* ---------- fábrica ---------- */
+/* ---------- fábrica: faixa de foto em largura total (rodada 3) ---------- */
 
-.factory {
+/*
+  A foto ocupa a faixa inteira e, no computador, fica parada enquanto a página passa (uma janela: `position: fixed`
+  recortado pelo `clip-path` da faixa, sem JavaScript e sem animação presa à rolagem). Com menos movimento, ou no
+  celular, a foto rola junto, como qualquer imagem.
+*/
+.factory-band {
+  background: var(--ink);
+  clip-path: inset(0);
+}
+
+.factory-band__link {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(var(--space-6), 5vw, var(--space-8));
-  align-items: center;
+  align-items: end;
+  min-height: clamp(560px, 92vh, 980px);
+  color: var(--paper);
+  text-decoration: none;
 }
 
-.factory__media img {
+.factory-band__media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: 100%;
   object-fit: cover;
 }
 
-.factory__copy {
+@media (hover: hover) and (min-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+  .factory-band__media img {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+.factory-band__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--hero-shade),
+    color-mix(in srgb, var(--hero-shade) 30%, transparent) 45%,
+    var(--hero-shade-clear) 70%
+  );
+  pointer-events: none;
+}
+
+.factory-band__wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-block: var(--section-y);
+}
+
+.factory-band__copy {
   display: grid;
   gap: var(--space-4);
   justify-items: start;
+  max-width: 40rem;
 }
 
-.factory__copy .link-arrow {
+.factory-band__copy h2 {
+  font-size: var(--fs-h1);
+}
+
+.factory-band__copy .lead {
+  color: var(--on-photo-muted);
+}
+
+.factory-band__copy .link-arrow {
   margin-top: var(--space-3);
 }
 
-@media (max-width: 56.25rem) {
-  .factory {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-  }
+/* Fábrica sem capa: só o texto, na seção com o fundo do tom. */
+.factory-text {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+  max-width: 40rem;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ---------- lojas (home e página de lojas) ---------- */

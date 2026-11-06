@@ -30,10 +30,13 @@ describe('HeroSection', () => {
     // Banner com foto: só o que foi cadastrado, sem os atalhos e a contagem da placa sem foto.
     expect(html).not.toContain('href="/room-planner"');
     expect(html).not.toContain('16 designers');
-    expect(html).not.toContain('hero__link');
+    // O botão some: o banner inteiro é o link, e o texto do botão fica pequeno sob o título.
+    expect(html).toContain('class="hero__link"');
+    expect(html).toContain('hero__cta');
+    expect(html).not.toContain('class="btn');
   });
 
-  it('writes nothing over a banner without text, keeps the title for screen readers and links the whole banner', () => {
+  it('fills the screen with the photo and writes only the small default title over it, linking the whole banner', () => {
     const html = renderWithIntl(
       <HeroSection
         banner={{
@@ -49,9 +52,9 @@ describe('HeroSection', () => {
         designerCount={16}
       />,
     );
-    expect(html).toContain('hero--clean');
-    expect(html).toMatch(/<h1 class="visually-hidden" id="hero-title">Móveis de design autoral<\/h1>/);
-    expect(html).not.toContain('hero__plate');
+    expect(html).toContain('class="hero hero--photo hero--full"');
+    expect(html).toMatch(/<h1 class="hero__title" id="hero-title">Móveis de design autoral<\/h1>/);
+    expect(html).toContain('hero__scroll');
     expect(html).not.toContain('class="btn');
     expect(html).toContain('class="hero__link" href="/pt/lancamentos" aria-label="Coleção Tempo"');
     // O vídeo só entra depois da hidratação (movimento reduzido é o padrão no servidor): a foto é o que vai no HTML.
@@ -59,21 +62,21 @@ describe('HeroSection', () => {
     expect(html).toContain('<img');
   });
 
-  it('follows the ratio of a wide marketing strip instead of cropping it, keeping the tall banner on mobile', () => {
-    const strip = image({ width: 1920, height: 500 });
+  it('crops a wide marketing strip to the full screen and asks for the width drawn at the screen height', () => {
     const banner = {
       title: null,
       subtitle: null,
       cta_label: null,
       cta_url: null,
-      image: strip,
+      image: image({ width: 1920, height: 500 }),
       image_mobile: null,
       video: null,
     };
     const html = renderWithIntl(<HeroSection banner={banner} brandNames={[]} designerCount={0} />);
-    expect(html).toContain('class="hero hero--clean hero--fit"');
-    expect(html).toContain('--hero-ratio:1920 / 500');
-    expect(html).toContain('sizes="100vw"');
+    expect(html).toContain('class="hero hero--photo hero--full"');
+    expect(html).not.toContain('--hero-ratio');
+    expect(html).toContain('sizes="max(100vw, calc(100vh * 3.84))"');
+    expect(html).not.toContain('hero__link');
 
     const withMobile = renderWithIntl(
       <HeroSection
@@ -82,35 +85,13 @@ describe('HeroSection', () => {
         designerCount={0}
       />,
     );
-    expect(withMobile).toContain('hero--fit hero--fit-desktop');
-    expect(withMobile).toContain('sizes="max(100vw, calc(clamp(560px, 82vh, 920px) * 0.75))"');
+    expect(withMobile).toContain('sizes="max(100vw, calc(100vh * 0.75))"');
   });
 
-  it('keeps the tall banner for a photo and asks for the width drawn by the crop', () => {
-    const html = renderWithIntl(
-      <HeroSection
-        banner={{
-          title: null,
-          subtitle: null,
-          cta_label: null,
-          cta_url: null,
-          image: image({ width: 1500, height: 1000 }),
-          image_mobile: null,
-          video: null,
-        }}
-        brandNames={[]}
-        designerCount={0}
-      />,
-    );
-    expect(html).not.toContain('hero--fit');
-    expect(html).toContain('sizes="max(100vw, calc(clamp(560px, 82vh, 920px) * 1.5))"');
-  });
-
-  it('uses the box of the first slide when the carousel passes it', () => {
+  it('gives the later carousel slides an h2 and a lazy image', () => {
     const html = renderWithIntl(
       <HeroSection
         index={1}
-        frame={{ kind: 'fit', width: 1920, height: 500 }}
         banner={{
           title: null,
           subtitle: null,
@@ -124,8 +105,10 @@ describe('HeroSection', () => {
         designerCount={0}
       />,
     );
-    expect(html).toContain('hero--fit');
-    expect(html).toContain('--hero-ratio:1920 / 500');
+    expect(html).toContain('<h2 class="hero__title" id="hero-title-2">');
+    // Só o primeiro banner deixa o cabeçalho transparente (a página de ideias usa um slide seguinte).
+    expect(html).toContain('class="hero hero--photo"');
+    expect(html).toContain('loading="lazy"');
   });
 
   it('falls back to a plain plate without inventing an image', () => {

@@ -72,7 +72,7 @@ export function SceneViewer({ scene, priority = false }: { scene: Scene; priorit
                   href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
                 >
                   {hotspot.product.cover ? (
-                    <span className="scene__card-media">
+                    <span className="scene__card-media hover-zoom">
                       <ApiImage image={hotspot.product.cover} sizes="160px" />
                     </span>
                   ) : null}
