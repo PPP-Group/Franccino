@@ -341,7 +341,7 @@ input[type='radio']:disabled {
 }
 
 .select__option[aria-selected='true'] {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .select__check {

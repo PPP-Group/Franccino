@@ -824,7 +824,7 @@ MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o pi
   sessão são gerentes do Drive compartilhado: o pedido foi feito à Franccino.
 - **Logo:** FRANCCINO em SVG (`web/src/components/layout/Logo.tsx`), com as letras da Adobe Garamond Pro do Drive e o
   espaçamento da logo do site atual. Só os contornos entram no site, nunca o arquivo da fonte.
-- **Fontes:** as alternativas que a Franccino mandou (pasta `_FONTES ALTERNATIVAS`): Cormorant Garamond nos títulos e
-  EB Garamond no texto, as mesmas que o site já usava.
+- **Fonte:** Jost no site inteiro, títulos e texto (pedido do Pedro Ivo, mais tarde no mesmo dia; licença SIL OFL,
+  servida pelo próprio site via `next/font`). Substitui Cormorant Garamond e EB Garamond. O painel continua como estava.
 - **Projetos virou "Corporativo"** (menu, título, rodapé e seção da home), sem os filtros Todos e Residencial.
 - **Movimento:** saiu a faixa de carregamento das fotos; a cortina da esquerda para a direita ficou só nas coleções.

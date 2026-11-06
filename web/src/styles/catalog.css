@@ -27,7 +27,7 @@
 .tech-table thead th {
   white-space: nowrap;
   font-size: var(--fs-label);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -85,7 +85,7 @@
 }
 
 .tech-table th[scope='row'] strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /*

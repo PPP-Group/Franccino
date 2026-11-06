@@ -1,24 +1,17 @@
-import { Cormorant_Garamond, EB_Garamond } from 'next/font/google';
+import { Jost } from 'next/font/google';
 
 /**
- * Fontes do site, pedido da Franccino em 06/10/2026: Cormorant Garamond nos títulos e EB Garamond no texto.
- * As duas usam a SIL Open Font License 1.1, que permite uso em site (o OFL.txt veio no zip enviado pelo cliente).
- * O next/font baixa os arquivos no build e serve pelo próprio site, só com o subconjunto latino.
- * Os tokens em src/styles/tokens.css leem `--font-serif-text` e `--font-serif-display`.
+ * Fonte do site inteiro (pedido do Pedro Ivo em 06/11/2026: "fonte do site todo vai ser essa"): Jost, nos títulos e no
+ * texto. Usa a SIL Open Font License 1.1, que permite uso em site (o OFL.txt veio no zip enviado). O next/font baixa
+ * os arquivos no build e serve pelo próprio site, só com o subconjunto latino. Os tokens em src/styles/tokens.css leem
+ * `--font-sans`. A logo FRANCCINO é outra coisa: é o desenho da marca, em vetor (components/layout/Logo.tsx).
  */
-export const ebGaramond = EB_Garamond({
+// Sem lista de pesos: carrega a versão variável (um arquivo por estilo), com o itálico de verdade para o <em>.
+export const jost = Jost({
   subsets: ['latin'],
-  // Itálico de verdade: sem ele, o <em> do texto rico saía com a fonte normal inclinada pelo navegador.
   style: ['normal', 'italic'],
-  variable: '--font-serif-text',
+  variable: '--font-sans',
   display: 'swap',
 });
 
-// Sem lista de pesos: carrega a versão variável num arquivo só, em vez de um arquivo por peso.
-export const cormorantGaramond = Cormorant_Garamond({
-  subsets: ['latin'],
-  variable: '--font-serif-display',
-  display: 'swap',
-});
-
-export const fontVariables = `${ebGaramond.variable} ${cormorantGaramond.variable}`;
+export const fontVariables = jost.variable;
