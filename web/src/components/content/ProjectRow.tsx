@@ -31,7 +31,7 @@ export function ProjectRow({ project, meta = [], priority = false }: ProjectRowP
         {...morphLink}
         tabIndex={-1}
         aria-hidden="true"
-        data-reveal={priority ? undefined : 'curtain'}
+        data-reveal={priority ? undefined : ''}
       >
         {project.cover ? (
           <MorphImage

@@ -40,7 +40,7 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
             {...morphLink}
             tabIndex={-1}
             aria-hidden="true"
-            data-reveal="curtain"
+            data-reveal=""
           >
             <span className="feature__frame" data-parallax-layer="back">
               <MorphImage

@@ -27,7 +27,8 @@
   - `data-reveal="stagger"`: os filhos fazem o mesmo, em sequência.
   - `data-reveal="curtain"`: o que está dentro (os filhos diretos: a foto, o link da foto) abre como uma cortina, da
     esquerda para a direita (clip-path). O recorte fica nos filhos, nunca no próprio bloco: um bloco recortado por
-    inteiro não conta como visível para o IntersectionObserver, e nunca abriria.
+    inteiro não conta como visível para o IntersectionObserver, e nunca abriria. Só nas coleções (retorno da
+    Franccino, 06/11/2026: o movimento em tudo cansava).
   - `data-reveal="curtain-stagger"`: o mesmo, com os filhos em sequência (mosaicos e grades de fotos).
   Texto marcado com `data-reveal` dentro de uma cortina sobe um pouco depois dela.
 */
@@ -278,16 +279,15 @@
 
 /* ---------- 12e. Números que contam até o valor (CountUp): o movimento é do componente, sem CSS ---------- */
 
-/* ---------- 12f. Carregamento: faixa suave no lugar de "Carregando…" ---------- */
+/* ---------- 12f. Carregamento: esqueleto suave no lugar de "Carregando…" ---------- */
 
 /*
-  Fotos: `ImageLoadWatcher` marca o <html> e cada foto que terminou de carregar; sem JavaScript, nada disso aparece.
-  Esqueletos (`.skeleton`, components.css): a lista de orçamento antes de ler o navegador e o 3D da peça enquanto o
-  modelo carrega. Sem este bloco, os esqueletos ficam parados, na cor de fundo.
+  Só nos esqueletos (`.skeleton`, components.css): a lista de orçamento antes de ler o navegador e o 3D da peça
+  enquanto o modelo carrega. As fotos de peças e coleções não têm mais a faixa que corria da esquerda para a direita
+  enquanto carregavam (retorno da Franccino, 06/11/2026: "em tudo está ficando ruim"): ficam na cor de fundo até a foto
+  chegar. O único movimento da esquerda para a direita que ficou é a cortina das coleções (`data-reveal="curtain"`).
 */
 @media (prefers-reduced-motion: no-preference) {
-  [data-image-watch] .plate__media:has(> img:not([data-loaded])),
-  [data-image-watch] .collection-tile__media:has(> img:not([data-loaded])),
   .skeleton {
     background-image: linear-gradient(
       100deg,
@@ -442,9 +442,7 @@
   }
 
   .splash__wordmark {
-    font-size: var(--fs-h3);
-    /* O espaço entre letras sobra à direita do último "O": compensa para o nome ficar no centro. */
-    margin-right: -0.3em;
+    height: 28px;
     animation: splash-in var(--t-slow) var(--ease-out) both;
   }
 
