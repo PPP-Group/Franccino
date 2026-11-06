@@ -108,7 +108,8 @@
     "sent": {
       "title": "Pedido enviado",
       "body": "Recebemos a sua lista. A equipe da Franccino responde pelo e-mail informado."
-    }
+    },
+    "addedToList": "Adicionada à lista"
   },
   "errors": {
     "notFound": {
@@ -279,7 +280,8 @@
     "designer": {
       "piecesBy": "Peças de {name}"
     },
-    "moreWays": "Outras formas de pedir"
+    "moreWays": "Outras formas de pedir",
+    "addedToList": "Adicionada à lista"
   },
   "catalog": {
     "filters": {
@@ -674,81 +676,143 @@
   },
   "ideas": {
     "meta": {
-      "title": "Ideias aprovadas",
-      "description": "Prévia das ideias aprovadas no banco de ideias, com a situação de cada uma."
+      "title": "Banco de ideias",
+      "description": "As ideias do banco de ideias com a decisão da Franccino e a situação de cada uma no site."
     },
-    "title": "Ideias aprovadas",
-    "intro": "Cada ideia que vocês aprovaram em 26 de outubro, funcionando com o conteúdo atual do site. Onde ainda falta material de vocês, a demonstração usa um exemplo e diz o que falta.",
+    "title": "Banco de ideias",
+    "intro": "As ideias aprovadas no PDF de retorno de vocês, com a mesma numeração, funcionando com o conteúdo atual do site. Onde ainda falta material, a demonstração usa um exemplo e diz o que falta. No fim, as que ficaram para mais tarde e as descartadas.",
     "number": "Ideia {number}",
+    "adjustmentLabel": "Ajuste pedido:",
     "missingLabel": "O que falta de vocês:",
+    "decision": {
+      "approved": "Aprovada",
+      "adjusted": "Aprovada com ajustes",
+      "later": "Mais tarde",
+      "discarded": "Descartada"
+    },
     "status": {
-      "ready": "Pronta",
-      "waiting": "Aguardando material",
-      "live": "No ar"
+      "live": "No ar",
+      "waiting": "Precisa de conteúdo"
     },
     "legend": {
-      "ready": "já funciona no site.",
+      "live": "funciona no site com o conteúdo atual.",
       "waiting": "funciona, mas o resultado final depende de material de vocês."
     },
-    "rail": {
-      "title": "Esteira de peças",
-      "description": "Só a foto e o nome, sem botões. O clique na peça abre a página dela, onde ficam o 3D e os acabamentos. Aparece em Lançamentos e na página de cada peça."
-    },
-    "lift": {
-      "title": "A peça vem para frente",
-      "description": "Ao passar o mouse, a peça e o nome vêm juntos para frente. No celular, o toque abre a peça direto."
-    },
-    "banner": {
-      "number": "3 e 14",
-      "title": "Banner limpo, com vídeo curto",
-      "description": "Quando a arte do banner já tem texto, o site não escreve nada por cima nem coloca botões. O banner segue a proporção da arte, sem cortar nem ampliar. Também aceita um vídeo curto em loop, sem som.",
-      "missing": "a arte final dos banners em 16:9 (2560 px de largura) e a versão para celular em 4:5; e, se quiserem, um vídeo de 10 a 20 segundos em MP4."
+    "carousel": {
+      "title": "Carrossel com a peça em destaque",
+      "adjustment": "sem acabamentos, sem \"ver peça\" e sem \"ver em 3D\"; o clique na foto abre a peça.",
+      "description": "A peça do centro fica grande e as vizinhas menores. Arraste ou use as setas: a próxima peça cresce e o nome troca com ela. O clique na foto abre a página da peça."
     },
     "scroll": {
-      "title": "Movimento na rolagem",
-      "description": "Os blocos grandes sobem e aparecem quando entram na tela, e a peça em destaque gira um pouco e se desfaz ao sair. Role devagar para ver."
-    },
-    "header": {
-      "title": "Cabeçalho branco",
-      "description": "Cabeçalho branco sólido, sem transparência, com contraste forte. É o que está no topo desta página."
+      "title": "Paralaxe e revelação ao rolar",
+      "description": "Ao rolar, o fundo, a peça e o texto andam em velocidades um pouco diferentes, num movimento curto. As fotos abrem como uma cortina quando entram na tela, e os títulos sobem um pouco enquanto aparecem. Role devagar para ver."
     },
     "scenes": {
       "title": "Ambiente com pontos clicáveis",
-      "description": "A foto de um ambiente montado, com um ponto em cada peça. O ponto abre a foto e o nome da peça, que levam à página dela.",
-      "missing": "fotos de ambientes montados com as peças (horizontais, em alta) e quais peças aparecem em cada foto. O cadastro é pelo painel, em Conteúdo, Ambientes.",
+      "description": "A foto de um ambiente montado, com um ponto em cada peça. O ponto abre a foto e o nome da peça, que levam à página dela. O cadastro é pelo painel, em Conteúdo, Ambientes: clicar na foto, escolher a peça e salvar.",
+      "missing": "fotos de ambientes montados com as peças (horizontais, em alta) e quais peças aparecem em cada foto.",
       "demoTitle": "Ambiente de exemplo",
       "demoNote": "Exemplo com uma foto de coleção e três peças reais em posições ilustrativas, só para mostrar o funcionamento."
     },
     "finish": {
-      "title": "Acabamento em detalhe",
-      "description": "Clique numa amostra para ver o acabamento numa imagem grande e fixa, inteira ou no tamanho real, para percorrer a textura. Também aparece na página da peça, ao lado do acabamento escolhido.",
+      "title": "Lupa de detalhe e faixa de materiais",
+      "adjustment": "na página de acabamentos, com a imagem fixa em alta.",
+      "description": "Na página Acabamentos, o clique numa amostra abre o acabamento numa imagem grande e fixa, inteira ou no tamanho real, para percorrer a textura.",
       "missing": "as fotos digitalizadas dos acabamentos em alta resolução (a partir de 2500 px), com o nome e o código de cada um."
     },
     "morph": {
-      "title": "A foto cresce até a peça",
-      "description": "Ao clicar numa peça, a foto do card cresce até virar a foto grande da página da peça. Experimente na esteira da ideia 1."
+      "title": "Transição de página com a foto",
+      "description": "Ao clicar numa peça, a foto do card cresce até virar a foto grande da página da peça. Experimente numa das peças abaixo."
     },
     "micro": {
-      "title": "Números que contam e carregamento suave",
-      "description": "Os números contam até o valor quando aparecem na tela, e as fotos mostram uma faixa suave enquanto carregam. Os números abaixo vêm do catálogo atual.",
-      "missing": "os números da fábrica que querem destacar (por exemplo: anos de história, área da fábrica, peças por mês), para a página Fábrica.",
-      "products": "peças no catálogo",
-      "collections": "coleções",
-      "designers": "designers"
+      "title": "Microinterações",
+      "adjustment": "validar quais serão utilizadas.",
+      "description": "Pequenos movimentos que respondem ao que a pessoa faz. Cada uma está abaixo, sozinha, para vocês escolherem quais ficam: as que não forem escolhidas saem sem mexer nas outras.",
+      "letter": "12{letter}",
+      "arrow": {
+        "title": "Seta que anda no botão",
+        "body": "Ao passar o mouse, a seta do botão e do link anda um pouco para a direita.",
+        "button": "Ver o catálogo",
+        "link": "Ver as coleções"
+      },
+      "underline": {
+        "title": "Sublinhado que cresce",
+        "body": "Ao passar o mouse num link de texto, o sublinhado cresce da esquerda para a direita, como no menu e no rodapé.",
+        "collections": "Coleções",
+        "designers": "Designers",
+        "projects": "Projetos"
+      },
+      "drag": {
+        "title": "Cursor \"Arraste\" no carrossel",
+        "body": "Sobre o carrossel da ideia 01, o cursor vira um círculo com a palavra \"Arraste\". Passe o mouse sobre as peças lá em cima."
+      },
+      "added": {
+        "title": "Confirmação na lista de orçamento",
+        "body": "Ao pôr uma peça na lista, o botão mostra o visto e \"Adicionada à lista\", e o ícone da lista no topo da página pulsa uma vez. Experimente: a peça entra na lista de verdade e pode ser tirada depois."
+      },
+      "count": {
+        "title": "Números que contam",
+        "body": "Os números contam até o valor quando aparecem na tela, como os da página Fábrica. Estes vêm do catálogo atual.",
+        "products": "peças no catálogo",
+        "collections": "coleções",
+        "designers": "designers"
+      },
+      "loading": {
+        "title": "Carregamento suave",
+        "body": "Enquanto uma foto ou uma lista carrega, uma faixa clara passa pelo espaço dela, no lugar do texto \"Carregando…\"."
+      }
     },
-    "collections": {
-      "title": "Coleções",
-      "description": "Blocos grandes, dois por linha, que escurecem e mostram o nome e o \"Saiba mais\" ao passar o mouse. Já está no ar.",
-      "link": "Ver as coleções"
+    "video": {
+      "title": "Vídeo curto em loop no banner",
+      "description": "O banner aceita um vídeo curto, sem som, que roda em loop por cima da foto. Ele só baixa quando o banner aparece na tela; quem pediu menos movimento ou economia de dados vê a foto.",
+      "missing": "um vídeo de 10 a 20 segundos em MP4, sem som, para o banner. O envio é pelo painel, em Banners.",
+      "note": "Ainda não há banner com vídeo: abaixo, o banner com a foto."
     },
-    "later": {
-      "title": "O que ficou para depois",
-      "finishPhotos": "Troca de acabamento por foto (ideia 8): para a segunda fase, porque depende de produzir uma foto por acabamento.",
-      "glass": "Vidro fosco no cabeçalho (ideia 5): ficou para mais tarde; por enquanto, o cabeçalho branco sólido.",
-      "discarded": "Luz e gradiente por peça (6), giro 360° (11) e menu com prévia de imagem (15): descartados por vocês."
+    "others": {
+      "title": "Mais tarde e descartadas",
+      "intro": "As ideias que vocês deixaram para uma próxima etapa ou descartaram no PDF de retorno.",
+      "i02": {
+        "title": "Peça saindo do quadro",
+        "note": "No card de produtos o movimento é interessante, mas sem cor no fundo."
+      },
+      "i03": {
+        "title": "Nome da peça em camadas",
+        "note": "Os banners vêm do marketing."
+      },
+      "i05": {
+        "title": "Vidro fosco",
+        "note": "Fica para uma próxima etapa."
+      },
+      "i06": {
+        "title": "Luz e gradiente na cor da peça",
+        "note": "Descartada por vocês."
+      },
+      "i08": {
+        "title": "Acabamento que troca a foto",
+        "note": "Entender a complexidade das combinações antes."
+      },
+      "i11": {
+        "title": "Giro 360°",
+        "note": "Descartada por vocês."
+      },
+      "i14": {
+        "title": "Menu com prévia de imagem",
+        "note": "Descartada por vocês."
+      }
     }
   },
   "recent": {
     "title": "Peças que você viu"
+  },
+  "featureCarousel": {
+    "roleDescription": "carrossel",
+    "slideRoleDescription": "peça",
+    "slide": "{current} de {total}: {name}",
+    "status": "{current} de {total}: {name}",
+    "counter": "{current} / {total}",
+    "meta": "{category} · {area}",
+    "previous": "Peça anterior",
+    "next": "Próxima peça",
+    "drag": "Arraste"
   }
 }

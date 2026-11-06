@@ -10,12 +10,14 @@ import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getDesigner, getDesigners } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -124,7 +126,11 @@ export default async function DesignerPage({ params }: Props) {
             <h2 id="designer-pieces" className="section-title">
               {t('piecesTitle')}
             </h2>
-            <ProductGrid products={designer.products} />
+            {fitsFeatureCarousel(designer.products.length) ? (
+              <FeatureCarousel label={t('piecesTitle')} products={designer.products} />
+            ) : (
+              <ProductGrid products={designer.products} />
+            )}
           </section>
         ) : null}
       </div>
