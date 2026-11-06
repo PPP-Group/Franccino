@@ -1,5 +1,15 @@
 import type { ReactNode } from 'react';
 
+// WhatsApp: o símbolo oficial (Tabler Icons, brand-whatsapp, MIT), nunca um balão desenhado à mão (retorno de
+// 06/11/2026). Para marcas, prefira `<BrandIcon name="whatsapp" />`; `chat` fica como apelido do mesmo desenho para
+// quem ainda usa `<Icon name="chat" />`.
+const WHATSAPP = (
+  <>
+    <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+    <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+  </>
+);
+
 const PATHS = {
   search: (
     <>
@@ -19,7 +29,8 @@ const PATHS = {
   plus: <path d="M12 5v14M5 12h14" />,
   minus: <path d="M5 12h14" />,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
-  chat: <path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z" />,
+  chat: WHATSAPP,
+  whatsapp: WHATSAPP,
   pin: (
     <>
       <path d="M12 21s-6.5-5.4-6.5-11a6.5 6.5 0 0 1 13 0c0 5.6-6.5 11-6.5 11Z" />

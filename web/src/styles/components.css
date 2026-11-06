@@ -37,7 +37,23 @@
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: transform var(--t-press) var(--ease-out);
+  /* Cor muda suave; o aperto (transform) é curto, como um botão físico (rodada 3: microinterações). */
+  transition:
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.btn .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+/* Seta no fim do botão anda um pouco para a direita no hover, como no link com seta. */
+@media (hover: hover) {
+  .btn:hover:not(:disabled) > .icon:last-child:not(:first-child) {
+    transform: translateX(3px);
+  }
 }
 
 .btn:hover {
@@ -46,7 +62,7 @@
 }
 
 .btn:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.985);
 }
 
 .btn--ghost {
@@ -98,6 +114,7 @@
   text-decoration: none;
   border-bottom: 1px solid currentColor;
   padding-bottom: var(--space-1);
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 /* Área de toque de 44 px sem mudar o desenho do link (texto + fio). */
@@ -114,8 +131,25 @@
   transition: transform var(--t-fast) var(--ease-out);
 }
 
-.link-arrow:hover .icon {
+@media (hover: hover) {
+  .link-arrow:hover .icon {
+    transform: translateX(3px);
+  }
+}
+
+.link-arrow:focus-visible .icon {
   transform: translateX(3px);
+}
+
+.link-arrow:active {
+  opacity: 0.7;
+}
+
+/* Link com símbolo de marca antes do texto (WhatsApp nos canais de contato). */
+.channel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 /* ---------- sections ---------- */
@@ -168,9 +202,9 @@
 }
 
 .area-dot {
+  /* Quadrado, como o resto da marca (rodada 3: nenhum canto arredondado). */
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   display: inline-block;
   margin-right: var(--space-2);
   vertical-align: 1px;
@@ -205,10 +239,19 @@
   background: transparent;
   text-decoration: none;
   cursor: pointer;
+  transition:
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
 }
 
 .chip:hover {
   border-color: var(--ink);
+}
+
+.chip:active {
+  transform: translateY(1px) scale(0.985);
 }
 
 .chip[aria-pressed='true'],

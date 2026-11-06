@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Link } from '@/i18n/navigation';
 import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
@@ -65,7 +66,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             <ul>
               {quotes ? (
                 <li>
-                  <a href={quotes} target="_blank" rel="noopener noreferrer">
+                  <a className="footer-icon-link" href={quotes} target="_blank" rel="noopener noreferrer">
+                    <BrandIcon name="whatsapp" size={18} />
                     {t('quotesWhatsapp')}
                     <span className="visually-hidden">{common('opensInNewWindow')}</span>
                   </a>
@@ -73,7 +75,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
               ) : null}
               {assistance ? (
                 <li>
-                  <a href={assistance} target="_blank" rel="noopener noreferrer">
+                  <a className="footer-icon-link" href={assistance} target="_blank" rel="noopener noreferrer">
+                    <BrandIcon name="whatsapp" size={18} />
                     {t('assistanceWhatsapp')}
                     <span className="visually-hidden">{common('opensInNewWindow')}</span>
                   </a>
@@ -124,7 +127,10 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             ))}
             {socialLinks(settings).map((link) => (
               <li key={link.platform}>
-                <a href={link.url} rel="noopener noreferrer" target="_blank">
+                <a className="footer-icon-link" href={link.url} rel="noopener noreferrer" target="_blank">
+                  {link.platform === 'instagram' || link.platform === 'facebook' ? (
+                    <BrandIcon name={link.platform} size={18} />
+                  ) : null}
                   {t(`social.${link.platform}`)}
                   <span className="visually-hidden">{common('opensInNewWindow')}</span>
                 </a>
