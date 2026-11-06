@@ -1,6 +1,7 @@
 /*
-  Prévia das ideias aprovadas (/pt/ideias). Página interna para a Franccino: cada ideia com número, situação, o que
-  falta e a demonstração ao vivo. Só tokens da escala (DESIGN.md, "Escala de tipos e de espaços").
+  Prévia do banco de ideias (/pt/ideias), com a numeração e as decisões do PDF de retorno. Página interna para a
+  Franccino: cada ideia aprovada com número, decisão, situação, o que falta e a demonstração ao vivo; no fim, a lista
+  curta das que ficaram para mais tarde ou foram descartadas. Só tokens da escala (DESIGN.md).
 */
 
 .ideas__head {
@@ -10,13 +11,20 @@
 }
 
 .ideas__legend {
-  gap: var(--space-3) var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
   font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
 
-.ideas__legend > * + *::before {
-  content: none;
+.ideas__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .idea {
@@ -40,13 +48,36 @@
   margin-top: var(--space-1);
 }
 
+.idea__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Decisão do PDF em preto (cheio na aprovada); situação no site em verde (no ar) ou madeira (precisa de conteúdo). */
+.idea__decision,
 .idea__status {
   display: inline-block;
+  white-space: nowrap;
   padding: var(--space-1) var(--space-2);
   border: 1px solid currentColor;
 }
 
-.idea__status--ready,
+.idea__decision--approved,
+.idea__decision--adjusted {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.idea__decision--later,
+.idea__decision--discarded {
+  color: var(--ink-muted);
+}
+
 .idea__status--live {
   color: var(--garden);
 }
@@ -55,7 +86,12 @@
   color: var(--wood);
 }
 
+.idea__adjustment {
+  max-width: var(--measure);
+}
+
 .idea__missing {
+  max-width: var(--measure);
   padding: var(--space-3) var(--space-4);
   border-left: 2px solid var(--wood);
   background: var(--row-hover);
@@ -71,31 +107,147 @@
   padding-bottom: 0;
 }
 
-.ideas__stats {
-  padding-block: 0;
+/* ---------- 12: uma demonstração por microinteração, para a Franccino escolher ---------- */
+
+.micro-demos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
 
-.ideas__later {
+.micro-demo {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  align-content: start;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.micro-demo__letter {
+  color: var(--ink-muted);
+}
+
+.micro-demo__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: end;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-4);
+}
+
+.micro-demo__stats {
+  margin-bottom: 0;
+}
+
+.micro-demo__stats dt {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2);
+  line-height: 1;
+}
+
+.micro-demo__stats dd {
+  margin: var(--space-1) 0 0;
+}
+
+.micro-demo__skeleton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  max-width: 14rem;
+}
+
+.micro-demo__skeleton-photo {
+  aspect-ratio: 4 / 3;
+}
+
+.micro-demo__skeleton-line {
+  width: 70%;
+  height: var(--fs-body);
+}
+
+.micro-demo__skeleton-line--short {
+  width: 40%;
+  height: var(--fs-caption);
+}
+
+/* ---------- mais tarde e descartadas ---------- */
+
+.ideas__others {
   display: grid;
   gap: var(--space-4);
   padding-block: var(--section-y);
   border-top: 1px solid var(--line);
 }
 
-.ideas__later ul {
-  display: grid;
-  gap: var(--space-3);
-  margin: 0;
-  padding-left: var(--space-5);
+.ideas__others .lead {
   max-width: var(--measure);
 }
 
-@media (max-width: 47.99rem) {
-  .ideas__tiles {
-    grid-template-columns: minmax(0, 1fr);
+.ideas__other-list {
+  display: grid;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.idea-other {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 18rem) auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-2) var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.idea-other__title {
+  font-weight: 500;
+}
+
+.idea-other__note {
+  margin: 0;
+}
+
+@media (max-width: 64rem) {
+  .micro-demos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .idea-other {
+    grid-template-columns: 6rem minmax(0, 1fr) auto;
+  }
+
+  .idea-other__note {
+    grid-column: 2 / -1;
   }
 }
 
-.ideas__legend .idea__status {
-  margin-right: var(--space-2);
+@media (max-width: 47.99rem) {
+  .ideas__tiles,
+  .micro-demos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .micro-demo {
+    padding: var(--space-5);
+  }
+
+  .idea-other {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .idea-other .idea__number {
+    grid-column: 1 / -1;
+  }
+
+  .idea-other__note {
+    grid-column: 1 / -1;
+  }
 }

@@ -34,7 +34,8 @@ export function CoverTile({
   const classes = ['collection-tile'];
   if (labelled || !image) classes.push('collection-tile--labelled');
   return (
-    <Link className={classes.join(' ')} href={href}>
+    // Abre como cortina ao entrar na tela (ideia 04), menos os primeiros blocos, que já abrem à vista (foto principal).
+    <Link className={classes.join(' ')} href={href} data-reveal={priority ? undefined : 'curtain'}>
       <div className="collection-tile__media hover-zoom">
         {image ? <ApiImage image={image} sizes={sizes} priority={priority} /> : null}
       </div>

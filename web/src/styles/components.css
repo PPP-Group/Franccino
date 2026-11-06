@@ -45,16 +45,7 @@
     color var(--t-fast) var(--ease-out);
 }
 
-.btn .icon {
-  transition: transform var(--t-fast) var(--ease-out);
-}
-
-/* Seta no fim do botão anda um pouco para a direita no hover, como no link com seta. */
-@media (hover: hover) {
-  .btn:hover:not(:disabled) > .icon:last-child:not(:first-child) {
-    transform: translateX(3px);
-  }
-}
+/* A seta que anda para a direita no hover é uma microinteração de motion.css (12a). */
 
 .btn:hover {
   background: color-mix(in srgb, var(--ink), black 45%);
@@ -112,9 +103,21 @@
   font-weight: 500;
   line-height: var(--lh-ui);
   text-decoration: none;
-  border-bottom: 1px solid currentColor;
   padding-bottom: var(--space-1);
   transition: opacity var(--t-fast) var(--ease-out);
+}
+
+/* O fio do link: um traço de 1 px (não borda), para o sublinhado poder se redesenhar no hover (motion.css, 12b). */
+.link-arrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  pointer-events: none;
 }
 
 /* Área de toque de 44 px sem mudar o desenho do link (texto + fio). */
@@ -128,17 +131,6 @@
 .link-arrow .icon {
   width: 16px;
   height: 16px;
-  transition: transform var(--t-fast) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .link-arrow:hover .icon {
-    transform: translateX(3px);
-  }
-}
-
-.link-arrow:focus-visible .icon {
-  transform: translateX(3px);
 }
 
 .link-arrow:active {
@@ -571,4 +563,55 @@
   .video__play:hover .icon {
     transform: scale(1.06);
   }
+}
+
+/*
+  Esqueleto de carregamento: blocos no lugar do conteúdo que ainda vai chegar, no lugar de um "Carregando…" escrito
+  (o texto fica só para o leitor de tela). Parado aqui; a faixa que passa por cima é a microinteração 12f de motion.css.
+*/
+.skeleton {
+  display: block;
+  background-color: var(--shimmer-base);
+}
+
+.skeleton--fill {
+  position: absolute;
+  inset: 0;
+}
+
+/* Ícone do botão de adicionar à lista: troca (lista ou + → visto) remontando este quadro (motion.css, 12d). */
+.add-icon {
+  display: inline-grid;
+}
+
+/*
+  Link de texto com o sublinhado do cabeçalho e do rodapé (fio de 1 px que aparece no hover), para usar fora deles.
+  O fio crescer da esquerda é a microinteração 12b de motion.css.
+*/
+.link-grow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
+  text-decoration: none;
+}
+
+.link-grow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(50% - 0.85em);
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.link-grow:hover::after,
+.link-grow:focus-visible::after {
+  transform: scaleX(1);
 }

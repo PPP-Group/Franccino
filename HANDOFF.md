@@ -769,3 +769,23 @@ alternados na home. Branch `claude/banner-cover-images-vcdpmb`, PR para a `devel
 Banners em 16:9 (2560 px) e em 4:5; capas das coleções e das páginas; fotos originais das peças em fundo branco e na
 diagonal; fotos de ambientes com as peças de cada um; acabamentos digitalizados (2500 px ou mais); números da fábrica;
 MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o piloto do fundo branco (PPP-130).
+
+### 21.3 Complemento (06/11): o PDF de respostas, capas e fundo branco
+
+- **PDF de respostas do banco de ideias (16/10, preenchido pela Franccino):** é a fonte oficial e a numeração dele vale
+  sobre a reconstruída em `docs/reunioes/2026-10-26-retorno-banco-de-ideias.md`. Aprovadas: 01 (carrossel com a peça em
+  destaque, com ajustes: sem acabamentos, sem "ver peça" e sem "ver em 3D", o clique na foto abre a peça), 04
+  (paralaxe e revelação), 07 (ambiente com pontos), 09 (acabamento em detalhe, na página de acabamentos), 10
+  (transição com a foto), 12 (microinterações, "validar quais serão usadas") e 13 (vídeo em loop). Mais tarde: 02, 05, 08. Descartadas: 03, 06, 11, 14. A página `/pt/ideias` segue essa numeração.
+- **Entrou nesta complementação:** o carrossel da ideia 01 (`FeatureCarousel`, na home, coleções e designers); a
+  paralaxe e a revelação em cortina (`data-parallax`, `data-reveal="curtain"`); as microinterações 12a a 12f, cada uma
+  num bloco de `motion.css` que dá para desligar (lista em `web/DESIGN.md`); no painel, o ponto do ambiente marcado com
+  um clique na foto e a peça escolhida ali mesmo.
+- **Capas:** 182 capas trocadas no preview pela foto na diagonal, virada para a esquerda
+  (`database/data/covers/2026-11-06-diagonal-esquerda.json`, aplicada no deploy) e uma segunda lista com 7 peças
+  (`…-2.json`). As 7 peças de estúdio da TEMPO com fundo bege (Toé, Sopro, Orvalho, Terezinha, Melina Estofada, Royale e
+  Majestic) foram limpas para fundo branco com o BiRefNet (licença MIT, rodado fora do servidor) e enviadas pelo painel.
+  Detalhes de perto e fotos com fundo preto não ficam bons com a limpeza: nessas peças a capa virou outra foto da
+  galeria.
+- **Logo em SVG:** não está no Drive compartilhado da Franccino nem no do Pedro Ivo. O Marcelo disse em 26/10 que está
+  num Drive que ele passou; falta o link.

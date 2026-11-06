@@ -155,3 +155,43 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/*
+  Esqueleto da lista antes de ler o navegador (QuoteListView): as mesmas medidas da lista pronta, para nada pular
+  quando ela chega. A faixa que passa por cima é a microinteração 12f de motion.css.
+*/
+.quote-skeleton {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.quote-skeleton__title {
+  width: min(28rem, 70%);
+  height: var(--fs-h1);
+}
+
+.quote-skeleton__lead {
+  width: min(36rem, 90%);
+  height: var(--fs-lead);
+  margin-bottom: var(--space-6);
+}
+
+.quote-skeleton__thumb {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.quote-skeleton__lines {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.quote-skeleton__lines > .skeleton {
+  width: 60%;
+  height: var(--fs-body);
+}
+
+.quote-skeleton__lines > .skeleton + .skeleton {
+  width: 35%;
+  height: var(--fs-caption);
+}

@@ -108,7 +108,8 @@
     "sent": {
       "title": "Request sent",
       "body": "We received your list. The Franccino team will reply to the email you provided."
-    }
+    },
+    "addedToList": "Added to the list"
   },
   "errors": {
     "notFound": {
@@ -279,7 +280,8 @@
     "designer": {
       "piecesBy": "Pieces by {name}"
     },
-    "moreWays": "Other ways to ask"
+    "moreWays": "Other ways to ask",
+    "addedToList": "Added to the list"
   },
   "catalog": {
     "filters": {
@@ -674,81 +676,143 @@
   },
   "ideas": {
     "meta": {
-      "title": "Approved ideas",
-      "description": "Preview of the ideas approved from the idea bank, with the status of each one."
+      "title": "Idea bank",
+      "description": "The idea bank with Franccino's decision and the status of each idea on the site."
     },
-    "title": "Approved ideas",
-    "intro": "Every idea you approved on 26 October, working with the site's current content. Where your material is still missing, the demo uses an example and says what is missing.",
+    "title": "Idea bank",
+    "intro": "The ideas you approved in your feedback PDF, with the same numbering, working with the site's current content. Where material is still missing, the demo uses an example and says what is missing. At the end, the ones left for later and the discarded ones.",
     "number": "Idea {number}",
-    "missingLabel": "What we need from you:",
+    "adjustmentLabel": "Requested adjustment:",
+    "missingLabel": "What we still need from you:",
+    "decision": {
+      "approved": "Approved",
+      "adjusted": "Approved with adjustments",
+      "later": "Later",
+      "discarded": "Discarded"
+    },
     "status": {
-      "ready": "Ready",
-      "waiting": "Waiting for material",
-      "live": "Live"
+      "live": "Live",
+      "waiting": "Needs content"
     },
     "legend": {
-      "ready": "already works on the site.",
-      "waiting": "works, but the final result depends on your material."
+      "live": "works on the site with the current content.",
+      "waiting": "works, but the final result depends on material from you."
     },
-    "rail": {
-      "title": "Product rail",
-      "description": "Just the photo and the name, no buttons. Clicking the piece opens its page, where the 3D view and finishes are. Shown in Novelties and on each product page."
-    },
-    "lift": {
-      "title": "The piece comes forward",
-      "description": "On hover, the piece and its name come forward together. On a phone, a tap opens the piece directly."
-    },
-    "banner": {
-      "number": "3 and 14",
-      "title": "Clean banner, with a short video",
-      "description": "When the banner art already has text, the site writes nothing over it and adds no buttons. The banner keeps the art's proportions, with no cropping or enlarging. It also takes a short, silent looping video.",
-      "missing": "the final banner art in 16:9 (2560 px wide) and a 4:5 version for phones; and, if you wish, a 10 to 20 second MP4 video."
+    "carousel": {
+      "title": "Carousel with the featured piece",
+      "adjustment": "no finishes, no \"view piece\" and no \"view in 3D\"; clicking the photo opens the piece.",
+      "description": "The piece in the centre is large and its neighbours smaller. Drag or use the arrows: the next piece grows and the name changes with it. Clicking the photo opens the piece's page."
     },
     "scroll": {
-      "title": "Motion on scroll",
-      "description": "Large blocks rise into view as they enter the screen, and the featured piece turns slightly and fades as it leaves. Scroll slowly to see it."
-    },
-    "header": {
-      "title": "White header",
-      "description": "A solid white header, without transparency, with strong contrast. It is the one at the top of this page."
+      "title": "Parallax and reveal on scroll",
+      "description": "While scrolling, the background, the piece and the text move at slightly different speeds, in a short movement. Photos open like a curtain when they enter the screen, and titles rise a little while they appear. Scroll slowly to see it."
     },
     "scenes": {
       "title": "Room with clickable points",
-      "description": "A photo of a furnished room with a point on each piece. The point opens the piece's photo and name, which lead to its page.",
-      "missing": "photos of furnished rooms with the pieces (landscape, high resolution) and which pieces appear in each photo. They are added in the admin panel, under Content, Rooms.",
+      "description": "A photo of a furnished room with a point on each piece. The point opens the piece's photo and name, which lead to its page. Set up in the panel, under Content, Rooms: click on the photo, choose the piece and save.",
+      "missing": "photos of furnished rooms with the pieces (landscape, high resolution) and which pieces appear in each photo.",
       "demoTitle": "Example room",
-      "demoNote": "Example using a collection photo and three real pieces at illustrative positions, only to show how it works."
+      "demoNote": "Example with a collection photo and three real pieces in illustrative positions, only to show how it works."
     },
     "finish": {
-      "title": "Finish in detail",
-      "description": "Click a swatch to see the finish in a large, fixed image, whole or at actual size, to move across the texture. It also appears on the product page, next to the chosen finish.",
-      "missing": "the digitised finish photos in high resolution (2500 px or more), with each one's name and code."
+      "title": "Detail magnifier and materials strip",
+      "adjustment": "on the finishes page, with a fixed high-resolution image.",
+      "description": "On the Finishes page, clicking a sample opens the finish in a large fixed image, whole or at real size, to browse the texture.",
+      "missing": "high-resolution scans of the finishes (2500 px or more), with the name and code of each."
     },
     "morph": {
-      "title": "The photo grows into the piece",
-      "description": "When you click a piece, the card photo grows into the large photo on the product page. Try it on the rail in idea 1."
+      "title": "Page transition with the photo",
+      "description": "When you click a piece, the card photo grows into the large photo on the piece's page. Try it on one of the pieces below."
     },
     "micro": {
-      "title": "Counting numbers and smooth loading",
-      "description": "Numbers count up to their value when they appear, and photos show a soft band while loading. The numbers below come from the current catalogue.",
-      "missing": "the factory figures you want to highlight (for example: years of history, factory area, pieces per month), for the Factory page.",
-      "products": "pieces in the catalogue",
-      "collections": "collections",
-      "designers": "designers"
+      "title": "Micro-interactions",
+      "adjustment": "confirm which ones will be used.",
+      "description": "Small movements that answer what the visitor does. Each one is below, on its own, so you can choose which ones stay: the ones not chosen are removed without touching the others.",
+      "letter": "12{letter}",
+      "arrow": {
+        "title": "Arrow that slides on the button",
+        "body": "On hover, the arrow on the button and on the link slides a little to the right.",
+        "button": "View the catalogue",
+        "link": "View the collections"
+      },
+      "underline": {
+        "title": "Underline that grows",
+        "body": "On hover over a text link, the underline grows from left to right, as in the menu and the footer.",
+        "collections": "Collections",
+        "designers": "Designers",
+        "projects": "Projects"
+      },
+      "drag": {
+        "title": "\"Drag\" cursor on the carousel",
+        "body": "Over the carousel in idea 01, the cursor becomes a circle with the word \"Drag\". Hover over the pieces up there."
+      },
+      "added": {
+        "title": "Quote list confirmation",
+        "body": "When a piece goes into the list, the button shows a check and \"Added to the list\", and the list icon at the top of the page pulses once. Try it: the piece really goes into the list and can be removed later."
+      },
+      "count": {
+        "title": "Numbers that count up",
+        "body": "Numbers count up to their value when they appear on screen, like the ones on the Factory page. These come from the current catalogue.",
+        "products": "pieces in the catalogue",
+        "collections": "collections",
+        "designers": "designers"
+      },
+      "loading": {
+        "title": "Smooth loading",
+        "body": "While a photo or a list loads, a light band passes over its space, instead of the word \"Loading…\"."
+      }
     },
-    "collections": {
-      "title": "Collections",
-      "description": "Large blocks, two per row, that darken and show the name and \"Learn more\" on hover. Already live.",
-      "link": "See the collections"
+    "video": {
+      "title": "Short looping video in the banner",
+      "description": "The banner accepts a short silent video that loops over the photo. It only downloads when the banner is on screen; visitors who asked for less motion or data saving see the photo.",
+      "missing": "a 10 to 20 second silent MP4 video for the banner. Upload it in the panel, under Banners.",
+      "note": "There is no banner with a video yet: below, the banner with its photo."
     },
-    "later": {
-      "title": "What was left for later",
-      "finishPhotos": "Swapping finishes by photo (idea 8): for the second phase, since it needs a photo per finish.",
-      "glass": "Frosted glass header (idea 5): left for later; for now, the solid white header.",
-      "discarded": "Light and gradient per piece (6), 360° spin (11) and menu with image preview (15): discarded by you."
+    "others": {
+      "title": "Later and discarded",
+      "intro": "The ideas you left for a next stage or discarded in the feedback PDF.",
+      "i02": {
+        "title": "Piece stepping out of the frame",
+        "note": "On the product card the movement is interesting, but with no colour in the background."
+      },
+      "i03": {
+        "title": "Piece name in layers",
+        "note": "The banners come from marketing."
+      },
+      "i05": {
+        "title": "Frosted glass",
+        "note": "Left for a next stage."
+      },
+      "i06": {
+        "title": "Light and gradient in the piece's colour",
+        "note": "Discarded by you."
+      },
+      "i08": {
+        "title": "Finish that changes the photo",
+        "note": "First understand the complexity of the combinations."
+      },
+      "i11": {
+        "title": "360° spin",
+        "note": "Discarded by you."
+      },
+      "i14": {
+        "title": "Menu with image preview",
+        "note": "Discarded by you."
+      }
     }
   },
   "recent": {
     "title": "Pieces you have seen"
+  },
+  "featureCarousel": {
+    "roleDescription": "carousel",
+    "slideRoleDescription": "piece",
+    "slide": "{current} of {total}: {name}",
+    "status": "{current} of {total}: {name}",
+    "counter": "{current} / {total}",
+    "meta": "{category} · {area}",
+    "previous": "Previous piece",
+    "next": "Next piece",
+    "drag": "Drag"
   }
 }

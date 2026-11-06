@@ -10,9 +10,9 @@ import { formatDimension } from '@/lib/format/dimensions';
 import { sectionClass, type Tone } from './tone';
 
 /**
- * Primeira peça em destaque da API, com fatos que ela mesma traz (nada escrito à mão). A foto leva à página da peça;
- * o hover aproxima a foto pelo quadro interno (`.feature__frame`), porque a própria foto já tem a animação de saída
- * de motion.css.
+ * Primeira peça em destaque da API, com fatos que ela mesma traz (nada escrito à mão). A foto leva à página da peça
+ * e abre como cortina ao entrar na tela; na rolagem, a foto anda um pouco mais devagar e o texto um pouco mais rápido
+ * que a página (paralaxe, ideia 04, motion.css). O hover aproxima a foto pelo quadro interno (`.feature__frame`).
  */
 export function FeatureSection({ product, tone = 'paper' }: { product: ProductDetail; tone?: Tone }) {
   const t = useTranslations('home.feature');
@@ -28,16 +28,16 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
   };
   return (
     <section className={sectionClass(tone, 'feature')} aria-labelledby="feature-title">
-      <div className="wrap feature__grid">
+      <div className="wrap feature__grid" data-parallax="">
         {product.cover ? (
           <Link
             className="feature__media"
             href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
             tabIndex={-1}
             aria-hidden="true"
-            data-reveal=""
+            data-reveal="curtain"
           >
-            <span className="feature__frame">
+            <span className="feature__frame" data-parallax-layer="back">
               <ApiImage
                 image={product.cover}
                 sizes="(max-width: 56.25rem) 92vw, (max-width: 97.5rem) 52vw, 800px"
@@ -45,7 +45,7 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
             </span>
           </Link>
         ) : null}
-        <div className="feature__copy" data-reveal="">
+        <div className="feature__copy" data-parallax-layer="front" data-reveal="">
           <div className="feature__head">
             <h2 id="feature-title" className="display">
               {product.name}

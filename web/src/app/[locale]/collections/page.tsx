@@ -47,7 +47,7 @@ export default async function CollectionsPage({ params }: Props) {
           <EmptyNotice text={common('nothingYet')} />
         </div>
       ) : (
-        <div className="collection-grid" data-reveal="stagger">
+        <div className="collection-grid">
           {collections.map((collection, index) => (
             <CollectionTile key={collection.id} collection={collection} priority={index < 2} />
           ))}

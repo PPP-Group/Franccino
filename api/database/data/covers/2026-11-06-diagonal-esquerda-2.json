@@ -1,0 +1,34 @@
+{
+  "version": "2026-11-06-diagonal-esquerda-2",
+  "note": "Complemento da lista 2026-11-06-diagonal-esquerda: peças cuja capa era um detalhe de perto ou tinha fundo preto, trocadas pela foto inteira na diagonal, em fundo branco. Ids das fotos do preview.",
+  "covers": [
+    {
+      "product": "sofa-snodo",
+      "media": 1646
+    },
+    {
+      "product": "banqueta-helena",
+      "media": 267
+    },
+    {
+      "product": "cadeira-marcela-sem-braco-2",
+      "media": 209
+    },
+    {
+      "product": "poltrona-irani",
+      "media": 1648
+    },
+    {
+      "product": "poltrona-caete",
+      "media": 1653
+    },
+    {
+      "product": "cama-link",
+      "media": 674
+    },
+    {
+      "product": "banco-paco",
+      "media": 841
+    }
+  ]
+}
