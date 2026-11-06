@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState, useSyncExternalStore, ViewTransition } from 'react';
+import { useState, useSyncExternalStore, ViewTransition, type CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import type { Image, ProductDetail } from '@/lib/api/types';
@@ -12,6 +12,24 @@ type Mode = 'photo' | '3d';
 
 const subscribeNoop = () => () => {};
 const wants3dFromUrl = () => new URLSearchParams(window.location.search).get('view') === '3d';
+
+/** Largura real do palco (`.product`, 7 de 12 colunas; uma coluna abaixo de 61,25rem; até ~810 px no `--max`). */
+const STAGE_SIZES = '(max-width: 61.25rem) 92vw, (min-width: 97.5rem) 810px, 52vw';
+/** Miniaturas: 5 por linha ao lado do painel, 4 no celular. */
+const THUMB_SIZES = '(max-width: 35rem) 24vw, (max-width: 61.25rem) 18vw, 160px';
+
+/**
+ * Maior largura que a foto tem de verdade (a maior conversão, ou o original). O palco não amplia além dela: as fotos
+ * de origem são pequenas e comprimidas, e ampliadas ficavam mais borradas do que precisavam.
+ */
+function naturalWidth(image: Image): number | null {
+  const widths = image.srcset.map((entry) => entry.width);
+  const largest = widths.length > 0 ? Math.max(...widths) : null;
+  if (image.width && largest) {
+    return Math.min(image.width, largest);
+  }
+  return image.width ?? largest;
+}
 
 type ProductStageProps = {
   images: Image[];
@@ -31,17 +49,19 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   const [index, setIndex] = useState(0);
   const mode: Mode = chosen ?? (model && wants3d ? '3d' : 'photo');
   const current = images[index] ?? images[0] ?? null;
+  const natural = current ? naturalWidth(current) : null;
+  const stageStyle = natural ? ({ '--stage-img-max': `${natural}px` } as CSSProperties) : undefined;
 
   return (
     <div className="gallery">
-      <div className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage'}>
+      <div className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage'} style={stageStyle}>
         {current && index === 0 ? (
           // Só a primeira foto recebe a foto do card que foi clicado (ideia 10); as outras trocam sem transição.
           <ViewTransition name={productMorphName(slug)} share="product-morph" default="none">
-            <ApiImage image={current} sizes="(max-width: 61.25rem) 100vw, 58vw" priority />
+            <ApiImage image={current} sizes={STAGE_SIZES} priority />
           </ViewTransition>
         ) : current ? (
-          <ApiImage image={current} sizes="(max-width: 61.25rem) 100vw, 58vw" />
+          <ApiImage image={current} sizes={STAGE_SIZES} />
         ) : null}
         {model && mode === '3d' ? (
           <div className="stage-3d">
@@ -74,7 +94,7 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
                 setChosen('photo');
               }}
             >
-              <ApiImage image={item} sizes="120px" />
+              <ApiImage image={item} sizes={THUMB_SIZES} />
             </button>
           ))}
         </div>

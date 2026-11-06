@@ -77,20 +77,18 @@ export default async function LaunchPage({ params, searchParams }: Props) {
       <div className="catalog-head">
         <div className="catalog-head__copy">
           <h1>{launch.title}</h1>
-          {launch.year ? <p className="meta num">{launch.year}</p> : null}
           {launch.summary ? <p className="lead">{launch.summary}</p> : null}
         </div>
-        <p className="meta num">{t('count', { count: launch.products.length })}</p>
+        {/* O ano só aparece quando o título não o traz ("Lançamentos 2026" já diz o ano). */}
+        {launch.year && !launch.title.includes(String(launch.year)) ? (
+          <p className="meta num">{launch.year}</p>
+        ) : null}
       </div>
-      {launch.description ? <RichText html={launch.description} className="catalog-description" /> : null}
-      <FileDownloads
-        files={launch.files}
-        title={t('launches.downloads')}
-        headingId="launch-downloads"
-        className="media-links--wide block"
-      />
-      <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
-      <div className="toolbar toolbar--end">
+      {launch.description ? (
+        <RichText html={launch.description} className="prose catalog-description" />
+      ) : null}
+      <div className="toolbar">
+        <p className="meta num">{t('count', { count: launch.products.length })}</p>
         <ViewToggle
           view={view}
           hrefFor={(next) => ({ ...launchHref(slug), query: next === 'table' ? { view: 'table' } : {} })}
@@ -100,9 +98,17 @@ export default async function LaunchPage({ params, searchParams }: Props) {
         {view === 'table' ? (
           <TechTable rows={rows} />
         ) : (
-          <ProductGrid products={launch.products} showNew priorityCount={4} />
+          <ProductGrid products={launch.products} showNew priorityCount={3} />
         )}
       </section>
+      {/* Arquivos e vídeos depois das peças, como na página Lançamentos. */}
+      <FileDownloads
+        files={launch.files}
+        title={t('launches.downloads')}
+        headingId="launch-downloads"
+        className="media-links--wide block"
+      />
+      <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
     </main>
   );
 }

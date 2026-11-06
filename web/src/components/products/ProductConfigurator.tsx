@@ -91,15 +91,15 @@ export function ProductConfigurator({ product, whatsapp, finishesNote, children 
             <span>{justAdded ? t('inList') : t('addToList')}</span>
           </button>
         </div>
-        <div className="buy__secondary">
+        <div className="buy__links">
           {whatsappHref ? (
-            <a className="btn btn--ghost" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+            <a className="buy__link" href={whatsappHref} target="_blank" rel="noopener noreferrer">
               <Icon name="chat" />
               <span>{t('whatsapp')}</span>
               <span className="visually-hidden">{common('opensInNewWindow')}</span>
             </a>
           ) : null}
-          <Link className="btn btn--ghost" href="/stores">
+          <Link className="buy__link" href="/stores">
             <Icon name="pin" />
             <span>{t('whereToBuy')}</span>
           </Link>

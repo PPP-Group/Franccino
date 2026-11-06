@@ -147,14 +147,15 @@ export default async function ProductPage({ params }: Props) {
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
 
-            <FileDownloads files={product.files} title={t('downloads.title')} />
-
-            <MediaLinks items={product.media_links} headingId="product-media" />
-
-            <details className="quote-inline block">
+            {/* Logo depois do botão de orçamento, como mais uma forma de pedir (sem fio nem título próprios). */}
+            <details className="quote-inline">
               <summary>{t('quoteOnlyThis')}</summary>
               <ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />
             </details>
+
+            <FileDownloads files={product.files} title={t('downloads.title')} />
+
+            <MediaLinks items={product.media_links} headingId="product-media" />
           </div>
         </div>
       </div>

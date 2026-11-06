@@ -92,9 +92,9 @@ export async function CatalogListing(props: CatalogListingProps) {
           <h1>{props.title}</h1>
           {props.intro}
         </div>
-        <p className="meta num">{t('count', { count: page.meta.total })}</p>
       </div>
       <CatalogToolbar
+        count={t('count', { count: page.meta.total })}
         view={view}
         hrefFor={hrefFor}
         designerOptions={facets.designers.map(toFilterOption)}
@@ -117,7 +117,7 @@ export async function CatalogListing(props: CatalogListingProps) {
         ) : view === 'table' ? (
           <TechTable rows={rows} />
         ) : (
-          <ProductGrid products={page.data} priorityCount={4} />
+          <ProductGrid products={page.data} priorityCount={3} />
         )}
       </section>
       <Pagination

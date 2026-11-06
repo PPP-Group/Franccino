@@ -1,12 +1,17 @@
 /* ---------- product plates (portado de design/prototype/assets/styles.css:508-631) ---------- */
 
 /*
-  Esteira de peças (ProductRail sobre o `Rail` de pages.css). O respiro em cima e embaixo deixa a peça "vir para
-  frente" no hover sem ser cortada pela rolagem horizontal.
+  Esteira de peças (ProductRail sobre o `Rail` de pages.css). O respiro em volta deixa a peça "vir para frente" no
+  hover sem ser cortada pela rolagem horizontal: em cima, embaixo e nas laterais (a margem negativa da faixa devolve
+  o primeiro card ao alinhamento da página).
 */
+.product-rail .scroll-rail__track {
+  margin-inline: calc(-1 * var(--space-3));
+}
+
 .product-rail .scroll-rail__track > ul {
-  gap: clamp(20px, 3vw, 40px);
-  padding-block: 16px 24px;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-3) var(--space-5);
 }
 
 .product-rail .scroll-rail__track > ul > li {
@@ -17,12 +22,13 @@
   Produtos soltos sobre o fundo branco, sem caixa nem borda (ajustes do cliente, 06/10/2026, referências Saccaro e
   Jader Almeida): 3 por linha no desktop, só foto e nome; ao passar o mouse a peça "vem para frente" (leve aumento
   com sombra suave). Desde o retorno do banco de ideias (26/10/2026, ideia 2) o nome vem para frente junto com a
-  peça: o movimento fica no link inteiro e a sombra só na foto.
+  peça: o movimento fica no link inteiro e a sombra só na foto. No celular, 2 por linha (revisão de 06/11/2026): o
+  catálogo tem perto de 200 peças, e uma por tela obrigava a rolar demais para comparar.
 */
 .grid-plates {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(36px, 4vw, 64px) clamp(20px, 3vw, 48px);
+  gap: var(--space-8) var(--space-7);
 }
 
 .plate {
@@ -34,9 +40,11 @@
 }
 
 .plate__link {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 14px;
+  gap: var(--space-4);
   color: inherit;
   text-decoration: none;
   transition: transform var(--t-mid) var(--ease-out);
@@ -47,10 +55,25 @@
 }
 
 .plate__media {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--paper);
-  transition: box-shadow var(--t-mid) var(--ease-out);
+}
+
+/*
+  Sombra da foto num pseudo-elemento do tamanho dela, atrás da foto: o hover só muda a opacidade (movimento só com
+  transform e opacity).
+*/
+.plate__link::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  aspect-ratio: 4 / 3;
+  z-index: -1;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  transition: opacity var(--t-mid) var(--ease-out);
 }
 
 .plate__media--empty {
@@ -67,42 +90,54 @@
   object-fit: cover;
 }
 
-.plate:hover .plate__link,
+@media (hover: hover) {
+  .plate:hover .plate__link {
+    transform: translateY(-6px) scale(1.04);
+  }
+
+  .plate:hover .plate__link::before {
+    opacity: 1;
+  }
+}
+
 .plate__link:focus-visible {
   transform: translateY(-6px) scale(1.04);
 }
 
-.plate:hover .plate__media,
-.plate__link:focus-visible .plate__media {
-  box-shadow: var(--shadow-lift);
+.plate__link:focus-visible::before {
+  opacity: 1;
 }
 
-.plate__body {
-  display: grid;
-  gap: 4px;
-}
-
+/* Nome da peça: texto corrido (--fs-body), centrado sob a foto, no máximo duas linhas equilibradas. */
 .plate__name {
-  font-size: 1.05rem;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: var(--lh-ui);
   font-weight: 500;
+  letter-spacing: 0;
   text-align: center;
 }
 
 @media (max-width: 73.75rem) {
   .grid-plates {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
   }
 }
 
 @media (max-width: 35rem) {
   .grid-plates {
-    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6) var(--space-4);
+  }
+
+  .plate__link {
+    gap: var(--space-3);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .plate__link,
-  .plate__media {
+  .plate__link::before {
     transition: none;
   }
 
@@ -114,16 +149,23 @@
 
 .plate__tags {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: var(--space-3);
+  left: var(--space-3);
   display: flex;
-  gap: 6px;
+  gap: var(--space-2);
+}
+
+/* No celular, com 2 peças por linha, a etiqueta cobriria a foto. */
+@media (max-width: 35rem) {
+  .plate__tags {
+    display: none;
+  }
 }
 
 .quick-add {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  top: var(--space-2);
+  right: var(--space-2);
   width: 44px;
   height: 44px;
   border: 1px solid var(--line-field);
@@ -132,9 +174,7 @@
   place-items: center;
   cursor: pointer;
   opacity: 0;
-  transition:
-    opacity var(--t-fast) ease,
-    background var(--t-fast) ease;
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 .quick-add .icon {

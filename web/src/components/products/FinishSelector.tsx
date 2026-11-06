@@ -109,7 +109,7 @@ export function FinishSelector({ groups, selection, onSelect, note }: FinishSele
               onKeyDown={(event) => handleSwatchKey(event, index)}
             >
               {item.swatch ? (
-                <ApiImage image={item.swatch} sizes="46px" />
+                <ApiImage image={item.swatch} sizes="40px" />
               ) : (
                 <span className="swatch__fallback" aria-hidden="true">
                   {item.code ?? item.name.slice(0, 2)}

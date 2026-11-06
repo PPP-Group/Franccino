@@ -10,33 +10,49 @@
   width: 100%;
   min-width: 860px;
   border-collapse: collapse;
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
   background: var(--paper);
 }
 
 .tech-table th,
 .tech-table td {
   text-align: left;
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
 }
 
-.tech-table th {
+/* Cabeçalho da tabela: o rótulo em caixa alta do sistema (.label). */
+.tech-table thead th {
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--ink-muted);
   background: var(--stone);
 }
 
-.tech-table tr:hover td {
-  background: var(--row-hover);
+@media (hover: hover) {
+  .tech-table tbody tr:hover > * {
+    background: var(--row-hover);
+  }
+}
+
+.tech-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* A coluna da miniatura fica do tamanho dela; o espaço que sobra vai para as colunas de texto. */
+.tech-table tr > :first-child {
+  width: 1%;
 }
 
 .tech-table .thumb {
   width: 64px;
+  /* Sem isto, o `max-width: 100%` do reset zera a foto na coluna de 1%. */
+  max-width: none;
   aspect-ratio: 4 / 3;
   object-fit: contain;
   background: var(--paper);
@@ -46,9 +62,19 @@
   font-weight: 400;
   background: transparent;
   color: var(--ink);
-  font-size: 0.9375rem;
-  letter-spacing: 0;
   white-space: normal;
+}
+
+.tech-table th[scope='row'] a {
+  text-decoration: none;
+}
+
+.tech-table th[scope='row'] a:hover {
+  text-decoration: underline;
+}
+
+.tech-table th[scope='row'] strong {
+  font-weight: 600;
 }
 
 .table-scroll {
@@ -60,7 +86,7 @@
 
 .file-links {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
@@ -68,78 +94,42 @@
   background: none;
   border: 0;
   min-height: 44px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   text-decoration: underline;
   color: var(--ink);
 }
 
 .download-error {
   display: block;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--alert);
-}
-
-.download > button {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 12px;
-  align-items: center;
-  width: 100%;
-  min-height: 44px;
-  padding: 12px 16px;
-  border: 1px solid var(--line-field);
-  background: var(--paper);
-  color: var(--ink);
-  text-align: left;
-  cursor: pointer;
-}
-
-.download > button .icon {
-  grid-row: 1 / span 2;
-  width: 20px;
-  height: 20px;
-}
-
-.download > button strong {
-  font-weight: 600;
-}
-
-.download > button small {
-  color: var(--ink-muted);
-  font-size: 0.8125rem;
-}
-
-.download > button:hover {
-  border-color: var(--ink);
-}
-
-.download > button[aria-busy='true'] {
-  cursor: progress;
-  opacity: 0.7;
 }
 
 /* ---------- catalog ---------- */
 
 .catalog {
-  padding-bottom: 32px;
+  padding-bottom: var(--section-y);
 }
 
+/*
+  Cabeçalho das páginas de lista (PageHead e catálogo): título e frase de abertura à esquerda, metadado curto à
+  direita. Perto do título (--space-4) e longe da barra de baixo (--space-6).
+*/
 .catalog-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
+  gap: var(--space-5);
   align-items: end;
-  padding-block: clamp(32px, 4vw, 56px) 24px;
+  padding-block: clamp(var(--space-6), 4vw, var(--space-8)) var(--space-6);
 }
 
 .catalog-head__copy {
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .catalog-head--center {
@@ -148,29 +138,46 @@
   text-align: center;
 }
 
+.catalog-head--center .lead {
+  margin-inline: auto;
+}
+
+/* Celular: o metadado desce para baixo do título, alinhado à mesma margem, em vez de ficar solto à direita. */
+@media (max-width: 35rem) {
+  .catalog-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+}
+
 .catalog-head--tight {
-  padding-top: 8px;
+  padding-top: var(--space-2);
 }
 
 .catalog-description {
-  max-width: 68ch;
-  margin-bottom: 24px;
+  max-width: var(--measure);
+  margin-bottom: var(--space-7);
 }
 
-.catalog-results {
-  padding-bottom: 32px;
+/* Downloads e vídeos depois da grade (página de lançamentos). */
+.catalog > .block {
+  margin-top: var(--space-7);
 }
 
+/*
+  Barra do catálogo: contagem à esquerda; filtro e troca Grade/Tabela à direita, todos com 44 px de altura. Fica presa
+  sob o cabeçalho no desktop; no celular rola junto (duas linhas presas tomariam a tela).
+*/
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-3) var(--space-4);
   flex-wrap: wrap;
-  padding-block: 16px;
+  padding-block: var(--space-3);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   position: sticky;
   top: var(--header);
   background: var(--stone);
@@ -183,22 +190,25 @@
 
 .toolbar__end {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
   flex-wrap: wrap;
 }
 
 .filter-form {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
 }
 
 .filter-form select {
+  min-height: 44px;
+  max-width: 100%;
   border: 1px solid var(--line-field);
+  border-radius: 0;
   background: var(--paper);
-  padding: 8px 12px;
-  font-size: 0.875rem;
+  padding-inline: var(--space-3);
+  font-size: var(--fs-ui);
 }
 
 .view-toggle {
@@ -209,15 +219,20 @@
 .view-toggle a {
   border: 0;
   background: transparent;
-  min-height: 44px;
-  padding: 0 14px;
-  font-size: 0.8125rem;
+  min-height: 42px;
+  padding: 0 var(--space-4);
+  font-size: var(--fs-ui);
   cursor: pointer;
   display: inline-flex;
-  gap: 6px;
+  gap: var(--space-2);
   align-items: center;
   text-decoration: none;
   color: inherit;
+}
+
+.view-toggle .icon {
+  width: 18px;
+  height: 18px;
 }
 
 .view-toggle a[aria-current='true'] {
@@ -225,12 +240,38 @@
   color: var(--paper);
 }
 
+@media (max-width: 35rem) {
+  .toolbar {
+    position: static;
+  }
+
+  /* Celular: contagem e Grade/Tabela na primeira linha; o filtro de designer ocupa a segunda inteira. */
+  .toolbar--catalog {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .toolbar--catalog .toolbar__end {
+    display: contents;
+  }
+
+  .toolbar--catalog .filter-form {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .toolbar--catalog .filter-form select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 .pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding-block: 24px 96px;
+  gap: var(--space-4);
+  padding-top: var(--space-7);
 }
 
 /* Alvo de toque de 44 px sem mudar o sublinhado do link. */
@@ -241,5 +282,5 @@
 .pagination .link-arrow::after {
   content: '';
   position: absolute;
-  inset: -12px -8px;
+  inset: calc(-1 * var(--space-3)) calc(-1 * var(--space-2));
 }

@@ -12,8 +12,11 @@ export function productMorphName(slug: string): string {
   return `product-${slug}`;
 }
 
-/** Larguras reais da prancha: 1 coluna no celular, 2 no tablet, ~4 no desktop. */
-export const PLATE_SIZES = '(max-width: 35rem) 100vw, (max-width: 73.75rem) 50vw, 25vw';
+/**
+ * Largura real da foto na grade (`.grid-plates`, plates.css), com folga para o aumento de 4% do hover: 2 colunas até
+ * 73,75rem (celular e tablet), 3 no desktop e no máximo ~450 px quando a página chega à largura máxima (`--max`).
+ */
+export const PLATE_SIZES = '(max-width: 73.75rem) 48vw, (min-width: 97.5rem) 470px, 30vw';
 
 type ProductPlateProps = {
   product: ProductCard;
@@ -43,14 +46,15 @@ export function ProductPlate({
               <ApiImage image={product.cover} sizes={sizes} priority={priority} />
             </ViewTransition>
           ) : null}
+          {/* Etiqueta dentro da foto, para vir para frente junto com a peça no hover. */}
+          {showNew && product.is_new ? (
+            <div className="plate__tags">
+              <span className="tag tag--new">{t('newTag')}</span>
+            </div>
+          ) : null}
         </div>
         <h3 className="plate__name">{product.name}</h3>
       </Link>
-      {showNew && product.is_new ? (
-        <div className="plate__tags">
-          <span className="tag tag--new">{t('newTag')}</span>
-        </div>
-      ) : null}
     </article>
   );
 }
