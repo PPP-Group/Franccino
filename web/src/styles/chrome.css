@@ -137,6 +137,7 @@ body:has(.hero--full) #conteudo {
 
 .nav-area {
   display: flex;
+  align-items: center;
 }
 
 .nav > a,
@@ -201,27 +202,38 @@ body:has(.hero--full) #conteudo {
   transform: scaleX(1);
 }
 
-/* O fio do Casa/Giardini/Coleções vai só até o texto, sem passar por baixo da seta. */
-.nav-area__trigger::after {
-  right: calc(14px + var(--space-1));
-}
-
-/* Casa e Giardini: painel de categorias em colunas (ajustes do cliente, 06/10/2026, "estilo Saccaro"). */
-.nav-area__trigger {
-  gap: var(--space-1);
+/*
+  Casa, Giardini e Coleções: o nome é o link da lista completa (retorno do tech lead, 06/11/2026) e a seta ao lado é
+  um botão à parte, que abre o painel pelo teclado, pelo toque e pelo leitor de tela. No mouse, o painel abre ao
+  passar por cima (HeaderNav). A seta é estreita no desktop para não afastar os itens; a altura de 44 px é a da barra.
+*/
+.nav-area__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-5);
+  min-height: 44px;
+  margin-left: calc(-1 * var(--space-1));
+  padding: 0;
   background: none;
   border: 0;
-  font: inherit;
+  color: var(--header-fg-muted);
   cursor: pointer;
+  transition: color var(--t-base) var(--ease-out);
 }
 
-.nav-area__trigger .icon {
+.nav-area__toggle:hover,
+.nav-area.is-open .nav-area__toggle {
+  color: var(--header-fg);
+}
+
+/* Painel de categorias em colunas (ajustes do cliente, 06/10/2026, "estilo Saccaro"). */
+.nav-area__toggle .icon {
   width: 14px;
   height: 14px;
   transition: transform var(--t-fast) var(--ease-out);
 }
 
-.nav-area.is-open .nav-area__trigger .icon {
+.nav-area.is-open .nav-area__toggle .icon {
   transform: rotate(180deg);
 }
 
@@ -414,14 +426,23 @@ body:has(.hero--full) #conteudo {
   }
 
   /* No menu recolhido, as categorias abrem como sanfona embaixo de Casa e Giardini. */
+  /* Nome à esquerda (leva à lista) e a seta à direita, com 48 px, abre a sanfona. */
   .nav-area {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     width: 100%;
   }
 
-  .nav-area__trigger {
-    width: 100%;
-    justify-content: space-between;
+  .nav-area__toggle {
+    width: 48px;
+    min-height: 48px;
+    margin-left: 0;
+    color: var(--ink);
+  }
+
+  .nav-area .nav-panel {
+    grid-column: 1 / -1;
   }
 
   .nav-panel {

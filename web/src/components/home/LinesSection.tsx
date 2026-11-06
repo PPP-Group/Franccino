@@ -1,10 +1,11 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Area, Image } from '@/lib/api/types';
 import { areaPath } from '@/lib/catalog/area';
 import { aspectRatio, coverSizes } from '@/lib/images/cover';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /** Altura dos painéis, igual a `--line-h` em `styles/home.css` (no celular, `svh` vira `vh` no `sizes`). */
 const LINE_HEIGHT = 'clamp(520px, 86vh, 920px)';
@@ -27,8 +28,22 @@ export function LinesSection({ areas }: { areas: Area[] }) {
   return (
     <section className="lines" aria-label={t('label')} data-reveal="curtain-stagger">
       {areas.map((area) => (
-        <Link key={area.key} className="line-panel hover-zoom" href={areaPath(area.key)} data-parallax="">
-          {area.cover ? <ApiImage image={area.cover} sizes={panelSizes(area.cover)} parallax /> : null}
+        <Link
+          key={area.key}
+          className="line-panel hover-zoom"
+          href={areaPath(area.key)}
+          data-parallax=""
+          transitionTypes={area.cover ? morphTypes(morphName('area', area.key)) : undefined}
+          data-morph-link={area.cover ? morphName('area', area.key) : undefined}
+        >
+          {area.cover ? (
+            <MorphImage
+              name={morphName('area', area.key)}
+              image={area.cover}
+              sizes={panelSizes(area.cover)}
+              parallax
+            />
+          ) : null}
           <div className="line-panel__copy" data-parallax-layer="front" data-reveal="">
             <h2 className="line-panel__title">{area.brand_name}</h2>
             {area.description ? <p className="lead">{area.description}</p> : null}

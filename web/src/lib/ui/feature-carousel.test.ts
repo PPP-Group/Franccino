@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   clampIndex,
   counterNumber,
+  coverflowPose,
+  dragPosition,
   fitsFeatureCarousel,
   initialIndex,
   keyTarget,
   nearestIndex,
   releaseIndex,
+  wheelStep,
 } from './feature-carousel';
 
 describe('fitsFeatureCarousel', () => {
@@ -28,11 +31,75 @@ describe('clampIndex', () => {
 });
 
 describe('initialIndex', () => {
-  it('opens on the second piece when there is one on each side', () => {
+  it('opens with neighbours on both sides, at most two on the left', () => {
     expect(initialIndex(1)).toBe(0);
     expect(initialIndex(2)).toBe(0);
     expect(initialIndex(3)).toBe(1);
-    expect(initialIndex(12)).toBe(1);
+    expect(initialIndex(4)).toBe(1);
+    expect(initialIndex(5)).toBe(2);
+    expect(initialIndex(12)).toBe(2);
+  });
+});
+
+describe('coverflowPose', () => {
+  it('keeps the centre piece full size, sharp and in front', () => {
+    expect(coverflowPose(0)).toEqual({ x: 0, scale: 1, fade: 0, opacity: 1, z: 100, hidden: false });
+  });
+
+  it('shrinks and fades the neighbours the further they are, on the right side of the offset', () => {
+    const one = coverflowPose(1);
+    const two = coverflowPose(2);
+    const left = coverflowPose(-1);
+    expect(one.x).toBeGreaterThan(0);
+    expect(left.x).toBe(-one.x);
+    expect(two.x).toBeGreaterThan(one.x);
+    expect(two.scale).toBeLessThan(one.scale);
+    expect(one.scale).toBeLessThan(1);
+    expect(two.fade).toBeGreaterThan(one.fade);
+    expect(two.z).toBeLessThan(one.z);
+  });
+
+  it('overlaps the neighbour with the centre piece (packed stack)', () => {
+    const one = coverflowPose(1);
+    // Borda esquerda da vizinha (em larguras da peça do centro) antes da borda direita da peça do centro (0,5).
+    expect(one.x - one.scale / 2).toBeLessThan(0.5);
+  });
+
+  it('interpolates between steps while dragging', () => {
+    const half = coverflowPose(0.5);
+    expect(half.scale).toBeLessThan(1);
+    expect(half.scale).toBeGreaterThan(coverflowPose(1).scale);
+  });
+
+  it('hides the pieces beyond the visible ones', () => {
+    expect(coverflowPose(3).hidden).toBe(false);
+    expect(coverflowPose(4).hidden).toBe(true);
+    expect(coverflowPose(-7).hidden).toBe(true);
+  });
+});
+
+describe('dragPosition', () => {
+  it('moves one piece per step and goes back when dragging right', () => {
+    expect(dragPosition(2, -100, 100, 6)).toBe(3);
+    expect(dragPosition(2, 50, 100, 6)).toBe(1.5);
+  });
+
+  it('resists past the ends', () => {
+    expect(dragPosition(0, 100, 100, 6)).toBeCloseTo(-0.3);
+    expect(dragPosition(5, -100, 100, 6)).toBeCloseTo(5.3);
+  });
+
+  it('stays at zero without pieces or width', () => {
+    expect(dragPosition(1, 10, 0, 4)).toBe(0);
+    expect(dragPosition(1, 10, 100, 0)).toBe(0);
+  });
+});
+
+describe('wheelStep', () => {
+  it('moves one piece once the sideways scroll is long enough', () => {
+    expect(wheelStep(30)).toEqual({ step: 0, rest: 30 });
+    expect(wheelStep(80)).toEqual({ step: 1, rest: 0 });
+    expect(wheelStep(-200)).toEqual({ step: -1, rest: 0 });
   });
 });
 

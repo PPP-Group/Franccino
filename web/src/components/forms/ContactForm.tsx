@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { Locale } from '@/i18n/config';
+import { Select } from '@/components/ui/Select';
 import { Link } from '@/i18n/navigation';
 import { submitContact, type ContactItem } from '@/lib/api/forms';
 import { getPublicEnv } from '@/lib/env';
@@ -48,7 +49,7 @@ function FieldShell(props: {
   const t = useTranslations('contactForm');
   return (
     <div className="field">
-      <label htmlFor={props.id}>
+      <label id={`${props.id}-label`} htmlFor={props.id}>
         {props.label}
         {props.required ? (
           <span className="req" aria-hidden="true">
@@ -111,7 +112,12 @@ export function ContactForm({
 
     const first = firstInvalidField(found);
     if (first) {
-      form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+      // A lista de opções (Select) leva o nome num campo escondido: o foco vai para o botão dela.
+      const target = form.querySelector<HTMLElement>(`[name="${first}"]`);
+      (target instanceof HTMLInputElement && target.type === 'hidden'
+        ? target.parentElement?.querySelector<HTMLElement>('[role="combobox"]')
+        : target
+      )?.focus();
       return;
     }
 
@@ -196,13 +202,13 @@ export function ContactForm({
 
       {typeSelectable ? (
         <FieldShell id={fieldId('type')} label={t('type')} errorId={errorId('type')}>
-          <select id={fieldId('type')} name="type" defaultValue={type}>
-            {CONTACT_TYPES.map((value) => (
-              <option key={value} value={value}>
-                {t(`types.${value}`)}
-              </option>
-            ))}
-          </select>
+          <Select
+            id={fieldId('type')}
+            labelId={`${fieldId('type')}-label`}
+            name="type"
+            defaultValue={type}
+            options={CONTACT_TYPES.map((value) => ({ value, label: t(`types.${value}`) }))}
+          />
         </FieldShell>
       ) : null}
 
@@ -279,20 +285,17 @@ export function ContactForm({
           />
         </FieldShell>
         <FieldShell id={fieldId('state')} label={t('state')} error={errors.state} errorId={errorId('state')}>
-          <select
+          <Select
             id={fieldId('state')}
+            labelId={`${fieldId('state')}-label`}
             name="state"
-            autoComplete="address-level1"
             defaultValue=""
+            options={[
+              { value: '', label: t('statePlaceholder') },
+              ...BRAZIL_STATES.map((uf) => ({ value: uf, label: uf })),
+            ]}
             {...aria('state')}
-          >
-            <option value="">{t('statePlaceholder')}</option>
-            {BRAZIL_STATES.map((uf) => (
-              <option key={uf} value={uf}>
-                {uf}
-              </option>
-            ))}
-          </select>
+          />
         </FieldShell>
       </div>
 
@@ -302,14 +305,17 @@ export function ContactForm({
         error={errors.profession}
         errorId={errorId('profession')}
       >
-        <select id={fieldId('profession')} name="profession" defaultValue="" {...aria('profession')}>
-          <option value="">{t('professionPlaceholder')}</option>
-          {PROFESSIONS.map((value) => (
-            <option key={value} value={value}>
-              {t(`professions.${value}`)}
-            </option>
-          ))}
-        </select>
+        <Select
+          id={fieldId('profession')}
+          labelId={`${fieldId('profession')}-label`}
+          name="profession"
+          defaultValue=""
+          options={[
+            { value: '', label: t('professionPlaceholder') },
+            ...PROFESSIONS.map((value) => ({ value, label: t(`professions.${value}`) })),
+          ]}
+          {...aria('profession')}
+        />
       </FieldShell>
 
       <FieldShell

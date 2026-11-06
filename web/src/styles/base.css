@@ -49,6 +49,53 @@ textarea {
   outline-offset: 3px;
 }
 
+/* Seleção de texto em ink sobre papel (pedido do tech lead, 06/11/2026: nada do azul do navegador); no rodapé escuro, o inverso. */
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-footer ::selection {
+  background: var(--stone);
+  color: var(--ink);
+}
+
+/*
+  Barras de rolagem finas, da página e de toda área que rola por dentro (lista de opções, tabela técnica): trilho
+  areia e alça ink suave, que escurece ao passar o mouse. `scrollbar-color` herda; `scrollbar-width` não, por isso o *.
+  Trilhos e carrosséis que escondem a barra (scrollbar-width: none) continuam valendo: as regras deles vêm depois.
+  Os ::-webkit-scrollbar ficam para o Safari (Chrome e Firefox usam as propriedades padrão).
+*/
+html {
+  scrollbar-color: var(--ink-muted) var(--sand);
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sand);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border: 2px solid var(--sand);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--sand);
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;

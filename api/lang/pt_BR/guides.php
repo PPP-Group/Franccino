@@ -49,6 +49,7 @@ return [
                 'Depois de salvar, na lista Acabamentos (abaixo do formulário): "Anexar" para escolher os acabamentos da peça e arraste para mudar a ordem.',
                 'Aba Mídia e 3D: envie a foto de capa (obrigatória para publicar) e, se tiver, as fotos da galeria e o arquivo 3D em GLB.',
                 'Capa sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda, em fundo branco. As outras vistas vão para a galeria.',
+                'Opcional, na mesma aba: a "Foto sem fundo (carrossel)", a peça da capa recortada em PNG ou WebP com fundo transparente, sem sombra, com pelo menos 2000 px. Ela aparece no carrossel de lançamentos e coleções; sem ela, o carrossel usa a capa.',
                 'Aba SEO: opcional. Vazio, o site usa o nome e a descrição.',
                 'Ligue "Publicado" (aba Geral) e clique em "Criar".',
                 'Para fichas técnicas e blocos SketchUp/DWG, abra o produto salvo e use a área "Arquivos" no fim da página.',

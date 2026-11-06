@@ -550,8 +550,7 @@
   flex: 1 1 260px;
 }
 
-.search-form input,
-.search-form select {
+.search-form input {
   min-height: 48px;
   padding: 0 var(--space-3);
   border: 1px solid var(--line-field);
@@ -953,29 +952,9 @@
   color: var(--ink);
 }
 
-/* Página da coleção: texto à esquerda e os designers dela à direita (rodada 3; antes a direita ficava vazia). */
-.collection-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: var(--space-8);
-  align-items: start;
-  padding-bottom: var(--section-y-tight);
-}
-
-.collection-intro > :only-child {
-  grid-column: 1 / -1;
-}
-
 @media (max-width: 48rem) {
   .collection-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 56.25rem) {
-  .collection-intro {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-7);
   }
 }
 
@@ -1557,6 +1536,11 @@
   text-wrap: balance;
 }
 
+/* Sem a frase de abertura: o texto à esquerda e uma peça em destaque à direita, alinhados pelo alto. */
+.project-story--feature {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+
 .project-section {
   margin-top: var(--section-y);
 }
@@ -1648,4 +1632,177 @@
 
 .project-story:last-child {
   padding-bottom: 0;
+}
+
+/* ---------- peça em destaque na coluna da direita (retorno do tech lead, 06/11/2026: nada de metade vazia) ---------- */
+
+/*
+  Foto grande da peça, solta no branco como o card (a foto da peça já tem fundo branco), com o nome e "Ver a peça"
+  embaixo. A foto nunca passa da própria largura (`--plate-img-max`, posto pelo FeaturePiece).
+*/
+.feature-piece {
+  align-self: start;
+}
+
+.feature-piece__link {
+  display: grid;
+  gap: var(--space-4);
+  color: inherit;
+  text-decoration: none;
+}
+
+.feature-piece__link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.feature-piece__media {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--paper);
+}
+
+.feature-piece__media img {
+  width: 100%;
+  height: 100%;
+  max-width: var(--plate-img-max, 100%);
+  object-fit: contain;
+}
+
+.feature-piece__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+.feature-piece__name {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: var(--lh-h3);
+  text-wrap: balance;
+}
+
+.feature-piece__caption .link-arrow {
+  flex: none;
+}
+
+/* ---------- seções de continuidade separadas pelo fundo (retorno do tech lead, 06/11/2026) ---------- */
+
+/*
+  "Peças que você viu" fecha as páginas numa faixa areia, separada do conteúdo branco acima; logo depois de uma faixa
+  areia ("Outras coleções", "Outros projetos"), volta ao branco com um fio, para as duas não se fundirem.
+*/
+.recent {
+  background: var(--sand);
+}
+
+:is(.band--sand, .section--sand) + .recent {
+  background: var(--paper);
+}
+
+/*
+  Pilha de seções da página da peça (designer, mesma linha, mais na categoria, peças que você viu): fundos alternados,
+  começando pela areia logo abaixo da peça (branca). Conta só as seções que existem, então nenhuma sequência quebra
+  quando uma some.
+*/
+.tone-stack > :nth-child(odd) {
+  background: var(--sand);
+}
+
+.tone-stack > :nth-child(even) {
+  background: var(--paper);
+}
+
+/* Faixa do designer com outras peças dele à direita do texto (sem a direita vazia). */
+.designer-strip--pieces {
+  grid-template-columns: 160px minmax(0, 6fr) minmax(0, 5fr);
+  gap: var(--space-7);
+}
+
+.designer-strip--text.designer-strip--pieces {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+
+.designer-strip__pieces {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 56.25rem) {
+  .designer-strip--pieces,
+  .designer-strip--text.designer-strip--pieces {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .designer-strip__pieces {
+    grid-column: 1 / -1;
+  }
+}
+
+/* As fotos das peças seguem o card (inteiras, em cor), não o retrato do designer (`.designer-strip img`). */
+.designer-strip .designer-strip__pieces img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  filter: none;
+}
+
+/* No texto longo do projeto, a peça acompanha a leitura. */
+.project-story--feature .feature-piece {
+  position: sticky;
+  top: calc(var(--header) + var(--space-6));
+}
+
+/*
+  Versão compacta, no cabeçalho das páginas de lista: foto pequena e, ao lado, o nome, "Peça em destaque" e o convite,
+  encostada à direita e centrada na altura do título e da frase.
+*/
+.catalog-head--split > .feature-piece--compact {
+  align-self: center;
+  justify-self: end;
+}
+
+.feature-piece--compact .feature-piece__link {
+  grid-template-columns: 220px minmax(0, 18rem);
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.feature-piece--compact .feature-piece__caption {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  padding-top: 0;
+  padding-left: var(--space-5);
+  border-top: 0;
+  border-left: 1px solid var(--line);
+}
+
+.feature-piece--compact .feature-piece__caption .link-arrow {
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 56.25rem) {
+  .catalog-head--split > .feature-piece--compact {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 35rem) {
+  .feature-piece--compact .feature-piece__link {
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .feature-piece--compact .feature-piece__caption {
+    padding-left: var(--space-4);
+  }
 }

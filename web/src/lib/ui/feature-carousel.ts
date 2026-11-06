@@ -1,17 +1,89 @@
 /**
  * Regras puras do carrossel com a peça em destaque (banco de ideias, ideia 01; `FeatureCarousel`). O componente só
  * mede o DOM e chama estas funções.
+ *
+ * O carrossel é um "coverflow" empilhado: todas as peças ficam no mesmo palco, a do centro grande e na frente, e as
+ * vizinhas encostadas nela, cada vez menores e mais apagadas quanto mais longe do centro. A posição de cada peça sai da
+ * distância (em peças, fracionária durante o arrasto) até o centro: `coverflowPose`.
  */
 
 /** O carrossel serve de 2 a 12 peças; fora disso a página fica com a grade (coleção e designer). */
 export const FEATURE_CAROUSEL_MIN = 2;
 export const FEATURE_CAROUSEL_MAX = 12;
 
-/** Distância, em px, que o mouse anda antes de virar arrasto (abaixo disso é clique). */
+/** Distância, em px, que o ponteiro anda antes de virar arrasto (abaixo disso é clique). */
 export const DRAG_THRESHOLD_PX = 6;
 
 /** Velocidade (px/ms) a partir da qual soltar o arrasto leva à peça seguinte, mesmo sem passar da metade. */
 export const FLICK_VELOCITY = 0.45;
+
+/** Quanto do arrasto vale além da primeira e da última peça (a faixa resiste, como uma mola). */
+export const EDGE_RESISTANCE = 0.3;
+
+/** Rolagem lateral (trackpad, roda inclinada), em px, para andar uma peça. */
+export const WHEEL_STEP_PX = 60;
+
+/**
+ * Pose de cada degrau a partir do centro (0 = peça do centro, 1 = vizinha, 2 = a seguinte...). `x` é a distância ao
+ * centro em larguras da peça do centro (a do lado encosta e passa um pouco por trás dela), `scale` o tamanho, `fade`
+ * o quanto a foto vai para o claro (filtro no CSS) e `opacity` some só com as das pontas.
+ */
+const STEP_X = [0, 0.42, 0.7, 0.92, 1.1];
+const STEP_SCALE = [1, 0.62, 0.46, 0.36, 0.28];
+const STEP_FADE = [0, 0.4, 0.7, 0.9, 1];
+const STEP_OPACITY = [1, 1, 1, 0.6, 0];
+
+/** Peças à vista de cada lado do centro; a partir daí a peça fica invisível e fora do alcance do ponteiro. */
+export const VISIBLE_PER_SIDE = 3;
+
+export type CoverflowPose = {
+  /** Deslocamento horizontal em larguras da peça do centro (negativo = à esquerda). */
+  x: number;
+  scale: number;
+  /** 0 (foto nítida) a 1 (toda apagada). */
+  fade: number;
+  opacity: number;
+  /** Ordem de empilhamento: a do centro na frente. */
+  z: number;
+  /** Longe demais do centro: invisível e sem clique. */
+  hidden: boolean;
+};
+
+function lerpTable(table: readonly number[], distance: number): number {
+  const last = table.length - 1;
+  if (distance >= last) return table[last];
+  const step = Math.floor(distance);
+  const fraction = distance - step;
+  return table[step] + (table[step + 1] - table[step]) * fraction;
+}
+
+/** Pose da peça que está a `offset` peças do centro (fracionário durante o arrasto). */
+export function coverflowPose(offset: number): CoverflowPose {
+  const distance = Math.abs(offset);
+  const side = offset < 0 ? -1 : 1;
+  const opacity = lerpTable(STEP_OPACITY, distance);
+  return {
+    x: side * lerpTable(STEP_X, distance),
+    scale: lerpTable(STEP_SCALE, distance),
+    fade: lerpTable(STEP_FADE, distance),
+    opacity,
+    z: 100 - Math.round(distance * 10),
+    hidden: opacity <= 0.01,
+  };
+}
+
+/**
+ * Posição (em peças, fracionária) durante o arrasto. `dx` é o quanto o ponteiro andou (positivo = para a direita, que
+ * volta uma peça) e `stepPx` quantos px valem uma peça. Além das pontas o arrasto resiste.
+ */
+export function dragPosition(start: number, dx: number, stepPx: number, total: number): number {
+  if (total <= 0 || stepPx <= 0) return 0;
+  const raw = start - dx / stepPx;
+  const last = total - 1;
+  if (raw < 0) return raw * EDGE_RESISTANCE;
+  if (raw > last) return last + (raw - last) * EDGE_RESISTANCE;
+  return raw;
+}
 
 export function fitsFeatureCarousel(total: number): boolean {
   return total >= FEATURE_CAROUSEL_MIN && total <= FEATURE_CAROUSEL_MAX;
@@ -22,9 +94,9 @@ export function clampIndex(index: number, total: number): number {
   return Math.min(Math.max(index, 0), total - 1);
 }
 
-/** Com 3 peças ou mais, abre na segunda: a peça em destaque fica com uma vizinha de cada lado. */
+/** Abre com vizinhas dos dois lados: a terceira peça com 5 ou mais, a segunda com 3 ou 4, a primeira com 2. */
 export function initialIndex(total: number): number {
-  return total >= 3 ? 1 : 0;
+  return Math.max(0, Math.min(2, Math.floor((total - 1) / 2)));
 }
 
 /** Índice do centro mais perto do centro visível da faixa. */
@@ -42,7 +114,7 @@ export function nearestIndex(centers: readonly number[], viewCenter: number): nu
 }
 
 /**
- * Peça em que o arrasto termina. `velocity` é em px/ms no sentido da rolagem (positivo = avança). Um arrasto rápido
+ * Peça em que o arrasto termina. `velocity` é em px/ms no sentido do avanço (positivo = avança). Um arrasto rápido
  * que não chegou a trocar de peça leva à vizinha no sentido do gesto.
  */
 export function releaseIndex(nearest: number, startIndex: number, velocity: number, total: number): number {
@@ -66,6 +138,16 @@ export function keyTarget(key: string, active: number, total: number): number | 
     default:
       return null;
   }
+}
+
+/**
+ * Rolagem lateral acumulada: devolve quantas peças andar (-1, 0 ou 1) e o que sobra no acumulador. Uma peça por vez,
+ * para o trackpad não atravessar o carrossel inteiro num gesto.
+ */
+export function wheelStep(accumulated: number): { step: -1 | 0 | 1; rest: number } {
+  if (accumulated >= WHEEL_STEP_PX) return { step: 1, rest: 0 };
+  if (accumulated <= -WHEEL_STEP_PX) return { step: -1, rest: 0 };
+  return { step: 0, rest: accumulated };
 }
 
 /** Número com dois algarismos para o contador ("02 / 12"). */

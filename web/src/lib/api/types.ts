@@ -66,6 +66,11 @@ export type ProductCard = {
   category: CategoryRef;
   designer: DesignerRef | null;
   cover: Image | null;
+  /**
+   * Foto sem fundo (PNG/WebP transparente) do carrossel com a peça em destaque. Opcional no tipo enquanto a API
+   * publicada não manda o campo; sem ela, o carrossel usa a capa.
+   */
+  cutout?: Image | null;
   is_new: boolean;
 };
 

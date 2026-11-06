@@ -2,11 +2,16 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Blocks } from '@/components/content/Blocks';
 import { ClientsRail } from '@/components/content/ClientsRail';
+import { firstWithCover } from '@/components/content/layout';
 import { ProjectRow } from '@/components/content/ProjectRow';
 import { PageBanner } from '@/components/layout/PageBanner';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
 import type { Locale } from '@/i18n/config';
-import { getClients, getPage, getProjects } from '@/lib/api/content';
+import { getClients, getHome, getPage, getProjects } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+/** Qual destaque da home esta página mostra (cada página de lista mostra um diferente). */
+const FEATURE_OFFSET = 4;
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -29,15 +34,23 @@ export default async function CorporatePage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = raw as Locale;
   setRequestLocale(locale);
-  const [t, page, projects, clients] = await Promise.all([
+  const [t, page, projects, clients, home] = await Promise.all([
     getTranslations({ locale, namespace: 'corporate' }),
     getPage(locale, 'corporate'),
     getProjects(locale, { type: 'corporate', per_page: 12 }),
     getClients(locale),
+    getHome(locale),
   ]);
+  // Um destaque da home à direita do título (nada de metade vazia), diferente do das outras páginas de lista.
+  const feature = firstWithCover([home.featured_products.slice(FEATURE_OFFSET), home.featured_products]);
   return (
     <main className="page-end">
-      <PageBanner image={page?.cover ?? null} title={page?.title ?? t('title')} lead={page?.intro} />
+      <PageBanner
+        image={page?.cover ?? null}
+        title={page?.title ?? t('title')}
+        lead={page?.intro}
+        aside={feature ? <FeaturePiece product={feature} compact /> : null}
+      />
       <div className="wrap">
         {page ? <Blocks blocks={page.content} /> : null}
         {projects.data.length > 0 ? (

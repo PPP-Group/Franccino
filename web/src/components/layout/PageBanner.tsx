@@ -1,6 +1,6 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import type { BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import type { Image } from '@/lib/api/types';
 import { aspectRatio, isWideArt } from '@/lib/images/cover';
@@ -12,6 +12,13 @@ type PageBannerProps = {
   lead?: string | null;
   /** Níveis do caminho (breadcrumb) quando o título vai no cabeçalho de texto (sem foto ou com arte larga). */
   trail?: BreadcrumbItem[];
+  /**
+   * Coluna da direita do cabeçalho de texto (sem foto ou com arte larga), para ele não ficar com metade vazia: a peça
+   * em destaque. No banner com foto o título fica sobre a foto, e ela não aparece.
+   */
+  aside?: ReactNode;
+  /** Nome do movimento (`morphName`): a foto do card que abriu a página cresce até o banner (ideia 10). */
+  morph?: string;
 };
 
 /**
@@ -20,14 +27,15 @@ type PageBannerProps = {
  * (`.page-banner-art` em `styles/pages.css`); a proporção vai em `--art-ratio` para a caixa ter a altura certa antes da
  * imagem chegar.
  */
-export function PageCoverArt({ image }: { image: Image }) {
+export function PageCoverArt({ image, morph }: { image: Image; morph?: string }) {
   const ratio = aspectRatio(image);
   const style = ratio
     ? ({ '--art-ratio': String(Math.round(ratio * 1000) / 1000) } as CSSProperties)
     : undefined;
   return (
     <div className={ratio ? 'page-banner-art page-banner-art--fixed' : 'page-banner-art'} style={style}>
-      <ApiImage image={image} sizes="100vw" priority />
+      {/* A capa recebe a foto do bloco que abriu a página (ideia 10, `MorphImage`). */}
+      <MorphImage name={morph ?? `cover-${image.id}`} image={image} sizes="100vw" priority hero />
     </div>
   );
 }
@@ -43,27 +51,34 @@ export function PageCoverArt({ image }: { image: Image }) {
  * Rodada 3: a foto fica parada no topo e a página sobe por cima dela, como no banner da home (só sem movimento
  * reduzido).
  */
-export function PageBanner({ image, title, lead = null, trail = [] }: PageBannerProps) {
+export function PageBanner({ image, title, lead = null, trail = [], aside = null, morph }: PageBannerProps) {
   if (!image) {
     return (
       <div className="wrap">
-        <PageHead title={title} lead={lead} trail={trail} />
+        <PageHead title={title} lead={lead} trail={trail} aside={aside} />
       </div>
     );
   }
   if (isWideArt(image)) {
     return (
       <>
-        <PageCoverArt image={image} />
+        <PageCoverArt image={image} morph={morph} />
         <div className="wrap">
-          <PageHead title={title} lead={lead} trail={trail} />
+          <PageHead title={title} lead={lead} trail={trail} aside={aside} />
         </div>
       </>
     );
   }
   return (
     <header className="page-banner">
-      <ApiImage image={image} sizes={pageBannerSizes(image)} priority className="page-banner__img" />
+      <MorphImage
+        name={morph ?? `cover-${image.id}`}
+        image={image}
+        sizes={pageBannerSizes(image)}
+        priority
+        className="page-banner__img"
+        hero
+      />
       <div className="wrap page-banner__copy">
         <h1 className="page-banner__title">{title}</h1>
         {lead ? <p className="page-banner__lead">{lead}</p> : null}

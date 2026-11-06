@@ -115,12 +115,21 @@
   background: var(--portrait-ground);
 }
 
-/* A foto nunca passa da própria largura (`--plate-img-max`, posto pelo ProductPlate): centrada, em vez de ampliada. */
+/*
+  A peça aparece inteira, centrada no quadro branco (`contain`), nunca cortada: a foto ocupa o quadro por posição
+  absoluta. Numa grade, `height: 100%` não vale (a linha da grade tem altura automática) e a foto em pé (1080×1350)
+  ficava com a altura da própria proporção, cortada em cima e embaixo pelo `overflow` (retorno de 06/11/2026). A foto
+  nunca passa da própria largura (`--plate-img-max`, posto pelo ProductPlate): centrada, em vez de ampliada.
+*/
 .plate__media img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 100%;
   height: 100%;
   max-width: var(--plate-img-max, 100%);
   object-fit: contain;
+  object-position: center;
 }
 
 .plate__media--cover img {

@@ -7,6 +7,9 @@ use App\Models\Finish;
 use App\Models\Launch;
 use App\Models\Line;
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileUnacceptableForCollection;
 
 it('paginates with a default per_page of 24 and rejects per_page over 48', function () {
     $indoor = area('indoor');
@@ -126,3 +129,24 @@ it('flags is_new for products in a current published launch', function () {
     expect($byId[$new->id]['is_new'])->toBeTrue();
     expect($byId[$old->id]['is_new'])->toBeFalse();
 });
+
+it('exposes the cut-out carousel photo only when one is uploaded', function () {
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $plain = publishedProduct();
+    $cutout = Product::factory()->for(area('indoor'))->create(['name' => ['pt' => 'Poltrona Maria']]);
+    $cutout->addMedia(UploadedFile::fake()->image('maria.png', 1200, 900))->toMediaCollection('cutout');
+
+    $byId = collect($this->getJson('/api/v1/products')->assertOk()->json('data'))->keyBy('id');
+
+    expect($byId[$plain->id])->toHaveKey('cutout')
+        ->and($byId[$plain->id]['cutout'])->toBeNull()
+        ->and($byId[$cutout->id]['cutout'])->toMatchArray(['alt' => 'Poltrona Maria', 'width' => 1200, 'height' => 900])
+        ->and($byId[$cutout->id]['cutout']['srcset'])->not->toBeEmpty()
+        ->and($byId[$cutout->id]['cover'])->toBeNull();
+});
+
+it('accepts only PNG or WebP as the cut-out photo', function () {
+    Storage::fake('media');
+    publishedProduct()->addMedia(UploadedFile::fake()->image('maria.jpg', 40, 30))->toMediaCollection('cutout');
+})->throws(FileUnacceptableForCollection::class);

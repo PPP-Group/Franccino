@@ -1,6 +1,8 @@
 import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Link, type AppHref } from '@/i18n/navigation';
 import type { Image } from '@/lib/api/types';
+import { morphTypes } from '@/lib/ui/morph';
 
 type CoverTileProps = {
   href: AppHref;
@@ -15,6 +17,8 @@ type CoverTileProps = {
    * todas as peças): ele não pode passar por mais uma coleção.
    */
   labelled?: boolean;
+  /** Nome do movimento até a página aberta (`morphName`, ideia 10): a foto cresce até a capa dela. */
+  morph?: string;
 };
 
 /**
@@ -30,14 +34,25 @@ export function CoverTile({
   sizes,
   priority = false,
   labelled = false,
+  morph,
 }: CoverTileProps) {
   const classes = ['collection-tile'];
   if (labelled || !image) classes.push('collection-tile--labelled');
   return (
     // Abre como cortina ao entrar na tela (ideia 04), menos os primeiros blocos, que já abrem à vista (foto principal).
-    <Link className={classes.join(' ')} href={href} data-reveal={priority ? undefined : 'curtain'}>
+    <Link
+      className={classes.join(' ')}
+      href={href}
+      data-reveal={priority ? undefined : 'curtain'}
+      transitionTypes={image && morph ? morphTypes(morph) : undefined}
+      data-morph-link={image && morph ? morph : undefined}
+    >
       <div className="collection-tile__media hover-zoom">
-        {image ? <ApiImage image={image} sizes={sizes} priority={priority} /> : null}
+        {image && morph ? (
+          <MorphImage name={morph} image={image} sizes={sizes} priority={priority} />
+        ) : image ? (
+          <ApiImage image={image} sizes={sizes} priority={priority} />
+        ) : null}
       </div>
       <div className="collection-tile__overlay">
         <h2 className="collection-tile__title">{title}</h2>

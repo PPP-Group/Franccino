@@ -29,6 +29,9 @@ import { absoluteUrl, alternateHrefs, buildMetadata, type Href } from '@/lib/seo
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
+/** Outras peças do designer ao lado do texto dele, na faixa do designer. */
+const DESIGNER_PIECES = 2;
+
 const productHref = (slug: string) => ({ pathname: '/products/[slug]', params: { slug } }) as const;
 
 function categoryHref(product: ProductDetail): AppHref {
@@ -92,8 +95,12 @@ export default async function ProductPage({ params }: Props) {
   // mesmo nome cancelariam a transição.
   const shown = new Set([product.id, ...product.line_products.map((item) => item.id)]);
   const related = product.related.filter((item) => !shown.has(item.id));
+  // Outras peças do designer ao lado do texto dele (no máximo duas), sem repetir as das esteiras.
+  const designerPieces = (designer?.products ?? [])
+    .filter((item) => item.cover && !shown.has(item.id) && !related.some((other) => other.id === item.id))
+    .slice(0, DESIGNER_PIECES);
   // "Peças que você viu" no fim não repete a peça aberta nem as das esteiras acima.
-  const onPage = [...shown, ...related.map((item) => item.id)];
+  const onPage = [...shown, ...related.map((item) => item.id), ...designerPieces.map((item) => item.id)];
   const card = toProductCard(product);
   // Conteúdo sem tradução volta em português (locale_fallback): marcar o idioma para leitores de tela.
   const contentLang = product.locale_fallback && locale !== 'pt' ? 'pt-BR' : undefined;
@@ -161,40 +168,47 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
 
-      {designer ? <DesignerStrip designer={designer} /> : null}
+      {/*
+        Seções de continuidade com o fundo alternado (areia, branco...), como na home: cada uma fica separada da
+        outra (retorno do tech lead de 06/11/2026: "tudo no branco"). A alternância é do CSS (`.tone-stack`), então
+        a seção que some não quebra a sequência.
+      */}
+      <div className="tone-stack">
+        {designer ? <DesignerStrip designer={designer} pieces={designerPieces} /> : null}
 
-      {product.line_products.length > 0 ? (
-        <section className="section" aria-labelledby="line-title" data-reveal>
-          <div className="wrap">
-            <div className="section-head">
-              <h2 id="line-title">
-                {product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
-              </h2>
+        {product.line_products.length > 0 ? (
+          <section className="section" aria-labelledby="line-title">
+            <div className="wrap" data-reveal>
+              <div className="section-head">
+                <h2 id="line-title">
+                  {product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
+                </h2>
+              </div>
+              <ProductRail
+                label={product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
+                products={product.line_products}
+              />
             </div>
-            <ProductRail
-              label={product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
-              products={product.line_products}
-            />
-          </div>
-        </section>
-      ) : null}
+          </section>
+        ) : null}
 
-      {related.length > 0 ? (
-        <section className="section" aria-labelledby="related-title" data-reveal>
-          <div className="wrap">
-            <div className="section-head">
-              <h2 id="related-title">{t('related', { category: product.category.name })}</h2>
-              <Link className="link-arrow" href={areaPath(product.area.key)}>
-                <span>{t('seeArea', { area: product.area.brand_name })}</span>
-                <Icon name="arrow" />
-              </Link>
+        {related.length > 0 ? (
+          <section className="section" aria-labelledby="related-title">
+            <div className="wrap" data-reveal>
+              <div className="section-head">
+                <h2 id="related-title">{t('related', { category: product.category.name })}</h2>
+                <Link className="link-arrow" href={areaPath(product.area.key)}>
+                  <span>{t('seeArea', { area: product.area.brand_name })}</span>
+                  <Icon name="arrow" />
+                </Link>
+              </div>
+              <ProductRail label={t('related', { category: product.category.name })} products={related} />
             </div>
-            <ProductRail label={t('related', { category: product.category.name })} products={related} />
-          </div>
-        </section>
-      ) : null}
+          </section>
+        ) : null}
 
-      <RecentlyViewed excludeIds={onPage} />
+        <RecentlyViewed excludeIds={onPage} />
+      </div>
     </main>
   );
 }

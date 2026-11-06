@@ -4,6 +4,7 @@ import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { Pagination } from '@/components/catalog/Pagination';
 import { DownloadsTable } from '@/components/downloads/DownloadsTable';
 import { PageHead } from '@/components/layout/PageHead';
+import { Select } from '@/components/ui/Select';
 import type { Locale } from '@/i18n/config';
 import type { DownloadFile, Paginated, ProductCard } from '@/lib/api/types';
 import { getAreas, getDownloads } from '@/lib/api/catalog';
@@ -74,15 +75,19 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
       />
       <form className="search-form" role="search">
         <div className="field">
-          <label htmlFor="downloads-area">{t('filters.area')}</label>
-          <select id="downloads-area" name="area" defaultValue={area ?? ''}>
-            <option value="">{t('filters.allAreas')}</option>
-            {areas.map((option) => (
-              <option key={option.key} value={option.key}>
-                {option.brand_name}
-              </option>
-            ))}
-          </select>
+          <label id="downloads-area-label" htmlFor="downloads-area">
+            {t('filters.area')}
+          </label>
+          <Select
+            id="downloads-area"
+            labelId="downloads-area-label"
+            name="area"
+            defaultValue={area ?? ''}
+            options={[
+              { value: '', label: t('filters.allAreas') },
+              ...areas.map((option) => ({ value: option.key, label: option.brand_name })),
+            ]}
+          />
         </div>
         <div className="field">
           <label htmlFor="downloads-q">{t('filters.search')}</label>

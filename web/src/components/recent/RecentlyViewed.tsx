@@ -15,8 +15,8 @@ export function RecentlyViewed({ excludeIds = [] }: { excludeIds?: number[] }) {
     return null;
   }
   return (
-    <section className="section recent" aria-labelledby="recent-title" data-reveal>
-      <div className="wrap">
+    <section className="section recent" aria-labelledby="recent-title">
+      <div className="wrap" data-reveal>
         <div className="section-head">
           <h2 id="recent-title">{t('title')}</h2>
         </div>

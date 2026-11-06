@@ -60,6 +60,11 @@ class Product extends Model implements HasMedia
     {
         $this->addMediaCollection('cover')->singleFile();
         $this->addMediaCollection('gallery');
+        // Cut-out photo (transparent background) for the launches/collection carousel. The WebP conversions of
+        // `HasImageConversions` keep the alpha channel (GD and Imagick both save it), so the piece stays cut out.
+        $this->addMediaCollection('cutout')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/png', 'image/webp']);
         // Private disk: the viewer gets a temporary link (`CreateModelLink`, contract 13.2).
         $this->addMediaCollection('model_3d')
             ->useDisk('downloads')

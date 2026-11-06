@@ -301,8 +301,10 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
   (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
   não conta como visível e nunca abriria.
 - Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
-  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`, no máximo 40 px na foto e 20 px no
-  texto (metade no celular). Não usar em arte com texto (faixas das coleções), porque a foto ganha 10% de sobra.
+  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`: 80 px na foto e 28 px no texto, em
+  sentidos opostos, de ponta a ponta da passagem do bloco pela tela (metade no celular; desde 06/11/2026, para ficar
+  visível). Sem `animation-timeline`, o `ParallaxFallback` da home faz o mesmo. Não usar em arte com texto (faixas das
+  coleções), porque a foto ganha 12% de sobra (`--parallax-scale`).
 - Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
   outra coleção, chamada) ou a grade muda o número de colunas.
 - Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
@@ -325,6 +327,7 @@ Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no coment
 | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- |
 | 04 Revelação ao rolar (texto sobe, foto abre como cortina)                                                   | "Ideia 04 — revelação ao rolar"                       | Tudo aparece pronto                                   |
 | 04 Paralaxe (três camadas)                                                                                   | "Ideia 04 — paralaxe suave"                           | Fotos e textos rolam juntos                           |
+| 10 A foto do card cresce até a página que ele abre e encolhe de volta (só a foto; entre listagens, nada)     | "abrir a peça e voltar dela (ideia 10)"               | A página troca sem movimento                          |
 | 12a Seta que anda no hover (botão, `.link-arrow`)                                                            | "12a"                                                 | A seta fica parada                                    |
 | 12b Sublinhado que cresce da esquerda (cabeçalho, rodapé, `.link-grow`; o fio do `.link-arrow` se redesenha) | "12b"                                                 | O fio aparece de uma vez                              |
 | 12c Cursor "Arraste" no carrossel                                                                            | em `carousel.css`                                     | Cursor normal                                         |

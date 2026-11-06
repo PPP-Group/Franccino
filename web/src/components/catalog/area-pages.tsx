@@ -8,6 +8,7 @@ import { parseListingParams } from '@/lib/api/listing-params';
 import type { AreaRef } from '@/lib/api/types';
 import { areaListingHref } from '@/lib/catalog/area-href';
 import { parseCatalogView } from '@/lib/catalog/view';
+import { morphName } from '@/lib/ui/morph';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 import { CatalogListing } from './CatalogListing';
 
@@ -67,6 +68,7 @@ export async function AreaPage({
       hrefFor={areaListingHref(area, params, view)}
       formAction={getPathname({ href: areaHref(area), locale })}
       facetsParams={{ area, category: params.category }}
+      banner={{ image: detail.cover, morph: morphName('area', area) }}
     />
   );
 }

@@ -9,6 +9,7 @@ import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { HeroSection } from '@/components/home/HeroSection';
 import { LaunchesSection } from '@/components/home/LaunchesSection';
 import { LinesSection } from '@/components/home/LinesSection';
+import { ParallaxFallback } from '@/components/home/ParallaxFallback';
 import { PlannerTeaser } from '@/components/home/PlannerTeaser';
 import { ProjectsSection } from '@/components/home/ProjectsSection';
 import { ScenesSection } from '@/components/home/ScenesSection';
@@ -133,13 +134,17 @@ export default async function HomePage({ params }: Props) {
       render: (tone) => <TechnicalTeaser rows={featured.map(toTechnicalRow)} tone={tone} />,
     });
   }
+  // A home abre no estado com mais lojas (a lista ao lado do texto fica cheia, não com uma loja só); empate mantém a
+  // ordem da API.
+  const storeCount = (state: string) => storeList.stores.filter((store) => store.state === state).length;
+  const statesByStoreCount = [...storeList.states].sort((a, b) => storeCount(b) - storeCount(a));
   if (storeList.stores.length > 0) {
     blocks.push({
       key: 'stores',
       render: (tone) => (
         <StoresSection
           stores={storeList.stores}
-          states={storeList.states}
+          states={statesByStoreCount}
           whatsapp={settings.quotes_whatsapp}
           tone={tone}
         />
@@ -151,30 +156,41 @@ export default async function HomePage({ params }: Props) {
   const toneOf = (index: number): Tone =>
     tones[blocks.slice(0, index).filter((block) => !block.bleed).length] ?? 'paper';
 
+  const [lead, ...rest] = blocks;
+  const hero =
+    home.banners.length > 1 ? (
+      <HeroCarousel>
+        {home.banners.map((banner, index) => (
+          <HeroSection
+            key={index}
+            index={index}
+            banner={banner}
+            brandNames={brandNames}
+            designerCount={designers.length}
+          />
+        ))}
+      </HeroCarousel>
+    ) : (
+      <HeroSection
+        banner={home.banners[0] ?? null}
+        brandNames={brandNames}
+        designerCount={designers.length}
+      />
+    );
+
+  // O banner fica parado só atrás da primeira seção, que sobe por cima dele: os dois vão juntos em `.home__lead`, e o
+  // `sticky` não passa do fim dela (retorno do tech lead de 06/11/2026: o banner aparecia atrás das seções seguintes
+  // enquanto as fotos delas carregavam).
   return (
     <main className="home">
-      {home.banners.length > 1 ? (
-        <HeroCarousel>
-          {home.banners.map((banner, index) => (
-            <HeroSection
-              key={index}
-              index={index}
-              banner={banner}
-              brandNames={brandNames}
-              designerCount={designers.length}
-            />
-          ))}
-        </HeroCarousel>
-      ) : (
-        <HeroSection
-          banner={home.banners[0] ?? null}
-          brandNames={brandNames}
-          designerCount={designers.length}
-        />
-      )}
-      {blocks.map((block, index) => (
-        <Fragment key={block.key}>{block.render(toneOf(index))}</Fragment>
+      <div className="home__lead">
+        {hero}
+        {lead ? lead.render(toneOf(0)) : null}
+      </div>
+      {rest.map((block, index) => (
+        <Fragment key={block.key}>{block.render(toneOf(index + 1))}</Fragment>
       ))}
+      <ParallaxFallback />
     </main>
   );
 }
