@@ -42,6 +42,7 @@ return [
     'product.finishes' => 'Acabamentos em que a peça é feita. Eles aparecem como amostras na página do produto.',
     'product.cover' => 'Foto principal da peça, sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda; fundo branco e peça centralizada. Pelo menos 2000 px. Obrigatória para publicar.',
     'product.gallery' => 'Outras fotos da peça (detalhes, ambientes). Arraste para mudar a ordem.',
+    'product.cutout' => 'Opcional. A mesma peça da capa, recortada: PNG ou WebP com fundo transparente, só a peça, cortada rente a ela e sem sombra, na diagonal virada para a esquerda, com pelo menos 2000 px. É a foto do carrossel de lançamentos e coleções; sem ela, o carrossel usa a capa.',
     'product.model_3d' => 'Arquivo 3D em GLB, até 5 MB. Ele aparece no botão "3D" da página do produto.',
     'product.is_3d_enabled' => 'Liga ou desliga o visualizador 3D desta peça, sem apagar o arquivo.',
 

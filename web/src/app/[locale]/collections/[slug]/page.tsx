@@ -8,6 +8,7 @@ import { EditorialGallery } from '@/components/content/EditorialGallery';
 import { neighbours } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { PageCoverArt } from '@/components/layout/PageBanner';
+import { morphName } from '@/lib/ui/morph';
 import { PageHead } from '@/components/layout/PageHead';
 import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
@@ -45,7 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Página da coleção (rodada 3): capa parada no topo, texto à esquerda e os designers à direita com retrato, galeria
+ * Página da coleção (rodada 3): capa parada no topo, título e texto à esquerda e os designers à direita com retrato
+ * (as duas colunas começam na altura do título), galeria
  * editorial, as peças e, para continuar, "Outras coleções" numa faixa areia e "Peças que você viu".
  */
 export default async function CollectionPage({ params }: Props) {
@@ -64,23 +66,29 @@ export default async function CollectionPage({ params }: Props) {
   const others = neighbours(collections, (item) => item.id === collection.id, OTHER_COLLECTIONS);
   return (
     <main className="page-end">
-      {collection.cover ? <PageCoverArt image={collection.cover} /> : null}
+      {collection.cover ? (
+        <PageCoverArt image={collection.cover} morph={morphName('collection', collection.slug)} />
+      ) : null}
       <div className="wrap">
+        {/* Título, frase e texto numa coluna; os designers à direita, alinhados pelo alto ao título (06/11/2026). */}
         <PageHead
           title={collection.name}
           lead={collection.summary}
           trail={[{ label: t('title'), href: '/collections' }]}
-        />
-        {collection.description || collection.designers.length > 0 ? (
-          <div className="collection-intro">
-            {collection.description ? <RichText html={collection.description} className="prose" /> : null}
-            <DesignerPortraits
-              title={t('designers')}
-              designers={collection.designers}
-              portraits={designers}
-            />
-          </div>
-        ) : null}
+          aside={
+            collection.designers.length > 0 ? (
+              <DesignerPortraits
+                title={t('designers')}
+                designers={collection.designers}
+                portraits={designers}
+              />
+            ) : null
+          }
+        >
+          {collection.description ? (
+            <RichText html={collection.description} className="prose collection-intro__text" />
+          ) : null}
+        </PageHead>
         <EditorialGallery images={collection.gallery} label={t('gallery')} />
         {collection.products.length > 0 ? (
           <section aria-labelledby="collection-pieces" className="page-section">

@@ -1,7 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { AreaMenuKey, NavMenuKey, NavMenus } from './area-menu';
@@ -14,6 +20,8 @@ import { QuoteListLink } from './QuoteListLink';
 const COLLAPSED_NAV_QUERY = '(max-width: 1180px)';
 // Tempo para o mouse sair do item e chegar ao painel (ou voltar) sem o painel fechar no caminho.
 const CLOSE_DELAY_MS = 250;
+// Intenção de hover: o mouse que só atravessa o menu não abre painel nenhum.
+const OPEN_DELAY_MS = 120;
 
 function isMenuKey(key: string): key is NavMenuKey {
   return key === 'indoor' || key === 'outdoor' || key === 'collections';
@@ -40,14 +48,18 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
   const nav = useTranslations('nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // Painel aberto (Casa, Giardini ou Coleções). No desktop abre no clique e ao passar o mouse; no menu recolhido
-  // funciona como sanfona dentro da lista.
+  // Painel aberto (Casa, Giardini ou Coleções). Retorno do tech lead (06/11/2026): o clique no nome leva direto à
+  // lista completa; o painel abre só ao passar o mouse (com a intenção de hover) ou pela seta ao lado do nome (teclado,
+  // toque e leitor de tela; a seta para baixo no nome também abre). No menu recolhido, a seta abre a sanfona.
   const [panel, setPanel] = useState<NavMenuKey | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
-  // Aberto pelo clique (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
+  // Aberto pela seta (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
   const pinned = useRef(false);
   const closeTimer = useRef<number | null>(null);
+  const openTimer = useRef<number | null>(null);
+  // Painel a focar no primeiro link assim que abrir (seta para baixo no nome).
+  const focusFirst = useRef<NavMenuKey | null>(null);
   const active = activeNavKey(pathname);
 
   function cancelClose() {
@@ -57,21 +69,40 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
     }
   }
 
+  function cancelOpen() {
+    if (openTimer.current !== null) {
+      window.clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+  }
+
   function closePanel() {
     cancelClose();
+    cancelOpen();
     pinned.current = false;
     setPanel(null);
   }
 
-  // Desmontar com o fechamento agendado: cancela o timer.
+  // Desmontar com a abertura ou o fechamento agendado: cancela os timers.
   useEffect(() => {
-    const timer = closeTimer;
+    const timers = [closeTimer, openTimer];
     return () => {
-      if (timer.current !== null) {
-        window.clearTimeout(timer.current);
+      for (const timer of timers) {
+        if (timer.current !== null) {
+          window.clearTimeout(timer.current);
+        }
       }
     };
   }, []);
+
+  // Seta para baixo no nome: o painel abre e o foco vai para o primeiro link dele.
+  useEffect(() => {
+    if (!panel || focusFirst.current !== panel) {
+      return;
+    }
+    focusFirst.current = null;
+    navRef.current?.querySelector<HTMLElement>(`#nav-panel-${panel} a`)?.focus();
+  }, [panel]);
 
   // Trocar de página fecha o menu e o painel.
   const [lastPathname, setLastPathname] = useState(pathname);
@@ -168,21 +199,36 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
     };
   }, [open]);
 
-  // Passar o mouse abre o painel só no desktop e só com mouse (no toque, o clique abre). Sair fecha depois de um
-  // instante, para o caminho do item até o painel (ou de volta) não fechar nada.
+  // Passar o mouse abre o painel só no desktop e só com mouse (no toque, a seta abre), depois de um instante parado
+  // (intenção de hover); com outro painel já aberto, troca na hora. Sair fecha depois de um instante, para o caminho
+  // do item até o painel (ou de volta) não fechar nada.
   function pointerOpen(key: NavMenuKey, event: ReactPointerEvent) {
     if (event.pointerType !== 'mouse' || !isDesktop()) {
       return;
     }
     cancelClose();
-    if (panel !== key) {
+    cancelOpen();
+    if (panel === key) {
+      return;
+    }
+    if (panel) {
       pinned.current = false;
       setPanel(key);
+      return;
     }
+    openTimer.current = window.setTimeout(() => {
+      openTimer.current = null;
+      pinned.current = false;
+      setPanel(key);
+    }, OPEN_DELAY_MS);
   }
 
   function pointerLeave(event: ReactPointerEvent) {
-    if (event.pointerType !== 'mouse' || !isDesktop() || pinned.current) {
+    if (event.pointerType !== 'mouse' || !isDesktop()) {
+      return;
+    }
+    cancelOpen();
+    if (pinned.current) {
       return;
     }
     cancelClose();
@@ -192,14 +238,32 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
     }, CLOSE_DELAY_MS);
   }
 
-  // Clique: abre e fixa; no painel já aberto pelo mouse, fixa; no painel fixo, fecha.
+  // Seta ao lado do nome: abre e fixa; no painel já aberto pelo mouse, fixa; no painel fixo, fecha.
   function clickTrigger(key: NavMenuKey) {
     cancelClose();
+    cancelOpen();
     if (panel === key && pinned.current) {
       closePanel();
       return;
     }
     pinned.current = true;
+    setPanel(key);
+  }
+
+  // Seta para baixo no nome (ou na seta): abre o painel e leva o foco ao primeiro link.
+  function keyDownTrigger(key: NavMenuKey, event: ReactKeyboardEvent) {
+    if (event.key !== 'ArrowDown') {
+      return;
+    }
+    event.preventDefault();
+    cancelClose();
+    cancelOpen();
+    pinned.current = true;
+    if (panel === key) {
+      navRef.current?.querySelector<HTMLElement>(`#nav-panel-${key} a`)?.focus();
+      return;
+    }
+    focusFirst.current = key;
     setPanel(key);
   }
 
@@ -230,16 +294,29 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
               onPointerEnter={(event) => pointerOpen(area, event)}
               onPointerLeave={pointerLeave}
             >
-              <button
-                type="button"
+              <Link
                 className="nav-area__trigger"
-                data-panel-trigger={area}
+                href={item.href}
                 data-active={area === active ? 'true' : undefined}
-                aria-expanded={expanded}
-                aria-controls={panelId}
-                onClick={() => clickTrigger(area)}
+                aria-current={area === active ? 'page' : undefined}
+                onKeyDown={(event) => keyDownTrigger(area, event)}
+                onClick={() => {
+                  closePanel();
+                  setOpen(false);
+                }}
               >
                 {nav(area)}
+              </Link>
+              <button
+                type="button"
+                className="nav-area__toggle"
+                data-panel-trigger={area}
+                aria-expanded={expanded}
+                aria-controls={panelId}
+                aria-label={t('submenu', { area: nav(area) })}
+                onKeyDown={(event) => keyDownTrigger(area, event)}
+                onClick={() => clickTrigger(area)}
+              >
                 <Icon name="chevron" />
               </button>
               <div id={panelId} className="nav-panel" hidden={!expanded}>

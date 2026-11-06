@@ -21,7 +21,7 @@ describe('SceneViewer', () => {
     expect(html).toContain('left:80%;top:70%');
     expect(html).toContain('data-horizontal="end"');
     expect(html).toContain('aria-expanded="false"');
-    expect(html).toMatch(/aria-label="Ver [^"]+"/);
+    expect(html).toMatch(/aria-label="Conheça [^"]+"/);
     expect(html).toMatch(/class="scene__card" hidden=""/);
     expect(html).toContain('href="/products/');
   });

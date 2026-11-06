@@ -6,7 +6,7 @@
   Banco de ideias (PDF de retorno da Franccino):
   - ideia 04, aprovada: paralaxe suave (três camadas em velocidades diferentes) e revelação ao rolar (a foto abre como
     uma cortina, o título sobe 20 px enquanto aparece);
-  - ideia 10, aprovada: a foto do card cresce até a página da peça (ViewTransition do React);
+  - ideia 10, aprovada: a foto do card cresce até a página que ele abre e encolhe de volta (ViewTransition do React);
   - ideia 12, aprovada com ajustes ("validar quais serão utilizados"): as microinterações 12a a 12f, cada uma no seu
     bloco, para a Franccino escolher quais ficam. A 12c (cursor "Arraste" no carrossel) vive em carousel.css.
 
@@ -87,25 +87,32 @@
 
 /*
   Três camadas, cada uma numa velocidade (só `translate`, sem mexer no layout): o texto anda um pouco mais rápido que
-  a página (camada `front`), a peça e o quadro andam com a página, e a foto de fundo anda mais devagar dentro do quadro
-  (camada `back`). Movimento curto: no máximo 40 px de ponta a ponta na foto e 20 px no texto (metade no celular).
+  a página (camada `front`), o quadro anda com a página, e a foto de dentro anda mais devagar (camada `back`).
+  Retorno do tech lead de 06/11/2026 ("não achei a paralaxe"): o movimento ficou visível, ainda calmo, de ponta a ponta
+  da passagem do bloco pela tela, 80 px na foto e 28 px no texto, em sentidos opostos (a foto desliza mais de 100 px
+  em relação ao texto); metade no celular. Na home: Casa e Giardini, a peça em destaque, o mosaico de projetos e o texto
+  da faixa da Fábrica (a foto dela já fica parada como uma janela).
 
   - `data-parallax` no bloco: é ele que mede a rolagem (view-timeline com nome, que vale para os descendentes). Por
     isso a camada pode ficar dentro de um quadro com overflow escondido (`.hover-zoom`), que sozinho viraria a
     referência de um `view()` e pararia o movimento.
-  - `data-parallax-layer="back"` na foto (ou no quadro dela): ganha 10% de sobra (`scale`) para nunca mostrar a borda.
+  - `data-parallax-layer="back"` na foto (ou no quadro dela): ganha sobra (`--parallax-scale`) para nunca mostrar a
+    borda; quadros baixos (mosaico) pedem mais sobra.
   - `data-parallax-layer="front"` no texto.
-  Só CSS (animation-timeline): navegador sem suporte mostra tudo parado.
+  Navegador com `animation-timeline` (Chrome, Edge, Safari 26): só CSS. Sem ele (Firefox), o `ParallaxFallback` da home
+  escreve o progresso da rolagem em `--parallax-progress` e marca `data-parallax-js` no <html>, com as mesmas
+  distâncias.
 */
 [data-parallax] {
-  --parallax-back: 20px;
-  --parallax-front: 10px;
+  --parallax-back: 40px;
+  --parallax-front: 14px;
+  --parallax-scale: 1.12;
 }
 
 @media (max-width: 56.25rem) {
   [data-parallax] {
-    --parallax-back: 12px;
-    --parallax-front: 6px;
+    --parallax-back: 20px;
+    --parallax-front: 7px;
   }
 }
 
@@ -116,7 +123,7 @@
     }
 
     [data-parallax-layer='back'] {
-      scale: 1.1;
+      scale: var(--parallax-scale);
       animation: parallax-back linear both;
       animation-timeline: --parallax;
       animation-range: cover 0% cover 100%;
@@ -127,6 +134,16 @@
       animation-timeline: --parallax;
       animation-range: cover 0% cover 100%;
     }
+  }
+
+  /* Sem `animation-timeline`: o mesmo movimento pelo progresso que o ParallaxFallback escreve (0 a 1). */
+  [data-parallax-js] [data-parallax-layer='back'] {
+    scale: var(--parallax-scale);
+    translate: 0 calc((var(--parallax-progress, 0.5) * 2 - 1) * var(--parallax-back));
+  }
+
+  [data-parallax-js] [data-parallax-layer='front'] {
+    translate: 0 calc((1 - var(--parallax-progress, 0.5) * 2) * var(--parallax-front));
   }
 }
 
@@ -292,22 +309,92 @@
   }
 }
 
-/* ---------- card → página da peça ---------- */
+/* ---------- abrir a peça e voltar dela (ideia 10) ---------- */
 
-/* Mais lenta e suave que uma transição de interface (retorno de 06/11/2026: "está abrindo muito rápido"). */
-::view-transition-group(.product-morph) {
+/*
+  A foto do card cresce até a foto grande da página que ele abre (peça, coleção, projeto) e encolhe de volta até o
+  card na volta (navegador, caminho, logo). Regras em `lib/ui/morph.ts`; a foto é `MorphImage` e o controle da
+  navegação, `PageTransition` (retorno de 06/11/2026). Fora desse movimento, a troca de página é imediata: entre
+  listagens nada se mexe.
+
+  - A página troca de uma vez por baixo da foto (`root` sem animação): só a foto se mexe, nada pisca.
+  - A foto de saída fica inteira durante o movimento e a de chegada aparece por cima na segunda metade (sem a mistura
+    de luz padrão, que clareava o meio): mesmo que a foto de chegada ainda não tenha chegado, nunca há quadro em
+    branco, e o fim cai exatamente sobre a foto da página.
+  - `morph-contain`: peça inteira em fundo branco (cards, palco da peça). `morph-cover`: foto recortada (capas,
+    banners). Mais lento que uma transição de interface (retorno de 06/11/2026: "está abrindo muito rápido").
+*/
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  display: none;
+}
+
+/* Começa a andar no clique e pousa devagar (a curva "in-out" deixava a foto parada no primeiro terço). */
+::view-transition-group(.morph-contain),
+::view-transition-group(.morph-cover) {
   animation-duration: var(--t-slow);
-  animation-timing-function: var(--ease-in-out);
+  animation-timing-function: var(--ease-out);
 }
 
-::view-transition-image-pair(.product-morph) {
-  animation-name: morph-soften;
+::view-transition-old(.morph-contain),
+::view-transition-old(.morph-cover) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-@keyframes morph-soften {
+::view-transition-new(.morph-contain),
+::view-transition-new(.morph-cover) {
+  animation: morph-arrive var(--t-slow) linear both;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(.morph-contain),
+::view-transition-new(.morph-contain) {
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/*
+  A peça é fotografada em fundo branco: o branco da foto não cobre os cards vizinhos enquanto ela passa por eles. O
+  React tira o nome do <html> (a página por baixo é a de verdade), então a mistura vai na camada inteira, só quando o
+  par é de peça (`data-morph-fit`, posto pelo controle da navegação).
+*/
+:root[data-morph-fit='contain']::view-transition {
+  mix-blend-mode: multiply;
+}
+
+::view-transition-old(.morph-cover),
+::view-transition-new(.morph-cover) {
+  block-size: 100%;
+  object-fit: cover;
+}
+
+@keyframes morph-arrive {
+  0%,
   30% {
-    filter: blur(2px);
+    opacity: 0;
   }
+
+  70% {
+    opacity: 1;
+  }
+}
+
+/*
+  Na volta, a página reaparece como estava: os blocos que aparecem ao rolar (ideia 04) já vêm à vista, sem animar
+  (`data-reveal-instant`, posto por dois quadros pelo controle da navegação).
+*/
+[data-reveal-instant] [data-reveal],
+[data-reveal-instant] [data-reveal] > * {
+  transition: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -315,50 +402,6 @@
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
-  }
-}
-
-/* ---------- troca de página (rodada 3) ---------- */
-
-/*
-  `PageTransition` (layout do idioma): a página que sai some rápido e a nova aparece logo depois, subindo 8 px.
-  O cabeçalho e o rodapé não fazem parte do par e ficam parados. A foto que cresce até a peça (product-morph, acima)
-  continua por cima, no seu tempo mais lento.
-*/
-::view-transition {
-  pointer-events: none;
-}
-
-::view-transition-old(.page-exit) {
-  animation: page-out var(--t-fast) var(--ease-out) both;
-}
-
-::view-transition-new(.page-enter) {
-  animation: page-in var(--t-mid) var(--ease-out) var(--t-press) both;
-}
-
-/*
-  Fotos de card com nome (product-morph) que não têm par na página nova: saem junto com a página, no tempo curto,
-  em vez de ficarem para trás no tempo lento do morph. Idem para a foto nova sem par.
-*/
-::view-transition-old(.product-morph):only-child {
-  animation: page-out var(--t-fast) var(--ease-out) both;
-}
-
-::view-transition-new(.product-morph):only-child {
-  animation: page-in var(--t-mid) var(--ease-out) var(--t-press) both;
-}
-
-@keyframes page-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--space-2));
   }
 }
 
@@ -497,5 +540,73 @@
   from {
     opacity: 0;
     transform: translateY(var(--space-1));
+  }
+}
+
+/* ======================================================================================================== */
+/* Lista de opções e campos (components/ui/Select.tsx, forms.css)                                           */
+/* ======================================================================================================== */
+
+/*
+  A lista abre descendo 4 px e crescendo de 98% a 100%, com o fade (180 ms), e fecha do mesmo jeito ao contrário;
+  a seta do botão gira junto. A opção sob o mouse ou o teclado ganha o fundo areia sem piscar, a borda dos campos
+  escurece devagar e o visto da caixa de marcar entra crescendo. Quem pediu menos movimento vê tudo na hora (o bloco
+  só vale com `prefers-reduced-motion: no-preference`). Navegador sem `@starting-style` abre e fecha na hora.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .select__list {
+    transition:
+      opacity var(--t-fast) var(--ease-out),
+      transform var(--t-fast) var(--ease-out),
+      display var(--t-fast) allow-discrete;
+  }
+
+  .select__list[hidden] {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-1))) scale(0.98);
+  }
+
+  @starting-style {
+    .select__list:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-1))) scale(0.98);
+    }
+  }
+
+  .select[data-placement='top'] .select__list[hidden] {
+    transform: translateY(var(--space-1)) scale(0.98);
+  }
+
+  @starting-style {
+    .select[data-placement='top'] .select__list:not([hidden]) {
+      transform: translateY(var(--space-1)) scale(0.98);
+    }
+  }
+
+  .select__chevron {
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+
+  .select__option {
+    transition: background-color var(--t-press) var(--ease-out);
+  }
+
+  .select__button,
+  .field input,
+  .field textarea,
+  .search-form input {
+    transition: border-color var(--t-fast) var(--ease-out);
+  }
+
+  input[type='checkbox']::before,
+  input[type='radio']::before {
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    transition:
+      background-color var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out);
   }
 }

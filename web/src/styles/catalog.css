@@ -270,6 +270,29 @@
   }
 }
 
+/*
+  Cabeçalho com coluna à direita (retorno do tech lead de 06/11/2026: as duas colunas começam na altura do título, e
+  nada de metade vazia): título, frase e texto à esquerda; designers da coleção ou a peça em destaque à direita.
+*/
+.catalog-head--split {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: start;
+  padding-bottom: var(--section-y-tight);
+}
+
+.catalog-head--split .catalog-head__copy > .prose {
+  max-width: var(--measure);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 56.25rem) {
+  .catalog-head--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+}
+
 .catalog-head--tight {
   padding-top: var(--space-2);
 }
@@ -321,16 +344,6 @@
   align-items: center;
 }
 
-.filter-form select {
-  min-height: 44px;
-  max-width: 100%;
-  border: 1px solid var(--line-field);
-  border-radius: 0;
-  background: var(--paper);
-  padding-inline: var(--space-3);
-  font-size: var(--fs-ui);
-}
-
 .view-toggle {
   display: inline-flex;
   border: 1px solid var(--ink);
@@ -380,7 +393,7 @@
     grid-row: 2;
   }
 
-  .toolbar--catalog .filter-form select {
+  .toolbar--catalog .filter-form .select {
     flex: 1;
     min-width: 0;
   }

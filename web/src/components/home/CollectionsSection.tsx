@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
 import type { CSSProperties } from 'react';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 import type { CollectionCard } from '@/lib/api/types';
 import { sectionClass, type Tone } from './tone';
 
@@ -61,9 +62,19 @@ export function CollectionsSection({ collections, tone }: { collections: Collect
                 <Link
                   className="strip__link"
                   href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}
+                  transitionTypes={
+                    collection.cover ? morphTypes(morphName('collection', collection.slug)) : undefined
+                  }
+                  data-morph-link={collection.cover ? morphName('collection', collection.slug) : undefined}
                 >
                   <span className="strip__media hover-zoom">
-                    <ApiImage image={collection.cover} sizes={size === 'wide' ? WIDE_SIZES : HALF_SIZES} />
+                    {collection.cover ? (
+                      <MorphImage
+                        name={morphName('collection', collection.slug)}
+                        image={collection.cover}
+                        sizes={size === 'wide' ? WIDE_SIZES : HALF_SIZES}
+                      />
+                    ) : null}
                   </span>
                   <div className="strip__caption">
                     <h3 className="strip__name">{collection.name}</h3>

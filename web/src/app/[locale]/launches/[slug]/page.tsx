@@ -5,9 +5,11 @@ import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
 import { ViewToggle } from '@/components/catalog/ViewToggle';
+import { firstWithCover } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
@@ -16,6 +18,9 @@ import { getLaunch, getLaunches } from '@/lib/api/content';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { parseCatalogView } from '@/lib/catalog/view';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
+
+/** Peças da primeira linha da grade (3 colunas no desktop). */
+const FIRST_ROW = 3;
 
 type Props = { params: Promise<{ locale: string; slug: string }>; searchParams: Promise<SearchParams> };
 
@@ -55,6 +60,11 @@ export default async function LaunchPage({ params, searchParams }: Props) {
     getTranslations({ locale, namespace: 'catalog' }),
     getTranslations({ locale, namespace: 'common' }),
   ]);
+  const year = launch.year && !launch.title.includes(String(launch.year)) ? launch.year : null;
+  // A peça em destaque não repete a primeira linha da grade logo abaixo (quando houver outras).
+  const feature = launch.description
+    ? firstWithCover([launch.products.slice(FIRST_ROW), launch.products])
+    : null;
   const rows =
     view === 'table'
       ? (
@@ -76,17 +86,20 @@ export default async function LaunchPage({ params, searchParams }: Props) {
             { label: launch.title },
           ]}
         />
-        <div className="catalog-head">
+        {/*
+          Com texto, a direita mostra uma peça do lançamento em foto grande (retorno do tech lead de 06/11/2026: o texto
+          ficava sozinho à esquerda). O ano só aparece quando o título não o traz ("Lançamentos 2026" já diz o ano).
+        */}
+        <div className={feature ? 'catalog-head catalog-head--split' : 'catalog-head'}>
           <div className="catalog-head__copy">
             <h1>{launch.title}</h1>
             {launch.summary ? <p className="lead">{launch.summary}</p> : null}
+            {feature && year ? <p className="meta num">{year}</p> : null}
+            {feature && launch.description ? <RichText html={launch.description} className="prose" /> : null}
           </div>
-          {/* O ano só aparece quando o título não o traz ("Lançamentos 2026" já diz o ano). */}
-          {launch.year && !launch.title.includes(String(launch.year)) ? (
-            <p className="meta num">{launch.year}</p>
-          ) : null}
+          {feature ? <FeaturePiece product={feature} /> : year ? <p className="meta num">{year}</p> : null}
         </div>
-        {launch.description ? (
+        {!feature && launch.description ? (
           <RichText html={launch.description} className="prose catalog-description" />
         ) : null}
         <div className="toolbar">

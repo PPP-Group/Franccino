@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { editorialRhythm, missingCells, neighbours } from './layout';
+import { editorialRhythm, firstWithCover, missingCells, neighbours } from './layout';
 
 describe('missingCells', () => {
   it('counts the cells that close the last row', () => {
@@ -47,5 +47,21 @@ describe('neighbours', () => {
 
   it('works when the current item is not in the list', () => {
     expect(neighbours(list, (item) => item === 'z', 2)).toEqual(['a', 'b']);
+  });
+});
+
+describe('firstWithCover', () => {
+  const piece = (id: number, cover: string | null) => ({ id, cover });
+
+  it('takes the first piece with a photo, in list order', () => {
+    expect(firstWithCover([[piece(1, null), piece(2, 'a')], [piece(3, 'b')]])?.id).toBe(2);
+  });
+
+  it('falls back to the next list and skips excluded pieces', () => {
+    expect(firstWithCover([[piece(1, 'a')], [piece(3, 'b')]], [1])?.id).toBe(3);
+  });
+
+  it('returns null without any photo', () => {
+    expect(firstWithCover([[piece(1, null)], []])).toBeNull();
   });
 });

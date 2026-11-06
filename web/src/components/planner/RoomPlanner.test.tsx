@@ -23,9 +23,9 @@ describe('RoomPlanner', () => {
     const html = renderWithIntl(<RoomPlanner initialLibrary={[sofa]} />);
     expect(html).toContain('value="5.0"');
     expect(html).toContain('value="4.0"');
-    expect(html).toContain('aria-label="Pôr Sofá Majestic na sala"');
+    expect(html).toContain('aria-label="Adicionar Sofá Majestic ao ambiente"');
     expect(html).toContain('240 × 100 cm');
-    expect(html).toContain('Nenhuma peça ainda.');
+    expect(html).toContain('Nenhuma peça adicionada.');
     expect(html).toContain('role="group"');
   });
 

@@ -3,14 +3,16 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { CardRail } from '@/components/content/CardRail';
 import { EditorialGallery } from '@/components/content/EditorialGallery';
-import { neighbours } from '@/components/content/layout';
+import { firstWithCover, neighbours } from '@/components/content/layout';
 import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { PageBanner } from '@/components/layout/PageBanner';
+import { morphName } from '@/lib/ui/morph';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
 import { ProductRail } from '@/components/products/ProductRail';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { getAllProjectSlugs, getProject, getProjects } from '@/lib/api/content';
+import { getAllProjectSlugs, getHome, getProject, getProjects } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -54,10 +56,18 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) {
     notFound();
   }
-  const [t, list] = await Promise.all([
+  const lead = distinctLead(project.summary, project.description);
+  // Sem a frase de abertura, o texto ficaria sozinho à esquerda: a direita mostra uma peça do projeto ou, sem nenhuma,
+  // um destaque da home (retorno do tech lead de 06/11/2026: nada de metade vazia).
+  const needsFeature = !lead && Boolean(project.description);
+  const [t, list, home] = await Promise.all([
     getTranslations({ locale, namespace: 'projects' }),
     getProjects(locale, { per_page: OTHER_PROJECTS + 1 }),
+    needsFeature && !project.products.some((product) => product.cover)
+      ? getHome(locale)
+      : Promise.resolve(null),
   ]);
+  const feature = needsFeature ? firstWithCover([project.products, home?.featured_products ?? []]) : null;
   const typeLabel = (value: string) => (t.has(`types.${value}`) ? t(`types.${value}`) : value);
   // Fatos só com o que foi cadastrado; sem nenhum além do tipo, a linha mostra só o tipo.
   const facts = [
@@ -67,12 +77,12 @@ export default async function ProjectPage({ params }: Props) {
     { key: 'year', value: project.year ? String(project.year) : null },
     { key: 'architect', value: project.architect },
   ].filter((fact): fact is { key: string; value: string } => Boolean(fact.value));
-  const lead = distinctLead(project.summary, project.description);
   const others = neighbours(list.data, (item) => item.id === project.id, OTHER_PROJECTS);
   return (
     <main className="page-end">
       <PageBanner
         image={project.cover}
+        morph={morphName('project', project.slug)}
         title={project.title}
         trail={[{ label: t('title'), href: '/projects' }]}
       />
@@ -86,9 +96,10 @@ export default async function ProjectPage({ params }: Props) {
           ))}
         </dl>
         {lead || project.description ? (
-          <div className="project-story" data-reveal>
+          <div className={feature ? 'project-story project-story--feature' : 'project-story'} data-reveal>
             {lead ? <p className="project-story__lead">{lead}</p> : null}
             {project.description ? <RichText html={project.description} className="prose" /> : null}
+            {feature ? <FeaturePiece product={feature} /> : null}
           </div>
         ) : null}
         <EditorialGallery images={project.gallery} label={t('gallery')} />

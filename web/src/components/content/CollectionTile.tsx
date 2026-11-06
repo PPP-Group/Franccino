@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import type { CollectionCard } from '@/lib/api/types';
 import { fixedBoxCoverSizes } from '@/lib/images/cover-sizes';
+import { morphName } from '@/lib/ui/morph';
 import { CoverTile } from './CoverTile';
 
 /** Proporção do bloco (16:9): todos iguais, mesmo com capas de proporções diferentes. */
@@ -31,6 +32,7 @@ export function CollectionTile({
       image={collection.cover}
       sizes={fixedBoxCoverSizes(collection.cover, TILE_RATIO, TILE_SLOTS)}
       priority={priority}
+      morph={morphName('collection', collection.slug)}
     />
   );
 }

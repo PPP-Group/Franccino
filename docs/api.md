@@ -84,6 +84,7 @@ type ProductCard = {
   category: CategoryRef;
   designer: DesignerRef | null;
   cover: Image | null;
+  cutout: Image | null; // foto sem fundo (PNG/WebP transparente) do carrossel de lançamentos e coleções; null sem ela
   is_new: boolean;
 };
 

@@ -1,7 +1,8 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 import type { ProjectCard } from '@/lib/api/types';
 import { aspectRatio, coverSizes } from '@/lib/images/cover';
 import { sectionClass, type Tone } from './tone';
@@ -68,12 +69,19 @@ export function ProjectsSection({ projects, tone }: { projects: ProjectCard[]; t
                     <Link
                       className="mosaic__link hover-zoom"
                       href={{ pathname: '/projects/[slug]', params: { slug: project.slug } }}
+                      transitionTypes={
+                        project.cover ? morphTypes(morphName('project', project.slug)) : undefined
+                      }
+                      data-morph-link={project.cover ? morphName('project', project.slug) : undefined}
                     >
-                      <ApiImage
-                        image={project.cover}
-                        sizes={tileSizes(project, index === 0, group.length)}
-                        parallax
-                      />
+                      {project.cover ? (
+                        <MorphImage
+                          name={morphName('project', project.slug)}
+                          image={project.cover}
+                          sizes={tileSizes(project, index === 0, group.length)}
+                          parallax
+                        />
+                      ) : null}
                       <div className="mosaic__copy" data-parallax-layer="front" data-reveal="">
                         <h3 className="mosaic__title">{project.title}</h3>
                         {meta ? <p className="mosaic__meta">{meta}</p> : null}
