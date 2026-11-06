@@ -789,3 +789,27 @@ MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o pi
   galeria.
 - **Logo em SVG:** não está no Drive compartilhado da Franccino nem no do Pedro Ivo. O Marcelo disse em 26/10 que está
   num Drive que ele passou; falta o link.
+
+### 21.4 Complemento (06/11, noite): retorno do Pedro Ivo sobre o preview (PR #66)
+
+- **Campos:** lista de opções própria (`components/ui/Select.tsx`, lógica em `lib/ui/listbox.ts`) no lugar do
+  `<select>` nativo; seleção de texto e barra de rolagem nas cores da marca; textos mais formais em `messages/`.
+- **Foto que cresce e volta (ideia 10):** `components/media/MorphImage.tsx`, `lib/ui/morph.ts` e o controle da
+  navegação em `components/layout/navigation-motion.ts`. Só a navegação que abre a peça (ou volta dela pelo navegador,
+  pelo caminho ou pelo logo) anima; entre listagens nada se mexe. A rolagem de cada página do histórico é guardada e
+  devolvida na hora. Vale para peça, peça em destaque da home, coleção, projeto e os blocos Casa/Giardini (que agora
+  abrem com o banner da foto da área). Conferido no build de produção quadro a quadro, sem quadro branco.
+- **Carrossel da ideia 01** em leque e o campo novo **"Foto sem fundo (carrossel)"** no painel (coleção `cutout`,
+  PNG/WebP com transparência). Sem a foto sem fundo, o carrossel usa a capa.
+- **Layout:** menu com o clique indo para a listagem completa e as subcategorias no hover; peça em destaque ao lado do
+  título nas páginas que tinham metade vazia; coluna dos designers alinhada na coleção; fundos alternados na peça;
+  banner fixo da home só atrás da primeira seção; paralaxe mais forte.
+- **Peça em destaque da home:** é a primeira peça marcada como "Destaque" (Produtos → Geral), pela ordem das peças.
+- **Qualidade das fotos do topo:** limite das fontes, não do recorte. Os banners do WordPress têm 1920×500 e as capas
+  de Casa e Giardini 900×576; esticadas para a tela inteira, perdem nitidez. Precisa das fotos originais (Banners e
+  Áreas, no painel), em 2560 px ou mais.
+- **Capas:** as 7 da TEMPO foram limpas de novo (fundo branco sem halo nem cinza) e reenviadas. Sofá Antônio e Sofá
+  Royale não têm foto em diagonal: precisam de foto nova.
+- **Depois do deploy:** enviar a foto sem fundo das 15 peças de lançamento (recortes prontos na área temporária da
+  sessão; script de envio pelo painel em `painel/enviar-recorte.js` dessa área). O usuário de teste do painel criado
+  para isso deve ser apagado pelo Pedro Ivo.
