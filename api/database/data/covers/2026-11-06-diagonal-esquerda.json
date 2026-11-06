@@ -1,0 +1,734 @@
+{
+  "version": "2026-11-06-diagonal-esquerda",
+  "note": "Capa de cada peça trocada pela foto da galeria na diagonal, virada para a esquerda, em fundo branco. Lista revisada em 06/11/2026 a partir das galerias do preview; ids das fotos do preview.",
+  "covers": [
+    {
+      "product": "mesa-lateral-epoca",
+      "media": 85
+    },
+    {
+      "product": "cadeira-aura",
+      "media": 87
+    },
+    {
+      "product": "mesa-lateral-rito",
+      "media": 93
+    },
+    {
+      "product": "poltrona-so-corda",
+      "media": 105
+    },
+    {
+      "product": "mesa-de-centro-trem",
+      "media": 107
+    },
+    {
+      "product": "sofa-antonio",
+      "media": 114
+    },
+    {
+      "product": "mesa-joey",
+      "media": 126
+    },
+    {
+      "product": "poltrona-noa",
+      "media": 214
+    },
+    {
+      "product": "cadeira-cancun-2",
+      "media": 351
+    },
+    {
+      "product": "cadeira-noa",
+      "media": 219
+    },
+    {
+      "product": "cadeira-luzy-com-braco",
+      "media": 403
+    },
+    {
+      "product": "sofa-mares",
+      "media": 1571
+    },
+    {
+      "product": "banqueta-turin",
+      "media": 296
+    },
+    {
+      "product": "poltrona-helena",
+      "media": 291
+    },
+    {
+      "product": "cadeira-luzy-sem-braco",
+      "media": 408
+    },
+    {
+      "product": "sofa-dara",
+      "media": 1573
+    },
+    {
+      "product": "poltrona-bras",
+      "media": 309
+    },
+    {
+      "product": "buffet-juno",
+      "media": 493
+    },
+    {
+      "product": "sofa-noa",
+      "media": 226
+    },
+    {
+      "product": "cadeira-arreda",
+      "media": 811
+    },
+    {
+      "product": "mesa-de-jantar-duna",
+      "media": 1658
+    },
+    {
+      "product": "sofa-alba",
+      "media": 1576
+    },
+    {
+      "product": "poltrona-turin",
+      "media": 273
+    },
+    {
+      "product": "mesa-lateral-faro",
+      "media": 146
+    },
+    {
+      "product": "poltrona-cais",
+      "media": 160
+    },
+    {
+      "product": "sofa-pinot-living",
+      "media": 167
+    },
+    {
+      "product": "poltrona-adhara",
+      "media": 190
+    },
+    {
+      "product": "poltrona-arp",
+      "media": 206
+    },
+    {
+      "product": "mesa-de-centro-noa-redonda",
+      "media": 232
+    },
+    {
+      "product": "poltrona-toe",
+      "media": 251
+    },
+    {
+      "product": "poltrona-zinia",
+      "media": 260
+    },
+    {
+      "product": "bar-coda",
+      "media": 279
+    },
+    {
+      "product": "mesa-lateral-neri",
+      "media": 282
+    },
+    {
+      "product": "poltrona-lisa",
+      "media": 285
+    },
+    {
+      "product": "puff-gana",
+      "media": 300
+    },
+    {
+      "product": "mesa-de-jantar-nice",
+      "media": 303
+    },
+    {
+      "product": "aparador-calabria",
+      "media": 306
+    },
+    {
+      "product": "banco-treviso",
+      "media": 313
+    },
+    {
+      "product": "cadeira-nancy",
+      "media": 325
+    },
+    {
+      "product": "puff-lion",
+      "media": 329
+    },
+    {
+      "product": "cadeira-amalfi",
+      "media": 338
+    },
+    {
+      "product": "cadeira-angulo",
+      "media": 346
+    },
+    {
+      "product": "cadeira-gavea",
+      "media": 356
+    },
+    {
+      "product": "mesa-de-centro-palermo",
+      "media": 362
+    },
+    {
+      "product": "puff-lilian",
+      "media": 377
+    },
+    {
+      "product": "cadeira-catania",
+      "media": 397
+    },
+    {
+      "product": "mesa-de-centro-treviso",
+      "media": 413
+    },
+    {
+      "product": "cadeira-grecia",
+      "media": 419
+    },
+    {
+      "product": "banco-calabria",
+      "media": 427
+    },
+    {
+      "product": "poltrona-samarti",
+      "media": 430
+    },
+    {
+      "product": "poltrona-ferrara",
+      "media": 444
+    },
+    {
+      "product": "puff-tris",
+      "media": 450
+    },
+    {
+      "product": "sofa-frizzo",
+      "media": 453
+    },
+    {
+      "product": "cadeira-sintra",
+      "media": 459
+    },
+    {
+      "product": "mesa-lateral-porto",
+      "media": 465
+    },
+    {
+      "product": "cadeira-santiago",
+      "media": 472
+    },
+    {
+      "product": "cadeira-marcela-com-braco-outdoor",
+      "media": 478
+    },
+    {
+      "product": "cadeira-datini",
+      "media": 500
+    },
+    {
+      "product": "sofa-zurique",
+      "media": 508
+    },
+    {
+      "product": "cadeira-ferrara",
+      "media": 513
+    },
+    {
+      "product": "sofa-baggio",
+      "media": 519
+    },
+    {
+      "product": "sofa-tagli",
+      "media": 527
+    },
+    {
+      "product": "sofa-cuba",
+      "media": 544
+    },
+    {
+      "product": "poltrona-shangai",
+      "media": 552
+    },
+    {
+      "product": "poltrona-parma",
+      "media": 558
+    },
+    {
+      "product": "poltrona-iraja",
+      "media": 567
+    },
+    {
+      "product": "poltrona-gana",
+      "media": 572
+    },
+    {
+      "product": "poltrona-datini",
+      "media": 578
+    },
+    {
+      "product": "poltrona-campestre",
+      "media": 581
+    },
+    {
+      "product": "mesa-de-jantar-calabria",
+      "media": 611
+    },
+    {
+      "product": "mesa-de-centro-tokio",
+      "media": 614
+    },
+    {
+      "product": "mesa-de-centro-shanghai",
+      "media": 617
+    },
+    {
+      "product": "mesa-de-centro-bend",
+      "media": 624
+    },
+    {
+      "product": "escrivaninha-pampulha",
+      "media": 632
+    },
+    {
+      "product": "chaise-lazio",
+      "media": 654
+    },
+    {
+      "product": "chaise-datini",
+      "media": 658
+    },
+    {
+      "product": "chaise-barcelona",
+      "media": 664
+    },
+    {
+      "product": "cadeira-samarti",
+      "media": 679
+    },
+    {
+      "product": "cadeira-rio",
+      "media": 685
+    },
+    {
+      "product": "cadeira-orbit-sem-braco",
+      "media": 691
+    },
+    {
+      "product": "cadeira-orbit-com-braco",
+      "media": 696
+    },
+    {
+      "product": "cadeira-julia",
+      "media": 713
+    },
+    {
+      "product": "cadeira-gana",
+      "media": 722
+    },
+    {
+      "product": "cadeira-dijon-com-braco",
+      "media": 731
+    },
+    {
+      "product": "cadeira-dijon-sem-braco-2",
+      "media": 737
+    },
+    {
+      "product": "banqueta-orbit-sem-braco",
+      "media": 742
+    },
+    {
+      "product": "banqueta-marcela",
+      "media": 757
+    },
+    {
+      "product": "banqueta-lazio-com-braco",
+      "media": 766
+    },
+    {
+      "product": "banqueta-gana",
+      "media": 773
+    },
+    {
+      "product": "banqueta-dijon",
+      "media": 778
+    },
+    {
+      "product": "chaise-coce",
+      "media": 798
+    },
+    {
+      "product": "banqueta-lisa",
+      "media": 822
+    },
+    {
+      "product": "banqueta-julia",
+      "media": 831
+    },
+    {
+      "product": "banco-coda",
+      "media": 834
+    },
+    {
+      "product": "banqueta-apruma",
+      "media": 848
+    },
+    {
+      "product": "poltrona-apruma",
+      "media": 853
+    },
+    {
+      "product": "escrivaninha-bruma",
+      "media": 858
+    },
+    {
+      "product": "sofa-so",
+      "media": 869
+    },
+    {
+      "product": "poltrona-so",
+      "media": 874
+    },
+    {
+      "product": "aparador-xove",
+      "media": 881
+    },
+    {
+      "product": "sofa-nu",
+      "media": 884
+    },
+    {
+      "product": "rack-trani",
+      "media": 919
+    },
+    {
+      "product": "rack-coda",
+      "media": 923
+    },
+    {
+      "product": "mesa-de-centro-italy",
+      "media": 926
+    },
+    {
+      "product": "poltrona-maria-2",
+      "media": 932
+    },
+    {
+      "product": "mesa-de-centro-vic",
+      "media": 939
+    },
+    {
+      "product": "puff-jiff",
+      "media": 962
+    },
+    {
+      "product": "buffet-twin",
+      "media": 966
+    },
+    {
+      "product": "banqueta-vest",
+      "media": 978
+    },
+    {
+      "product": "cadeira-vest-com-braco",
+      "media": 991
+    },
+    {
+      "product": "banqueta-paglia",
+      "media": 994
+    },
+    {
+      "product": "cadeira-paglia",
+      "media": 1002
+    },
+    {
+      "product": "cadeira-beatriz",
+      "media": 1009
+    },
+    {
+      "product": "sofa-malta",
+      "media": 1016
+    },
+    {
+      "product": "poltrona-stella",
+      "media": 1023
+    },
+    {
+      "product": "poltrona-terere",
+      "media": 1035
+    },
+    {
+      "product": "poltrona-twiggy",
+      "media": 1046
+    },
+    {
+      "product": "banqueta-fran",
+      "media": 1052
+    },
+    {
+      "product": "cadeira-fran-com-braco",
+      "media": 1058
+    },
+    {
+      "product": "poltrona-fran",
+      "media": 1073
+    },
+    {
+      "product": "mesa-de-centro-neri",
+      "media": 1089
+    },
+    {
+      "product": "mesa-de-jantar-malaga",
+      "media": 1092
+    },
+    {
+      "product": "cadeira-malaga-com-braco",
+      "media": 1102
+    },
+    {
+      "product": "cadeira-gava",
+      "media": 1105
+    },
+    {
+      "product": "cadeira-zago",
+      "media": 1125
+    },
+    {
+      "product": "poltrona-zago",
+      "media": 1130
+    },
+    {
+      "product": "sofa-mumbai",
+      "media": 1139
+    },
+    {
+      "product": "poltrona-mumbai",
+      "media": 1144
+    },
+    {
+      "product": "poltrona-derby",
+      "media": 1153
+    },
+    {
+      "product": "mesa-de-centro-fiori",
+      "media": 1171
+    },
+    {
+      "product": "sofa-fiori",
+      "media": 1175
+    },
+    {
+      "product": "poltrona-fiori",
+      "media": 1180
+    },
+    {
+      "product": "cama-nick",
+      "media": 1185
+    },
+    {
+      "product": "revisteiro-near",
+      "media": 1208
+    },
+    {
+      "product": "cadeira-marcela-com-braco",
+      "media": 1226
+    },
+    {
+      "product": "cadeira-lisa-sem-braco",
+      "media": 1231
+    },
+    {
+      "product": "poltrona-betti",
+      "media": 1245
+    },
+    {
+      "product": "sofa-valentin",
+      "media": 1261
+    },
+    {
+      "product": "sofa-plataforma",
+      "media": 1265
+    },
+    {
+      "product": "poltrona-elo",
+      "media": 1281
+    },
+    {
+      "product": "poltrona-celina",
+      "media": 1285
+    },
+    {
+      "product": "poltrona-augusta",
+      "media": 1289
+    },
+    {
+      "product": "poltrona-altiva",
+      "media": 1295
+    },
+    {
+      "product": "mesa-de-jantar-minas",
+      "media": 1308
+    },
+    {
+      "product": "mesa-de-centro-belize",
+      "media": 1318
+    },
+    {
+      "product": "carrinho-veredas",
+      "media": 1341
+    },
+    {
+      "product": "cadeira-pita-com-braco",
+      "media": 1351
+    },
+    {
+      "product": "cadeira-olimpia",
+      "media": 1360
+    },
+    {
+      "product": "banco-dublin",
+      "media": 1385
+    },
+    {
+      "product": "cadeira-melina-com-braco",
+      "media": 1405
+    },
+    {
+      "product": "cadeira-gama",
+      "media": 1416
+    },
+    {
+      "product": "cadeira-cancun",
+      "media": 1422
+    },
+    {
+      "product": "cadeira-brisa-com-braco",
+      "media": 1434
+    },
+    {
+      "product": "cadeira-brisa-sem-braco",
+      "media": 1440
+    },
+    {
+      "product": "aparador-paco",
+      "media": 1447
+    },
+    {
+      "product": "sofa-sambura",
+      "media": 1454
+    },
+    {
+      "product": "sofa-holly",
+      "media": 1459
+    },
+    {
+      "product": "sofa-dara-indoor",
+      "media": 1463
+    },
+    {
+      "product": "poltrona-sambura-2",
+      "media": 1476
+    },
+    {
+      "product": "poltrona-sambaqui",
+      "media": 1488
+    },
+    {
+      "product": "poltrona-alfaia",
+      "media": 1493
+    },
+    {
+      "product": "penteadeira-lenyr",
+      "media": 1498
+    },
+    {
+      "product": "mesa-de-centro-hera",
+      "media": 1504
+    },
+    {
+      "product": "cama-lenyr",
+      "media": 1512
+    },
+    {
+      "product": "cadeira-teka-sem-braco",
+      "media": 1515
+    },
+    {
+      "product": "cadeira-teka-com-braco",
+      "media": 1521
+    },
+    {
+      "product": "cadeira-martino-sem-braco",
+      "media": 1528
+    },
+    {
+      "product": "cadeira-martino-com-braco",
+      "media": 1533
+    },
+    {
+      "product": "cadeira-helena",
+      "media": 1538
+    },
+    {
+      "product": "cadeira-dara-2",
+      "media": 1543
+    },
+    {
+      "product": "bar-martini",
+      "media": 1554
+    },
+    {
+      "product": "bar-juno",
+      "media": 1560
+    },
+    {
+      "product": "banco-hera",
+      "media": 1564
+    },
+    {
+      "product": "banco-dara",
+      "media": 1567
+    },
+    {
+      "product": "poltrona-solar",
+      "media": 1583
+    },
+    {
+      "product": "cadeira-solar-sem-braco",
+      "media": 1602
+    },
+    {
+      "product": "cadeira-solar-com-braco",
+      "media": 1608
+    },
+    {
+      "product": "cadeira-pita-3",
+      "media": 1612
+    },
+    {
+      "product": "cadeira-pita-sem-braco-2",
+      "media": 1625
+    },
+    {
+      "product": "cadeira-altiva",
+      "media": 1630
+    },
+    {
+      "product": "balanco-alira",
+      "media": 1636
+    },
+    {
+      "product": "banqueta-dara",
+      "media": 1666
+    }
+  ]
+}

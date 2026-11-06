@@ -178,6 +178,19 @@ Depois, faça **Deploy do site** para o build pegar o conteúdo.
 
 Não reimportar o snapshot e não apagar o banco.
 
+Ao subir, a API também faz sozinha, uma vez por versão e em segundo plano (os detalhes estão em
+`api/docker/entrypoint.sh`):
+
+- aplica as listas de capas revisadas de `api/database/data/covers/*.json`
+  (`php artisan franccino:covers:apply`). Cada lista troca a capa de cada peça pela foto da galeria na diagonal,
+  virada para a esquerda. Foto que não está mais na galeria é ignorada, porque vale o que foi editado no painel;
+- põe na fila as fotos redimensionadas de novo quando o tamanho ou a qualidade delas muda
+  (`php artisan franccino:media:refresh <versão>`, versão em `MEDIA_REFRESH_VERSION`). Com 2 workers, o catálogo
+  inteiro fica pronto em cerca de meia hora, e até lá o site mostra as versões antigas.
+
+A marca de cada versão fica em `storage/` (`.covers-*`, `.media-refresh-*`): apagar a marca faz a versão rodar de
+novo na próxima subida.
+
 ### Traduzir o conteúdo para o inglês
 
 O arquivo `api/database/data/translations/en.json` traz a tradução de todo o conteúdo publicado no preview em 16/10/2026

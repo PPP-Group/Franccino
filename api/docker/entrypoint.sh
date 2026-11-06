@@ -61,6 +61,19 @@ if [ "${RUN_QUEUE_WORKER:-true}" = "true" ]; then
     done
 fi
 
+# Manutenção das fotos, uma vez por versão (a marca em storage/ pula nas próximas subidas), em segundo plano para
+# não atrasar a API: as capas revisadas de database/data/covers/ (diagonal para a esquerda) e, depois de mudar o
+# tamanho ou a qualidade das versões redimensionadas, a fila para refazê-las. O site mostra as antigas até as novas
+# ficarem prontas. A trava evita rodar em dobro quando dois containers sobem juntos no redeploy.
+(
+    for list in database/data/covers/*.json; do
+        [ -f "$list" ] && flock storage/.media.lock php artisan franccino:covers:apply "$list" \
+            || echo "Capas de $list não aplicadas; a API segue com as atuais."
+    done
+    flock storage/.media.lock php artisan franccino:media:refresh "${MEDIA_REFRESH_VERSION:-2026-11-06-qualidade-90}" \
+        || echo "Fila das fotos redimensionadas não montada; a API segue com as atuais."
+) &
+
 # Agendador (routes/console.php): limpeza dos logs pelo prazo de retenção, jobs com falha, exportações e o backup
 # do SQLite. RUN_SCHEDULER=false desliga (ex.: um segundo container só de fila).
 if [ "${RUN_SCHEDULER:-true}" = "true" ]; then
