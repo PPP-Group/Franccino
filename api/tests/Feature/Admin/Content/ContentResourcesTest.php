@@ -190,14 +190,17 @@ it('creates a scene with a point on a piece', function () {
 
 it('offers to place a point by clicking the saved photo and choosing the piece there', function () {
     Storage::fake('media');
-    publishedProduct();
+    $product = publishedProduct();
     $scene = Scene::factory()->create();
     $scene->addMedia(UploadedFile::fake()->image('varanda.jpg', 1600, 900))->toMediaCollection('image');
+    $scene->hotspots()->create(['product_id' => $product->id, 'x' => 49.8, 'y' => 50]);
 
     livewire(EditScene::class, ['record' => $scene->getRouteKey()])
         ->assertOk()
         ->assertSee(__('Which piece is here?'))
         ->assertSee('Cadeira Aura', false)
+        // The click gives one decimal (e.g. 49.8); a coarser step would make the browser refuse to save.
+        ->assertSeeHtml('step="0.1"')
         ->assertSee($scene->getFirstMediaUrl('image'), false);
 });
 

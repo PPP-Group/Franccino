@@ -67,14 +67,14 @@ class SceneForm
                             ->numeric()
                             ->minValue(0)
                             ->maxValue(100)
-                            ->step(0.5)
+                            ->step(0.1)
                             ->required(),
                         TextInput::make('y')
                             ->label(__('Down (%)'))
                             ->numeric()
                             ->minValue(0)
                             ->maxValue(100)
-                            ->step(0.5)
+                            ->step(0.1)
                             ->required(),
                     ]),
             ]);
