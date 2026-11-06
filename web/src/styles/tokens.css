@@ -6,6 +6,9 @@
   /* Fundo das páginas: branco puro (pedido do cliente, 06/10/2026, "como no site da Saccaro"). */
   --stone: #ffffff;
   --paper: #ffffff;
+  /* Areia: fundo alternado de seções (retorno de 06/11/2026: mesclar branco e areia, como o site atual). */
+  --sand: #f4efe6;
+  --sand-strong: #e9e1d3;
   --ink: #171717;
   --ink-muted: #57564f;
   --line: #dcd9d1;
