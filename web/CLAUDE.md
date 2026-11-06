@@ -56,6 +56,7 @@ src/
     quote/QuoteListView.tsx
     home/{HeroSection,HeroCarousel,HeroVideo,SceneViewer,ScenesSection,LaunchesSection,LinesSection,FeatureSection,...}.tsx
     stores/StoreFinder.tsx
+    ideas/IdeaSection.tsx (página interna /pt/ideias: prévia das ideias aprovadas, noindex, fora do menu)
     seo/JsonLd.tsx
   i18n/{config,routing,navigation,request}.ts
   lib/
@@ -78,7 +79,7 @@ src/
     images/srcset.ts
     seo/{metadata,jsonld,sitemap,site-map}.ts
     security/{basic-auth,csp,csp-report}.ts
-  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,motion}.css
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,ideas,motion}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts

@@ -1,0 +1,101 @@
+/*
+  Prévia das ideias aprovadas (/pt/ideias). Página interna para a Franccino: cada ideia com número, situação, o que
+  falta e a demonstração ao vivo. Só tokens da escala (DESIGN.md, "Escala de tipos e de espaços").
+*/
+
+.ideas__head {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--section-y) var(--space-7);
+}
+
+.ideas__legend {
+  gap: var(--space-3) var(--space-5);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+}
+
+.ideas__legend > * + *::before {
+  content: none;
+}
+
+.idea {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--section-y-tight);
+  border-top: 1px solid var(--line);
+}
+
+.idea__head {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.idea__number {
+  color: var(--ink-muted);
+}
+
+.idea__description {
+  margin-top: var(--space-1);
+}
+
+.idea__status {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid currentColor;
+}
+
+.idea__status--ready,
+.idea__status--live {
+  color: var(--garden);
+}
+
+.idea__status--waiting {
+  color: var(--wood);
+}
+
+.idea__missing {
+  padding: var(--space-3) var(--space-4);
+  border-left: 2px solid var(--wood);
+  background: var(--row-hover);
+}
+
+.ideas__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.ideas__finishes {
+  padding-bottom: 0;
+}
+
+.ideas__stats {
+  padding-block: 0;
+}
+
+.ideas__later {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--line);
+}
+
+.ideas__later ul {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-left: var(--space-5);
+  max-width: var(--measure);
+}
+
+@media (max-width: 47.99rem) {
+  .ideas__tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ideas__legend .idea__status {
+  margin-right: var(--space-2);
+}

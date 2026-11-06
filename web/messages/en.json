@@ -617,5 +617,81 @@
   },
   "blocks": {
     "timeline": "Timeline"
+  },
+  "ideas": {
+    "meta": {
+      "title": "Approved ideas",
+      "description": "Preview of the ideas approved from the idea bank, with the status of each one."
+    },
+    "title": "Approved ideas",
+    "intro": "Every idea you approved on 26 October, working with the site's current content. Where your material is still missing, the demo uses an example and says what is missing.",
+    "number": "Idea {number}",
+    "missingLabel": "What we need from you:",
+    "status": {
+      "ready": "Ready",
+      "waiting": "Waiting for material",
+      "live": "Live"
+    },
+    "legend": {
+      "ready": "already works on the site.",
+      "waiting": "works, but the final result depends on your material."
+    },
+    "rail": {
+      "title": "Product rail",
+      "description": "Just the photo and the name, no buttons. Clicking the piece opens its page, where the 3D view and finishes are. Shown in Novelties and on each product page."
+    },
+    "lift": {
+      "title": "The piece comes forward",
+      "description": "On hover, the piece and its name come forward together. On a phone, a tap opens the piece directly."
+    },
+    "banner": {
+      "number": "3 and 14",
+      "title": "Clean banner, with a short video",
+      "description": "When the banner art already has text, the site writes nothing over it and adds no buttons. The banner keeps the art's proportions, with no cropping or enlarging. It also takes a short, silent looping video.",
+      "missing": "the final banner art in 16:9 (2560 px wide) and a 4:5 version for phones; and, if you wish, a 10 to 20 second MP4 video."
+    },
+    "scroll": {
+      "title": "Motion on scroll",
+      "description": "Large blocks rise into view as they enter the screen, and the featured piece turns slightly and fades as it leaves. Scroll slowly to see it."
+    },
+    "header": {
+      "title": "White header",
+      "description": "A solid white header, without transparency, with strong contrast. It is the one at the top of this page."
+    },
+    "scenes": {
+      "title": "Room with clickable points",
+      "description": "A photo of a furnished room with a point on each piece. The point opens the piece's photo and name, which lead to its page.",
+      "missing": "photos of furnished rooms with the pieces (landscape, high resolution) and which pieces appear in each photo. They are added in the admin panel, under Content, Rooms.",
+      "demoTitle": "Example room",
+      "demoNote": "Example using a collection photo and three real pieces at illustrative positions, only to show how it works."
+    },
+    "finish": {
+      "title": "Finish in detail",
+      "description": "Click a swatch to see the finish in a large, fixed image, whole or at actual size, to move across the texture. It also appears on the product page, next to the chosen finish.",
+      "missing": "the digitised finish photos in high resolution (2500 px or more), with each one's name and code."
+    },
+    "morph": {
+      "title": "The photo grows into the piece",
+      "description": "When you click a piece, the card photo grows into the large photo on the product page. Try it on the rail in idea 1."
+    },
+    "micro": {
+      "title": "Counting numbers and smooth loading",
+      "description": "Numbers count up to their value when they appear, and photos show a soft band while loading. The numbers below come from the current catalogue.",
+      "missing": "the factory figures you want to highlight (for example: years of history, factory area, pieces per month), for the Factory page.",
+      "products": "pieces in the catalogue",
+      "collections": "collections",
+      "designers": "designers"
+    },
+    "collections": {
+      "title": "Collections",
+      "description": "Large blocks, two per row, that darken and show the name and \"Learn more\" on hover. Already live.",
+      "link": "See the collections"
+    },
+    "later": {
+      "title": "What was left for later",
+      "finishPhotos": "Swapping finishes by photo (idea 8): for the second phase, since it needs a photo per finish.",
+      "glass": "Frosted glass header (idea 5): left for later; for now, the solid white header.",
+      "discarded": "Light and gradient per piece (6), 360° spin (11) and menu with image preview (15): discarded by you."
+    }
   }
 }

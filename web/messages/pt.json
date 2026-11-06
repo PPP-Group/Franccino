@@ -617,5 +617,81 @@
   },
   "blocks": {
     "timeline": "Linha do tempo"
+  },
+  "ideas": {
+    "meta": {
+      "title": "Ideias aprovadas",
+      "description": "Prévia das ideias aprovadas no banco de ideias, com a situação de cada uma."
+    },
+    "title": "Ideias aprovadas",
+    "intro": "Cada ideia que vocês aprovaram em 26 de outubro, funcionando com o conteúdo atual do site. Onde ainda falta material de vocês, a demonstração usa um exemplo e diz o que falta.",
+    "number": "Ideia {number}",
+    "missingLabel": "O que falta de vocês:",
+    "status": {
+      "ready": "Pronta",
+      "waiting": "Aguardando material",
+      "live": "No ar"
+    },
+    "legend": {
+      "ready": "já funciona no site.",
+      "waiting": "funciona, mas o resultado final depende de material de vocês."
+    },
+    "rail": {
+      "title": "Esteira de peças",
+      "description": "Só a foto e o nome, sem botões. O clique na peça abre a página dela, onde ficam o 3D e os acabamentos. Aparece em Lançamentos e na página de cada peça."
+    },
+    "lift": {
+      "title": "A peça vem para frente",
+      "description": "Ao passar o mouse, a peça e o nome vêm juntos para frente. No celular, o toque abre a peça direto."
+    },
+    "banner": {
+      "number": "3 e 14",
+      "title": "Banner limpo, com vídeo curto",
+      "description": "Quando a arte do banner já tem texto, o site não escreve nada por cima nem coloca botões. O banner segue a proporção da arte, sem cortar nem ampliar. Também aceita um vídeo curto em loop, sem som.",
+      "missing": "a arte final dos banners em 16:9 (2560 px de largura) e a versão para celular em 4:5; e, se quiserem, um vídeo de 10 a 20 segundos em MP4."
+    },
+    "scroll": {
+      "title": "Movimento na rolagem",
+      "description": "Os blocos grandes sobem e aparecem quando entram na tela, e a peça em destaque gira um pouco e se desfaz ao sair. Role devagar para ver."
+    },
+    "header": {
+      "title": "Cabeçalho branco",
+      "description": "Cabeçalho branco sólido, sem transparência, com contraste forte. É o que está no topo desta página."
+    },
+    "scenes": {
+      "title": "Ambiente com pontos clicáveis",
+      "description": "A foto de um ambiente montado, com um ponto em cada peça. O ponto abre a foto e o nome da peça, que levam à página dela.",
+      "missing": "fotos de ambientes montados com as peças (horizontais, em alta) e quais peças aparecem em cada foto. O cadastro é pelo painel, em Conteúdo, Ambientes.",
+      "demoTitle": "Ambiente de exemplo",
+      "demoNote": "Exemplo com uma foto de coleção e três peças reais em posições ilustrativas, só para mostrar o funcionamento."
+    },
+    "finish": {
+      "title": "Acabamento em detalhe",
+      "description": "Clique numa amostra para ver o acabamento numa imagem grande e fixa, inteira ou no tamanho real, para percorrer a textura. Também aparece na página da peça, ao lado do acabamento escolhido.",
+      "missing": "as fotos digitalizadas dos acabamentos em alta resolução (a partir de 2500 px), com o nome e o código de cada um."
+    },
+    "morph": {
+      "title": "A foto cresce até a peça",
+      "description": "Ao clicar numa peça, a foto do card cresce até virar a foto grande da página da peça. Experimente na esteira da ideia 1."
+    },
+    "micro": {
+      "title": "Números que contam e carregamento suave",
+      "description": "Os números contam até o valor quando aparecem na tela, e as fotos mostram uma faixa suave enquanto carregam. Os números abaixo vêm do catálogo atual.",
+      "missing": "os números da fábrica que querem destacar (por exemplo: anos de história, área da fábrica, peças por mês), para a página Fábrica.",
+      "products": "peças no catálogo",
+      "collections": "coleções",
+      "designers": "designers"
+    },
+    "collections": {
+      "title": "Coleções",
+      "description": "Blocos grandes, dois por linha, que escurecem e mostram o nome e o \"Saiba mais\" ao passar o mouse. Já está no ar.",
+      "link": "Ver as coleções"
+    },
+    "later": {
+      "title": "O que ficou para depois",
+      "finishPhotos": "Troca de acabamento por foto (ideia 8): para a segunda fase, porque depende de produzir uma foto por acabamento.",
+      "glass": "Vidro fosco no cabeçalho (ideia 5): ficou para mais tarde; por enquanto, o cabeçalho branco sólido.",
+      "discarded": "Luz e gradiente por peça (6), giro 360° (11) e menu com prévia de imagem (15): descartados por vocês."
+    }
   }
 }

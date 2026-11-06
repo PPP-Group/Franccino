@@ -252,3 +252,52 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 - **Don't** round a button, input, table, or card corner; square corners are the system's form language throughout.
 - **Don't** reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects — daylight photography and one grotesque are the world.
 - **Don't** promote `--ink-3` into use without a real call site; it is declared but unused in the current build.
+
+## Escala de tipos e de espaços (rodada 2, 06/11/2026)
+
+Regra única para o site inteiro. Tokens em `src/styles/tokens.css`; nenhum arquivo de estilo usa `font-size`, `padding`,
+`margin` ou `gap` com valor solto quando existe token para ele. Fontes das regras: as leis de UX usadas no VTX Tap
+(proximidade, Tesler, grade de 4 px, área de toque, 4 tempos de movimento) e o checklist das skills de design
+(Vercel web-interface-guidelines, Anthropic frontend-design, better-typography, impeccable, baseline-ui, web-quality).
+
+### Tipos
+
+| Token          | Tamanho                   | Uso                                                              | Fonte, peso, entrelinha |
+| -------------- | ------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| `--fs-display` | 44 a 80 px                | Uma vez por página, no máximo: banner sem foto, peça em destaque | Cormorant 500, 1.02     |
+| `--fs-h1`      | 36 a 56 px                | Título da página                                                 | Cormorant 500, 1.12     |
+| `--fs-h2`      | 28 a 40 px                | Título de seção                                                  | Cormorant 500, 1.12     |
+| `--fs-h3`      | 22 px                     | Título de item (card de projeto, grupo, coluna)                  | Cormorant 600, 1.25     |
+| `--fs-lead`    | 18 a 20 px                | Uma frase de abertura abaixo do título                           | EB Garamond 400, 1.55   |
+| `--fs-body`    | 17 px                     | Texto corrido, nome de peça no card                              | EB Garamond 400, 1.6    |
+| `--fs-ui`      | 15 px                     | Botões, menu, campos, filtros                                    | EB Garamond 500, 1.4    |
+| `--fs-caption` | 14 px                     | Metadados, legendas, rodapé de tabela                            | EB Garamond 400, 1.4    |
+| `--fs-label`   | 12 px, caixa alta, 0.08em | Etiquetas e cabeçalho de tabela; o único texto em caixa alta     | EB Garamond 600, 1.4    |
+
+- Títulos de 24 px ou mais com `letter-spacing: -0.01em`; `text-wrap: balance` em títulos e `pretty` em parágrafos.
+- Texto corrido com no máximo `--measure` (65 caracteres) por linha. Nada abaixo de 12 px.
+- Metadado nunca acima do título; nada de rótulo em caixa alta acima de cada título.
+- Números que mudam ou ficam em coluna com `.num` (algarismos tabulares).
+
+### Espaços
+
+Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
+
+- **Proximidade:** título → seu conteúdo com `--space-3` a `--space-4`; bloco → próximo bloco da mesma seção com
+  `--space-7`; seção → seção com `--section-y` (64 a 128 px). Uma seção mais densa usa `--section-y-tight`.
+- Entre itens irmãos de uma grade ou lista, sempre `gap`, nunca margem no item.
+- Margem lateral da página: `--gutter`; largura máxima: `--max`.
+
+### Interação e movimento
+
+- Área de toque de 44 px em todo controle; foco visível com contorno de 2 px.
+- Movimento só com `transform` e `opacity`, nos tempos `--t-press` (120), `--t-fast` (180), `--t-base` (240) e
+  `--t-mid` (320), curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
+- `prefers-reduced-motion`: nada se mexe; o conteúdo aparece pronto.
+- Lei de Tesler (VTX): a interface não mostra o que não se aplica agora (seção sem dado some; sem botão sem ação).
+
+### Imagens
+
+- Cada `ApiImage` declara um `sizes` igual à largura real em que é desenhada (contando o recorte de `object-fit:
+cover`), para o navegador baixar a versão certa em tela retina.
+- Arte de banner com texto (faixa larga do marketing) não é recortada: o banner segue a proporção da imagem.
