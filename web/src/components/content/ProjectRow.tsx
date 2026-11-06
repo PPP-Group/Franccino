@@ -34,7 +34,11 @@ export function ProjectRow({ project, meta = [], priority = false }: ProjectRowP
           </ul>
         ) : null}
         {project.summary ? <p className="project-row__text">{project.summary}</p> : null}
-        <Link className="pill-link" href={href} aria-label={`${common('learnMore')}: ${project.title}`}>
+        <Link
+          className="btn btn--ghost project-row__more"
+          href={href}
+          aria-label={`${common('learnMore')}: ${project.title}`}
+        >
           {common('learnMore')}
         </Link>
       </div>

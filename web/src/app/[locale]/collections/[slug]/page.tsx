@@ -12,6 +12,9 @@ import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
+/** Galeria em 3 colunas (2 no tablet, 1 no celular), com o recorte 4:3 de `.gallery-strip`. */
+const GALLERY_SIZES = '(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw';
+
 const collectionHref = (slug: string) => ({ pathname: '/collections/[slug]', params: { slug } }) as const;
 
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
@@ -45,9 +48,9 @@ export default async function CollectionPage({ params }: Props) {
   }
   const t = await getTranslations({ locale, namespace: 'collections' });
   return (
-    <main>
+    <main className="page-end">
       {collection.cover ? (
-        <div className="collection-banner">
+        <div className="page-banner-art">
           <ApiImage image={collection.cover} sizes="100vw" priority />
         </div>
       ) : null}
@@ -82,13 +85,13 @@ export default async function CollectionPage({ params }: Props) {
           <ul className="gallery-strip" aria-label={t('gallery')}>
             {collection.gallery.map((picture) => (
               <li key={picture.id}>
-                <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
+                <ApiImage image={picture} sizes={GALLERY_SIZES} />
               </li>
             ))}
           </ul>
         ) : null}
         {collection.products.length > 0 ? (
-          <section aria-labelledby="collection-pieces" className="section--tight">
+          <section aria-labelledby="collection-pieces" className="page-section">
             <h2 id="collection-pieces" className="section-title">
               {t('piecesTitle')}
             </h2>

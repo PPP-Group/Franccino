@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { PageHead } from '@/components/layout/PageHead';
 import { ApiImage } from '@/components/media/ApiImage';
@@ -10,6 +11,9 @@ import { getAllProjectSlugs, getProject } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+/** Galeria em 3 colunas (2 no tablet, 1 no celular), com o recorte 4:3 de `.gallery-strip`. */
+const GALLERY_SIZES = '(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw';
 
 const projectHref = (slug: string) => ({ pathname: '/projects/[slug]', params: { slug } }) as const;
 
@@ -44,11 +48,20 @@ export default async function ProjectPage({ params }: Props) {
   }
   const t = await getTranslations({ locale, namespace: 'projects' });
   const typeLabel = t.has(`types.${project.type}`) ? t(`types.${project.type}`) : project.type;
+  // Fatos só com o que foi cadastrado; sem nenhum, a lista some (antes sobrava o fio de cima). O ano já está no
+  // metadado ao lado do título.
+  const facts = [
+    { key: 'client', value: project.client_name },
+    { key: 'architect', value: project.architect },
+    { key: 'location', value: project.location },
+  ].filter((fact): fact is { key: 'client' | 'architect' | 'location'; value: string } =>
+    Boolean(fact.value),
+  );
   return (
-    <main className="wrap">
+    <main className="wrap page-end">
       <PageHead
         title={project.title}
-        lead={project.summary}
+        lead={distinctLead(project.summary, project.description)}
         trail={[{ label: t('title'), href: '/projects' }]}
         meta={
           <ul className="meta meta-inline num">
@@ -64,32 +77,16 @@ export default async function ProjectPage({ params }: Props) {
           ) : null}
         </div>
         <div className="detail-hero__copy">
-          <dl className="facts">
-            {project.client_name ? (
-              <div>
-                <dt>{t('client')}</dt>
-                <dd>{project.client_name}</dd>
-              </div>
-            ) : null}
-            {project.architect ? (
-              <div>
-                <dt>{t('architect')}</dt>
-                <dd>{project.architect}</dd>
-              </div>
-            ) : null}
-            {project.location ? (
-              <div>
-                <dt>{t('location')}</dt>
-                <dd>{project.location}</dd>
-              </div>
-            ) : null}
-            {project.year ? (
-              <div>
-                <dt>{t('year')}</dt>
-                <dd className="num">{project.year}</dd>
-              </div>
-            ) : null}
-          </dl>
+          {facts.length > 0 ? (
+            <dl className="facts">
+              {facts.map((fact) => (
+                <div key={fact.key}>
+                  <dt>{t(fact.key)}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
           {project.description ? <RichText html={project.description} className="prose" /> : null}
         </div>
       </div>
@@ -97,13 +94,13 @@ export default async function ProjectPage({ params }: Props) {
         <ul className="gallery-strip" aria-label={t('gallery')}>
           {project.gallery.map((picture) => (
             <li key={picture.id}>
-              <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
+              <ApiImage image={picture} sizes={GALLERY_SIZES} />
             </li>
           ))}
         </ul>
       ) : null}
       {project.products.length > 0 ? (
-        <section aria-labelledby="project-pieces" className="section--tight">
+        <section aria-labelledby="project-pieces" className="page-section">
           <h2 id="project-pieces" className="section-title">
             {t('piecesTitle')}
           </h2>

@@ -34,7 +34,7 @@ export default async function FactoryPage({ params }: Props) {
     getPage(locale, 'factory'),
   ]);
   return (
-    <main>
+    <main className="page-end">
       {/* Abre com a foto da fachada (capa da página no painel), como pedido nos ajustes de 06/10/2026. */}
       <PageBanner image={page?.cover ?? null} title={page?.title ?? t('title')} lead={page?.intro} />
       <div className="wrap">

@@ -30,7 +30,7 @@ export default async function CollectionsPage({ params }: Props) {
     getCollections(locale),
   ]);
   return (
-    <main>
+    <main className="page-end">
       <div className="wrap">
         <PageHead title={t('title')} centered />
       </div>
@@ -41,7 +41,12 @@ export default async function CollectionsPage({ params }: Props) {
       ) : (
         <div className="collection-grid">
           {collections.map((collection, index) => (
-            <CollectionTile key={collection.id} collection={collection} priority={index < 2} />
+            <CollectionTile
+              key={collection.id}
+              collection={collection}
+              priority={index < 2}
+              alone={collections.length % 2 === 1 && index === collections.length - 1}
+            />
           ))}
         </div>
       )}

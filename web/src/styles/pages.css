@@ -2,20 +2,47 @@
   Páginas restantes (plano P5a): grades de cartões, cabeçalho de detalhe,
   blocos de página do painel, lojas, downloads, contato, busca e erros.
   Só tokens de tokens.css; cantos retos; sem sombra em repouso.
+  Rodada 2 (06/11/2026): todo tamanho de letra, espaço e tempo de movimento por token (web/DESIGN.md, "Escala de
+  tipos e de espaços"); movimento só com transform e opacity.
 */
+
+/* ---------- ritmo das páginas ---------- */
+
+/* Fim da página: o mesmo respiro antes do rodapé em todas as páginas de conteúdo. */
+.page-end {
+  padding-bottom: var(--section-y);
+}
+
+/* Seção dentro de uma página de detalhe (peças da coleção, clientes, projetos corporativos). */
+.page-section {
+  margin-top: var(--section-y-tight);
+}
+
+/* Título de seção: o mesmo nas páginas de conteúdo, perto do que é dele. */
+.section-title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h2);
+}
+
+/* Título de grupo ou de coluna (mapa do site, grupos de acabamentos): papel de título de item. */
+.site-map .section-title,
+.finish-group .section-title {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-h3);
+}
 
 /* ---------- cartões ---------- */
 
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px 16px;
-  padding-bottom: 96px;
+  gap: var(--space-7) var(--space-4);
+  padding-bottom: var(--section-y);
 }
 
 .tile {
   display: grid;
-  gap: 14px;
+  gap: var(--space-3);
   align-content: start;
   color: inherit;
   text-decoration: none;
@@ -35,22 +62,18 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 900ms var(--ease-out);
+  transition: transform var(--t-mid) var(--ease-out);
 }
 
+/* Retrato sempre em preto e branco: filtro não anima (só transform e opacity se mexem). */
 .tile--portrait .tile__media img {
   filter: grayscale(1) contrast(1.02);
-  transition:
-    transform 900ms var(--ease-out),
-    filter var(--t-mid) ease;
 }
 
-.tile:hover .tile__media img {
-  transform: scale(1.02);
-}
-
-.tile--portrait:hover .tile__media img {
-  filter: grayscale(0);
+@media (hover: hover) {
+  .tile:hover .tile__media img {
+    transform: scale(1.02);
+  }
 }
 
 .tile:focus-visible {
@@ -60,17 +83,24 @@
 
 .tile__copy {
   display: grid;
-  gap: 6px;
+  gap: var(--space-1);
 }
 
 .tile__title {
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
 }
 
+/* Resumo do cartão em até 3 linhas: cartões da mesma linha ficam com a mesma altura de texto. */
 .tile__text {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin-top: var(--space-1);
   color: var(--ink-muted);
-  font-size: 0.9375rem;
-  max-width: 52ch;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-body);
 }
 
 /* ---------- cabeçalho de detalhe ---------- */
@@ -78,9 +108,14 @@
 .detail-hero {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(28px, 5vw, 80px);
+  gap: var(--space-8);
   align-items: start;
-  padding-bottom: 56px;
+  padding-bottom: var(--space-7);
+}
+
+/* Designer: o retrato fica na coluna menor e o texto na maior (o retrato em 7/12 da tela passava da dobra). */
+.detail-hero--portrait {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
 }
 
 .detail-hero__media img {
@@ -90,17 +125,17 @@
 
 .detail-hero__copy {
   display: grid;
-  gap: 20px;
+  gap: var(--space-5);
   align-content: start;
 }
 
 .gallery-strip {
   list-style: none;
-  margin: 0 0 56px;
+  margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
 }
 
 .gallery-strip img {
@@ -109,31 +144,35 @@
   object-fit: cover;
 }
 
-.section-title {
-  font-size: 1.5rem;
-  margin: 8px 0 20px;
-}
-
 /* ---------- blocos do painel ---------- */
 
 .blocks {
   display: grid;
-  gap: 56px;
-  padding-bottom: 96px;
+  gap: var(--section-y-tight);
+  padding-bottom: var(--section-y);
+}
+
+/* Dentro de uma página que já fecha com `.page-end`, o respiro do fim não se repete. */
+.page-end :is(.blocks, .tiles, .collection-grid) {
+  padding-bottom: 0;
 }
 
 .prose {
-  max-width: 70ch;
+  max-width: var(--measure);
 }
 
 .prose h2 {
-  font-size: 1.5rem;
-  margin: 36px 0 12px;
+  margin: var(--space-7) 0 var(--space-3);
+  font-size: var(--fs-h2);
 }
 
 .prose h3 {
-  font-size: 1.15rem;
-  margin: 28px 0 10px;
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--fs-h3);
+}
+
+.prose > :first-child {
+  margin-top: 0;
 }
 
 .prose a {
@@ -142,12 +181,39 @@
 
 .prose p + p,
 .prose p + ul,
-.prose ul + p {
-  margin-top: 0.85em;
+.prose ul + p,
+.prose p + ol,
+.prose ol + p {
+  margin-top: var(--space-4);
 }
 
-.prose ul {
-  padding-left: 1.2em;
+.prose ul,
+.prose ol {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+/*
+  Texto importado do WordPress (Privacidade, Termos): os subtítulos vieram como lista de um item só
+  (`<ul><li>IDENTIFICAÇÃO</li></ul>`), o que deixava um recuo e um marcador soltos. Lista de um item vira subtítulo,
+  alinhado à margem do texto. A caixa alta vem do próprio texto: o certo é trocar por um título no painel.
+*/
+.prose ul:has(> li:only-child) {
+  margin-top: var(--space-6);
+  padding-left: 0;
+  list-style: none;
+}
+
+.prose ul > li:only-child {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: var(--lh-h3);
+  text-wrap: balance;
+}
+
+.prose ul:has(> li:only-child) + p {
+  margin-top: var(--space-3);
 }
 
 .block-image img,
@@ -158,50 +224,54 @@
 
 .block-image figcaption,
 .block-gallery figcaption {
-  margin-top: 8px;
+  margin-top: var(--space-2);
   color: var(--ink-muted);
-  font-size: 0.875rem;
+  font-size: var(--fs-caption);
+}
+
+.block-image,
+.block-gallery {
+  margin: 0;
 }
 
 .block-image-text {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 64px);
+  gap: var(--space-8);
   align-items: center;
+}
+
+.block-image-text__copy {
+  display: grid;
+  gap: var(--space-4);
 }
 
 .block-image-text[data-image-position='right'] .block-image-text__media {
   order: 2;
 }
 
-/* "Nossa História" na horizontal, com setas (ajustes do cliente, 06/10/2026). */
+/* "Nossa História" na horizontal, com setas (ajustes do cliente, 06/10/2026). Ano, título e fatos alinhados à
+   esquerda, sob um fio contínuo que faz a linha do tempo. */
 .timeline {
-  gap: clamp(16px, 2vw, 32px);
+  gap: 0;
 }
 
+/* Sem `gap` entre os anos: o espaço fica dentro de cada item, para o fio correr sem falhas. */
 .timeline__item {
   display: grid;
   align-content: start;
-  justify-items: center;
-  gap: 12px;
-  width: clamp(220px, 22vw, 300px);
-  padding-block: 8px;
-  text-align: center;
+  gap: var(--space-3);
+  width: clamp(272px, 24vw, 332px);
+  padding: var(--space-5) var(--space-6) 0 0;
+  border-top: 1px solid var(--line-strong);
 }
 
 .timeline__year {
   font-family: var(--font-heading);
-  font-size: clamp(2.6rem, 4vw, 3.6rem);
-  font-weight: 600;
+  font-size: var(--fs-h1);
+  font-weight: 500;
   line-height: 1;
-}
-
-.timeline h3 {
-  font-family: var(--font);
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: var(--tracking-heading);
 }
 
 .timeline__facts {
@@ -209,36 +279,40 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 4px;
+  gap: var(--space-2);
   color: var(--ink-muted);
-  font-size: 0.9375rem;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
 }
 
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
+  gap: var(--space-6) var(--space-5);
   margin: 0;
 }
 
 .stats div {
-  background: var(--paper);
-  padding: 24px;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-strong);
 }
 
 .stats dt {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h1);
   line-height: 1;
+  letter-spacing: var(--tracking-heading);
 }
 
 .stats dd {
-  margin: 8px 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--ink-muted);
+  font-size: var(--fs-caption);
 }
 
 .faq {
   border-top: 1px solid var(--line);
-  max-width: 80ch;
+  max-width: var(--measure);
 }
 
 .faq details {
@@ -248,7 +322,7 @@
 .faq summary {
   cursor: pointer;
   min-height: 44px;
-  padding: 14px 0;
+  padding: var(--space-3) 0;
   font-weight: 600;
 }
 
@@ -258,31 +332,38 @@
 }
 
 .faq details p {
-  margin: 0 0 18px;
+  margin: 0 0 var(--space-4);
   color: var(--ink-muted);
-  max-width: 70ch;
 }
 
 .block-quote {
   margin: 0;
-  padding-left: 24px;
+  padding-left: var(--space-5);
   border-left: 2px solid var(--ink);
 }
 
 .block-quote p {
-  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: balance;
 }
 
 .block-quote cite {
+  display: block;
+  margin-top: var(--space-3);
   font-style: normal;
   color: var(--ink-muted);
+  font-size: var(--fs-caption);
 }
 
+/* Chamada do painel: fundo e página são brancos, então o bloco se separa por um fio, não por uma caixa colorida. */
 .block-cta {
-  background: var(--paper);
-  padding: clamp(24px, 4vw, 48px);
+  border: 1px solid var(--line);
+  padding: var(--space-7);
   display: grid;
-  gap: 14px;
+  gap: var(--space-4);
   justify-items: start;
 }
 
@@ -292,7 +373,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .block-gallery img {
@@ -304,21 +385,21 @@
 /* ---------- acabamentos ---------- */
 
 .finish-group + .finish-group {
-  margin-top: 48px;
+  margin-top: var(--space-7);
 }
 
 .finish-grid {
   list-style: none;
   margin: 0;
-  padding: 0 0 48px;
+  padding: 0 0 var(--space-7);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px 16px;
+  gap: var(--space-5) var(--space-4);
 }
 
 .finish-card {
   display: grid;
-  gap: 6px;
+  gap: var(--space-2);
   align-content: start;
 }
 
@@ -352,15 +433,15 @@
 
 .finish-card__zoom-icon {
   position: absolute;
-  right: 6px;
-  bottom: 6px;
+  right: var(--space-2);
+  bottom: var(--space-2);
   display: grid;
   place-items: center;
   width: 28px;
   height: 28px;
   background: var(--paper);
   opacity: 0;
-  transition: opacity var(--t-fast) ease;
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 .finish-card__zoom-icon .icon {
@@ -380,7 +461,7 @@
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: zoom-in;
@@ -401,8 +482,8 @@
 
 .finish-zoom__panel {
   display: grid;
-  gap: 16px;
-  padding: clamp(16px, 3vw, 32px);
+  gap: var(--space-4);
+  padding: clamp(var(--space-4), 3vw, var(--space-6));
 }
 
 .finish-zoom__head,
@@ -410,7 +491,7 @@
   display: flex;
   align-items: start;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .finish-zoom__foot {
@@ -419,7 +500,7 @@
 }
 
 .finish-zoom__title {
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: var(--fs-h2);
 }
 
 .finish-zoom__close {
@@ -466,9 +547,9 @@
 .search-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: end;
-  margin-bottom: 32px;
+  margin-bottom: var(--space-6);
 }
 
 .search-form .field {
@@ -478,38 +559,49 @@
 .search-form input,
 .search-form select {
   min-height: 48px;
-  padding: 0 14px;
+  padding: 0 var(--space-3);
   border: 1px solid var(--line-field);
   background: var(--paper);
   font: inherit;
 }
 
 .result-group + .result-group {
-  margin-top: 56px;
+  margin-top: var(--space-8);
 }
 
 /* ---------- lojas ---------- */
 
+.stores-page {
+  padding-top: var(--space-4);
+}
+
 .store__hours {
   color: var(--ink-muted);
-  font-size: 0.875rem;
+  font-size: var(--fs-caption);
   white-space: pre-line;
 }
 
+/* Contatos da loja (e links de designer e de vídeos) numa linha que quebra, sem um vão de 44 px entre cada um. */
 .store__links {
   list-style: none;
-  margin: 4px 0 0;
+  margin: 0;
   padding: 0;
-  display: grid;
-  gap: 6px;
-  font-size: 0.875rem;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-5);
+  font-size: var(--fs-caption);
 }
 
 .store__links a {
   display: inline-flex;
-  gap: 6px;
+  gap: var(--space-2);
   align-items: center;
   min-height: 44px;
+}
+
+.store__links .icon {
+  width: 16px;
+  height: 16px;
 }
 
 /* ---------- contato ---------- */
@@ -517,21 +609,22 @@
 .contact-layout {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(28px, 5vw, 80px);
+  gap: var(--space-8);
   align-items: start;
-  padding-bottom: 72px;
+  padding-bottom: var(--section-y);
 }
 
 /* ---------- erros ---------- */
 
 .error-page {
-  padding-block: 96px 120px;
+  padding-block: var(--space-9) var(--space-10);
 }
 
 /* ---------- responsivo ---------- */
 
 @media (max-width: 56.25rem) {
-  .tiles {
+  .tiles,
+  .gallery-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -539,15 +632,21 @@
   .block-image-text,
   .contact-layout {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
   }
 
   .block-image-text[data-image-position='right'] .block-image-text__media {
     order: 0;
   }
+
+  .block-cta {
+    padding: var(--space-5);
+  }
 }
 
 @media (max-width: 35rem) {
-  .tiles {
+  .tiles,
+  .gallery-strip {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -567,8 +666,8 @@
 .site-map {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(28px, 4vw, 56px);
-  padding-block: clamp(24px, 4vw, 48px) clamp(48px, 8vw, 96px);
+  gap: var(--space-7);
+  padding-block: var(--space-6) var(--section-y);
 }
 
 .site-map ul {
@@ -576,14 +675,26 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .site-map a {
   display: inline-block;
   min-height: 44px;
-  padding-block: 10px;
+  padding-block: var(--space-2);
   color: var(--ink);
+}
+
+/* Com mouse a lista fica justa (32 px por linha); no toque cada link mantém os 44 px. */
+@media (pointer: fine) {
+  .site-map a {
+    min-height: 0;
+    padding-block: var(--space-1);
+  }
+
+  .site-map ul {
+    gap: 0;
+  }
 }
 
 .site-map a:hover,
@@ -606,7 +717,7 @@
 /* ---------- loja com foto e descrição (PPP-108) ---------- */
 
 .store__image {
-  margin: calc(-1 * var(--store-pad, 0px)) calc(-1 * var(--store-pad, 0px)) 4px;
+  margin: calc(-1 * var(--store-pad, 0px)) calc(-1 * var(--store-pad, 0px)) var(--space-1);
   aspect-ratio: 4 / 3;
   background: var(--stone);
   overflow: hidden;
@@ -624,11 +735,13 @@
 
 /* ---------- banner com foto no topo (ajustes do cliente, 06/10/2026) ---------- */
 
+/* Altura igual a PAGE_BANNER_HEIGHT em lib/images/cover-sizes.ts (o `sizes` da foto é calculado com ela). */
 .page-banner {
+  --page-banner-h: clamp(360px, 62vh, 640px);
   position: relative;
   display: flex;
   align-items: flex-end;
-  height: clamp(360px, 62vh, 640px);
+  height: var(--page-banner-h);
   overflow: hidden;
   background: var(--hero-ground);
   color: var(--paper);
@@ -654,28 +767,42 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 14px;
+  gap: var(--space-3);
   width: 100%;
-  padding-block: clamp(32px, 6vw, 72px);
+  padding-block: var(--section-y-tight);
 }
 
+/* Título da página sobre a foto: sem caixa alta (só rótulos curtos têm caixa alta). */
 .page-banner__title {
   color: var(--paper);
-  font-size: clamp(2.4rem, 5vw, 4.6rem);
-  font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
 }
 
 .page-banner__lead {
-  max-width: 60ch;
+  max-width: var(--measure);
   color: var(--on-photo-muted);
-  font-size: 1.0625rem;
+  font-size: var(--fs-lead);
 }
 
 .page-banner + .wrap {
-  padding-top: clamp(32px, 5vw, 56px);
+  padding-top: var(--space-7);
+}
+
+/*
+  Arte larga (faixa do WordPress, ~1920×500) e capa da coleção: a imagem segue a própria proporção, sem recorte nem
+  ampliação; o título vem logo abaixo, no cabeçalho de texto. Uma foto alta usada como capa é limitada a 72% da
+  tela.
+*/
+.page-banner-art {
+  background: var(--hero-ground);
+}
+
+.page-banner-art img {
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  object-fit: cover;
 }
 
 /* ---------- coleções no modelo do site antigo (ajustes do cliente, 06/10/2026) ---------- */
@@ -683,7 +810,7 @@
 .collection-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding-bottom: 96px;
+  padding-bottom: var(--section-y);
 }
 
 .collection-tile {
@@ -703,7 +830,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 900ms var(--ease-out);
+  transition: transform var(--t-mid) var(--ease-out);
 }
 
 .collection-tile__overlay {
@@ -712,39 +839,47 @@
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 16px;
-  padding: 24px;
+  gap: var(--space-4);
+  padding: var(--space-5);
   text-align: center;
-  background: var(--hero-shade-clear);
-  transition: background var(--t-mid) ease;
+}
+
+/* O escurecer é uma camada que aparece por opacidade (só transform e opacity se mexem). */
+.collection-tile__overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hero-shade);
+  opacity: 0;
+  transition: opacity var(--t-mid) var(--ease-out);
+}
+
+.collection-tile__title,
+.collection-tile__more {
+  position: relative;
 }
 
 .collection-tile__title {
   color: var(--paper);
-  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: var(--fs-h2);
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(var(--space-2));
   transition:
-    opacity var(--t-mid) ease,
+    opacity var(--t-mid) var(--ease-out),
     transform var(--t-mid) var(--ease-out);
 }
 
+/* "Saiba mais" quadrado, como os botões do site. */
 .collection-tile__more {
-  padding: 8px 22px;
+  padding: var(--space-2) var(--space-5);
   border: 1px solid var(--paper);
-  border-radius: 999px;
-  font-size: 0.875rem;
+  font-size: var(--fs-ui);
   opacity: 0;
-  transition: opacity var(--t-mid) ease;
+  transition: opacity var(--t-mid) var(--ease-out);
 }
 
-.collection-tile:hover .collection-tile__overlay,
-.collection-tile:focus-visible .collection-tile__overlay {
-  background: var(--hero-shade);
-}
-
+.collection-tile:hover .collection-tile__overlay::before,
+.collection-tile:focus-visible .collection-tile__overlay::before,
 .collection-tile:hover .collection-tile__title,
 .collection-tile:focus-visible .collection-tile__title,
 .collection-tile:hover .collection-tile__more,
@@ -753,8 +888,10 @@
   transform: none;
 }
 
-.collection-tile:hover .collection-tile__media img {
-  transform: scale(1.03);
+@media (hover: hover) {
+  .collection-tile:hover .collection-tile__media img {
+    transform: scale(1.03);
+  }
 }
 
 .collection-tile:focus-visible {
@@ -764,10 +901,7 @@
 
 /* Sem mouse (celular, tablet), o nome e o "Saiba mais" ficam sempre à vista. */
 @media (hover: none) {
-  .collection-tile__overlay {
-    background: var(--hero-shade);
-  }
-
+  .collection-tile__overlay::before,
   .collection-tile__title,
   .collection-tile__more {
     opacity: 1;
@@ -775,17 +909,24 @@
   }
 }
 
-.collection-banner img {
-  width: 100%;
-  height: auto;
-  max-height: 72vh;
-  object-fit: cover;
-}
-
 .collection-intro {
   display: grid;
-  gap: 24px;
-  padding-bottom: 56px;
+  gap: var(--space-5);
+  padding-bottom: var(--space-7);
+}
+
+/* Designers da coleção na mesma coluna do texto (na largura toda, o nome ficava longe do rótulo). */
+.collection-intro .facts {
+  max-width: var(--measure);
+}
+
+@media (min-width: 48.0625rem) {
+  /* Último bloco de uma lista ímpar: centralizado na linha, do mesmo tamanho dos outros (sem meia linha vazia). */
+  .collection-tile--alone {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 50%;
+  }
 }
 
 @media (max-width: 48rem) {
@@ -803,16 +944,27 @@
 
 /* ---------- projetos em faixas alternadas (ajustes do cliente, 06/10/2026) ---------- */
 
+/* Filtro por tipo: os chips juntos à esquerda e sem fixar no topo (são só três). */
+.toolbar.project-filter {
+  position: static;
+  justify-content: flex-start;
+  gap: var(--space-2);
+}
+
 .project-rows {
   display: grid;
-  gap: clamp(48px, 7vw, 96px);
-  padding-block: 24px 72px;
+  gap: var(--space-9);
+  padding-top: var(--space-7);
+}
+
+.page-section > .project-rows {
+  padding-top: var(--space-5);
 }
 
 .project-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 80px);
+  gap: var(--space-8);
   align-items: center;
 }
 
@@ -831,24 +983,25 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 900ms var(--ease-out);
+  transition: transform var(--t-mid) var(--ease-out);
 }
 
-.project-row__media:hover img {
-  transform: scale(1.02);
+@media (hover: hover) {
+  .project-row__media:hover img {
+    transform: scale(1.02);
+  }
 }
 
 .project-row__copy {
   display: grid;
-  gap: 14px;
+  gap: var(--space-3);
   justify-items: start;
-  max-width: 56ch;
+  max-width: var(--measure);
 }
 
+/* Nome do projeto como título de seção, sem caixa alta (só rótulos curtos têm caixa alta). */
 .project-row__title {
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: var(--fs-h2);
 }
 
 .project-row__title a {
@@ -859,34 +1012,28 @@
   text-decoration: underline;
 }
 
+/* Resumo em até 5 linhas: o texto completo fica na página do projeto. */
 .project-row__text {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
   color: var(--ink-muted);
 }
 
-.pill-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 24px;
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  color: var(--ink);
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition:
-    background var(--t-fast) ease,
-    color var(--t-fast) ease;
-}
-
-.pill-link:hover,
-.pill-link:focus-visible {
-  background: var(--ink);
-  color: var(--paper);
+.project-row__more {
+  margin-top: var(--space-3);
 }
 
 @media (max-width: 56.25rem) {
+  .project-rows {
+    gap: var(--space-8);
+  }
+
   .project-row {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
   }
 
   .project-row:nth-child(even) .project-row__media {
@@ -898,7 +1045,7 @@
 
 .scroll-rail {
   display: grid;
-  gap: 16px;
+  gap: var(--space-5);
 }
 
 .scroll-rail__track {
@@ -934,23 +1081,20 @@
 .scroll-rail__controls {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
+/* Setas quadradas, como todo controle do site; a cor troca na hora, só a opacidade anima. */
 .scroll-rail__button {
   display: inline-grid;
   place-items: center;
   width: 44px;
   height: 44px;
   border: 1px solid var(--ink);
-  border-radius: 50%;
   background: transparent;
   color: var(--ink);
   cursor: pointer;
-  transition:
-    background var(--t-fast) ease,
-    color var(--t-fast) ease,
-    opacity var(--t-fast) ease;
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 .scroll-rail__button:hover:not(:disabled) {
@@ -969,55 +1113,57 @@
 
 /* ---------- "Alguns de nossos clientes" ---------- */
 
-.clients {
-  padding-block: 24px 96px;
-}
-
-.clients__title {
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+/* Os clientes fecham a página: seção inteira de distância, não a das seções de detalhe. */
+.clients.page-section {
+  margin-top: var(--section-y);
 }
 
 .clients__list {
-  gap: 24px;
+  gap: var(--space-4);
 }
 
 .clients__item {
-  width: 200px;
+  width: 176px;
 }
 
+/* Cada cliente numa caixa quadrada com fio: logo ou, sem logo, o nome. */
 .clients__item > a,
 .clients__item > img,
 .clients__item > .clients__name {
   display: grid;
   place-items: center;
-  height: 200px;
+  height: 112px;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
 }
 
 .clients__item img {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 72px;
   width: auto;
   height: auto;
   object-fit: contain;
 }
 
 .clients__name {
-  padding: 16px;
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-h3);
   text-align: center;
+  text-wrap: balance;
 }
 
 @media (max-width: 35rem) {
   .clients__item {
-    width: 150px;
+    width: 144px;
   }
 
   .clients__item > a,
   .clients__item > img,
   .clients__item > .clients__name {
-    height: 150px;
+    height: 96px;
   }
 }
 
@@ -1041,13 +1187,13 @@
   object-fit: cover;
 }
 
+/* Botão de play quadrado sobre a capa. */
 .video__play--poster .icon {
   position: relative;
   width: clamp(64px, 8vw, 96px);
   height: clamp(64px, 8vw, 96px);
-  padding: clamp(18px, 2.2vw, 28px);
+  padding: var(--space-5);
   border-color: var(--paper);
-  border-radius: 50%;
   background: transparent;
   color: var(--paper);
 }
@@ -1063,7 +1209,7 @@
 .store-map {
   margin: 0;
   display: grid;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .store-map__frame {
@@ -1104,7 +1250,7 @@
   border-radius: 50% 50% 50% 0;
   background: var(--ink);
   transform: rotate(-45deg);
-  transition: background var(--t-fast) ease;
+  transition: transform var(--t-fast) var(--ease-out);
 }
 
 .store-map__pin::after {
@@ -1118,10 +1264,11 @@
 .store-map__pin:hover,
 .store-map__pin:focus-visible {
   background: var(--wood);
+  transform: rotate(-45deg) scale(1.15);
 }
 
 .store-map__credit {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
   text-align: right;
 }
@@ -1133,7 +1280,7 @@
 @media (min-width: 900px) {
   .stores__intro:has(.store-map) {
     position: sticky;
-    top: calc(var(--header) + 24px);
+    top: calc(var(--header) + var(--space-5));
     align-self: start;
   }
 }

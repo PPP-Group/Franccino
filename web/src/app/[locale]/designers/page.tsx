@@ -30,7 +30,7 @@ export default async function DesignersPage({ params }: Props) {
     getDesigners(locale),
   ]);
   return (
-    <main className="wrap">
+    <main className="wrap page-end">
       <PageHead
         title={t('title')}
         lead={t('description')}

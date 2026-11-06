@@ -35,7 +35,7 @@ export default async function StoresPage({ params }: Props) {
     getStores(locale),
   ]);
   return (
-    <main className="wrap">
+    <main className="wrap page-end">
       <PageHead
         title={page?.title ?? t('title')}
         lead={page?.intro}
@@ -44,7 +44,7 @@ export default async function StoresPage({ params }: Props) {
       {list.stores.length === 0 ? (
         <EmptyNotice text={common('nothingYet')} />
       ) : (
-        <section className="section section--tight" aria-label={t('title')}>
+        <section className="stores-page" aria-label={t('title')}>
           <StoreFinder stores={list.stores} states={list.states} allStates typeFilter detailed map />
         </section>
       )}

@@ -11,15 +11,15 @@ export function ClientsRail({ clients }: { clients: Client[] }) {
     return null;
   }
   return (
-    <section className="clients" aria-labelledby="clients-title">
-      <h2 id="clients-title" className="section-title clients__title">
+    <section className="clients page-section" aria-labelledby="clients-title">
+      <h2 id="clients-title" className="section-title">
         {t('clients')}
       </h2>
       <Rail label={t('clients')}>
         <ul className="clients__list">
           {clients.map((client) => {
             const mark = client.logo ? (
-              <ApiImage image={client.logo} sizes="200px" />
+              <ApiImage image={client.logo} sizes="160px" />
             ) : (
               <span className="clients__name">{client.name}</span>
             );

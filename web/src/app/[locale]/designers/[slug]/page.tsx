@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
@@ -52,17 +53,17 @@ export default async function DesignerPage({ params }: Props) {
     designer.instagram_url ? { href: designer.instagram_url, label: t('instagram') } : null,
   ].filter((link): link is { href: string; label: string } => link !== null);
   return (
-    <main className="wrap">
+    <main className="wrap page-end">
       <PageHead
         title={designer.name}
-        lead={designer.short_bio}
+        lead={distinctLead(designer.short_bio, designer.bio)}
         trail={[{ label: t('title'), href: '/designers' }]}
         meta={designer.location ? <p className="meta">{designer.location}</p> : null}
       />
-      <div className="detail-hero">
+      <div className="detail-hero detail-hero--portrait">
         <div className="detail-hero__media designer__photo">
           {designer.portrait ? (
-            <ApiImage image={designer.portrait} sizes="(max-width: 56.25rem) 100vw, 40vw" priority />
+            <ApiImage image={designer.portrait} sizes="(max-width: 56.25rem) 100vw, 36vw" priority />
           ) : null}
         </div>
         <div className="detail-hero__copy">
@@ -107,7 +108,7 @@ export default async function DesignerPage({ params }: Props) {
         className="media-links--wide block"
       />
       {designer.products.length > 0 ? (
-        <section aria-labelledby="designer-pieces">
+        <section aria-labelledby="designer-pieces" className="page-section">
           <h2 id="designer-pieces" className="section-title">
             {t('piecesTitle')}
           </h2>
