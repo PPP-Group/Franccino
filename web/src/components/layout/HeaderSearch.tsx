@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import { type CSSProperties, type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
@@ -20,7 +20,11 @@ function suggestionHref(item: Suggestion) {
   return { pathname: '/products/[slug]', params: { slug: item.slug } } as const;
 }
 
-/** Busca do cabeçalho: abre um campo e mostra sugestões enquanto a pessoa digita. */
+/**
+ * Busca do cabeçalho: abre uma faixa logo abaixo da barra (desce com fade), com o campo sublinhado como o da
+ * newsletter, e mostra sugestões enquanto a pessoa digita. O painel fica sempre no HTML (`hidden` quando fechado),
+ * para fechar também com transição (motion.css).
+ */
 export function HeaderSearch() {
   const t = useTranslations('header');
   const tSearch = useTranslations('search');
@@ -34,12 +38,18 @@ export function HeaderSearch() {
   const [result, setResult] = useState<{ q: string; items: Suggestion[] } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const requestRef = useRef(0);
 
+  // Fechar não apaga o texto na hora (o painel ainda está sumindo); abrir de novo começa limpo.
   function close() {
     setOpen(false);
+  }
+
+  function openSearch() {
     setQuery('');
     setResult(null);
+    setOpen(true);
   }
 
   // Muda de página: fecha. Estado derivado do caminho, por isso só reage à troca.
@@ -48,8 +58,6 @@ export function HeaderSearch() {
     if (lastPathname.current !== pathname) {
       lastPathname.current = pathname;
       setOpen(false);
-      setQuery('');
-      setResult(null);
     }
   }, [pathname]);
 
@@ -66,6 +74,7 @@ export function HeaderSearch() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setOpen(false);
+        buttonRef.current?.focus();
       }
     }
     document.addEventListener('pointerdown', onPointerDown);
@@ -104,22 +113,24 @@ export function HeaderSearch() {
   }
 
   return (
-    <div className="header-search" ref={rootRef}>
+    <div className={open ? 'header-search is-open' : 'header-search'} ref={rootRef}>
       <button
+        ref={buttonRef}
         type="button"
         aria-label={t('search')}
         aria-expanded={open}
         aria-controls={listId}
-        onClick={() => (open ? close() : setOpen(true))}
+        onClick={() => (open ? close() : openSearch())}
       >
         <Icon name={open ? 'close' : 'search'} />
       </button>
-      {open ? (
-        <div className="header-search__panel" id={listId}>
-          <form className="wrap header-search__inner" role="search" onSubmit={onSubmit}>
-            <label className="visually-hidden" htmlFor={`${listId}-q`}>
-              {tSearch('label')}
-            </label>
+      <div className="header-search__panel" id={listId} hidden={!open}>
+        <form className="wrap header-search__inner" role="search" onSubmit={onSubmit}>
+          <label className="visually-hidden" htmlFor={`${listId}-q`}>
+            {tSearch('label')}
+          </label>
+          <div className="header-search__field">
+            <Icon name="search" />
             <input
               ref={inputRef}
               id={`${listId}-q`}
@@ -129,36 +140,40 @@ export function HeaderSearch() {
               placeholder={tSearch('placeholder')}
               onChange={(event) => setQuery(event.target.value)}
             />
-            <div aria-live="polite">
-              {items.length > 0 ? (
-                <ul className="header-search__list">
-                  {items.map((item) => (
-                    <li key={`${item.kind}-${item.slug}`}>
-                      <Link href={suggestionHref(item)} onClick={close}>
-                        <span
-                          className={`header-search__thumb header-search__thumb--${item.kind}`}
-                          aria-hidden="true"
-                        >
-                          <ApiImage image={item.image ? { ...item.image, alt: '' } : null} sizes="88px" />
-                        </span>
-                        <span className="header-search__name">{item.name}</span>
-                        <small>{tSearch(`kind.${item.kind}`)}</small>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : searched ? (
-                <p className="header-search__empty">{tSearch('noResults')}</p>
-              ) : null}
-            </div>
+            <button type="submit" className="header-search__submit" aria-label={tSearch('submit')}>
+              <Icon name="arrow" />
+            </button>
+          </div>
+          <div aria-live="polite">
             {items.length > 0 ? (
-              <button type="submit" className="header-search__all">
-                {tSearch('seeAll')}
-              </button>
+              <ul className="header-search__list">
+                {items.map((item, index) => (
+                  <li key={`${item.kind}-${item.slug}`} style={{ '--i': index } as CSSProperties}>
+                    <Link href={suggestionHref(item)} onClick={close}>
+                      <span
+                        className={`header-search__thumb header-search__thumb--${item.kind}`}
+                        aria-hidden="true"
+                      >
+                        <ApiImage image={item.image ? { ...item.image, alt: '' } : null} sizes="88px" />
+                      </span>
+                      <span className="header-search__name">{item.name}</span>
+                      <small>{tSearch(`kind.${item.kind}`)}</small>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : searched ? (
+              <p className="header-search__empty">{tSearch('noResults')}</p>
             ) : null}
-          </form>
-        </div>
-      ) : null}
+          </div>
+          {items.length > 0 ? (
+            <button type="submit" className="link-arrow header-search__all">
+              {tSearch('seeAll')}
+              <Icon name="arrow" />
+            </button>
+          ) : null}
+        </form>
+      </div>
     </div>
   );
 }

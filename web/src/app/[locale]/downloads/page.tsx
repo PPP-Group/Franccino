@@ -66,7 +66,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
   }
 
   return (
-    <main className="wrap">
+    <main className="wrap catalog">
       <PageHead
         title={page?.title ?? t('title')}
         lead={page?.intro}

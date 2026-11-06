@@ -52,8 +52,34 @@ describe('PlanSvg', () => {
     expect(html).toContain('role="group"');
     expect(html).toContain('class="piece is-selected"');
     expect(html).toContain('class="piece is-conflict"');
-    expect(html).toContain('<rect width="240" height="100"');
-    expect(html).toContain('<ellipse cx="65" cy="65" rx="65" ry="65"');
+    expect(html).toContain('<rect class="piece__outline" width="240" height="100"');
+    expect(html).toContain('<ellipse class="piece__outline" cx="65" cy="65" rx="65" ry="65"');
     expect(html).toContain('Sofá Majestic');
+  });
+
+  it('shows the cover photo inside the piece while there is no 2D drawing', () => {
+    const photo = 'https://media.example/aura.webp';
+    const html = renderToStaticMarkup(
+      <PlanSvg
+        room={{ w: 500, d: 400 }}
+        pieces={[
+          {
+            piece: { uid: 1, productId: 7, x: 0, y: 0, r: 0 },
+            product: { ...sofa, image: { src: photo, alt: '' } },
+          },
+          {
+            piece: { uid: 2, productId: 8, x: 300, y: 0, r: 0 },
+            product: { ...table, image: { src: photo, alt: '' } },
+          },
+        ]}
+        label="Planta"
+        widthLabel="5,00 m"
+        depthLabel="4,00 m"
+      />,
+    );
+    expect(html).toContain(`href="${photo}"`);
+    expect(html).toContain('preserveAspectRatio="xMidYMid meet"');
+    expect(html).toContain('clip-path="url(#piece-clip-2)"');
+    expect(html).not.toContain('url(#piece-clip-1)');
   });
 });

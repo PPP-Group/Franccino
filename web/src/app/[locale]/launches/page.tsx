@@ -7,6 +7,7 @@ import { ViewToggle } from '@/components/catalog/ViewToggle';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
 import { getLaunch, getLaunches, getPage } from '@/lib/api/content';
@@ -101,7 +102,8 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
               {view === 'table' ? (
                 <TechTable rows={rows} />
               ) : (
-                <ProductGrid products={products} showNew priorityCount={3} />
+                // Toda peça aqui é lançamento: o rótulo "Lançamentos" no card não diria nada (lei de Tesler).
+                <ProductGrid products={products} priorityCount={3} />
               )}
             </section>
           </>
@@ -122,6 +124,7 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
           className="media-links--wide block"
         />
       </div>
+      <RecentlyViewed excludeIds={products.map((product) => product.id)} />
     </main>
   );
 }

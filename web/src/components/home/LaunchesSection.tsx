@@ -3,13 +3,16 @@ import { ProductRail } from '@/components/products/ProductRail';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { LaunchCard, ProductCard } from '@/lib/api/types';
+import { sectionClass, type Tone } from './tone';
 
-export function LaunchesSection({ launch, products }: { launch: LaunchCard; products: ProductCard[] }) {
+type LaunchesSectionProps = { launch: LaunchCard; products: ProductCard[]; tone: Tone };
+
+export function LaunchesSection({ launch, products, tone }: LaunchesSectionProps) {
   const t = useTranslations('home.launches');
   return (
-    <section className="section" aria-labelledby="launches-title">
+    <section className={sectionClass(tone)} aria-labelledby="launches-title">
       <div className="wrap">
-        <div className="section-head">
+        <div className="section-head" data-reveal="">
           <div>
             <h2 id="launches-title">{t('title')}</h2>
             <p className="lead">{launch.summary ?? launch.title}</p>
@@ -19,7 +22,9 @@ export function LaunchesSection({ launch, products }: { launch: LaunchCard; prod
             <Icon name="arrow" />
           </Link>
         </div>
-        <ProductRail label={launch.title} products={products} />
+        <div data-reveal="">
+          <ProductRail label={launch.title} products={products} />
+        </div>
       </div>
     </section>
   );

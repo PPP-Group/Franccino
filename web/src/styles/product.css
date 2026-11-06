@@ -19,38 +19,43 @@
 .product {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(28px, 4vw, 64px);
+  gap: clamp(var(--space-6), 4vw, var(--space-8));
   align-items: start;
-  padding-bottom: clamp(56px, 7vw, 104px);
+  padding-bottom: var(--section-y-tight);
 }
 
 .gallery {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   position: sticky;
-  top: calc(var(--header) + 20px);
+  top: calc(var(--header) + var(--space-5));
 }
 
+/*
+  Palco da foto. As fotos de origem são pequenas e muito comprimidas: a foto nunca passa da própria largura
+  (`--stage-img-max`, definido em ProductStage) e fica centrada no quadro, em vez de ampliada e borrada.
+*/
 .gallery__stage {
   background: var(--paper);
   aspect-ratio: 4 / 3;
   position: relative;
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
 .gallery__stage img {
   width: 100%;
   height: 100%;
+  max-width: var(--stage-img-max, 100%);
   object-fit: contain;
-  transition:
-    opacity var(--t-mid) ease,
-    filter var(--t-mid) ease;
+  transition: opacity var(--t-mid) var(--ease-out);
 }
 
 .stage-toggle {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: var(--space-4);
+  left: var(--space-4);
   display: inline-flex;
   /* R17: borda de controle >= 3:1 (`--line` sozinho fica abaixo disso). */
   border: 1px solid var(--line-field);
@@ -60,12 +65,12 @@
 .stage-toggle button {
   border: 0;
   background: transparent;
-  padding: 8px 14px;
+  padding: var(--space-2) var(--space-4);
   min-height: 44px;
-  font-size: 0.8125rem;
+  font-size: var(--fs-ui);
   cursor: pointer;
   display: inline-flex;
-  gap: 6px;
+  gap: var(--space-2);
   align-items: center;
 }
 
@@ -95,8 +100,8 @@
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 16px;
-  padding: 0 24px;
+  gap: var(--space-4);
+  padding: 0 var(--space-5);
   text-align: center;
 }
 
@@ -111,7 +116,7 @@
 .thumbs {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .thumbs button {
@@ -124,6 +129,12 @@
   min-height: 44px;
 }
 
+@media (hover: hover) {
+  .thumbs button:hover {
+    border-color: var(--line-strong);
+  }
+}
+
 .thumbs button[aria-pressed='true'] {
   border-color: var(--ink);
 }
@@ -134,14 +145,18 @@
   object-fit: contain;
 }
 
+/*
+  Painel da peça, de cima para baixo: título, metadados e texto; acabamentos; medidas; orçamento; arquivos. Cada bloco
+  abre com um fio e um título de item (--fs-h3), a --space-6 do anterior.
+*/
 .panel {
   display: grid;
-  gap: 28px;
+  gap: var(--space-6);
 }
 
 .panel__head {
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .panel__head .meta a {
@@ -150,41 +165,43 @@
 
 .panel__copy {
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .block {
   border-top: 1px solid var(--line);
-  padding-top: 22px;
+  padding-top: var(--space-5);
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .block__title {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  gap: var(--space-1) var(--space-3);
 }
 
 .block__title h2 {
-  font-size: 1rem;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
   font-weight: 600;
   letter-spacing: 0;
-  font-variation-settings: 'wdth' 100;
 }
 
 .tabs {
   display: inline-flex;
-  gap: 18px;
-  font-size: 0.875rem;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+  font-size: var(--fs-ui);
 }
 
 .tabs button {
   min-height: 44px;
   background: none;
   border: 0;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   cursor: pointer;
   color: var(--ink-muted);
   border-bottom: 1px solid transparent;
@@ -198,17 +215,16 @@
 .swatches {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .swatch {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   border: 1px solid var(--line-field);
-  padding: 3px;
+  padding: var(--space-1);
   background: var(--paper);
   cursor: pointer;
-  transition: border-color var(--t-fast) ease;
 }
 
 .swatch img,
@@ -224,19 +240,32 @@
   box-shadow: inset 0 0 0 1px var(--ink);
 }
 
+/* Nome e código do acabamento escolhido, logo abaixo das amostras. */
 .swatch-name {
-  font-size: 0.9375rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--fs-ui);
 }
 
+.swatch-name strong {
+  font-weight: 600;
+}
+
+/*
+  Medidas: o desenho em cima e a lista embaixo. Lado a lado, o desenho ficava com ~250 px e as cotas com 8 px; em
+  coluna as cotas ficam legíveis (>= 12 px).
+*/
 .dims {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: center;
+  gap: var(--space-4);
 }
 
 .dims svg {
   width: 100%;
+  max-width: 26rem;
   height: auto;
   background: var(--paper);
   border: 1px solid var(--line);
@@ -261,24 +290,34 @@
   stroke: var(--line-strong);
 }
 
+/* Unidade do desenho (viewBox), não da tela: o SVG escala, e 12 unidades dão 12 a 14 px na tela. */
 .dims svg text {
   fill: var(--ink-muted);
   font-family: var(--font);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .dims dl {
   margin: 0;
   display: grid;
-  gap: 0;
 }
 
 .dims dl div {
   display: flex;
   justify-content: space-between;
-  padding: 9px 0;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
   border-bottom: 1px solid var(--line);
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
+}
+
+.dims dl div:first-child {
+  border-top: 1px solid var(--line);
+}
+
+/* A última medida não fecha com fio: o fio do bloco de orçamento, logo abaixo, já separa (sem dois fios seguidos). */
+.dims dl div:last-child {
+  border-bottom: 0;
 }
 
 .dims dt {
@@ -291,59 +330,191 @@
 }
 
 .unit-toggle {
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
 }
 
+/*
+  Orçamento em dois níveis (retorno de 06/11/2026). 1) A ação principal: quantidade e "Adicionar à lista de orçamento"
+  lado a lado, os dois com exatamente 48 px de altura. 2) Separada por um fio, a linha das outras formas de pedir
+  (WhatsApp, Onde comprar, Pedir orçamento só desta peça), com o mesmo espaço entre elas e um divisor fino; quando o
+  painel fica estreito, viram uma lista, uma por linha.
+*/
 .buy {
   display: grid;
-  gap: 10px;
+  gap: var(--space-3);
+  container-type: inline-size;
 }
 
 .buy__row {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: stretch;
 }
 
 .stepper {
+  box-sizing: border-box;
   display: inline-grid;
-  grid-template-columns: 44px 44px 44px;
+  grid-template-columns: 44px minmax(44px, auto) 44px;
+  align-items: stretch;
   border: 1px solid var(--ink);
-  height: 50px;
+  /* A mesma altura do .btn (48 px, borda incluída), para quantidade e botão alinharem lado a lado. */
+  height: 48px;
 }
 
 .stepper button {
   border: 0;
   background: transparent;
+  color: var(--ink);
   cursor: pointer;
   display: grid;
   place-items: center;
 }
 
+.stepper button .icon {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--t-press) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .stepper button:not(:disabled):hover {
+    background: var(--sand);
+  }
+}
+
+.stepper button:focus-visible {
+  outline-offset: -3px;
+}
+
+.stepper button:active:not(:disabled) .icon {
+  transform: scale(0.85);
+}
+
 .stepper button:disabled {
-  opacity: 0.35;
+  color: var(--line-field);
   cursor: not-allowed;
 }
 
 .stepper output {
   display: grid;
   place-items: center;
+  font-size: var(--fs-ui);
+  line-height: 1;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
-.buy__secondary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.buy__add {
+  height: 48px;
+}
+
+/* O ícone troca (lista → visto) com um pequeno pulo: entra pela escala, só no momento da troca. */
+.buy__add-icon {
+  display: inline-grid;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .buy__add.is-added .buy__add-icon {
+    animation: buy-check var(--t-mid) var(--ease-out);
+  }
+}
+
+@keyframes buy-check {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.feedback:empty {
+  display: none;
+}
+
+.buy__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-5);
+  margin-top: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+/* Divisor fino entre as ações, no meio do espaço entre elas. */
+.buy__links > li + li {
+  position: relative;
+}
+
+.buy__links > li + li::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--space-5) / 2);
+  width: 1px;
+  height: 16px;
+  background: var(--line-strong);
+  translate: 0 -50%;
+}
+
+.buy__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.3em;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .buy__link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.buy__link .icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* Painel estreito (tablet, celular): as três ações viram uma lista, com o fio entre elas no lugar do divisor. */
+@container (max-width: 30rem) {
+  .buy__links {
+    display: grid;
+    gap: 0;
+    padding-top: 0;
+  }
+
+  .buy__links > li + li {
+    border-top: 1px solid var(--line);
+  }
+
+  .buy__links > li + li::before {
+    display: none;
+  }
+}
+
+/* "Pedir orçamento só desta peça": o formulário abre logo abaixo da linha de ações. */
+.buy__quote {
+  padding-top: var(--space-4);
 }
 
 .feedback {
-  font-size: 0.875rem;
+  font-size: var(--fs-caption);
   color: var(--garden);
-  min-height: 1.4em;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 10px;
+  gap: var(--space-1) var(--space-3);
 }
 
 .feedback--alert {
@@ -355,42 +526,62 @@
   font-weight: 600;
 }
 
+/* Arquivos técnicos (página da peça, do designer e do lançamento): uma lista de linhas, não de caixas. */
 .downloads {
   display: grid;
 }
 
 .download > button {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 14px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
   align-items: center;
-  padding: 12px 0;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-3) 0;
   border: 0;
   border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  font-size: 0.9375rem;
-  width: 100%;
   background: none;
-  text-align: left;
-  cursor: pointer;
   color: inherit;
+  font-size: var(--fs-ui);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.download:first-child > button {
+  border-top: 1px solid var(--line);
+}
+
+.download > button .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.download > button strong {
+  font-weight: 500;
 }
 
 .download > button:hover strong {
   text-decoration: underline;
 }
 
-.downloads small {
+.download > button small {
   color: var(--ink-muted);
+  font-size: var(--fs-caption);
+  white-space: nowrap;
+}
+
+.download > button[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.7;
 }
 
 .designer-strip {
   display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 32px;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: var(--space-6);
   align-items: center;
-  background: var(--stone);
-  padding: clamp(20px, 3vw, 36px);
 }
 
 .designer-strip img {
@@ -400,24 +591,12 @@
 }
 
 .designer-strip--text {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .designer-strip__copy {
   display: grid;
-  gap: 14px;
-}
-
-.quote-inline summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.quote-inline[open] summary {
-  margin-bottom: 8px;
+  gap: var(--space-4);
 }
 
 @media (max-width: 980px) {
@@ -430,37 +609,34 @@
   }
 }
 
-@media (max-width: 640px) {
-  .designer-strip > :first-child {
-    max-width: 120px;
-  }
-
-  .buy__secondary {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 560px) {
   .thumbs {
     grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2);
   }
 
-  .dims {
+  /* A frase do botão principal não cabe ao lado da quantidade em 390 px: cada um na sua linha. */
+  .buy__row {
     grid-template-columns: 1fr;
+  }
+
+  .buy__row .stepper {
+    justify-self: start;
   }
 
   .designer-strip {
     grid-template-columns: 1fr;
+    gap: var(--space-5);
   }
 
   .designer-strip img {
-    max-width: 160px;
+    max-width: 120px;
   }
 }
 
 .swatch__fallback {
   display: grid;
   place-items: center;
-  font-size: 0.6875rem;
+  font-size: var(--fs-label);
   background: var(--stone);
 }

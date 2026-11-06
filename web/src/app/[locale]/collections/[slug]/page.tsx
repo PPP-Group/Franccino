@@ -2,15 +2,22 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { CardRail } from '@/components/content/CardRail';
+import { DesignerPortraits } from '@/components/content/DesignerPortraits';
+import { EditorialGallery } from '@/components/content/EditorialGallery';
+import { neighbours } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
+import { PageCoverArt } from '@/components/layout/PageBanner';
 import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { Link } from '@/i18n/navigation';
-import { getCollection, getCollections } from '@/lib/api/content';
+import { getCollection, getCollections, getDesigners } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+/** Quantas coleções a faixa "Outras coleções" mostra (as seguintes a esta na ordem do painel). */
+const OTHER_COLLECTIONS = 8;
 
 const collectionHref = (slug: string) => ({ pathname: '/collections/[slug]', params: { slug } }) as const;
 
@@ -35,6 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+/**
+ * Página da coleção (rodada 3): capa parada no topo, texto à esquerda e os designers à direita com retrato, galeria
+ * editorial, as peças e, para continuar, "Outras coleções" numa faixa areia e "Peças que você viu".
+ */
 export default async function CollectionPage({ params }: Props) {
   const { locale: raw, slug } = await params;
   const locale = raw as Locale;
@@ -43,52 +54,34 @@ export default async function CollectionPage({ params }: Props) {
   if (!collection) {
     notFound();
   }
-  const t = await getTranslations({ locale, namespace: 'collections' });
+  const [t, collections, designers] = await Promise.all([
+    getTranslations({ locale, namespace: 'collections' }),
+    getCollections(locale),
+    collection.designers.length > 0 ? getDesigners(locale) : Promise.resolve([]),
+  ]);
+  const others = neighbours(collections, (item) => item.id === collection.id, OTHER_COLLECTIONS);
   return (
-    <main>
-      {collection.cover ? (
-        <div className="collection-banner">
-          <ApiImage image={collection.cover} sizes="100vw" priority />
-        </div>
-      ) : null}
+    <main className="page-end">
+      {collection.cover ? <PageCoverArt image={collection.cover} /> : null}
       <div className="wrap">
         <PageHead
           title={collection.name}
           lead={collection.summary}
           trail={[{ label: t('title'), href: '/collections' }]}
         />
-        <div className="collection-intro">
-          {collection.description ? <RichText html={collection.description} className="prose" /> : null}
-          {collection.designers.length > 0 ? (
-            <dl className="facts">
-              <div>
-                <dt>{t('designers')}</dt>
-                <dd>
-                  <ul className="meta-inline">
-                    {collection.designers.map((designer) => (
-                      <li key={designer.id}>
-                        <Link href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}>
-                          {designer.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-            </dl>
-          ) : null}
-        </div>
-        {collection.gallery.length > 0 ? (
-          <ul className="gallery-strip" aria-label={t('gallery')}>
-            {collection.gallery.map((picture) => (
-              <li key={picture.id}>
-                <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
-              </li>
-            ))}
-          </ul>
+        {collection.description || collection.designers.length > 0 ? (
+          <div className="collection-intro">
+            {collection.description ? <RichText html={collection.description} className="prose" /> : null}
+            <DesignerPortraits
+              title={t('designers')}
+              designers={collection.designers}
+              portraits={designers}
+            />
+          </div>
         ) : null}
+        <EditorialGallery images={collection.gallery} label={t('gallery')} />
         {collection.products.length > 0 ? (
-          <section aria-labelledby="collection-pieces" className="section--tight">
+          <section aria-labelledby="collection-pieces" className="page-section">
             <h2 id="collection-pieces" className="section-title">
               {t('piecesTitle')}
             </h2>
@@ -96,6 +89,25 @@ export default async function CollectionPage({ params }: Props) {
           </section>
         ) : null}
       </div>
+      {others.length > 0 ? (
+        <section className="band band--sand" aria-labelledby="other-collections">
+          <div className="wrap" data-reveal>
+            <h2 id="other-collections" className="section-title">
+              {t('othersTitle')}
+            </h2>
+            <CardRail
+              label={t('othersTitle')}
+              items={others.map((item) => ({
+                id: item.id,
+                href: collectionHref(item.slug),
+                title: item.name,
+                image: item.cover,
+              }))}
+            />
+          </div>
+        </section>
+      ) : null}
+      <RecentlyViewed excludeIds={collection.products.map((product) => product.id)} />
     </main>
   );
 }

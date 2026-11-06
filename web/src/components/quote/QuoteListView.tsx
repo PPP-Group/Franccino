@@ -142,7 +142,9 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
           ))}
         </ul>
         <section className="quote-form" aria-labelledby="quote-form-title">
-          <h2 id="quote-form-title">{t('form.title')}</h2>
+          <h2 id="quote-form-title" className="form-title">
+            {t('form.title')}
+          </h2>
           <ContactForm
             type="quote"
             items={toContactItems(items)}

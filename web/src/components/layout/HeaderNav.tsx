@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
-import type { AreaMenuKey, AreaMenus } from './area-menu';
+import type { AreaMenuKey, NavMenuKey, NavMenus } from './area-menu';
 import { HeaderSearch } from './HeaderSearch';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { activeNavKey, NAV_ITEMS } from './nav';
@@ -12,9 +12,15 @@ import { QuoteListLink } from './QuoteListLink';
 
 // Mesmo corte do menu recolhido em `styles/chrome.css` (`@media (max-width: 1180px)`).
 const COLLAPSED_NAV_QUERY = '(max-width: 1180px)';
+// Tempo para o mouse sair do item e chegar ao painel (ou voltar) sem o painel fechar no caminho.
+const CLOSE_DELAY_MS = 250;
 
-function isAreaKey(key: string): key is AreaMenuKey {
-  return key === 'indoor' || key === 'outdoor';
+function isMenuKey(key: string): key is NavMenuKey {
+  return key === 'indoor' || key === 'outdoor' || key === 'collections';
+}
+
+function isDesktop() {
+  return !window.matchMedia(COLLAPSED_NAV_QUERY).matches;
 }
 
 function categoryHref(area: AreaMenuKey, category: string) {
@@ -23,19 +29,49 @@ function categoryHref(area: AreaMenuKey, category: string) {
     : ({ pathname: '/indoor/[category]', params: { category } } as const);
 }
 
-export function HeaderNav({ menus }: { menus: AreaMenus }) {
+function entryHref(menu: NavMenuKey, slug: string) {
+  return menu === 'collections'
+    ? ({ pathname: '/collections/[slug]', params: { slug } } as const)
+    : categoryHref(menu, slug);
+}
+
+export function HeaderNav({ menus }: { menus: NavMenus }) {
   const t = useTranslations('header');
   const nav = useTranslations('nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // Painel de categorias aberto (Casa ou Giardini). No desktop abre no clique e ao passar o mouse; no menu
-  // recolhido funciona como sanfona dentro da lista.
-  const [panel, setPanel] = useState<AreaMenuKey | null>(null);
+  // Painel aberto (Casa, Giardini ou Coleções). No desktop abre no clique e ao passar o mouse; no menu recolhido
+  // funciona como sanfona dentro da lista.
+  const [panel, setPanel] = useState<NavMenuKey | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
-  // Quando o mouse acabou de abrir o painel, o clique que vem em seguida não deve fechá-lo.
-  const hoverOpenedAt = useRef(0);
+  // Aberto pelo clique (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
+  const pinned = useRef(false);
+  const closeTimer = useRef<number | null>(null);
   const active = activeNavKey(pathname);
+
+  function cancelClose() {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function closePanel() {
+    cancelClose();
+    pinned.current = false;
+    setPanel(null);
+  }
+
+  // Desmontar com o fechamento agendado: cancela o timer.
+  useEffect(() => {
+    const timer = closeTimer;
+    return () => {
+      if (timer.current !== null) {
+        window.clearTimeout(timer.current);
+      }
+    };
+  }, []);
 
   // Trocar de página fecha o menu e o painel.
   const [lastPathname, setLastPathname] = useState(pathname);
@@ -63,6 +99,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
       }
       if (panel) {
         const trigger = navRef.current?.querySelector<HTMLButtonElement>(`[data-panel-trigger="${panel}"]`);
+        pinned.current = false;
         setPanel(null);
         trigger?.focus();
         return;
@@ -85,6 +122,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
     function handlePointerDown(event: PointerEvent) {
       const header = navRef.current?.closest('.site-header');
       if (header && event.target instanceof Node && !header.contains(event.target)) {
+        pinned.current = false;
         setPanel(null);
       }
     }
@@ -130,34 +168,48 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
     };
   }, [open]);
 
-  // Passar o mouse abre o painel só no desktop; no menu recolhido ele abre no toque.
-  function hoverOpen(key: AreaMenuKey, at: number) {
-    if (!window.matchMedia(COLLAPSED_NAV_QUERY).matches) {
-      hoverOpenedAt.current = at;
+  // Passar o mouse abre o painel só no desktop e só com mouse (no toque, o clique abre). Sair fecha depois de um
+  // instante, para o caminho do item até o painel (ou de volta) não fechar nada.
+  function pointerOpen(key: NavMenuKey, event: ReactPointerEvent) {
+    if (event.pointerType !== 'mouse' || !isDesktop()) {
+      return;
+    }
+    cancelClose();
+    if (panel !== key) {
+      pinned.current = false;
       setPanel(key);
     }
   }
 
-  function toggleArea(key: AreaMenuKey, at: number) {
-    if (panel === key && at - hoverOpenedAt.current < 600) {
+  function pointerLeave(event: ReactPointerEvent) {
+    if (event.pointerType !== 'mouse' || !isDesktop() || pinned.current) {
       return;
     }
-    setPanel((value) => (value === key ? null : key));
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      setPanel(null);
+    }, CLOSE_DELAY_MS);
   }
 
-  function hoverClose() {
-    if (!window.matchMedia(COLLAPSED_NAV_QUERY).matches) {
-      setPanel(null);
+  // Clique: abre e fixa; no painel já aberto pelo mouse, fixa; no painel fixo, fecha.
+  function clickTrigger(key: NavMenuKey) {
+    cancelClose();
+    if (panel === key && pinned.current) {
+      closePanel();
+      return;
     }
+    pinned.current = true;
+    setPanel(key);
   }
 
   return (
     <>
       <nav ref={navRef} id="site-nav" className={open ? 'nav is-open' : 'nav'} aria-label={t('navLabel')}>
         {NAV_ITEMS.map((item) => {
-          const area = isAreaKey(item.key) ? item.key : null;
-          const categories = area ? menus[area] : [];
-          if (!area || categories.length === 0) {
+          const area = isMenuKey(item.key) ? item.key : null;
+          const entries = area ? menus[area] : [];
+          if (!area || entries.length === 0) {
             return (
               <Link
                 key={item.key}
@@ -175,8 +227,8 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
             <div
               key={area}
               className={expanded ? 'nav-area is-open' : 'nav-area'}
-              onMouseEnter={(event) => hoverOpen(area, event.timeStamp)}
-              onMouseLeave={hoverClose}
+              onPointerEnter={(event) => pointerOpen(area, event)}
+              onPointerLeave={pointerLeave}
             >
               <button
                 type="button"
@@ -185,7 +237,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
                 data-active={area === active ? 'true' : undefined}
                 aria-expanded={expanded}
                 aria-controls={panelId}
-                onClick={(event) => toggleArea(area, event.timeStamp)}
+                onClick={() => clickTrigger(area)}
               >
                 {nav(area)}
                 <Icon name="chevron" />
@@ -198,13 +250,13 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
                     aria-current={area === active ? 'page' : undefined}
                     onClick={() => setOpen(false)}
                   >
-                    {t('areaAll', { area: nav(area) })}
+                    {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
                   </Link>
                   <ul className="nav-panel__list">
-                    {categories.map((category) => (
-                      <li key={category.slug}>
-                        <Link href={categoryHref(area, category.slug)} onClick={() => setOpen(false)}>
-                          {category.name}
+                    {entries.map((entry) => (
+                      <li key={entry.slug}>
+                        <Link href={entryHref(area, entry.slug)} onClick={() => setOpen(false)}>
+                          {entry.name}
                         </Link>
                       </li>
                     ))}

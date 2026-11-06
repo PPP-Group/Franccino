@@ -1,15 +1,22 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { CardRail } from '@/components/content/CardRail';
+import { EditorialGallery } from '@/components/content/EditorialGallery';
+import { neighbours } from '@/components/content/layout';
+import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
-import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
+import { PageBanner } from '@/components/layout/PageBanner';
+import { ProductRail } from '@/components/products/ProductRail';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { getAllProjectSlugs, getProject } from '@/lib/api/content';
+import { getAllProjectSlugs, getProject, getProjects } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+/** Quantos projetos a API devolve para a faixa "Outros projetos" (o próprio sai da lista). */
+const OTHER_PROJECTS = 9;
 
 const projectHref = (slug: string) => ({ pathname: '/projects/[slug]', params: { slug } }) as const;
 
@@ -34,6 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+/**
+ * Página do projeto, editorial (rodada 3): capa na largura toda com o título (parada enquanto a página sobe), uma
+ * linha de fatos (só o que foi cadastrado), a frase de abertura e o texto na medida de leitura, a galeria alternando
+ * imagens largas e pares, as peças usadas e, para continuar, "Outros projetos" numa faixa areia.
+ */
 export default async function ProjectPage({ params }: Props) {
   const { locale: raw, slug } = await params;
   const locale = raw as Locale;
@@ -42,74 +54,73 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) {
     notFound();
   }
-  const t = await getTranslations({ locale, namespace: 'projects' });
-  const typeLabel = t.has(`types.${project.type}`) ? t(`types.${project.type}`) : project.type;
+  const [t, list] = await Promise.all([
+    getTranslations({ locale, namespace: 'projects' }),
+    getProjects(locale, { per_page: OTHER_PROJECTS + 1 }),
+  ]);
+  const typeLabel = (value: string) => (t.has(`types.${value}`) ? t(`types.${value}`) : value);
+  // Fatos só com o que foi cadastrado; sem nenhum além do tipo, a linha mostra só o tipo.
+  const facts = [
+    { key: 'type', value: typeLabel(project.type) },
+    { key: 'client', value: project.client_name },
+    { key: 'location', value: project.location },
+    { key: 'year', value: project.year ? String(project.year) : null },
+    { key: 'architect', value: project.architect },
+  ].filter((fact): fact is { key: string; value: string } => Boolean(fact.value));
+  const lead = distinctLead(project.summary, project.description);
+  const others = neighbours(list.data, (item) => item.id === project.id, OTHER_PROJECTS);
   return (
-    <main className="wrap">
-      <PageHead
+    <main className="page-end">
+      <PageBanner
+        image={project.cover}
         title={project.title}
-        lead={project.summary}
         trail={[{ label: t('title'), href: '/projects' }]}
-        meta={
-          <ul className="meta meta-inline num">
-            <li>{typeLabel}</li>
-            {project.year ? <li>{project.year}</li> : null}
-          </ul>
-        }
       />
-      <div className="detail-hero">
-        <div className="detail-hero__media">
-          {project.cover ? (
-            <ApiImage image={project.cover} sizes="(max-width: 56.25rem) 100vw, 58vw" priority />
-          ) : null}
-        </div>
-        <div className="detail-hero__copy">
-          <dl className="facts">
-            {project.client_name ? (
-              <div>
-                <dt>{t('client')}</dt>
-                <dd>{project.client_name}</dd>
-              </div>
-            ) : null}
-            {project.architect ? (
-              <div>
-                <dt>{t('architect')}</dt>
-                <dd>{project.architect}</dd>
-              </div>
-            ) : null}
-            {project.location ? (
-              <div>
-                <dt>{t('location')}</dt>
-                <dd>{project.location}</dd>
-              </div>
-            ) : null}
-            {project.year ? (
-              <div>
-                <dt>{t('year')}</dt>
-                <dd className="num">{project.year}</dd>
-              </div>
-            ) : null}
-          </dl>
-          {project.description ? <RichText html={project.description} className="prose" /> : null}
-        </div>
-      </div>
-      {project.gallery.length > 0 ? (
-        <ul className="gallery-strip" aria-label={t('gallery')}>
-          {project.gallery.map((picture) => (
-            <li key={picture.id}>
-              <ApiImage image={picture} sizes="(max-width: 35rem) 100vw, 33vw" />
-            </li>
+      <div className="wrap">
+        <dl className="project-facts">
+          {facts.map((fact) => (
+            <div key={fact.key}>
+              <dt className="label">{t(fact.key)}</dt>
+              <dd>{fact.value}</dd>
+            </div>
           ))}
-        </ul>
-      ) : null}
-      {project.products.length > 0 ? (
-        <section aria-labelledby="project-pieces" className="section--tight">
-          <h2 id="project-pieces" className="section-title">
-            {t('piecesTitle')}
-          </h2>
-          <ProductGrid products={project.products} />
+        </dl>
+        {lead || project.description ? (
+          <div className="project-story" data-reveal>
+            {lead ? <p className="project-story__lead">{lead}</p> : null}
+            {project.description ? <RichText html={project.description} className="prose" /> : null}
+          </div>
+        ) : null}
+        <EditorialGallery images={project.gallery} label={t('gallery')} />
+        {project.products.length > 0 ? (
+          <section aria-labelledby="project-pieces" className="project-section" data-reveal>
+            <div className="section-head">
+              <h2 id="project-pieces">{t('piecesTitle')}</h2>
+            </div>
+            <ProductRail label={t('piecesTitle')} products={project.products} />
+          </section>
+        ) : null}
+      </div>
+      {others.length > 0 ? (
+        <section className="band band--sand" aria-labelledby="other-projects">
+          <div className="wrap" data-reveal>
+            <h2 id="other-projects" className="section-title">
+              {t('othersTitle')}
+            </h2>
+            <CardRail
+              label={t('othersTitle')}
+              items={others.map((item) => ({
+                id: item.id,
+                href: projectHref(item.slug),
+                title: item.title,
+                image: item.cover,
+                meta: [typeLabel(item.type), ...(item.location ? [item.location] : [])],
+              }))}
+            />
+          </div>
         </section>
       ) : null}
+      <RecentlyViewed excludeIds={project.products.map((product) => product.id)} />
     </main>
   );
 }

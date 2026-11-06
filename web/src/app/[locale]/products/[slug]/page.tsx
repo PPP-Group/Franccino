@@ -8,6 +8,8 @@ import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
+import { TrackView } from '@/components/recent/TrackView';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { AreaDot } from '@/components/ui/AreaDot';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
@@ -90,6 +92,9 @@ export default async function ProductPage({ params }: Props) {
   // mesmo nome cancelariam a transição.
   const shown = new Set([product.id, ...product.line_products.map((item) => item.id)]);
   const related = product.related.filter((item) => !shown.has(item.id));
+  // "Peças que você viu" no fim não repete a peça aberta nem as das esteiras acima.
+  const onPage = [...shown, ...related.map((item) => item.id)];
+  const card = toProductCard(product);
   // Conteúdo sem tradução volta em português (locale_fallback): marcar o idioma para leitores de tela.
   const contentLang = product.locale_fallback && locale !== 'pt' ? 'pt-BR' : undefined;
 
@@ -97,6 +102,7 @@ export default async function ProductPage({ params }: Props) {
     <main>
       <JsonLd data={productJsonLd(product, url)} />
       <JsonLd data={breadcrumb} />
+      <TrackView product={card} />
       <div className="wrap">
         <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
         <div className="product">
@@ -140,9 +146,10 @@ export default async function ProductPage({ params }: Props) {
             </div>
 
             <ProductConfigurator
-              product={{ ...toProductCard(product), finishes: product.finishes }}
+              product={{ ...card, finishes: product.finishes }}
               whatsapp={settings.quotes_whatsapp}
               finishesNote={product.finishes_note}
+              quoteForm={<ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />}
             >
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
@@ -150,11 +157,6 @@ export default async function ProductPage({ params }: Props) {
             <FileDownloads files={product.files} title={t('downloads.title')} />
 
             <MediaLinks items={product.media_links} headingId="product-media" />
-
-            <details className="quote-inline block">
-              <summary>{t('quoteOnlyThis')}</summary>
-              <ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />
-            </details>
           </div>
         </div>
       </div>
@@ -162,7 +164,7 @@ export default async function ProductPage({ params }: Props) {
       {designer ? <DesignerStrip designer={designer} /> : null}
 
       {product.line_products.length > 0 ? (
-        <section className="section" aria-labelledby="line-title">
+        <section className="section" aria-labelledby="line-title" data-reveal>
           <div className="wrap">
             <div className="section-head">
               <h2 id="line-title">
@@ -178,7 +180,7 @@ export default async function ProductPage({ params }: Props) {
       ) : null}
 
       {related.length > 0 ? (
-        <section className="section" aria-labelledby="related-title">
+        <section className="section" aria-labelledby="related-title" data-reveal>
           <div className="wrap">
             <div className="section-head">
               <h2 id="related-title">{t('related', { category: product.category.name })}</h2>
@@ -191,6 +193,8 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </section>
       ) : null}
+
+      <RecentlyViewed excludeIds={onPage} />
     </main>
   );
 }

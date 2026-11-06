@@ -2,19 +2,35 @@ import { useTranslations } from 'next-intl';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
-import type { Area } from '@/lib/api/types';
+import type { Area, Image } from '@/lib/api/types';
 import { areaPath } from '@/lib/catalog/area';
+import { aspectRatio, coverSizes } from '@/lib/images/cover';
 
-/** `area.description` é texto simples no contrato, então vai como parágrafo e não por `RichText` (R6). */
+/** Altura dos painéis, igual a `--line-h` em `styles/home.css` (no celular, `svh` vira `vh` no `sizes`). */
+const LINE_HEIGHT = 'clamp(520px, 86vh, 920px)';
+const LINE_HEIGHT_MOBILE = 'clamp(420px, 62vh, 640px)';
+
+/** A capa é recortada (`cover`) num painel alto: o `sizes` conta a largura em que ela é realmente desenhada. */
+function panelSizes(cover: Image): string {
+  const ratio = aspectRatio(cover);
+  const mobile = coverSizes(ratio, { width: '100vw', height: LINE_HEIGHT_MOBILE });
+  const desktop = coverSizes(ratio, { width: '50vw', height: LINE_HEIGHT });
+  return `(max-width: 51.25rem) ${mobile}, ${desktop}`;
+}
+
+/**
+ * Casa e Giardini lado a lado, em tela cheia. Hover: a foto aproxima devagar dentro do painel (`.hover-zoom`).
+ * `area.description` é texto simples no contrato, então vai como parágrafo e não por `RichText` (R6).
+ */
 export function LinesSection({ areas }: { areas: Area[] }) {
   const t = useTranslations('home.lines');
   return (
     <section className="lines" aria-label={t('label')}>
       {areas.map((area) => (
-        <Link key={area.key} className="line-panel" href={areaPath(area.key)}>
-          {area.cover ? <ApiImage image={area.cover} sizes="(max-width: 51.25rem) 100vw, 50vw" /> : null}
-          <div className="line-panel__copy">
-            <h2 className="display">{area.brand_name}</h2>
+        <Link key={area.key} className="line-panel hover-zoom" href={areaPath(area.key)}>
+          {area.cover ? <ApiImage image={area.cover} sizes={panelSizes(area.cover)} /> : null}
+          <div className="line-panel__copy" data-reveal="">
+            <h2 className="line-panel__title">{area.brand_name}</h2>
             {area.description ? <p className="lead">{area.description}</p> : null}
             <span className="link-arrow">
               <span>{t('viewPieces')}</span>

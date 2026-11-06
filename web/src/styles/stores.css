@@ -1,0 +1,114 @@
+/* Lojas e mapa (rodada 3, 06/11/2026). Carregado depois de pages.css: o que estiver aqui vale sobre ele. */
+
+/*
+  Pino ↔ loja. Clicar num pino destaca a loja na lista: nome em negrito, fio de cima em tinta e um brilho areia que se
+  desfaz devagar; o destaque fica até escolher outra. A rolagem (só se a loja estiver fora da tela) para logo abaixo do
+  cabeçalho fixo. Passar o mouse numa loja acende o pino dela no mapa.
+*/
+.stores-page .store {
+  position: relative;
+  isolation: isolate;
+  scroll-margin-top: calc(var(--header) + var(--space-5));
+}
+
+/* O brilho fica atrás do texto e passa um pouco das bordas, para o texto não encostar nele. */
+.stores-page .store::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-1 * var(--space-4)) calc(-1 * var(--space-4));
+  z-index: -1;
+  background: var(--sand);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stores-page .store.is-active {
+  border-top-color: var(--ink);
+}
+
+.stores-page .store.is-active h3 {
+  font-weight: 700;
+}
+
+/* Dois nomes para a mesma animação: trocar entre eles faz o brilho recomeçar a cada clique. */
+.stores-page .store[data-flash='a']::before {
+  animation: store-flash-a 1600ms var(--ease-out) both;
+}
+
+.stores-page .store[data-flash='b']::before {
+  animation: store-flash-b 1600ms var(--ease-out) both;
+}
+
+@keyframes store-flash-a {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes store-flash-b {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.stores-page .store:focus {
+  outline: none;
+}
+
+.stores-page .store:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: var(--space-2);
+}
+
+/* Pino: tinta em repouso; no hover da loja na lista ele cresce, e o escolhido fica maior e na frente. */
+.store-map__pins li.is-hover,
+.store-map__pins li.is-active {
+  z-index: 1;
+}
+
+.store-map__pins li.is-active {
+  z-index: 2;
+}
+
+.store-map__pins li.is-hover .store-map__pin {
+  background: var(--wood);
+  transform: rotate(-45deg) scale(1.2);
+}
+
+.store-map__pins li.is-active .store-map__pin {
+  background: var(--wood);
+  transform: rotate(-45deg) scale(1.35);
+}
+
+/* Área de toque de 44 px no pino (o desenho tem 22 px). */
+.store-map__pin::before {
+  content: '';
+  position: absolute;
+  inset: -11px;
+}
+
+/* Contato pelo WhatsApp com o ícone oficial. */
+.store__links .icon--brand {
+  width: 16px;
+  height: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sem animação, o fundo areia fica parado na loja escolhida. */
+  .stores-page .store[data-flash]::before {
+    animation: none;
+    opacity: 1;
+  }
+
+  .store-map__pin {
+    transition: none;
+  }
+}

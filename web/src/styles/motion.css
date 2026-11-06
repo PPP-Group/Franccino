@@ -9,39 +9,37 @@
   3. Imagem que cresce (ideia 10): a foto do card vira a foto grande da página da peça (ViewTransition do React).
 
   Quem pediu menos movimento não vê nenhuma delas.
+
+  Tempos e curvas pelos tokens (--t-*, --ease-*). As exceções são laços contínuos, que não são transição: a faixa de
+  carregamento (1,4 s) e o pulso dos pontos dos ambientes (home.css).
 */
 
+/*
+  Aparecer ao entrar na tela (RevealObserver): uma vez só, por transição, sem ficar preso à rolagem. Só com
+  JavaScript ativo ([data-reveal-ready]) os blocos começam escondidos.
+*/
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .collection-tile,
-    .project-row,
-    .factory,
-    .line-panel,
-    .designer,
-    .block-image-text,
-    .block-gallery {
-      animation: reveal-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 70%;
-    }
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']),
+  [data-reveal-ready] [data-reveal='stagger'] > * {
+    transition:
+      opacity var(--t-slow) var(--ease-out),
+      transform var(--t-slow) var(--ease-out);
+    transition-delay: calc(var(--reveal-index, 0) * 70ms);
+  }
 
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger']):not(.is-revealed),
+  [data-reveal-ready] [data-reveal='stagger']:not(.is-revealed) > * {
+    opacity: 0;
+    transform: translateY(var(--space-5));
+  }
+
+  @supports (animation-timeline: view()) {
     .feature__media img {
       transform-origin: 50% 60%;
       animation: feature-drift linear both;
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
-  }
-}
-
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -80,9 +78,10 @@
 
 /* ---------- card → página da peça ---------- */
 
+/* Mais lenta e suave que uma transição de interface (retorno de 06/11/2026: "está abrindo muito rápido"). */
 ::view-transition-group(.product-morph) {
-  animation-duration: 460ms;
-  animation-timing-function: var(--ease-out);
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-in-out);
 }
 
 ::view-transition-image-pair(.product-morph) {
@@ -100,5 +99,187 @@
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+}
+
+/* ---------- troca de página (rodada 3) ---------- */
+
+/*
+  `PageTransition` (layout do idioma): a página que sai some rápido e a nova aparece logo depois, subindo 8 px.
+  O cabeçalho e o rodapé não fazem parte do par e ficam parados. A foto que cresce até a peça (product-morph, acima)
+  continua por cima, no seu tempo mais lento.
+*/
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page-exit) {
+  animation: page-out var(--t-fast) var(--ease-out) both;
+}
+
+::view-transition-new(.page-enter) {
+  animation: page-in var(--t-mid) var(--ease-out) var(--t-press) both;
+}
+
+/*
+  Fotos de card com nome (product-morph) que não têm par na página nova: saem junto com a página, no tempo curto,
+  em vez de ficarem para trás no tempo lento do morph. Idem para a foto nova sem par.
+*/
+::view-transition-old(.product-morph):only-child {
+  animation: page-out var(--t-fast) var(--ease-out) both;
+}
+
+::view-transition-new(.product-morph):only-child {
+  animation: page-in var(--t-mid) var(--ease-out) var(--t-press) both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+/* ---------- tela de abertura (SplashScreen + BootScript) ---------- */
+
+/*
+  Só na primeira página da sessão (o BootScript marca `data-splash="off"` nas outras). O nome aparece devagar, um fio
+  cresce embaixo dele e o branco some quando a página carregou (`data-splash="out"`, depois de 600 ms no mínimo).
+  Sem JavaScript, ou se a página demorar, o próprio CSS tira a tela aos 1,8 s. Depois de sumir, não pega clique.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-splash='off']) .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: block;
+    animation: splash-away var(--t-slow) var(--ease-in-out) 1.1s both;
+  }
+
+  html[data-splash='out'] .splash {
+    pointer-events: none;
+  }
+
+  .splash__panel {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-4);
+    background: var(--paper);
+    color: var(--ink);
+    transition: opacity var(--t-slow) var(--ease-in-out);
+  }
+
+  html[data-splash='out'] .splash__panel {
+    opacity: 0;
+  }
+
+  .splash__wordmark {
+    font-size: var(--fs-h3);
+    /* O espaço entre letras sobra à direita do último "O": compensa para o nome ficar no centro. */
+    margin-right: -0.3em;
+    animation: splash-in var(--t-slow) var(--ease-out) both;
+  }
+
+  .splash__line {
+    width: var(--space-8);
+    height: 1px;
+    background: var(--ink);
+    transform-origin: left;
+    animation: splash-line 1.1s var(--ease-in-out) var(--t-fast) both;
+  }
+}
+
+@keyframes splash-away {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+@keyframes splash-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- painéis do cabeçalho (menus e busca) ---------- */
+
+/*
+  Casa, Giardini e Coleções (desktop) e a faixa da busca: abrem com fade e descem 8 px; fecham ao contrário
+  (`allow-discrete` deixa animar o `hidden`). Navegador sem suporte abre e fecha na hora.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  @media (min-width: 1181px) {
+    .nav-panel {
+      transition:
+        opacity var(--t-base) var(--ease-out),
+        transform var(--t-base) var(--ease-out),
+        display var(--t-base) allow-discrete;
+    }
+
+    .nav-panel[hidden] {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    @starting-style {
+      .nav-panel:not([hidden]) {
+        opacity: 0;
+        transform: translateY(calc(-1 * var(--space-2)));
+      }
+    }
+
+    /* Trocar de Casa para Giardini: o painel de antes sai na hora, sem dois painéis por cima um do outro. */
+    .nav:has(.nav-area.is-open) .nav-panel[hidden] {
+      transition: none;
+    }
+  }
+
+  .header-search__panel {
+    transition:
+      opacity var(--t-base) var(--ease-out),
+      transform var(--t-base) var(--ease-out),
+      display var(--t-base) allow-discrete;
+  }
+
+  .header-search__panel[hidden] {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2)));
+  }
+
+  @starting-style {
+    .header-search__panel:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+  }
+
+  /* Sugestões entram em sequência (até a oitava), a cada resultado novo. */
+  .header-search__list li {
+    animation: suggestion-in var(--t-base) var(--ease-out) both;
+    animation-delay: calc(min(var(--i, 0), 8) * 40ms);
+  }
+}
+
+@keyframes suggestion-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-1));
   }
 }
