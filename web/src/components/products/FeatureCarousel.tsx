@@ -7,43 +7,52 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  ViewTransition,
   type CSSProperties,
   type KeyboardEvent,
+  type MouseEvent,
   type PointerEvent,
 } from 'react';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { ProductCard } from '@/lib/api/types';
+import { morphTypes } from '@/lib/ui/morph';
 import {
   clampIndex,
   counterNumber,
+  coverflowPose,
   DRAG_THRESHOLD_PX,
+  dragPosition,
   initialIndex,
   keyTarget,
-  nearestIndex,
   releaseIndex,
+  wheelStep,
+  type CoverflowPose,
 } from '@/lib/ui/feature-carousel';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
 import { productMorphName } from './ProductPlate';
 
 export type FeatureCarouselProduct = Pick<
   ProductCard,
-  'id' | 'slug' | 'name' | 'cover' | 'category' | 'area'
+  'id' | 'slug' | 'name' | 'cover' | 'cutout' | 'category' | 'area'
 >;
 
 /** Largura da peça do centro (`--fc-item` em carousel.css), com folga para o zoom de 5% do hover. */
-const ITEM_SIZES = '(max-width: 48rem) 66vw, (min-width: 100rem) 570px, 36vw';
+const ITEM_SIZES = '(max-width: 48rem) 66vw, (min-width: 100rem) 560px, 36vw';
 
-/** Prazo máximo para a rolagem suave terminar quando o navegador não tem o evento `scrollend`. */
-const SETTLE_FALLBACK_MS = 800;
+/** Uma peça de arrasto vale esta fração da largura da peça do centro (a vizinha está a meia largura dela). */
+const DRAG_STEP_RATIO = 0.55;
+
+/** Depois de andar uma peça pela rolagem lateral, espera este tempo antes de aceitar a próxima. */
+const WHEEL_COOLDOWN_MS = 420;
 
 type Drag = {
   pointerId: number;
   x: number;
-  left: number;
+  y: number;
   startIndex: number;
+  stepPx: number;
+  position: number;
   moved: boolean;
   lastX: number;
   lastT: number;
@@ -56,14 +65,30 @@ type FeatureCarouselProps = {
   products: FeatureCarouselProduct[];
 };
 
+/** Variáveis do CSS que posicionam a peça no palco (carousel.css). */
+function poseStyle(pose: CoverflowPose): CSSProperties {
+  return {
+    '--fc-x': pose.x.toFixed(4),
+    '--fc-s': pose.scale.toFixed(4),
+    '--fc-f': pose.fade.toFixed(4),
+    '--fc-o': pose.opacity.toFixed(4),
+    zIndex: pose.z,
+  } as CSSProperties;
+}
+
 /**
- * Carrossel com a peça em destaque (banco de ideias, ideia 01, aprovada com ajustes em 26/10/2026): a peça do centro
- * fica grande e nítida, as vizinhas menores e mais claras; ao passar para o lado, a próxima cresce e o nome troca com
- * ela. Só a foto, o nome e a categoria: sem acabamentos, sem "ver peça" e sem 3D (o 3D fica na página da peça). O
- * clique na foto abre a peça, com a foto crescendo até a página (`ViewTransition`, ideia 10).
+ * Carrossel com a peça em destaque (banco de ideias, ideia 01, aprovada com ajustes em 26/10/2026), no desenho da
+ * referência da Franccino: as peças sem fundo, empilhadas num palco claro, a do centro grande e na frente, com a sombra
+ * de contato no chão, e as vizinhas encostadas nela, menores e mais apagadas quanto mais longe. Embaixo, o nome e a
+ * categoria da peça do centro e o contador. Sem acabamentos, sem "ver peça" e sem 3D (o 3D fica na página da peça).
  *
- * É uma rolagem nativa com encaixe no centro (dedo, trackpad, teclado); o mouse arrasta, com o cursor redondo
- * "Arraste" da ideia 12. Escala e opacidade ficam no CSS (carousel.css); com movimento reduzido nada cresce nem anima.
+ * A foto é a `cutout` (PNG/WebP sem fundo) quando o painel tem; sem ela, a capa em fundo branco, que some no palco por
+ * `mix-blend-mode: multiply`. O clique na peça do centro abre a peça, com a foto crescendo até a página
+ * (`ViewTransition`, ideia 10); o clique numa vizinha a traz para o centro.
+ *
+ * Nada rola: as peças ficam no mesmo lugar e só mudam `transform`, `opacity` e `filter` (a pose vem de `coverflowPose`).
+ * Arrasta com o dedo e com o mouse (com o cursor redondo "Arraste" da ideia 12), anda com as setas do teclado, com os
+ * botões e com a rolagem lateral do trackpad. Com movimento reduzido as peças trocam sem animar.
  */
 export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   const t = useTranslations('featureCarousel');
@@ -72,84 +97,78 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   const reduceMotion = useReducedMotion();
   const total = products.length;
   const [active, setActive] = useState(() => initialIndex(total));
+  // A peça cujo nome aparece embaixo: acompanha o arrasto antes de `active` mudar no fim do gesto.
+  const [shown, setShown] = useState(active);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const trackRef = useRef<HTMLDivElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const cursorRef = useRef<HTMLSpanElement | null>(null);
   const drag = useRef<Drag | null>(null);
   const suppressClick = useRef(false);
-  const settleTimer = useRef<number | undefined>(undefined);
-  const scrollFrame = useRef<number | undefined>(undefined);
+  const activeRef = useRef(active);
+  // O nome embaixo troca durante o arrasto só quando muda de peça (sem desenhar o React a cada movimento).
+  const shownRef = useRef(active);
+  const wheel = useRef({ accumulated: 0, lockedUntil: 0 });
   const cursor = useRef({ x: 0, y: 0, tx: 0, ty: 0, frame: 0, visible: false });
 
-  const centers = useCallback(
-    () => itemRefs.current.map((item) => (item ? item.offsetLeft + item.offsetWidth / 2 : 0)),
-    [],
-  );
-
-  const leftFor = useCallback((index: number) => {
-    const track = trackRef.current;
-    const item = itemRefs.current[index];
-    if (!track || !item) return 0;
-    return item.offsetLeft + item.offsetWidth / 2 - track.clientWidth / 2;
-  }, []);
-
-  const syncActive = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    setActive(nearestIndex(centers(), track.scrollLeft + track.clientWidth / 2));
-  }, [centers]);
-
-  /** Fim da rolagem depois do arrasto: devolve o encaixe à faixa. */
-  const settle = useCallback(() => {
-    window.clearTimeout(settleTimer.current);
-    const track = trackRef.current;
-    if (track && !drag.current) {
-      delete track.dataset.dragging;
-    }
+  /** Põe cada peça na pose da posição dada (fracionária durante o arrasto), direto no DOM. */
+  const paint = useCallback((position: number) => {
+    itemRefs.current.forEach((node, index) => {
+      if (!node) return;
+      const pose = coverflowPose(index - position);
+      node.style.setProperty('--fc-x', pose.x.toFixed(4));
+      node.style.setProperty('--fc-s', pose.scale.toFixed(4));
+      node.style.setProperty('--fc-f', pose.fade.toFixed(4));
+      node.style.setProperty('--fc-o', pose.opacity.toFixed(4));
+      node.style.zIndex = String(pose.z);
+      node.toggleAttribute('data-hidden', pose.hidden);
+    });
   }, []);
 
   const goTo = useCallback(
     (index: number) => {
-      const track = trackRef.current;
-      if (!track) return;
       const target = clampIndex(index, total);
+      activeRef.current = target;
+      shownRef.current = target;
       setActive(target);
-      track.scrollTo({ left: leftFor(target), behavior: reduceMotion ? 'auto' : 'smooth' });
+      setShown(target);
+      // Mesmo índice (arrasto que voltou): o React não desenha de novo, então a pose volta por aqui.
+      paint(target);
     },
-    [leftFor, reduceMotion, total],
+    [paint, total],
   );
 
-  // Abre com a segunda peça no centro (com 3 ou mais). O CSS `scroll-initial-target` já faz isso antes do JavaScript
-  // nos navegadores que o têm; aqui fica para os outros.
   useLayoutEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    track.scrollLeft = leftFor(initialIndex(total));
-  }, [leftFor, total]);
+    activeRef.current = active;
+    paint(active);
+  }, [active, paint]);
+
+  // Rolagem lateral (trackpad, roda inclinada): uma peça por gesto. Ouvinte nativo para poder segurar o "voltar" do
+  // navegador no gesto de dois dedos.
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || total < 2) return;
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      const state = wheel.current;
+      if (event.timeStamp < state.lockedUntil) return;
+      const { step, rest } = wheelStep(state.accumulated + event.deltaX);
+      state.accumulated = rest;
+      if (step !== 0) {
+        state.lockedUntil = event.timeStamp + WHEEL_COOLDOWN_MS;
+        goTo(activeRef.current + step);
+      }
+    };
+    stage.addEventListener('wheel', onWheel, { passive: false });
+    return () => stage.removeEventListener('wheel', onWheel);
+  }, [goTo, total]);
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const onScrollEnd = () => settle();
     const cursorState = cursor.current;
-    track.addEventListener('scrollend', onScrollEnd);
-    return () => {
-      track.removeEventListener('scrollend', onScrollEnd);
-      window.clearTimeout(settleTimer.current);
-      if (scrollFrame.current !== undefined) window.cancelAnimationFrame(scrollFrame.current);
-      window.cancelAnimationFrame(cursorState.frame);
-    };
-  }, [settle]);
-
-  function onScroll() {
-    if (scrollFrame.current !== undefined) return;
-    scrollFrame.current = window.requestAnimationFrame(() => {
-      scrollFrame.current = undefined;
-      syncActive();
-    });
-  }
+    return () => window.cancelAnimationFrame(cursorState.frame);
+  }, []);
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const target = keyTarget(event.key, active, total);
@@ -159,16 +178,19 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     linkRefs.current[target]?.focus({ preventScroll: true });
   }
 
-  // ---------- arrasto com o mouse (o dedo e o trackpad já rolam sozinhos) ----------
+  // ---------- arrasto (dedo, caneta e mouse) ----------
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
-    const track = trackRef.current;
-    if (!track || event.pointerType !== 'mouse' || event.button !== 0 || total < 2) return;
+    if (total < 2 || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    if ((event.target as Element).closest('button')) return;
+    const item = itemRefs.current[active];
     drag.current = {
       pointerId: event.pointerId,
       x: event.clientX,
-      left: track.scrollLeft,
+      y: event.clientY,
       startIndex: active,
+      stepPx: (item?.offsetWidth ?? 400) * DRAG_STEP_RATIO,
+      position: active,
       moved: false,
       lastX: event.clientX,
       lastT: event.timeStamp,
@@ -180,24 +202,36 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {
     moveCursor(event);
     const state = drag.current;
-    const track = trackRef.current;
-    if (!state || !track || event.pointerId !== state.pointerId) return;
+    const stage = stageRef.current;
+    if (!state || !stage || event.pointerId !== state.pointerId) return;
     const dx = event.clientX - state.x;
     if (!state.moved) {
+      const dy = event.clientY - state.y;
+      // Gesto mais vertical que horizontal: é a página rolando, não o carrossel.
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) >= DRAG_THRESHOLD_PX) {
+        drag.current = null;
+        rootRef.current?.removeAttribute('data-pressed');
+        return;
+      }
       if (Math.abs(dx) < DRAG_THRESHOLD_PX) return;
       state.moved = true;
-      window.clearTimeout(settleTimer.current);
-      track.dataset.dragging = '';
-      track.setPointerCapture(event.pointerId);
+      stage.dataset.dragging = '';
+      stage.setPointerCapture(event.pointerId);
     }
     const dt = event.timeStamp - state.lastT;
     if (dt > 0) {
-      // Positivo quando a faixa avança (o mouse vai para a esquerda); média curta para não pular com um evento solto.
+      // Positivo quando a faixa avança (o ponteiro vai para a esquerda); média curta para não pular com um evento solto.
       state.velocity = 0.7 * ((state.lastX - event.clientX) / dt) + 0.3 * state.velocity;
     }
     state.lastX = event.clientX;
     state.lastT = event.timeStamp;
-    track.scrollLeft = state.left - dx;
+    state.position = dragPosition(state.startIndex, dx, state.stepPx, total);
+    paint(state.position);
+    const nearest = clampIndex(Math.round(state.position), total);
+    if (nearest !== shownRef.current) {
+      shownRef.current = nearest;
+      setShown(nearest);
+    }
   }
 
   function endDrag(event: PointerEvent<HTMLDivElement>) {
@@ -205,16 +239,25 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     rootRef.current?.removeAttribute('data-pressed');
     if (!state || event.pointerId !== state.pointerId) return;
     drag.current = null;
-    const track = trackRef.current;
-    if (!state.moved || !track) return;
-    if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+    const stage = stageRef.current;
+    if (!state.moved || !stage) return;
+    if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+    delete stage.dataset.dragging;
     suppressClick.current = true;
     window.setTimeout(() => {
       suppressClick.current = false;
     }, 0);
-    const nearest = nearestIndex(centers(), track.scrollLeft + track.clientWidth / 2);
-    goTo(releaseIndex(nearest, state.startIndex, state.velocity, total));
-    settleTimer.current = window.setTimeout(settle, SETTLE_FALLBACK_MS);
+    const nearest = clampIndex(Math.round(state.position), total);
+    const target = releaseIndex(nearest, state.startIndex, state.velocity, total);
+    goTo(target);
+    if (event.pointerType !== 'mouse') hideCursor();
+  }
+
+  function onItemClick(event: MouseEvent<HTMLAnchorElement>, index: number) {
+    if (index === active) return;
+    // A vizinha não abre a peça: vem para o centro.
+    event.preventDefault();
+    goTo(index);
   }
 
   // ---------- cursor "Arraste" (ideia 12): segue o mouse com um leve atraso ----------
@@ -222,6 +265,11 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   function moveCursor(event: PointerEvent<HTMLDivElement>) {
     const root = rootRef.current;
     if (!root || event.pointerType !== 'mouse' || reduceMotion || total < 2) return;
+    // Sobre as setas fica o cursor normal: a bolha esconderia o botão.
+    if (!drag.current?.moved && (event.target as Element).closest('button')) {
+      hideCursor();
+      return;
+    }
     const rect = root.getBoundingClientRect();
     const state = cursor.current;
     state.tx = event.clientX - rect.left;
@@ -252,20 +300,25 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     rootRef.current?.removeAttribute('data-cursor');
   }
 
-  const current = products[active];
+  const current = products[shown] ?? products[active];
+  // Só capas em fundo branco (ou uma parte delas): as peças ficam um pouco mais afastadas, porque a capa fundida no
+  // palco não tapa a vizinha de trás (carousel.css).
+  const rootClass = products.every((product) => product.cutout)
+    ? 'feature-carousel'
+    : 'feature-carousel feature-carousel--packshots';
+  const stageClass = reduceMotion ? 'feature-carousel__stage' : 'feature-carousel__stage is-animated';
 
   return (
     <div
       ref={rootRef}
-      className="feature-carousel"
+      className={rootClass}
       role="region"
       aria-roledescription={t('roleDescription')}
       aria-label={label}
     >
       <div
-        ref={trackRef}
-        className="feature-carousel__track"
-        onScroll={onScroll}
+        ref={stageRef}
+        className={stageClass}
         onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -282,21 +335,24 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
       >
         {products.map((product, index) => {
           const isActive = index === active;
-          const cover = product.cover;
-          const mediaStyle = cover?.width
-            ? ({ '--plate-img-max': `${cover.width}px` } as CSSProperties)
-            : undefined;
+          // Sem a foto recortada, a capa em fundo branco: o branco some no palco (multiply, carousel.css).
+          const image = product.cutout ?? product.cover;
+          const kind = product.cutout ? 'is-cutout' : 'is-packshot';
+          const pose = coverflowPose(index - active);
           return (
             <div
               key={product.id}
               ref={(node) => {
                 itemRefs.current[index] = node;
               }}
-              className={`feature-carousel__item ${isActive ? 'is-active' : index < active ? 'is-before' : 'is-after'}`}
+              className={['feature-carousel__item', kind, isActive ? 'is-active' : null]
+                .filter(Boolean)
+                .join(' ')}
+              style={poseStyle(pose)}
+              data-hidden={pose.hidden ? '' : undefined}
               role="group"
               aria-roledescription={t('slideRoleDescription')}
               aria-label={t('slide', { current: index + 1, total, name: product.name })}
-              data-initial={index === initialIndex(total) ? '' : undefined}
             >
               <Link
                 ref={(node) => {
@@ -304,71 +360,72 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 }}
                 className="feature-carousel__link"
                 href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
+                transitionTypes={image ? morphTypes(productMorphName(product.slug)) : undefined}
+                data-morph-link={image ? productMorphName(product.slug) : undefined}
                 tabIndex={isActive ? 0 : -1}
                 draggable={false}
-                onFocus={(event) => {
-                  // Só o foco do teclado traz a peça ao centro; o clique do mouse pode ser o começo de um arrasto.
-                  if (!isActive && event.currentTarget.matches(':focus-visible')) goTo(index);
-                }}
+                aria-label={product.name}
+                onClick={(event) => onItemClick(event, index)}
               >
-                <div className="feature-carousel__media">
-                  <div
-                    className={
-                      cover
-                        ? 'feature-carousel__frame hover-zoom'
-                        : 'feature-carousel__frame feature-carousel__frame--empty'
-                    }
-                    style={mediaStyle}
-                  >
-                    {cover ? (
-                      <ViewTransition
-                        name={productMorphName(product.slug)}
-                        share="product-morph"
-                        default="none"
-                      >
-                        <ApiImage image={cover} sizes={ITEM_SIZES} />
-                      </ViewTransition>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="feature-carousel__caption">
-                  <h3 className="feature-carousel__name">{product.name}</h3>
-                  <p className="feature-carousel__meta">
-                    {t('meta', { category: product.category.name, area: nav(product.area.key) })}
-                  </p>
-                </div>
+                <span
+                  className={
+                    image
+                      ? 'feature-carousel__frame'
+                      : 'feature-carousel__frame feature-carousel__frame--empty'
+                  }
+                >
+                  {image ? (
+                    <MorphImage
+                      name={productMorphName(product.slug)}
+                      image={image}
+                      sizes={ITEM_SIZES}
+                      fit="contain"
+                    />
+                  ) : null}
+                </span>
+                <span className="feature-carousel__shadow" aria-hidden="true" />
               </Link>
             </div>
           );
         })}
+        {total > 1 ? (
+          <>
+            <button
+              type="button"
+              className="feature-carousel__button feature-carousel__button--previous"
+              aria-label={t('previous')}
+              disabled={active === 0}
+              onClick={() => goTo(active - 1)}
+            >
+              <Icon name="arrow" />
+            </button>
+            <button
+              type="button"
+              className="feature-carousel__button feature-carousel__button--next"
+              aria-label={t('next')}
+              disabled={active === total - 1}
+              onClick={() => goTo(active + 1)}
+            >
+              <Icon name="arrow" />
+            </button>
+          </>
+        ) : null}
       </div>
-      {total > 1 ? (
-        <div className="feature-carousel__controls">
-          <button
-            type="button"
-            className="feature-carousel__button feature-carousel__button--previous"
-            aria-label={t('previous')}
-            disabled={active === 0}
-            onClick={() => goTo(active - 1)}
-          >
-            <Icon name="arrow" />
-          </button>
-          <p className="feature-carousel__counter num" aria-hidden="true">
-            {t('counter', { current: counterNumber(active + 1), total: counterNumber(total) })}
+      {current ? (
+        <div className="feature-carousel__caption" key={current.id} aria-hidden="true">
+          <p className="feature-carousel__name">{current.name}</p>
+          <p className="feature-carousel__meta">
+            {t('meta', { category: current.category.name, area: nav(current.area.key) })}
           </p>
-          <button
-            type="button"
-            className="feature-carousel__button"
-            aria-label={t('next')}
-            disabled={active === total - 1}
-            onClick={() => goTo(active + 1)}
-          >
-            <Icon name="arrow" />
-          </button>
+          {total > 1 ? (
+            <p className="feature-carousel__counter num">
+              {t('counter', { current: counterNumber(shown + 1), total: counterNumber(total) })}
+            </p>
+          ) : null}
         </div>
       ) : null}
       <p className="visually-hidden" aria-live="polite" aria-atomic="true">
-        {current ? t('status', { current: active + 1, total, name: current.name }) : null}
+        {products[active] ? t('status', { current: active + 1, total, name: products[active].name }) : null}
       </p>
       <span ref={cursorRef} className="feature-carousel__cursor" aria-hidden="true">
         <span className="feature-carousel__cursor-dot">{t('drag')}</span>

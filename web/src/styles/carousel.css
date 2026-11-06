@@ -1,65 +1,93 @@
 /* Ideia 01 do banco de ideias: carrossel com a peça em destaque. */
 
 /*
-  FeatureCarousel (components/products/FeatureCarousel.tsx). Rolagem nativa com encaixe no centro: a peça do centro em
-  tamanho cheio, as vizinhas a 78% e mais claras. Só `transform` e `opacity` animam (--t-slow). A faixa passa por cima
-  da margem lateral da página (--gutter), para as vizinhas cortarem na borda da tela, não no meio dela.
+  FeatureCarousel (components/products/FeatureCarousel.tsx), no desenho da referência da Franccino: um "coverflow"
+  empilhado num palco claro (degradê de branco para areia). Todas as peças ficam no mesmo ponto do chão do palco; cada
+  uma recebe do componente a pose (`coverflowPose`, lib/ui/feature-carousel.ts) em variáveis:
+    --fc-x  deslocamento, em larguras da peça do centro    --fc-s  escala (a partir do chão)
+    --fc-f  quanto a foto vai para o claro (0 a 1)          --fc-o  opacidade (só as das pontas somem)
+  Só `transform`, `opacity` e `filter` animam (--t-slow); arrastando, nada anima e a peça segue o dedo.
+
+  A foto é a recortada (`.is-cutout`, PNG/WebP sem fundo). Sem ela vem a capa em fundo branco (`.is-packshot`), que o
+  `mix-blend-mode: multiply` funde no palco: o branco some e fica só a peça.
 */
 .feature-carousel {
-  --fc-item: clamp(260px, 36vw, 540px);
-  --fc-gap: var(--space-7);
-  --fc-side-scale: 0.78;
-  --fc-side-opacity: 0.55;
+  --fc-item: clamp(280px, 36vw, 560px);
+  --fc-spread: 1;
+  --fc-stage-top: var(--space-5);
+  --fc-stage-bottom: var(--space-8);
   position: relative;
   display: grid;
   gap: var(--space-6);
 }
 
-.feature-carousel__track {
+/*
+  Com capas em fundo branco a foto não tapa a de trás (o multiply mistura as duas onde se cruzam): as peças ficam mais
+  afastadas, encostando sem passar uma pela outra.
+*/
+.feature-carousel--packshots {
+  --fc-spread: 1.2;
+}
+
+.feature-carousel__stage {
   position: relative;
-  display: flex;
-  gap: var(--fc-gap);
-  margin-inline: calc(-1 * var(--gutter));
-  padding-block: var(--space-2);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  touch-action: pan-x pan-y;
-}
-
-.feature-carousel__track::-webkit-scrollbar {
-  display: none;
-}
-
-/* Espaço antes da primeira e depois da última peça, para as duas pontas também chegarem ao centro. */
-.feature-carousel__track::before,
-.feature-carousel__track::after {
-  content: '';
-  flex: none;
-  width: calc((100% - var(--fc-item)) / 2 - var(--fc-gap));
-}
-
-/* Arrastando com o mouse: o encaixe sai até a faixa parar na peça escolhida (FeatureCarousel). */
-.feature-carousel__track[data-dragging] {
-  scroll-snap-type: none;
+  isolation: isolate;
+  overflow: clip;
+  height: calc(var(--fc-item) + var(--fc-stage-top) + var(--fc-stage-bottom));
+  background:
+    radial-gradient(120% 90% at 50% 34%, var(--paper) 0%, transparent 62%),
+    linear-gradient(180deg, var(--paper) 0%, var(--sand) 58%, var(--sand-strong) 100%);
+  touch-action: pan-y;
   user-select: none;
 }
 
+/* Cada peça: um quadro quadrado em pé no chão do palco, no meio; a pose desloca, encolhe e apaga. */
 .feature-carousel__item {
-  flex: none;
+  position: absolute;
+  left: 50%;
+  bottom: var(--fc-stage-bottom);
   width: var(--fc-item);
-  scroll-snap-align: center;
+  margin-left: calc(var(--fc-item) / -2);
+  transform-origin: 50% 100%;
+  transform: translate3d(calc(var(--fc-x, 0) * var(--fc-item) * var(--fc-spread)), 0, 0) scale(var(--fc-s, 1));
+  opacity: calc(var(--fc-o, 1) * (1 - 0.3 * var(--fc-f, 0)));
+  /* Apagar = ir para o claro sem acinzentar: o branco continua branco (some no palco) e a cor perde força. */
+  filter: saturate(calc(1 - 0.6 * var(--fc-f, 0))) brightness(calc(1 + 0.22 * var(--fc-f, 0)));
 }
 
-/* Abre com a segunda peça no centro antes do JavaScript, onde o navegador já entende `scroll-initial-target`. */
-.feature-carousel__item[data-initial] {
-  scroll-initial-target: nearest;
+.feature-carousel__item.is-packshot {
+  mix-blend-mode: multiply;
+}
+
+/* O fundo quase branco das capas (estúdio levemente cinza ou bege) vira branco, para não sobrar o retângulo. */
+.feature-carousel__item.is-packshot .feature-carousel__frame img {
+  filter: brightness(1.04) contrast(1.06);
+}
+
+.feature-carousel__item[data-hidden] {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.feature-carousel__stage.is-animated .feature-carousel__item {
+  transition:
+    transform var(--t-slow) var(--ease-out),
+    opacity var(--t-slow) var(--ease-out),
+    filter var(--t-slow) var(--ease-out),
+    visibility 0s linear var(--t-slow);
+}
+
+.feature-carousel__stage.is-animated .feature-carousel__item:not([data-hidden]) {
+  transition-delay: 0s;
+}
+
+.feature-carousel__stage[data-dragging] .feature-carousel__item {
+  transition: none;
 }
 
 .feature-carousel__link {
-  display: grid;
-  gap: var(--space-5);
+  position: relative;
+  display: block;
   color: inherit;
   text-decoration: none;
   -webkit-user-drag: none;
@@ -74,33 +102,13 @@
   outline-offset: 6px;
 }
 
-/*
-  As vizinhas encolhem e chegam perto da peça do centro (o deslocamento desconta o que a escala tirou), para mostrar
-  mais delas na ponta da tela. Antes do centro vão para a direita, depois dele para a esquerda.
-*/
-.feature-carousel__media {
-  --fc-shift: calc((1 - var(--fc-side-scale)) * var(--fc-item) / 2);
-  transform: translateX(calc(-1 * var(--fc-shift))) scale(var(--fc-side-scale));
-  opacity: var(--fc-side-opacity);
-  transition:
-    transform var(--t-slow) var(--ease-out),
-    opacity var(--t-slow) var(--ease-out);
-}
-
-.feature-carousel__item.is-before .feature-carousel__media {
-  transform: translateX(var(--fc-shift)) scale(var(--fc-side-scale));
-}
-
-.feature-carousel__item.is-active .feature-carousel__media {
-  transform: none;
-  opacity: 1;
-}
-
 .feature-carousel__frame {
-  aspect-ratio: 4 / 3;
-  display: grid;
-  place-items: center;
-  background: var(--paper);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  aspect-ratio: 1;
 }
 
 .feature-carousel__frame--empty {
@@ -108,32 +116,61 @@
 }
 
 .feature-carousel__frame img {
-  width: 100%;
-  height: 100%;
-  max-width: var(--plate-img-max, 100%);
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  object-position: 50% 100%;
   pointer-events: none;
   -webkit-user-drag: none;
 }
 
-/* Nome e categoria só da peça do centro: o texto das vizinhas some e o novo sobe junto com a peça que cresce. */
+/* A peça do centro aproxima devagar no hover, como as fotos clicáveis do site (sem moldura: a peça cresce no palco). */
+.feature-carousel__frame img {
+  transform-origin: 50% 100%;
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .feature-carousel__item.is-active .feature-carousel__link:hover .feature-carousel__frame img {
+    transform: scale(1.04);
+  }
+}
+
+/*
+  Sombra de contato: uma elipse suave no chão, embaixo da peça recortada (degradê, não `box-shadow`). Aparece cheia na
+  peça do centro e some nas vizinhas, junto com o resto da pose. A foto recortada vem rente à peça, então a base da
+  foto é o pé da peça.
+*/
+.feature-carousel__shadow {
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: calc(-1 * var(--space-3));
+  height: var(--space-6);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in srgb, var(--ink) 30%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 12%, transparent) 40%,
+    transparent 100%
+  );
+  opacity: calc(1 - var(--fc-f, 0) * 2);
+  pointer-events: none;
+}
+
+/* A capa em fundo branco já traz a sombra do estúdio, e a peça não encosta na borda da foto: sem a elipse. */
+.feature-carousel__item.is-packshot .feature-carousel__shadow {
+  display: none;
+}
+
+/* Nome, categoria e contador da peça do centro, embaixo do palco; trocam com a peça. */
 .feature-carousel__caption {
   display: grid;
   justify-items: center;
   gap: var(--space-2);
   text-align: center;
-  opacity: 0;
-  transform: translateY(var(--space-3));
-  transition:
-    opacity var(--t-base) var(--ease-out),
-    transform var(--t-base) var(--ease-out);
-}
-
-.feature-carousel__item.is-active .feature-carousel__caption {
-  opacity: 1;
-  transform: none;
-  transition-duration: var(--t-slow);
-  transition-delay: var(--t-press);
 }
 
 .feature-carousel__name {
@@ -153,58 +190,85 @@
   color: var(--ink-muted);
 }
 
-/* Setas quadradas com o contador entre elas, centradas embaixo da peça em destaque. */
-.feature-carousel__controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-5);
+.feature-carousel__counter {
+  margin-top: var(--space-2);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-muted);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .feature-carousel__caption {
+    animation: feature-carousel-caption var(--t-mid) var(--ease-out) both;
+  }
+}
+
+@keyframes feature-carousel-caption {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+/* Setas quadradas nas laterais do palco, na altura do meio da peça. */
 .feature-carousel__button {
+  position: absolute;
+  top: 50%;
+  z-index: 200;
   display: inline-grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
   border: 1px solid var(--ink);
-  background: transparent;
+  background: var(--paper);
   color: var(--ink);
   cursor: pointer;
-  transition: opacity var(--t-fast) var(--ease-out);
+  transition:
+    opacity var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
 }
 
-.feature-carousel__button:hover:not(:disabled) {
-  background: var(--ink);
-  color: var(--paper);
+.feature-carousel__button--previous {
+  left: var(--space-5);
+}
+
+.feature-carousel__button--next {
+  right: var(--space-5);
+}
+
+@media (hover: hover) {
+  .feature-carousel__button:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+.feature-carousel__button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
 .feature-carousel__button:disabled {
-  opacity: 0.3;
-  cursor: default;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .feature-carousel__button--previous .icon {
   transform: scaleX(-1);
 }
 
-.feature-carousel__counter {
-  min-width: 5ch;
-  font-size: var(--fs-caption);
-  line-height: var(--lh-ui);
-  letter-spacing: var(--tracking-label);
-  text-align: center;
-  color: var(--ink-muted);
-}
-
 /*
-  Cursor "Arraste" (ideia 12): bolha redonda que segue o mouse sobre a faixa. Só com mouse e sem movimento reduzido; o
+  Cursor "Arraste" (ideia 12): bolha redonda que segue o mouse sobre o palco. Só com mouse e sem movimento reduzido; o
   FeatureCarousel põe `data-cursor` na raiz quando o mouse entra e move a bolha por `transform`.
 */
 .feature-carousel__cursor {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 300;
   pointer-events: none;
   display: none;
 }
@@ -235,9 +299,13 @@
     display: block;
   }
 
-  .feature-carousel[data-cursor] .feature-carousel__track,
+  .feature-carousel[data-cursor] .feature-carousel__stage,
   .feature-carousel[data-cursor] .feature-carousel__link {
     cursor: none;
+  }
+
+  .feature-carousel[data-cursor] .feature-carousel__button {
+    cursor: pointer;
   }
 
   .feature-carousel[data-cursor] .feature-carousel__cursor-dot {
@@ -252,43 +320,51 @@
 
 /* Mouse com movimento reduzido: sem a bolha, o cursor de arrastar do sistema. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
-  .feature-carousel__track,
-  .feature-carousel__link {
+  .feature-carousel__stage,
+  .feature-carousel__item:not(.is-active) .feature-carousel__link {
     cursor: grab;
   }
 
-  .feature-carousel__track[data-dragging],
-  .feature-carousel__track[data-dragging] .feature-carousel__link {
+  .feature-carousel__item.is-active .feature-carousel__link {
+    cursor: pointer;
+  }
+
+  .feature-carousel__stage[data-dragging],
+  .feature-carousel__stage[data-dragging] .feature-carousel__link {
     cursor: grabbing;
   }
 }
 
 @media (max-width: 48rem) {
   .feature-carousel {
-    /* Mais estreita no celular, para as vizinhas aparecerem dos dois lados. */
+    /* No celular a peça do centro ocupa mais da largura, e as vizinhas ficam mais juntas para caber dos dois lados. */
     --fc-item: 62vw;
-    --fc-gap: var(--space-3);
-    --fc-side-scale: 0.82;
+    --fc-spread: 0.82;
+    --fc-stage-top: var(--space-5);
+    --fc-stage-bottom: var(--space-7);
     gap: var(--space-5);
   }
 
-  .feature-carousel__link {
-    gap: var(--space-4);
-  }
-}
-
-/* Movimento reduzido: nada cresce nem anima; a peça do centro continua marcada pela opacidade das vizinhas. */
-@media (prefers-reduced-motion: reduce) {
-  .feature-carousel__media,
-  .feature-carousel__item.is-before .feature-carousel__media,
-  .feature-carousel__item.is-active .feature-carousel__media {
-    transform: none;
-    transition: none;
+  .feature-carousel--packshots {
+    --fc-spread: 0.95;
   }
 
-  .feature-carousel__caption,
-  .feature-carousel__item.is-active .feature-carousel__caption {
-    transform: none;
-    transition: none;
+  /* O palco vai de borda a borda da tela. */
+  .feature-carousel__stage {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .feature-carousel__button {
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+  }
+
+  .feature-carousel__button--previous {
+    left: var(--space-3);
+  }
+
+  .feature-carousel__button--next {
+    right: var(--space-3);
   }
 }

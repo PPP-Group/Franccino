@@ -1,18 +1,20 @@
 import { useTranslations } from 'next-intl';
-import { ViewTransition, type CSSProperties } from 'react';
-import { ApiImage } from '@/components/media/ApiImage';
+import type { CSSProperties } from 'react';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { ProductCard } from '@/lib/api/types';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /** O que o card usa: foto, nome e o sinal de lançamento (também serve às peças guardadas em "Peças que você viu"). */
 export type PlateProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>;
 
 /**
- * Nome da transição que leva a foto do card até a foto grande da página da peça (banco de ideias, ideia 10: "você
- * clica e a imagem vai crescendo"). O mesmo nome fica na primeira foto de `ProductStage`.
+ * Nome da transição que leva a foto do card até a foto grande da página da peça e de volta (banco de ideias, ideia
+ * 10: "você clica e a imagem vai crescendo"; regras em `lib/ui/morph.ts`). A primeira foto de `ProductStage` começa
+ * com o mesmo nome.
  */
 export function productMorphName(slug: string): string {
-  return `product-${slug}`;
+  return morphName('product', slug);
 }
 
 /**
@@ -47,15 +49,24 @@ export function ProductPlate({
   const mediaStyle = cover?.width ? ({ '--plate-img-max': `${cover.width}px` } as CSSProperties) : undefined;
   return (
     <article className="plate">
-      <Link className="plate__link" href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}>
+      <Link
+        className="plate__link"
+        href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
+        transitionTypes={cover ? morphTypes(productMorphName(product.slug)) : undefined}
+        data-morph-link={cover ? productMorphName(product.slug) : undefined}
+      >
         <div
           className={cover ? 'plate__media hover-zoom' : 'plate__media plate__media--empty'}
           style={mediaStyle}
         >
           {cover ? (
-            <ViewTransition name={productMorphName(product.slug)} share="product-morph" default="none">
-              <ApiImage image={cover} sizes={sizes} priority={priority} />
-            </ViewTransition>
+            <MorphImage
+              name={productMorphName(product.slug)}
+              image={cover}
+              sizes={sizes}
+              priority={priority}
+              fit="contain"
+            />
           ) : null}
         </div>
         <div className="plate__body">

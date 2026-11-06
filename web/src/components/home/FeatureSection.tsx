@@ -1,5 +1,5 @@
 import { useLocale, useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { QuickAddButton } from '@/components/products/QuickAddButton';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
@@ -7,6 +7,7 @@ import type { ProductDetail } from '@/lib/api/types';
 import { toProductCard } from '@/lib/catalog/card';
 import { primaryDimension } from '@/lib/catalog/technical';
 import { formatDimension } from '@/lib/format/dimensions';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 import { sectionClass, type Tone } from './tone';
 
 /**
@@ -18,6 +19,9 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
   const t = useTranslations('home.feature');
   const tDimensions = useTranslations('dimensions');
   const locale = useLocale() as Locale;
+  // A foto cresce até a página da peça (ideia 10); nome próprio, porque a mesma peça pode estar numa esteira da home.
+  const morph = morphName('feature', product.slug);
+  const morphLink = product.cover ? { transitionTypes: morphTypes(morph), 'data-morph-link': morph } : {};
   const dimension = primaryDimension(product.dimensions);
   const dimensionLabels = {
     width: tDimensions('width'),
@@ -33,14 +37,17 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
           <Link
             className="feature__media"
             href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
+            {...morphLink}
             tabIndex={-1}
             aria-hidden="true"
-            data-reveal="curtain"
+            data-reveal=""
           >
             <span className="feature__frame" data-parallax-layer="back">
-              <ApiImage
+              <MorphImage
+                name={morph}
                 image={product.cover}
                 sizes="(max-width: 56.25rem) 92vw, (max-width: 97.5rem) 52vw, 800px"
+                fit="contain"
               />
             </span>
           </Link>
@@ -73,7 +80,11 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
             ) : null}
           </dl>
           <div className="hero__actions">
-            <Link className="btn" href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}>
+            <Link
+              className="btn"
+              href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
+              {...morphLink}
+            >
               {t('view')}
             </Link>
             <QuickAddButton product={toProductCard(product)} variant="button" />

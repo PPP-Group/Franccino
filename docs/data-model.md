@@ -159,7 +159,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 
 `label` é opcional (produto de medida única). Todos os valores em mm e opcionais individualmente.
 
-Mídia: `cover` (1, imagem de listagem), `gallery` (n), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
+Mídia: `cover` (1, imagem de listagem), `gallery` (n), `cutout` (1, opcional, PNG ou WebP com fundo transparente para o carrossel; as conversões WebP mantêm a transparência), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
 Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`.
 
 ### finish_groups / finishes

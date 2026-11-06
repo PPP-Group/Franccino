@@ -44,3 +44,21 @@ export function neighbours<T>(items: T[], isCurrent: (item: T) => boolean, limit
   const others = start === -1 ? items : [...items.slice(start + 1), ...items.slice(0, start)];
   return others.filter((item) => !isCurrent(item)).slice(0, limit);
 }
+
+/**
+ * Peça para a coluna da direita que ficaria vazia (retorno do tech lead de 06/11/2026: "nada de metade vazia"): a
+ * primeira com foto, procurando nas listas na ordem dada (as peças da própria página primeiro, depois os destaques da
+ * home), sem as que `exclude` já mostra. Sem nenhuma, `null`, e a coluna some.
+ */
+export function firstWithCover<T extends { id: number; cover: unknown }>(
+  lists: T[][],
+  exclude: number[] = [],
+): T | null {
+  for (const list of lists) {
+    const found = list.find((item) => item.cover && !exclude.includes(item.id));
+    if (found) {
+      return found;
+    }
+  }
+  return null;
+}

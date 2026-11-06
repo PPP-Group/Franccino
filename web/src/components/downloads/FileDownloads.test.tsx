@@ -14,7 +14,7 @@ describe('FileDownloads', () => {
     expect(html).toContain('id="designer-downloads"');
     expect(html).toContain('Catálogos e apresentações');
     expect(html).toContain('Catálogo Daniela Ferro');
-    expect(html).toContain('Link seguro por 10 min');
+    expect(html).toContain('Link seguro, válido por 10 minutos');
   });
 
   it('renders nothing without files', () => {

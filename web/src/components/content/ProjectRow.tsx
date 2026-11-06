@@ -1,7 +1,8 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { ProjectCard } from '@/lib/api/types';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 type ProjectRowProps = {
   project: ProjectCard;
@@ -19,20 +20,33 @@ type ProjectRowProps = {
 export function ProjectRow({ project, meta = [], priority = false }: ProjectRowProps) {
   const common = useTranslations('common');
   const href = { pathname: '/projects/[slug]', params: { slug: project.slug } } as const;
+  // A foto cresce até a capa da página do projeto (ideia 10), por qualquer um dos três links.
+  const morph = morphName('project', project.slug);
+  const morphLink = project.cover ? { transitionTypes: morphTypes(morph), 'data-morph-link': morph } : {};
   return (
     <article className="project-row">
       <Link
         className="project-row__media hover-zoom"
         href={href}
+        {...morphLink}
         tabIndex={-1}
         aria-hidden="true"
-        data-reveal={priority ? undefined : 'curtain'}
+        data-reveal={priority ? undefined : ''}
       >
-        <ApiImage image={project.cover} sizes="(max-width: 56.25rem) 100vw, 50vw" priority={priority} />
+        {project.cover ? (
+          <MorphImage
+            name={morph}
+            image={project.cover}
+            sizes="(max-width: 56.25rem) 100vw, 50vw"
+            priority={priority}
+          />
+        ) : null}
       </Link>
       <div className="project-row__copy" data-reveal="">
         <h2 className="project-row__title">
-          <Link href={href}>{project.title}</Link>
+          <Link href={href} {...morphLink}>
+            {project.title}
+          </Link>
         </h2>
         {meta.length > 0 ? (
           <ul className="meta meta-inline">
@@ -45,6 +59,7 @@ export function ProjectRow({ project, meta = [], priority = false }: ProjectRowP
         <Link
           className="btn btn--ghost project-row__more"
           href={href}
+          {...morphLink}
           aria-label={`${common('learnMore')}: ${project.title}`}
         >
           {common('learnMore')}

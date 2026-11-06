@@ -27,9 +27,9 @@ describe('ContactForm', () => {
 
   it('offers all Brazilian states and every profession of the contract', () => {
     const html = renderWithIntl(<ContactForm />);
-    expect(html.match(/<option value="[A-Z]{2}">/g)).toHaveLength(27);
+    expect(html.match(/role="option"[^>]*data-value="[A-Z]{2}"/g)).toHaveLength(27);
     for (const value of ['architect', 'interior_designer', 'retailer', 'end_customer', 'other']) {
-      expect(html).toContain(`value="${value}"`);
+      expect(html).toContain(`data-value="${value}"`);
     }
   });
 });

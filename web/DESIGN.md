@@ -297,12 +297,15 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
 - Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
 - Aparecer ao rolar (ideia 04): `data-reveal` no bloco de texto (sobe 20 px enquanto aparece), `data-reveal="stagger"`
   num grupo (filhos em sequência), `data-reveal="curtain"` em volta de uma foto (os filhos diretos abrem como cortina,
-  da esquerda para a direita) e `data-reveal="curtain-stagger"` num mosaico ou grade de fotos. Dispara uma vez
+  da esquerda para a direita; só nas coleções, retorno da Franccino de 06/11/2026) e `data-reveal="curtain-stagger"`
+  num mosaico ou grade de fotos (hoje sem uso). Dispara uma vez
   (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
   não conta como visível e nunca abriria.
 - Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
-  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`, no máximo 40 px na foto e 20 px no
-  texto (metade no celular). Não usar em arte com texto (faixas das coleções), porque a foto ganha 10% de sobra.
+  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`: 80 px na foto e 28 px no texto, em
+  sentidos opostos, de ponta a ponta da passagem do bloco pela tela (metade no celular; desde 06/11/2026, para ficar
+  visível). Sem `animation-timeline`, o `ParallaxFallback` da home faz o mesmo. Não usar em arte com texto (faixas das
+  coleções), porque a foto ganha 12% de sobra (`--parallax-scale`).
 - Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
   outra coleção, chamada) ou a grade muda o número de colunas.
 - Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
@@ -325,12 +328,13 @@ Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no coment
 | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- |
 | 04 Revelação ao rolar (texto sobe, foto abre como cortina)                                                   | "Ideia 04 — revelação ao rolar"                       | Tudo aparece pronto                                   |
 | 04 Paralaxe (três camadas)                                                                                   | "Ideia 04 — paralaxe suave"                           | Fotos e textos rolam juntos                           |
+| 10 A foto do card cresce até a página que ele abre e encolhe de volta (só a foto; entre listagens, nada)     | "abrir a peça e voltar dela (ideia 10)"               | A página troca sem movimento                          |
 | 12a Seta que anda no hover (botão, `.link-arrow`)                                                            | "12a"                                                 | A seta fica parada                                    |
 | 12b Sublinhado que cresce da esquerda (cabeçalho, rodapé, `.link-grow`; o fio do `.link-arrow` se redesenha) | "12b"                                                 | O fio aparece de uma vez                              |
 | 12c Cursor "Arraste" no carrossel                                                                            | em `carousel.css`                                     | Cursor normal                                         |
 | 12d Peça adicionada: o visto entra e o ícone e o contador da lista pulsam uma vez                            | "12d"                                                 | O visto e "Adicionada à lista" aparecem sem movimento |
 | 12e Números que contam (`CountUp`)                                                                           | é o componente: trocar `<CountUp value=…>` pelo valor | O número aparece pronto                               |
-| 12f Faixa de carregamento (fotos e `.skeleton`)                                                              | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
+| 12f Faixa de carregamento (só `.skeleton`; as fotos não têm)                                                 | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
 
 A Franccino escolhe quais microinterações ficam (PDF de retorno: "validar quais serão utilizados"); cada uma está
 sozinha em `/pt/ideias`, ideia 12.

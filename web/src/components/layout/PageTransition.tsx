@@ -1,20 +1,31 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ViewTransition, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
+import { installNavigationMotion, onRouteCommit } from './navigation-motion';
 
 /**
- * Troca de página com fade (rodada 3, 06/11/2026: "a navegação não pode ser seca"): a página que sai some rápido e a
- * nova aparece logo depois (classes `page-exit` e `page-enter` em motion.css). O layout não desmonta na navegação,
- * por isso a chave é o caminho da URL: cada página nova entra e a anterior sai. Os pares com nome dentro da página (a
- * foto do card que cresce até a peça, `product-morph`) continuam funcionando por cima. Sem suporte do navegador ou
- * com movimento reduzido, a troca é imediata.
+ * Movimento da navegação (retorno de 06/11/2026). Não há mais fade entre páginas: trocar de uma listagem para outra é
+ * imediato. Só a abertura de uma peça, coleção, projeto ou linha anima, com a foto crescendo do card até a página e
+ * encolhendo de volta (`MorphImage`, `lib/ui/morph.ts`, motion.css). Este componente instala o controle da navegação
+ * (`navigation-motion.ts`: rolagem devolvida na hora, volta do navegador animada, caminho que vira "voltar") e avisa a
+ * cada troca de página, no mesmo quadro, antes da foto do movimento. Não desenha nada.
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  return (
-    <ViewTransition key={pathname} enter="page-enter" exit="page-exit" default="none">
-      {children}
-    </ViewTransition>
-  );
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    installNavigationMotion();
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    onRouteCommit();
+  }, [pathname]);
+
+  return children;
 }

@@ -36,7 +36,7 @@ export function DesignersSection({ designers, tone }: { designers: DesignerCard[
             <Icon name="arrow" />
           </Link>
         </div>
-        <div className={`designers designers--${shown.length}`} data-reveal="curtain-stagger">
+        <div className={`designers designers--${shown.length}`} data-reveal="stagger">
           {shown.map((designer) => (
             <Link
               key={designer.id}

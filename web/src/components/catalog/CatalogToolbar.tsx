@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import type { AppHref } from '@/i18n/navigation';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
+import { Select } from '@/components/ui/Select';
 import { ViewToggle } from './ViewToggle';
 
 type CatalogToolbarProps = {
@@ -32,19 +33,25 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
             {Object.entries(props.hiddenQuery).map(([name, value]) => (
               <input key={name} type="hidden" name={name} value={value} />
             ))}
-            <label className="visually-hidden" htmlFor="designer-filter">
+            <label className="visually-hidden" id="designer-filter-label" htmlFor="designer-filter">
               {t('designer')}
             </label>
-            <select id="designer-filter" name="designer" defaultValue={props.activeDesigner ?? ''}>
-              <option value="">{t('allDesigners')}</option>
-              {props.designerOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.count === null
-                    ? option.label
-                    : t('facetOption', { name: option.label, count: option.count })}
-                </option>
-              ))}
-            </select>
+            <Select
+              id="designer-filter"
+              labelId="designer-filter-label"
+              name="designer"
+              defaultValue={props.activeDesigner ?? ''}
+              options={[
+                { value: '', label: t('allDesigners') },
+                ...props.designerOptions.map((option) => ({
+                  value: option.value,
+                  label:
+                    option.count === null
+                      ? option.label
+                      : t('facetOption', { name: option.label, count: option.count }),
+                })),
+              ]}
+            />
             <button type="submit" className="btn btn--ghost btn--compact">
               {t('apply')}
             </button>

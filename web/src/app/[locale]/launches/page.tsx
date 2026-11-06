@@ -4,9 +4,11 @@ import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
 import { ViewToggle } from '@/components/catalog/ViewToggle';
+import { firstWithCover } from '@/components/content/layout';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
@@ -15,6 +17,9 @@ import type { LaunchDetail, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { parseCatalogView } from '@/lib/catalog/view';
 import { buildMetadata } from '@/lib/seo/metadata';
+
+/** Peças da primeira linha da grade (3 colunas no desktop). */
+const FIRST_ROW = 3;
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
 
@@ -72,6 +77,8 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
     launches.find((launch) => launch.cover)?.cover ??
     launches.flatMap((launch) => launch.gallery)[0] ??
     null;
+  // A peça em destaque não repete a primeira linha da grade logo abaixo (quando houver outras).
+  const feature = firstWithCover([products.slice(FIRST_ROW), products]);
   const rows =
     view === 'table'
       ? (
@@ -84,7 +91,13 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
 
   return (
     <main>
-      <PageBanner image={banner} title={page?.title ?? t('title')} lead={page?.intro ?? t('intro')} />
+      {/* À direita do título, uma peça dos lançamentos (retorno do tech lead de 06/11/2026: nada de metade vazia). */}
+      <PageBanner
+        image={banner}
+        title={page?.title ?? t('title')}
+        lead={page?.intro ?? t('intro')}
+        aside={feature ? <FeaturePiece product={feature} compact /> : null}
+      />
       <div className="wrap catalog">
         {products.length > 0 ? (
           <>

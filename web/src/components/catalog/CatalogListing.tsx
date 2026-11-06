@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { PageBanner } from '@/components/layout/PageBanner';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
@@ -13,8 +14,9 @@ import {
 } from '@/lib/api/catalog';
 import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
-import type { Facets, Paginated, ProductCard } from '@/lib/api/types';
+import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
+import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar } from './CatalogToolbar';
 import { Pagination } from './Pagination';
@@ -36,6 +38,11 @@ export type CatalogListingProps = {
   /** A categoria já está no caminho (páginas de categoria): não repetir na query do form. */
   categoryInPath?: boolean;
   facetsParams: ProductFacetsParams;
+  /**
+   * Foto no topo, com o título sobre ela (Casa e Giardini): a foto do bloco da home que abriu a página cresce até ela
+   * (ideia 10, `morph`). Arte larga ou sem foto: o cabeçalho de texto de sempre.
+   */
+  banner?: { image: Image | null; morph: string };
 };
 
 const PER_PAGE = 24;
@@ -85,16 +92,27 @@ export async function CatalogListing(props: CatalogListingProps) {
     designer: undefined,
   });
 
+  const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
+
   return (
     <main>
+      {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
       <div className="wrap catalog">
         <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
-        <div className="catalog-head">
-          <div className="catalog-head__copy">
-            <h1>{props.title}</h1>
-            {props.intro}
+        {banner ? (
+          props.intro ? (
+            <div className="catalog-head">
+              <div className="catalog-head__copy">{props.intro}</div>
+            </div>
+          ) : null
+        ) : (
+          <div className="catalog-head">
+            <div className="catalog-head__copy">
+              <h1>{props.title}</h1>
+              {props.intro}
+            </div>
           </div>
-        </div>
+        )}
         <CatalogToolbar
           count={t('count', { count: page.meta.total })}
           view={view}

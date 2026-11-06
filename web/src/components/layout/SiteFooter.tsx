@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { socialLinks } from '@/lib/settings';
+import { Logo } from './Logo';
 
 export function SiteFooter({ settings }: { settings: Settings }) {
   const t = useTranslations('footer');
@@ -20,8 +21,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
       <div className="wrap">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link className="wordmark" href="/">
-              {t('wordmark')}
+            <Link className="wordmark" href="/" aria-label={t('wordmark')}>
+              <Logo />
             </Link>
             {settings.factory_address ? (
               <p className="footer-muted">{t('factory', { address: settings.factory_address })}</p>
@@ -89,7 +90,7 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/downloads">{nav('downloads')}</Link>
               </li>
               <li>
-                <Link href="/corporate">{nav('corporate')}</Link>
+                <Link href="/projects">{nav('projects')}</Link>
               </li>
               <li>
                 <Link href="/contact">{nav('contact')}</Link>

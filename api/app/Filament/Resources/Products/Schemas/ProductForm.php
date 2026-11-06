@@ -168,6 +168,11 @@ class ProductForm
                 ->image()
                 ->multiple()
                 ->reorderable(),
+            SpatieMediaLibraryFileUpload::make('cutout')
+                ->label(__('Cutout photo (carousel)'))
+                ->collection('cutout')
+                ->image()
+                ->acceptedFileTypes(['image/png', 'image/webp']),
             SpatieMediaLibraryFileUpload::make('model_3d')
                 ->label(__('3D model'))
                 ->collection('model_3d')
