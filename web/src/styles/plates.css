@@ -67,7 +67,7 @@
 .grid-fill__title {
   font-size: var(--fs-h3);
   line-height: var(--lh-h3);
-  font-weight: 600;
+  font-weight: 500;
   text-wrap: balance;
 }
 
@@ -174,7 +174,7 @@
 .plate__flag {
   font-size: var(--fs-label);
   line-height: var(--lh-ui);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--wood);

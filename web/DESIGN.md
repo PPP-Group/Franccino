@@ -13,30 +13,30 @@ colors:
   alert: '#9b2c1f'
 typography:
   display:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: 'clamp(2.5rem, 5.2vw, 4.9rem)'
     fontWeight: 400
     lineHeight: 1.02
     letterSpacing: '-0.025em'
   headline:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: 'clamp(2.1rem, 3.6vw, 3.4rem)'
     fontWeight: 400
     lineHeight: 1.05
     letterSpacing: '-0.015em'
   title:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '1.125rem'
     fontWeight: 500
     lineHeight: 1.3
     letterSpacing: '-0.005em'
   body:
-    fontFamily: "'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '1rem'
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '0.8125rem'
     fontWeight: 500
     lineHeight: 1.4
@@ -93,7 +93,7 @@ components:
 
 # Design System: Franccino
 
-> **Beta notice (2026-10-21).** This file documents the site as built for the beta. The visual design gets a full revamp in month 2, so expect this file to be rewritten then. Since the client's round 1 feedback (2026-10-06): the page ground is white (`--stone: #ffffff`); headings use Cormorant Garamond and text uses EB Garamond (SIL Open Font License, served by `next/font` from `src/app/fonts.ts`). The wordmark is still text, waiting for the logo in vector format. Every color, type, spacing and radius value is a CSS custom property in `src/styles/tokens.css`. Treat hex values, font families and imagery direction as replaceable, and the structural rules (grid, spacing rhythm, corners, elevation, named rules) as the durable system.
+> **Beta notice (2026-10-21).** This file documents the site as built for the beta. The visual design gets a full revamp in month 2, so expect this file to be rewritten then. Since the client's round 1 feedback (2026-10-06): the page ground is white (`--stone: #ffffff`); since 2026-11-06 the whole site uses Jost (SIL Open Font License, served by `next/font` from `src/app/fonts.ts`), and the wordmark is the brand logo in vector form (`components/layout/Logo.tsx`). Every color, type, spacing and radius value is a CSS custom property in `src/styles/tokens.css`. Treat hex values, font families and imagery direction as replaceable, and the structural rules (grid, spacing rhythm, corners, elevation, named rules) as the durable system.
 
 ## Overview
 
@@ -106,7 +106,7 @@ The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23
 **Key Characteristics:**
 
 - White plates on a stone ground; paper is the surface color, stone is the field.
-- A Garamond pairing: Cormorant Garamond for headings, EB Garamond for running text (client request, 2026-10-06).
+- One family, Jost, for headings and running text (request of 2026-11-06; it replaced the Garamond pairing).
 - Square corners everywhere except two small functional exceptions (badge pill, status dot).
 - Flat always: no shadows. Since 06/11/2026 the hover feedback on clickable photos is a slow 5% zoom inside the frame (`.hover-zoom`), never a shadow.
 - Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color.
@@ -141,9 +141,9 @@ Note on incumbent tokens not canonized: `--ink-3` (`#8a887f`) is declared in `as
 
 ## Typography
 
-**Fonts:** Cormorant Garamond (headings: display, headline, title; weights 400–700) and EB Garamond (body, lead, labels), both SIL Open Font License 1.1, loaded by `next/font/google` and served by the site itself (`src/app/fonts.ts`, tokens `--font-heading` and `--font`). They replaced Archivo, the provisional grotesque of the prototype, on 2026-10-07.
+**Fonts:** Jost for every role (headings 400, h3 500, text 400, UI 500), SIL Open Font License 1.1, loaded by `next/font/google` and served by the site itself (`src/app/fonts.ts`, tokens `--font-heading` and `--font`). It replaced Cormorant Garamond and EB Garamond on 2026-11-06.
 
-**Character:** A classic book serif in two optical voices: Cormorant's high contrast carries titles at large sizes, EB Garamond keeps running copy dense and legible. Hierarchy comes from size and weight. Neither family has a width axis, so the old `wdth` tokens (`--wide`, `--text`) no longer change anything.
+**Character:** A geometric sans with a calm, open rhythm. Hierarchy comes from size and weight, never from a second family. Jost has no width axis, so the old `wdth` tokens (`--wide`, `--text`) change nothing.
 
 ### Hierarchy
 
@@ -158,7 +158,7 @@ Note on incumbent tokens not canonized: `--ink-3` (`#8a887f`) is declared in `as
 
 ### Named Rules
 
-**The Two Faces Rule.** Headings use Cormorant Garamond and every other text role uses EB Garamond. No third family (no sans accent, no mono display face). A change of fonts happens only in `src/app/fonts.ts` and the tokens.
+**The One Face Rule.** Every text role uses Jost. No second family. The logo is a drawing, not text. A change of fonts happens only in `src/app/fonts.ts` and the tokens.
 
 **The No-Kicker Rule.** Metadata (`.meta`) sits _below or beside_ a heading as a supporting fact line — designer name, category, price cue — never as a small-caps label placed above a headline to announce it. The build never uses eyebrows/kickers; don't introduce them on new surfaces.
 
@@ -240,7 +240,7 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 ### Do:
 
 - **Do** treat every color, font-family, spacing and radius value as a swappable custom property — the brand manual will replace some of them, not the structure.
-- **Do** build hierarchy with size and weight inside the two Garamond families, never with a third family.
+- **Do** build hierarchy with size and weight inside Jost, never with a second family.
 - **Do** keep corners square (`border-radius: 0`); reserve rounding for the count badge and area dot only.
 - **Do** reuse garden as the single success/confirmed signal and wood/garden as the only area identifiers.
 - **Do** keep metadata (`.meta`) below or beside headings as supporting fact, never as an uppercase kicker above them.
@@ -264,15 +264,15 @@ Regra única para o site inteiro. Tokens em `src/styles/tokens.css`; nenhum arqu
 
 | Token          | Tamanho                   | Uso                                                              | Fonte, peso, entrelinha |
 | -------------- | ------------------------- | ---------------------------------------------------------------- | ----------------------- |
-| `--fs-display` | 44 a 80 px                | Uma vez por página, no máximo: banner sem foto, peça em destaque | Cormorant 500, 1.02     |
-| `--fs-h1`      | 36 a 56 px                | Título da página                                                 | Cormorant 500, 1.12     |
-| `--fs-h2`      | 28 a 40 px                | Título de seção                                                  | Cormorant 500, 1.12     |
-| `--fs-h3`      | 22 px                     | Título de item (card de projeto, grupo, coluna)                  | Cormorant 600, 1.25     |
-| `--fs-lead`    | 18 a 20 px                | Uma frase de abertura abaixo do título                           | EB Garamond 400, 1.55   |
-| `--fs-body`    | 17 px                     | Texto corrido, nome de peça no card                              | EB Garamond 400, 1.6    |
-| `--fs-ui`      | 15 px                     | Botões, menu, campos, filtros                                    | EB Garamond 500, 1.4    |
-| `--fs-caption` | 14 px                     | Metadados, legendas, rodapé de tabela                            | EB Garamond 400, 1.4    |
-| `--fs-label`   | 12 px, caixa alta, 0.08em | Etiquetas e cabeçalho de tabela; o único texto em caixa alta     | EB Garamond 600, 1.4    |
+| `--fs-display` | 44 a 80 px                | Uma vez por página, no máximo: banner sem foto, peça em destaque | Jost 400, 1.02          |
+| `--fs-h1`      | 36 a 56 px                | Título da página                                                 | Jost 400, 1.12          |
+| `--fs-h2`      | 28 a 40 px                | Título de seção                                                  | Jost 400, 1.12          |
+| `--fs-h3`      | 22 px                     | Título de item (card de projeto, grupo, coluna)                  | Jost 500, 1.25          |
+| `--fs-lead`    | 18 a 20 px                | Uma frase de abertura abaixo do título                           | Jost 400, 1.55          |
+| `--fs-body`    | 16 px                     | Texto corrido, nome de peça no card                              | Jost 400, 1.6           |
+| `--fs-ui`      | 15 px                     | Botões, menu, campos, filtros                                    | Jost 500, 1.4           |
+| `--fs-caption` | 14 px                     | Metadados, legendas, rodapé de tabela                            | Jost 400, 1.4           |
+| `--fs-label`   | 12 px, caixa alta, 0.08em | Etiquetas e cabeçalho de tabela; o único texto em caixa alta     | Jost 500, 1.4           |
 
 - Títulos de 24 px ou mais com `letter-spacing: -0.01em`; `text-wrap: balance` em títulos e `pretty` em parágrafos.
 - Texto corrido com no máximo `--measure` (65 caracteres) por linha. Nada abaixo de 12 px.
