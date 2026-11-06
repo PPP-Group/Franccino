@@ -217,24 +217,39 @@
   cursor: grabbing;
 }
 
-.piece rect,
-.piece ellipse {
+/* Fundo da peça: branco por baixo da foto de capa (ou o tom das peças, sem foto). */
+.piece__ground {
   fill: var(--plan-piece);
+  stroke: none;
+}
+
+.piece:has(.piece__photo) .piece__ground {
+  fill: var(--paper);
+}
+
+/* A foto não recebe o ponteiro: arrastar pega a peça inteira, nunca a imagem. */
+.piece__photo {
+  pointer-events: none;
+}
+
+/* Contorno por cima da foto: é ele que mostra a seleção e o conflito (com um véu leve da cor do estado). */
+.piece__outline {
+  fill: transparent;
   stroke: var(--ink);
   stroke-width: 1.6;
   vector-effect: non-scaling-stroke;
 }
 
-.piece.is-selected rect,
-.piece.is-selected ellipse {
+.piece.is-selected .piece__outline {
   fill: var(--plan-selected);
+  fill-opacity: 0.5;
   stroke: var(--garden);
   stroke-width: 2.4;
 }
 
-.piece.is-conflict rect,
-.piece.is-conflict ellipse {
+.piece.is-conflict .piece__outline {
   fill: var(--plan-conflict);
+  fill-opacity: 0.6;
   stroke: var(--alert);
 }
 
@@ -249,12 +264,19 @@
   fill: var(--ink-muted);
 }
 
+/* Nome sobre a foto: contorno branco por trás das letras, para ler em cima de qualquer imagem. */
+.piece__label text {
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
 .piece:focus-visible {
   outline: none;
 }
 
-.piece:focus-visible rect,
-.piece:focus-visible ellipse {
+.piece:focus-visible .piece__outline {
   stroke: var(--ink);
   stroke-width: 3;
 }

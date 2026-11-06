@@ -6,6 +6,8 @@ import type { Room } from '@/lib/planner/types';
 const MARGIN = 60;
 const GRID_CM = 50;
 const LABEL_MIN_CM = 70;
+/** Folga entre a borda da peça e a foto, em cm do desenho. */
+const PHOTO_INSET_CM = 3;
 
 export type PlanSvgProps = {
   room: Room;
@@ -107,26 +109,76 @@ export function PlanSvg({
             {...pieceProps?.(entry)}
           >
             <g transform={`rotate(${piece.r} ${px} ${py})`}>
+              {/*
+                Enquanto não há desenho 2D da peça, a foto de capa (fundo branco) aparece dentro do contorno dela,
+                inteira e sem recorte (meet); na peça redonda, recortada pelo círculo. O contorno vem por cima, com os
+                estados de seleção e conflito.
+              */}
               {product.shape === 'round' ? (
                 <ellipse
+                  className="piece__ground"
                   cx={product.width / 2}
                   cy={product.depth / 2}
                   rx={product.width / 2}
                   ry={product.depth / 2}
                 />
               ) : (
-                <rect width={product.width} height={product.depth} rx={2} />
+                <rect className="piece__ground" width={product.width} height={product.depth} rx={2} />
+              )}
+              {product.image ? (
+                <>
+                  {product.shape === 'round' ? (
+                    <clipPath id={`piece-clip-${piece.uid}`}>
+                      <ellipse
+                        cx={product.width / 2}
+                        cy={product.depth / 2}
+                        rx={product.width / 2 - PHOTO_INSET_CM}
+                        ry={product.depth / 2 - PHOTO_INSET_CM}
+                      />
+                    </clipPath>
+                  ) : null}
+                  <image
+                    className="piece__photo"
+                    href={product.image.src}
+                    x={PHOTO_INSET_CM}
+                    y={PHOTO_INSET_CM}
+                    width={Math.max(0, product.width - 2 * PHOTO_INSET_CM)}
+                    height={Math.max(0, product.depth - 2 * PHOTO_INSET_CM)}
+                    preserveAspectRatio="xMidYMid meet"
+                    clipPath={product.shape === 'round' ? `url(#piece-clip-${piece.uid})` : undefined}
+                  />
+                </>
+              ) : null}
+              {product.shape === 'round' ? (
+                <ellipse
+                  className="piece__outline"
+                  cx={product.width / 2}
+                  cy={product.depth / 2}
+                  rx={product.width / 2}
+                  ry={product.depth / 2}
+                />
+              ) : (
+                <rect className="piece__outline" width={product.width} height={product.depth} rx={2} />
               )}
             </g>
             {text && Math.max(box.w, box.d) > LABEL_MIN_CM ? (
-              <g aria-hidden="true">
-                <text x={box.w / 2} y={box.d / 2 - 2} textAnchor="middle">
-                  {text.name}
-                </text>
-                <text className="piece__size" x={box.w / 2} y={box.d / 2 + 12} textAnchor="middle">
-                  {text.size}
-                </text>
-              </g>
+              product.image ? (
+                // Com foto, só o nome, junto da borda de baixo, para não cobrir a peça.
+                <g aria-hidden="true" className="piece__label">
+                  <text x={box.w / 2} y={box.d - 6} textAnchor="middle">
+                    {text.name}
+                  </text>
+                </g>
+              ) : (
+                <g aria-hidden="true">
+                  <text x={box.w / 2} y={box.d / 2 - 2} textAnchor="middle">
+                    {text.name}
+                  </text>
+                  <text className="piece__size" x={box.w / 2} y={box.d / 2 + 12} textAnchor="middle">
+                    {text.size}
+                  </text>
+                </g>
+              )
             ) : null}
           </g>
         );
