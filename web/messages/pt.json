@@ -19,7 +19,7 @@
     "launches": "Lançamentos",
     "collections": "Coleções",
     "designers": "Designers",
-    "projects": "Projetos",
+    "projects": "Corporativo",
     "corporate": "Projetos corporativos",
     "factory": "Fábrica",
     "finishes": "Acabamentos",
@@ -547,9 +547,9 @@
       "pieces": "{count, plural, one {# peça} other {# peças}}"
     },
     "projects": {
-      "title": "Projetos",
-      "lead": "Ambientes residenciais e corporativos com peças da Franccino.",
-      "all": "Todos os projetos",
+      "title": "Corporativo",
+      "lead": "Projetos corporativos com peças da Franccino.",
+      "all": "Conheça os projetos corporativos",
       "view": "Conheça o projeto"
     }
   },
@@ -578,8 +578,8 @@
     "fillCta": "Explorar as coleções"
   },
   "projects": {
-    "title": "Projetos",
-    "description": "Projetos residenciais e corporativos com peças da Franccino.",
+    "title": "Corporativo",
+    "description": "Projetos corporativos com peças da Franccino.",
     "typeFilter": "Tipo de projeto",
     "allTypes": "Todos",
     "types": {

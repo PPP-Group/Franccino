@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl';
+import { Logo } from './Logo';
 
 /**
  * Tela de abertura (rodada 3, 06/11/2026): na primeira página da sessão, um branco com o nome FRANCCINO que aparece
@@ -7,11 +7,10 @@ import { useTranslations } from 'next-intl';
  * conteúdo da página já está no HTML embaixo dela).
  */
 export function SplashScreen() {
-  const t = useTranslations('header');
   return (
     <div className="splash" aria-hidden="true">
       <div className="splash__panel">
-        <span className="wordmark splash__wordmark">{t('wordmark')}</span>
+        <Logo className="splash__wordmark" />
         <span className="splash__line" />
       </div>
     </div>

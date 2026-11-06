@@ -19,7 +19,7 @@
     "launches": "Novelties",
     "collections": "Collections",
     "designers": "Designers",
-    "projects": "Projects",
+    "projects": "Contract",
     "corporate": "Corporate projects",
     "factory": "Factory",
     "finishes": "Finishes",
@@ -547,9 +547,9 @@
       "pieces": "{count, plural, one {# piece} other {# pieces}}"
     },
     "projects": {
-      "title": "Projects",
-      "lead": "Residential and corporate spaces with Franccino pieces.",
-      "all": "All projects",
+      "title": "Contract",
+      "lead": "Corporate projects with Franccino pieces.",
+      "all": "Discover the corporate projects",
       "view": "Discover the project"
     }
   },
@@ -578,8 +578,8 @@
     "fillCta": "Explore the collections"
   },
   "projects": {
-    "title": "Projects",
-    "description": "Residential and corporate projects with Franccino pieces.",
+    "title": "Contract",
+    "description": "Corporate projects with Franccino pieces.",
     "typeFilter": "Project type",
     "allTypes": "All",
     "types": {

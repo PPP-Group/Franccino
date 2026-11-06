@@ -60,7 +60,7 @@ export function ProjectsSection({ projects, tone }: { projects: ProjectCard[]; t
               className={['mosaic', `mosaic--${group.length}`, groupIndex % 2 === 1 ? 'mosaic--flip' : '']
                 .filter(Boolean)
                 .join(' ')}
-              data-reveal="curtain-stagger"
+              data-reveal="stagger"
             >
               {group.map((project, index) => {
                 const meta = [project.client_name, project.location].filter(Boolean).join(' · ');

@@ -297,7 +297,8 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
 - Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
 - Aparecer ao rolar (ideia 04): `data-reveal` no bloco de texto (sobe 20 px enquanto aparece), `data-reveal="stagger"`
   num grupo (filhos em sequência), `data-reveal="curtain"` em volta de uma foto (os filhos diretos abrem como cortina,
-  da esquerda para a direita) e `data-reveal="curtain-stagger"` num mosaico ou grade de fotos. Dispara uma vez
+  da esquerda para a direita; só nas coleções, retorno da Franccino de 06/11/2026) e `data-reveal="curtain-stagger"`
+  num mosaico ou grade de fotos (hoje sem uso). Dispara uma vez
   (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
   não conta como visível e nunca abriria.
 - Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
@@ -333,7 +334,7 @@ Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no coment
 | 12c Cursor "Arraste" no carrossel                                                                            | em `carousel.css`                                     | Cursor normal                                         |
 | 12d Peça adicionada: o visto entra e o ícone e o contador da lista pulsam uma vez                            | "12d"                                                 | O visto e "Adicionada à lista" aparecem sem movimento |
 | 12e Números que contam (`CountUp`)                                                                           | é o componente: trocar `<CountUp value=…>` pelo valor | O número aparece pronto                               |
-| 12f Faixa de carregamento (fotos e `.skeleton`)                                                              | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
+| 12f Faixa de carregamento (só `.skeleton`; as fotos não têm)                                                 | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
 
 A Franccino escolhe quais microinterações ficam (PDF de retorno: "validar quais serão utilizados"); cada uma está
 sozinha em `/pt/ideias`, ideia 12.

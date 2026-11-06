@@ -114,14 +114,17 @@ body:has(.hero--full) #conteudo {
 }
 
 .wordmark {
-  font-family: var(--font-heading);
-  font-size: var(--fs-lead);
-  font-weight: 600;
-  line-height: var(--lh-ui);
-  letter-spacing: 0.3em;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
+}
+
+/* Logo em vetor (components/layout/Logo.tsx): a altura manda, a largura segue a proporção da logo. */
+.logo {
+  display: block;
+  width: auto;
+  height: 18px;
 }
 
 .nav {
@@ -486,8 +489,8 @@ body:has(.hero--full) #conteudo {
     gap: var(--space-1);
   }
 
-  .wordmark {
-    letter-spacing: 0.22em;
+  .wordmark .logo {
+    height: 15px;
   }
 }
 
@@ -497,9 +500,8 @@ body:has(.hero--full) #conteudo {
     gap: var(--space-2);
   }
 
-  .site-header .wordmark {
-    font-size: var(--fs-body);
-    letter-spacing: 0.16em;
+  .site-header .wordmark .logo {
+    height: 13px;
   }
 
   .tools {
@@ -575,7 +577,7 @@ body:has(.hero--full) #conteudo {
 /* O nome no rodapé alinha o topo com os títulos das colunas. */
 .footer-brand .wordmark {
   justify-self: start;
-  line-height: 1;
+  min-height: 0;
   margin-bottom: var(--space-2);
 }
 

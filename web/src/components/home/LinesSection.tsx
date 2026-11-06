@@ -26,7 +26,7 @@ function panelSizes(cover: Image): string {
 export function LinesSection({ areas }: { areas: Area[] }) {
   const t = useTranslations('home.lines');
   return (
-    <section className="lines" aria-label={t('label')} data-reveal="curtain-stagger">
+    <section className="lines" aria-label={t('label')} data-reveal="stagger">
       {areas.map((area) => (
         <Link
           key={area.key}
