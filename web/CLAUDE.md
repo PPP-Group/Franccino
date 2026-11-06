@@ -112,8 +112,8 @@ Alias `@/*` aponta para `src/*`.
   protótipo aprovado (`design/prototype/`).
 - Cantos retos, sem sombra (o hover de foto clicável é o zoom `.hover-zoom`, desde 06/11/2026), madeira = Casa,
   verde = Giardini/sucesso, metadado nunca acima do título.
-- Fontes em `src/app/fonts.ts`: Cormorant Garamond nos títulos e EB Garamond no texto (pedido do cliente,
-  licença aberta). Troca de fonte só ali e nos tokens.
+- Fonte em `src/app/fonts.ts`: Jost no site inteiro, títulos e texto (pedido de 06/11/2026, licença aberta). A logo é
+  o desenho da marca em vetor (`components/layout/Logo.tsx`). Troca de fonte só ali e nos tokens.
 - Lógica de estado (lista de orçamento, planta, acabamentos) em módulos puros de `src/lib/*`
   com testes; componentes só ligam estado a markup.
 - Estado do navegador (lista e planta) só por `src/lib/quote/store.ts` e

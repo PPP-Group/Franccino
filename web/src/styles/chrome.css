@@ -267,7 +267,7 @@ body:has(.hero--full) #conteudo {
   min-height: 44px;
   font-family: var(--font-heading);
   font-size: var(--fs-h3);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--lh-h3);
   text-decoration: none;
   color: var(--ink);
@@ -348,7 +348,7 @@ body:has(.hero--full) #conteudo {
 
 .lang strong {
   color: var(--header-fg);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .lang a {
@@ -369,7 +369,7 @@ body:has(.hero--full) #conteudo {
   background: var(--header-fg);
   color: var(--header-bg);
   font-size: var(--fs-label);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   display: inline-grid;
   place-items: center;
@@ -553,7 +553,7 @@ body:has(.hero--full) #conteudo {
   margin-bottom: var(--space-4);
   font-family: var(--font);
   font-size: var(--fs-label);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--lh-ui);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;

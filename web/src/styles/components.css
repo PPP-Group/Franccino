@@ -178,7 +178,7 @@
 
 .tag {
   font-size: var(--fs-label);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--lh-ui);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
@@ -310,7 +310,7 @@
 
 .field label:not(.consent) {
   font-size: var(--fs-caption);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--lh-ui);
 }
 
@@ -393,7 +393,7 @@
 
 .toast a {
   color: var(--paper);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 @media (max-width: 560px) {
@@ -466,7 +466,7 @@
 .consent-banner__title {
   font-size: var(--fs-h3);
   line-height: var(--lh-h3);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0;
 }
 

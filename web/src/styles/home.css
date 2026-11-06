@@ -145,7 +145,7 @@
   padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--on-photo-rule);
   font-size: var(--fs-label);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--lh-ui);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;

@@ -184,7 +184,7 @@
 .feature-carousel__meta {
   font-size: var(--fs-label);
   line-height: var(--lh-ui);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -284,7 +284,7 @@
   color: var(--paper);
   font-size: var(--fs-label);
   line-height: 1;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   transform: scale(0);
