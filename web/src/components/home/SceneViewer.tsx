@@ -42,7 +42,7 @@ export function SceneViewer({ scene, priority = false }: { scene: Scene; priorit
 
   return (
     <div ref={rootRef} className="scene">
-      <ApiImage image={scene.image} sizes="(max-width: 73.75rem) 100vw, 1440px" priority={priority} />
+      <ApiImage image={scene.image} sizes="(max-width: 97.5rem) 94vw, 1448px" priority={priority} />
       <ul className="scene__points" aria-label={t('points', { title: scene.title })}>
         {scene.hotspots.map((hotspot, index) => {
           const place = placeHotspot(hotspot.x, hotspot.y);

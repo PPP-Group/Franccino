@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { StoreFinder } from '@/components/stores/StoreFinder';
 import { Icon } from '@/components/ui/Icon';
+import { Link } from '@/i18n/navigation';
 import type { Store } from '@/lib/api/types';
 import { whatsappUrl } from '@/lib/contact-links';
 
@@ -23,6 +24,10 @@ export function StoresSection({ stores, states, whatsapp }: StoresSectionProps) 
               <span className="visually-hidden">{common('opensInNewWindow')}</span>
             </a>
           ) : null}
+          <Link className="link-arrow" href="/stores">
+            <span>{t('all')}</span>
+            <Icon name="arrow" />
+          </Link>
         </StoreFinder>
       </div>
     </section>

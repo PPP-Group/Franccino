@@ -6,6 +6,13 @@ import type { DesignerCard } from '@/lib/api/types';
 
 const SHOWN = 4;
 
+/** Largura desenhada do retrato: 2 colunas no celular e no tablet, 4 no computador (grade de até 1448px). */
+const PORTRAIT_SIZES = '(max-width: 56.25rem) 46vw, (max-width: 97.5rem) 23vw, 360px';
+
+/**
+ * Designers da home: só retrato e nome, como os cards de peça (revisão de 06/11/2026). A biografia, de tamanho
+ * diferente em cada um, desalinhava a linha; ela continua na página do designer.
+ */
 export function DesignersSection({ designers }: { designers: DesignerCard[] }) {
   const t = useTranslations('home.designers');
   return (
@@ -29,12 +36,9 @@ export function DesignersSection({ designers }: { designers: DesignerCard[] }) {
               href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
             >
               <div className="designer__photo">
-                {designer.portrait ? (
-                  <ApiImage image={designer.portrait} sizes="(max-width: 56.25rem) 50vw, 25vw" />
-                ) : null}
+                {designer.portrait ? <ApiImage image={designer.portrait} sizes={PORTRAIT_SIZES} /> : null}
               </div>
               <h3>{designer.name}</h3>
-              {designer.short_bio ? <p className="meta">{designer.short_bio}</p> : null}
             </Link>
           ))}
         </div>

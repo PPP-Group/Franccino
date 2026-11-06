@@ -63,6 +63,17 @@ it('serves a web-ready original at its own size instead of compressing it again'
         ->and($image['srcset'][1]['url'])->toBe($media->getFullUrl('w960'));
 });
 
+it('offers the original while its full-size conversion is not generated yet', function () {
+    $stub = MediaStub::create();
+    $media = $stub->addMedia(UploadedFile::fake()->image('peca.jpg', 900, 600))->toMediaCollection('cover');
+    $media->refresh()->markAsConversionNotGenerated('w960');
+
+    $image = ImagePresenter::present($media->refresh(), 'Cadeira Aura');
+
+    expect(collect($image['srcset'])->pluck('width')->all())->toBe([480, 900])
+        ->and($image['srcset'][1]['url'])->toBe($media->getFullUrl());
+});
+
 it('returns null without media', function () {
     expect(ImagePresenter::present(null, 'x'))->toBeNull();
 });

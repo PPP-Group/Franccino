@@ -26,14 +26,19 @@ export function FeatureSection({ product }: { product: ProductDetail }) {
       <div className="wrap feature__grid">
         <div className="feature__media">
           {product.cover ? (
-            <ApiImage image={product.cover} sizes="(max-width: 56.25rem) 100vw, 58vw" />
+            <ApiImage
+              image={product.cover}
+              sizes="(max-width: 56.25rem) 92vw, (max-width: 97.5rem) 52vw, 800px"
+            />
           ) : null}
         </div>
         <div className="feature__copy">
-          <h2 id="feature-title" className="display">
-            {product.name}
-          </h2>
-          {product.tagline ? <p className="lead">{product.tagline}</p> : null}
+          <div className="feature__head">
+            <h2 id="feature-title" className="display">
+              {product.name}
+            </h2>
+            {product.tagline ? <p className="lead">{product.tagline}</p> : null}
+          </div>
           <dl className="facts num">
             {dimension ? (
               <div>

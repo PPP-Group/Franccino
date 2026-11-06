@@ -1,8 +1,18 @@
+import type { CSSProperties } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Banner } from '@/lib/api/types';
+import {
+  aspectRatio,
+  coverSizes,
+  frameAspect,
+  HERO_HEIGHT,
+  heroFrame,
+  heroSizes,
+  type HeroFrame,
+} from '@/lib/images/cover';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { HeroVideo } from './HeroVideo';
 
@@ -12,6 +22,11 @@ type HeroSectionProps = {
   designerCount: number;
   /** Posição no carrossel: só o primeiro slide tem `h1` e imagem com prioridade (LCP). */
   index?: number;
+  /**
+   * Caixa do banner (`heroFrame`). No carrossel vem do primeiro slide, para todos terem a mesma caixa; sem ela, vale a
+   * da própria foto.
+   */
+  frame?: HeroFrame;
 };
 
 /**
@@ -21,8 +36,10 @@ type HeroSectionProps = {
  *   14): a arte do banner já traz o texto do marketing, então sem título nada é escrito por cima, nem botão nem
  *   sombra. O título da seção fica só para leitores de tela, e com `cta_url` o banner inteiro vira o link.
  * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
+ * - Arte larga (faixa de ~1920×500 com o texto do marketing): o banner segue a proporção da arte, sem recortar o texto
+ *   nem ampliar a imagem (revisão de 06/11/2026). Com foto própria para celular, o celular continua com o banner alto.
  */
-export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
+export function HeroSection({ banner, brandNames, designerCount, index = 0, frame }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
   const first = index === 0;
@@ -43,13 +60,23 @@ export function HeroSection({ banner, brandNames, designerCount, index = 0 }: He
 
   const hasText = Boolean(banner.title || banner.subtitle);
   const cta = banner.cta_url ? { url: banner.cta_url, label: banner.cta_label } : null;
+  const box = frame ?? heroFrame(photo);
+  const ratio = frameAspect(box);
+  const classes = ['hero'];
+  if (!hasText) classes.push('hero--clean');
+  if (ratio) classes.push(banner.image_mobile ? 'hero--fit hero--fit-desktop' : 'hero--fit');
+  const style = ratio ? ({ '--hero-ratio': ratio } as CSSProperties) : undefined;
   return (
-    <section className={hasText ? 'hero' : 'hero hero--clean'} aria-labelledby={titleId}>
+    <section className={classes.join(' ')} style={style} aria-labelledby={titleId}>
       <picture className="hero__picture">
         {banner.image_mobile ? (
-          <source media="(max-width: 47.99rem)" srcSet={buildSrcSet(banner.image_mobile)} sizes="100vw" />
+          <source
+            media="(max-width: 47.99rem)"
+            srcSet={buildSrcSet(banner.image_mobile)}
+            sizes={coverSizes(aspectRatio(banner.image_mobile), { width: '100vw', height: HERO_HEIGHT })}
+          />
         ) : null}
-        <ApiImage image={photo} sizes="100vw" priority={first} className="hero__img" />
+        <ApiImage image={photo} sizes={heroSizes(photo, box)} priority={first} className="hero__img" />
       </picture>
       {banner.video ? <HeroVideo src={banner.video} /> : null}
       {hasText ? (

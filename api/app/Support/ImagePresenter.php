@@ -33,6 +33,14 @@ final class ImagePresenter
             }
         }
 
+        // Bigger conversions not generated yet (queue still running): the original stands in at its own size, as long as
+        // it is not bigger than the largest conversion would be.
+        $largest = array_key_last(self::CONVERSIONS);
+        $covered = $srcset === [] ? 0 : $srcset[array_key_last($srcset)]['width'];
+        if ($width !== null && $covered < $width && $width <= $largest) {
+            $srcset[] = ['width' => $width, 'url' => $media->getFullUrl()];
+        }
+
         // A web-ready original no larger than the biggest conversion replaces that conversion at full size: re-encoding
         // an already compressed WebP (the photos imported from the old site) only loses detail.
         $last = array_key_last($srcset);

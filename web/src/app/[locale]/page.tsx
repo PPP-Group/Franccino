@@ -17,6 +17,7 @@ import { getDesigners, getHome, getPage, getScenes, getSettings, getStores } fro
 import { emptyPage } from '@/lib/api/empty';
 import type { ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
+import { heroFrame } from '@/lib/images/cover';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -61,15 +62,18 @@ export default async function HomePage({ params }: Props) {
   ]);
   const feature = featured[0] ?? null;
   const brandNames = areas.map((area) => area.brand_name);
+  // Todos os slides do carrossel na caixa do primeiro: a página não pula na troca.
+  const frame = heroFrame(home.banners[0]?.image);
 
   return (
-    <main>
+    <main className="home">
       {home.banners.length > 1 ? (
         <HeroCarousel>
           {home.banners.map((banner, index) => (
             <HeroSection
               key={index}
               index={index}
+              frame={frame}
               banner={banner}
               brandNames={brandNames}
               designerCount={designers.length}

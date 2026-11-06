@@ -487,7 +487,7 @@
       "view": "See the piece"
     },
     "teaser": {
-      "title": "Plan your room to scale before asking for a quote.",
+      "title": "Plan your room to scale before asking for a quote",
       "body": "Enter the room size, place the pieces with their real dimensions and see what fits. The room becomes a quote list.",
       "cta": "Open the room planner"
     },
@@ -507,7 +507,8 @@
     "stores": {
       "title": "See the pieces in store",
       "lead": "Exclusive stores and resellers. Choose a state.",
-      "consultant": "Talk to a consultant"
+      "consultant": "Talk to a consultant",
+      "all": "All stores"
     }
   },
   "collections": {

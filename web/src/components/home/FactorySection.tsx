@@ -11,17 +11,20 @@ export function FactorySection({ page }: { page: PageContent }) {
     <section className="section section--paper" aria-labelledby="factory-title">
       <div className="wrap factory">
         <div className="factory__media">
-          {page.cover ? <ApiImage image={page.cover} sizes="(max-width: 56.25rem) 100vw, 50vw" /> : null}
+          {page.cover ? (
+            <ApiImage
+              image={page.cover}
+              sizes="(max-width: 56.25rem) 92vw, (max-width: 97.5rem) 52vw, 800px"
+            />
+          ) : null}
         </div>
         <div className="factory__copy">
           <h2 id="factory-title">{page.title}</h2>
           {page.intro ? <p className="lead">{page.intro}</p> : null}
-          <div>
-            <Link className="link-arrow" href="/factory">
-              <span>{t('cta')}</span>
-              <Icon name="arrow" />
-            </Link>
-          </div>
+          <Link className="link-arrow" href="/factory">
+            <span>{t('cta')}</span>
+            <Icon name="arrow" />
+          </Link>
         </div>
       </div>
     </section>

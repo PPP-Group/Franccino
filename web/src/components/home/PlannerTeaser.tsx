@@ -17,9 +17,7 @@ export function PlannerTeaser() {
     <section className="section section--paper" aria-labelledby="teaser-title">
       <div className="wrap teaser">
         <div className="teaser__copy">
-          <h2 id="teaser-title" className="display display--section">
-            {t('title')}
-          </h2>
+          <h2 id="teaser-title">{t('title')}</h2>
           <p className="lead">{t('body')}</p>
           <div>
             <Link className="btn" href="/room-planner">
