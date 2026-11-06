@@ -15,7 +15,7 @@ type TileProps = {
   headingLevel?: 'h2' | 'h3';
 };
 
-/** Cartão inteiro clicável de coleção, designer ou projeto. */
+/** Cartão inteiro clicável de coleção, designer ou projeto. O hover é o zoom da foto (`.hover-zoom`). */
 export function Tile({
   href,
   title,
@@ -29,7 +29,7 @@ export function Tile({
 }: TileProps) {
   return (
     <Link className={portrait ? 'tile tile--portrait' : 'tile'} href={href}>
-      <div className="tile__media">
+      <div className="tile__media hover-zoom">
         {image ? <ApiImage image={image} sizes={sizes} priority={priority} /> : null}
       </div>
       <div className="tile__copy">

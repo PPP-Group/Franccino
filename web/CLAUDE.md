@@ -110,7 +110,7 @@ Alias `@/*` aponta para `src/*`.
   ali); utilitários Tailwind usam os tokens (`bg-stone`, `text-ink-muted`…), a paleta padrão do
   Tailwind está desligada. Classes de componente por área em `src/styles/*.css`, portadas do
   protótipo aprovado (`design/prototype/`).
-- Cantos retos, sem sombra em repouso (só no hover do card de produto), madeira = Casa,
+- Cantos retos, sem sombra (o hover de foto clicável é o zoom `.hover-zoom`, desde 06/11/2026), madeira = Casa,
   verde = Giardini/sucesso, metadado nunca acima do título.
 - Fontes em `src/app/fonts.ts`: Cormorant Garamond nos títulos e EB Garamond no texto (pedido do cliente,
   licença aberta). Troca de fonte só ali e nos tokens.

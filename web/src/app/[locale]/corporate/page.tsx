@@ -60,8 +60,8 @@ export default async function CorporatePage({ params }: Props) {
             </div>
           </section>
         ) : null}
-        <ClientsRail clients={clients} />
       </div>
+      <ClientsRail clients={clients} />
     </main>
   );
 }

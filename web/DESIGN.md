@@ -108,7 +108,7 @@ The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23
 - White plates on a stone ground; paper is the surface color, stone is the field.
 - A Garamond pairing: Cormorant Garamond for headings, EB Garamond for running text (client request, 2026-10-06).
 - Square corners everywhere except two small functional exceptions (badge pill, status dot).
-- Flat by default; a single soft ambient shadow appears only as hover feedback on interactive plates, never as a resting decoration.
+- Flat always: no shadows. Since 06/11/2026 the hover feedback on clickable photos is a slow 5% zoom inside the frame (`.hover-zoom`), never a shadow.
 - Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color.
 
 ## Colors
@@ -172,11 +172,11 @@ Two data-dense screens depart from the fluid container's comfort: the technical 
 
 ## Elevation & Depth
 
-The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The one exception is a soft, ambient shadow (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`) that appears solely on hover/focus of an interactive product plate — it is a state response signaling "this is clickable," not a resting decoration. This is a narrow, deliberate divergence from the direction contract's stated "no decorative shadows": it is used exactly once, as functional hover feedback, never at rest and never on non-interactive cards (tech table rows, store cards, factory facts use borders only). Do not generalize it into a resting card shadow elsewhere.
+The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The plate-hover shadow was removed on 06/11/2026 (it looked cheap and was clipped at the end of rails): clickable photos now answer hover with a slow zoom inside their frame (`.hover-zoom`).
 
 ### Shadow Vocabulary
 
-- **Plate hover** (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`): interactive product plate on `:hover`, signaling affordance only.
+- None. Hover feedback is the photo zoom (`.hover-zoom`), not a shadow.
 
 ### Named Rules
 
@@ -210,7 +210,7 @@ Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips a
 
 - **Corner style:** square (0 radius).
 - **Background:** paper on a stone field.
-- **Shadow strategy:** flat at rest; ambient hover shadow only on interactive plates (see Elevation & Depth).
+- **Shadow strategy:** none; hover is the photo zoom (see Elevation & Depth).
 - **Border:** a single `--stone` divider between media and body; no outer border on the plate itself.
 - **Internal padding:** 16px 18px 20px body padding; 16px gap in card grids.
 - **Area identity:** a small colored dot (wood/garden) precedes the category label to mark Casa vs. Giardini at a glance.
@@ -247,7 +247,7 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 
 ### Don't:
 
-- **Don't** add a resting shadow to a card, table row, or panel — shadow is reserved for interactive-plate hover only.
+- **Don't** add a shadow to a card, table row, or panel, at rest or on hover.
 - **Don't** introduce a third saturated accent color; wood and garden are reserved for Casa/Giardini identity.
 - **Don't** round a button, input, table, or card corner; square corners are the system's form language throughout.
 - **Don't** reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects — daylight photography and one grotesque are the world.

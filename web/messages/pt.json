@@ -69,7 +69,8 @@
     "closeMenu": "Fechar menu",
     "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
     "quoteListShort": "Lista",
-    "areaAll": "Ver tudo de {area}"
+    "areaAll": "Ver tudo de {area}",
+    "collectionsAll": "Ver todas as coleções"
   },
   "quote": {
     "viewList": "Ver lista",
@@ -226,7 +227,7 @@
     "whatsapp": "WhatsApp",
     "whereToBuy": "Onde comprar",
     "added": "{quantity} × {name} · {finishes}.",
-    "whatsappText": "Olá! Tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?",
+    "whatsappText": "Olá, tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?",
     "designBy": "Design <designer>{name}</designer>",
     "sku": "Ref. {sku}",
     "materials": "Materiais: {materials}",
@@ -277,7 +278,8 @@
     },
     "designer": {
       "piecesBy": "Peças de {name}"
-    }
+    },
+    "moreWays": "Outras formas de pedir"
   },
   "catalog": {
     "filters": {
@@ -342,6 +344,12 @@
       "files": "Arquivos",
       "list": "Lista de orçamento",
       "empty": "—"
+    },
+    "gridFill": {
+      "title": "Precisa de ajuda para escolher?",
+      "body": "Monte a sua sala em escala com as medidas reais das peças, ou fale com a equipe da Franccino.",
+      "planner": "Montar uma sala",
+      "contact": "Falar com um consultor"
     }
   },
   "stores": {
@@ -529,6 +537,17 @@
       "lead": "Lojas exclusivas e revendas. Escolha o estado.",
       "consultant": "Falar com um consultor",
       "all": "Todas as lojas"
+    },
+    "collections": {
+      "title": "Coleções",
+      "all": "Todas as coleções",
+      "pieces": "{count, plural, one {# peça} other {# peças}}"
+    },
+    "projects": {
+      "title": "Projetos",
+      "lead": "Ambientes residenciais e corporativos com peças da Franccino.",
+      "all": "Todos os projetos",
+      "view": "Ver o projeto"
     }
   },
   "collections": {
@@ -536,7 +555,11 @@
     "description": "Coleções da Franccino e as peças de cada uma.",
     "designers": "Design",
     "gallery": "Imagens da coleção",
-    "piecesTitle": "Peças da coleção"
+    "piecesTitle": "Peças da coleção",
+    "othersTitle": "Outras coleções",
+    "fillLaunch": "Ver lançamentos",
+    "fillAllTitle": "Todas as peças",
+    "fillAllCta": "Ver as peças"
   },
   "designers": {
     "downloads": "Catálogos e apresentações",
@@ -546,7 +569,10 @@
     "website": "Site",
     "instagram": "Instagram",
     "collections": "Coleções do designer",
-    "piecesTitle": "Peças do designer"
+    "piecesTitle": "Peças do designer",
+    "othersTitle": "Outros designers",
+    "fillTitle": "Conheça as coleções",
+    "fillCta": "Ver as coleções"
   },
   "projects": {
     "title": "Projetos",
@@ -563,7 +589,9 @@
     "location": "Local",
     "year": "Ano",
     "gallery": "Imagens do projeto",
-    "piecesTitle": "Peças no projeto"
+    "piecesTitle": "Peças usadas neste projeto",
+    "type": "Tipo",
+    "othersTitle": "Outros projetos"
   },
   "corporate": {
     "title": "Corporativo",
@@ -571,7 +599,11 @@
     "clients": "Alguns de nossos clientes"
   },
   "factory": {
-    "title": "Fábrica"
+    "title": "Fábrica",
+    "nextTitle": "Continue conhecendo a Franccino",
+    "nextStores": "Encontre uma loja",
+    "nextProjects": "Veja os projetos",
+    "nextCollections": "Conheça as coleções"
   },
   "finishes": {
     "title": "Acabamentos",
@@ -637,7 +669,8 @@
     "video": "Vídeo"
   },
   "blocks": {
-    "timeline": "Linha do tempo"
+    "timeline": "Linha do tempo",
+    "timelineTitle": "Nossa história"
   },
   "ideas": {
     "meta": {
