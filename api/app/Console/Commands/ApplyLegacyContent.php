@@ -171,7 +171,7 @@ class ApplyLegacyContent extends Command
      * Appends blocks to a page, only the types the page does not have yet. Image fields hold old-site URLs, copied
      * to the media disk like a panel upload (`pages/`).
      *
-     * @param  list<array{key: string, blocks: list<array{type: string, data: array<string, mixed>}>}>  $items
+     * @param  list<array{key: string, blocks: list<array{type: string, merge?: bool, data: array<string, mixed>}>}>  $items
      */
     private function pages(array $items, Client $client): void
     {
