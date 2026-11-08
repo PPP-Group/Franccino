@@ -57,3 +57,13 @@ it('queues a covers or content list', function () {
         ->assertStatus(202)
         ->assertJsonPath('data.queued', 'franccino:content:apply');
 });
+
+it('queues a translations list', function () {
+    config(['franccino.import.token' => 'abc123']);
+    Artisan::partialMock()->shouldReceive('queue')->once()
+        ->withArgs(fn (string $command, array $args) => $command === 'franccino:translations:import' && str_ends_with($args['file'], 'en-teste.json'));
+
+    $this->postJson('/api/import/translations', ['version' => 'en-teste', 'items' => [['model' => 'product', 'field' => 'tagline', 'pt' => 'Olá', 'en' => 'Hello']]], ['Authorization' => 'Bearer abc123'])
+        ->assertStatus(202)
+        ->assertJsonPath('data.queued', 'franccino:translations:import');
+});

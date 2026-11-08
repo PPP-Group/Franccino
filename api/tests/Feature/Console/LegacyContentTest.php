@@ -90,3 +90,32 @@ it('fills only what is empty with the old site content, once', function () {
     expect($project->refresh()->getMedia('gallery'))->toHaveCount(1)
         ->and(Scene::query()->count())->toBe(1);
 });
+
+it('creates the stores the database does not have and adds photos to an existing gallery', function () {
+    Store::factory()->create(['name' => 'Franccino Curitiba']);
+    $factory = Page::factory()->create(['key' => 'factory', 'content' => [['type' => 'gallery', 'data' => ['images' => ['pages/abc-ja-tem.webp'], 'caption' => null]]]]);
+    $url = 'https://franccino.com.br/wp-content/uploads/2026/03/';
+
+    File::put($this->list, json_encode([
+        'version' => 'teste',
+        'new_stores' => [
+            ['name' => 'FRANCCINO CURITIBA', 'type' => 'exclusive', 'address' => 'Rua A, 1', 'city' => 'Curitiba', 'state' => 'PR'],
+            ['legacy_wp_id' => 9166, 'name' => 'Franttone', 'type' => 'reseller', 'address' => 'Av. Princesa do Sul, 494', 'city' => 'Varginha', 'state' => 'MG', 'latitude' => -21.57, 'longitude' => -45.44, 'image' => $url.'fachada.webp'],
+        ],
+        'pages' => [['key' => 'factory', 'blocks' => [
+            ['type' => 'gallery', 'merge' => true, 'data' => ['images' => [$url.'ja-tem.webp', $url.'nova.webp'], 'caption' => null]],
+        ]]],
+    ]));
+
+    $this->artisan('franccino:content:apply', ['file' => $this->list])->assertSuccessful();
+
+    $new = Store::query()->where('name', 'Franttone')->sole();
+    expect(Store::query()->count())->toBe(2)
+        ->and($new->is_published)->toBeTrue()
+        ->and($new->getMedia('image'))->toHaveCount(1);
+
+    $images = $factory->refresh()->content[0]['data']['images'];
+    expect($images)->toHaveCount(2)
+        ->and($images[0])->toBe('pages/abc-ja-tem.webp')
+        ->and($images[1])->toEndWith('-nova.webp');
+});

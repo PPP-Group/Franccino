@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (23, de 08/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (24, de 08/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -923,3 +923,46 @@ GitHub, ou um dono da organização instala o app do Claude no repositório).
    (`design/recortes/LEIA-ME.md`). Depois dos lotes, apagar a variável.
 3. Conferir no preview: Corporativo → Fazenda Boa Vista (pontos na faixa e na página), Lojas (fotos), Fábrica (vídeo e
    galeria), uma peça sem descrição antes (ex.: Mesa Joey).
+
+## 24. 08/11/2026: depois do deploy, retorno do tech lead e o que faltava do site antigo
+
+PRs #71 e #72 mergeados (`develop` e `main`) e o deploy conferido de fora: textos das peças, lojas, Boa Vista, logos,
+Fábrica e capas no preview. Com o `CONTENT_IMPORT_TOKEN` (guardado como segredo de rede da sessão, ninguém vê o valor),
+os recortes do carrossel foram refeitos e enviados pela importação: as 15 peças de lançamento e mais 59 peças dos
+carrosséis das coleções e dos designers, que agora seguem o padrão da home (peças juntas, com o véu).
+
+- **Versões misturadas e serviço cinza no EasyPanel:** de fora, a API e o site passam no teste de saúde e o site devolve
+  sempre a mesma versão (16 de 16). A mistura aparece na janela do deploy (o site compila ao iniciar, e o container
+  antigo responde até o novo ficar pronto) e em abas abertas com o JavaScript antigo: recarregar a página depois do
+  deploy. O cinza no EasyPanel não deu para ver daqui; se continuar, mandar o texto do status do serviço.
+- **Corrigido no site:**
+  - grade em branco ao voltar da tabela técnica (o observador da revelação não via a grade nova; agora revisa a página
+    a cada mudança e revela assim que qualquer parte entra na tela);
+  - Toé cortada nas miniaturas ("peça em destaque" e fotos do hover da tabela): foto em pé por posição absoluta;
+  - paralaxe forte o bastante para ver (8% da altura da foto) e também nas faixas de coleções da home;
+  - borda do "O" do logo; sublinhado do seletor de idioma só embaixo do "EN";
+  - sala para montar: a planta salva troca as fotos pelas atuais do catálogo (as antigas tinham sumido com a troca de capas);
+  - tabela técnica: peças com medida primeiro;
+  - lista de orçamento: faixa areia com as peças vistas e as recomendadas;
+  - rodapé: selo "uma solução Vortex" (desenho do `endosso-negativo.svg` do repositório app-vtx-tap).
+- **Foto que cresce e encaixa:** agora também na miniatura da tabela técnica, no cartão dos pontos do ambiente, no caminho
+  (breadcrumb) da peça para a categoria e em todo retrato de designer (lista, home, coleção e página da peça) até a página
+  do designer. No preview atual as transições medidas rodaram inteiras (uma por navegação, ~800 ms); o "às vezes não
+  funciona" coincidiu com as versões misturadas do deploy.
+- **Inglês:** 317 peças mostravam o texto em português no `/en`. Tradução por máquina (OpenNMT/Argos, rodada fora do
+  servidor) com os nomes das peças e um glossário protegidos, em `api/database/data/translations/en-2026-11-08-produtos.json`
+  (`reviewed: false`, como o arquivo anterior); rota nova `POST /api/import/translations` para aplicar sem esperar deploy.
+- **Site antigo, segunda parte** (`api/database/data/wordpress/2026-11-08-site-antigo-2.json`, aplicada no deploy):
+  - as 10 lojas e revendas que faltavam (Porto Alegre, Móveis Modernos, Hanna Decor, Espaço Fátima Lima, Casa TMG,
+    Armazém 401, Casal Design, Paux, Forma e Conforto, Franttone), com endereço, contato e posição no mapa;
+  - 4 fotos de ateliê da home antiga (2560 px) na galeria da Fábrica;
+  - as fotos das coleções no site antigo são as miniaturas das peças e o banner, que o preview já tem; as fotos de
+    ambiente residencial ficaram de fora (o Corporativo não tem mais Residencial).
+- **Scroll suave:** descartado pelo tech lead.
+
+### 24.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
+
+Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar"). Caminho combinado em 08/11: o tech lead
+gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o
+entrega pelo formulário seguro da sessão (`request_credential`, host `www.googleapis.com`); a sessão baixa os arquivos
+marcados "Usar" e envia pela importação em massa (`design/recortes/LEIA-ME.md`), sem passar pelo repositório nem pelo painel.

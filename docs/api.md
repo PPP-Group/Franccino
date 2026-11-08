@@ -359,11 +359,12 @@ Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fot
 pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
 `Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
 
-| Rota                       | Corpo                                                                                     | Resposta                                   |
-| -------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `POST /api/import/media`   | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?` | 201 `{ data: { id, collection } }`         |
-| `POST /api/import/covers`  | JSON no formato de `api/database/data/covers/*.json`                                      | 202 `{ data: { queued, version } }` (fila) |
-| `POST /api/import/content` | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)    | 202 `{ data: { queued, version } }` (fila) |
+| Rota                            | Corpo                                                                                           | Resposta                                   |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`         |
+| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila) |
+| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila) |
+| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila) |
 
 `target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`; `key`
 = slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id. Coleção de um arquivo só

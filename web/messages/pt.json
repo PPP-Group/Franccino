@@ -49,7 +49,8 @@
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
       "youtube": "YouTube"
-    }
+    },
+    "vortex": "Uma solução Vortex"
   },
   "language": {
     "label": "Idioma",
@@ -110,7 +111,8 @@
       "title": "Pedido enviado",
       "body": "Recebemos sua solicitação. A equipe Franccino entrará em contato pelo e-mail informado."
     },
-    "addedToList": "Adicionada à lista"
+    "addedToList": "Adicionada à lista",
+    "recommendedTitle": "Recomendadas para você"
   },
   "errors": {
     "notFound": {

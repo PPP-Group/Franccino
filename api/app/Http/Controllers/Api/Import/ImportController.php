@@ -74,6 +74,17 @@ class ImportController extends Controller
         return $this->queueList('franccino:content:apply', $request->all());
     }
 
+    /**
+     * A translations list (`database/data/translations/*.json` format: `{locale, items: [{model, field, pt, en}]}`),
+     * applied on the queue. Only fills what has no translation yet (`franccino:translations:import`).
+     */
+    public function translations(Request $request): JsonResponse
+    {
+        $request->validate(['version' => ['required', 'string', 'max:120'], 'items' => ['required', 'array']]);
+
+        return $this->queueList('franccino:translations:import', $request->all());
+    }
+
     /** @param array<string, mixed> $list */
     private function queueList(string $command, array $list): JsonResponse
     {

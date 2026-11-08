@@ -58,6 +58,7 @@ class ApplyLegacyContent extends Command
         }
 
         $this->products($list['products'] ?? []);
+        $this->newStores($list['new_stores'] ?? [], $client);
         $this->stores($list['stores'] ?? [], $client);
         $this->projects($list['projects'] ?? [], $client);
         $this->clients($list['clients'] ?? [], $client);
@@ -106,6 +107,31 @@ class ApplyLegacyContent extends Command
         }
     }
 
+    /**
+     * Stores that the old site lists and the database does not have (matched by old-site id or name), created
+     * published, after the existing ones, with the photo when there is one.
+     *
+     * @param  list<array<string, mixed>>  $items
+     */
+    private function newStores(array $items, Client $client): void
+    {
+        $names = Store::query()->pluck('name')->map(fn ($name) => self::key((string) $name))->all();
+        $order = (int) Store::query()->max('sort_order');
+        foreach ($items as $item) {
+            $exists = in_array(self::key((string) $item['name']), $names, true)
+                || (isset($item['legacy_wp_id']) && Store::query()->where('legacy_wp_id', $item['legacy_wp_id'])->exists());
+            if (! $exists && ! $this->dryRun) {
+                $image = $item['image'] ?? null;
+                unset($item['image']);
+                $store = Store::query()->create($item + ['is_published' => true, 'sort_order' => ++$order]);
+                if (is_string($image)) {
+                    $this->attach($store, 'image', $image, $client);
+                }
+            }
+            $this->count('Lojas novas', ! $exists);
+        }
+    }
+
     /** @param list<array{name: string, image: string}> $items */
     private function stores(array $items, Client $client): void
     {
@@ -145,7 +171,7 @@ class ApplyLegacyContent extends Command
      * Appends blocks to a page, only the types the page does not have yet. Image fields hold old-site URLs, copied
      * to the media disk like a panel upload (`pages/`).
      *
-     * @param  list<array{key: string, blocks: list<array{type: string, data: array<string, mixed>}>}>  $items
+     * @param  list<array{key: string, blocks: list<array{type: string, merge?: bool, data: array<string, mixed>}>}>  $items
      */
     private function pages(array $items, Client $client): void
     {
@@ -154,6 +180,12 @@ class ApplyLegacyContent extends Command
             $content = $page === null ? [] : (array) ($page->content ?? []);
             $types = array_column($content, 'type');
             foreach ($item['blocks'] as $block) {
+                // `merge`: the photos go into the page's existing gallery (the ones it does not have yet).
+                if (($block['merge'] ?? false) && $page !== null && in_array($block['type'], $types, true)) {
+                    $content = $this->mergeImages($content, $block, $client);
+
+                    continue;
+                }
                 $add = $page !== null && ! in_array($block['type'], $types, true);
                 if ($add && ! $this->dryRun) {
                     $data = $block['data'];
@@ -173,6 +205,37 @@ class ApplyLegacyContent extends Command
                 $page->update(['content' => $content]);
             }
         }
+    }
+
+    /**
+     * Adds the block's image URLs to the first block of the same type, skipping a photo whose file name is already
+     * there (the copy keeps the original name after a random prefix).
+     *
+     * @param  list<array<string, mixed>>  $content
+     * @param  array{type: string, data: array<string, mixed>}  $block
+     * @return list<array<string, mixed>>
+     */
+    private function mergeImages(array $content, array $block, Client $client): array
+    {
+        foreach ($content as $index => $existing) {
+            if (($existing['type'] ?? null) !== $block['type']) {
+                continue;
+            }
+            $images = (array) ($existing['data']['images'] ?? []);
+            foreach ((array) ($block['data']['images'] ?? []) as $url) {
+                $name = basename((string) parse_url((string) $url, PHP_URL_PATH));
+                $known = collect($images)->contains(fn ($path) => str_ends_with((string) $path, '-'.$name));
+                if (! $known && ! $this->dryRun && ($path = $this->copyToMedia((string) $url, $client)) !== null) {
+                    $images[] = $path;
+                }
+                $this->count('Fotos acrescentadas a páginas', ! $known);
+            }
+            $content[$index]['data']['images'] = array_values($images);
+
+            return $content;
+        }
+
+        return $content;
     }
 
     /**
