@@ -195,3 +195,14 @@
   width: 35%;
   height: var(--fs-caption);
 }
+
+/* Faixa abaixo da lista: vistas por último e recomendadas, no tom areia, separadas da lista (retorno de 07/11/2026). */
+.quote-more {
+  margin-top: var(--section-y);
+  background: var(--sand);
+}
+
+.quote-more > .section,
+.quote-more > .recent {
+  background: transparent;
+}

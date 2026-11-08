@@ -1,6 +1,7 @@
-import { ApiImage } from '@/components/media/ApiImage';
 import { Link } from '@/i18n/navigation';
 import type { DesignerCard, DesignerRef } from '@/lib/api/types';
+import { MorphImage } from '@/components/media/MorphImage';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /** Até três designers, retratos grandes lado a lado; mais que isso, lista com retrato pequeno (sem buraco na grade). */
 const GRID_MAX = 3;
@@ -41,10 +42,15 @@ export function DesignerPortraits({
               <Link
                 className="designer-portraits__item"
                 href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+                transitionTypes={
+                  card?.portrait ? morphTypes(morphName('designer', designer.slug)) : undefined
+                }
+                data-morph-link={card?.portrait ? morphName('designer', designer.slug) : undefined}
               >
                 <div className="designer-portraits__photo hover-zoom">
                   {card?.portrait ? (
-                    <ApiImage
+                    <MorphImage
+                      name={morphName('designer', designer.slug)}
                       image={card.portrait}
                       sizes={asGrid ? '(max-width: 56.25rem) 33vw, 14vw' : '96px'}
                     />

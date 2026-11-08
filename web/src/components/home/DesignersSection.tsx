@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { DesignerCard } from '@/lib/api/types';
 import { sectionClass, type Tone } from './tone';
+import { MorphImage } from '@/components/media/MorphImage';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 const SHOWN = 4;
 
@@ -42,9 +43,19 @@ export function DesignersSection({ designers, tone }: { designers: DesignerCard[
               key={designer.id}
               className="designer"
               href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+              transitionTypes={
+                designer.portrait ? morphTypes(morphName('designer', designer.slug)) : undefined
+              }
+              data-morph-link={designer.portrait ? morphName('designer', designer.slug) : undefined}
             >
               <div className="designer__photo hover-zoom">
-                {designer.portrait ? <ApiImage image={designer.portrait} sizes={PORTRAIT_SIZES} /> : null}
+                {designer.portrait ? (
+                  <MorphImage
+                    name={morphName('designer', designer.slug)}
+                    image={designer.portrait}
+                    sizes={PORTRAIT_SIZES}
+                  />
+                ) : null}
               </div>
               <h3>{designer.name}</h3>
             </Link>

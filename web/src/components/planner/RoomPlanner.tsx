@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import {
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -27,6 +28,7 @@ import {
   addPiece,
   planEntries,
   planToQuoteInputs,
+  refreshPlanProducts,
   removePiece,
   setRoom,
   updatePiece,
@@ -53,6 +55,13 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
   const locale = useLocale() as Locale;
   const baseId = useId();
   const plan = useSyncExternalStore(subscribePlan, getPlan, getServerPlan);
+
+  // A planta salva guarda a foto de cada peça: troca pelas fotos atuais do catálogo (as antigas podem ter sumido).
+  useEffect(() => {
+    const current = getPlan();
+    const refreshed = refreshPlanProducts(current, initialLibrary);
+    if (refreshed !== current) savePlan(refreshed);
+  }, [initialLibrary]);
   const [selected, setSelected] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const [announcement, setAnnouncement] = useState('');

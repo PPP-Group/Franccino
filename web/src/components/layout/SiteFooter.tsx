@@ -6,6 +6,7 @@ import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { socialLinks } from '@/lib/settings';
 import { Logo } from './Logo';
+import { VortexMark } from './VortexMark';
 
 export function SiteFooter({ settings }: { settings: Settings }) {
   const t = useTranslations('footer');
@@ -107,7 +108,18 @@ export function SiteFooter({ settings }: { settings: Settings }) {
         </div>
 
         <div className="footer-base">
-          <span>{t('copyright', { year, company: settings.company_name })}</span>
+          <span className="footer-base__credits">
+            <span>{t('copyright', { year, company: settings.company_name })}</span>
+            <a
+              className="footer-vortex"
+              href="https://vortexsystems.tech/"
+              rel="noopener"
+              target="_blank"
+              aria-label={t('vortex')}
+            >
+              <VortexMark />
+            </a>
+          </span>
           <ul className="footer-legal" aria-label={t('legal')}>
             <li>
               <Link href="/privacy">{t('privacy')}</Link>

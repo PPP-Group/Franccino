@@ -1,11 +1,13 @@
 import { useLocale, useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { DownloadButton } from '@/components/products/DownloadButton';
+import { productMorphName } from '@/components/products/ProductPlate';
 import { QuickAddButton } from '@/components/products/QuickAddButton';
 import { AreaDot } from '@/components/ui/AreaDot';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import type { TechnicalRow } from '@/lib/catalog/technical';
+import { withDimensionsFirst, type TechnicalRow } from '@/lib/catalog/technical';
+import { morphTypes } from '@/lib/ui/morph';
 import { formatDimension } from '@/lib/format/dimensions';
 import { RowLinks } from './RowLinks';
 import { RowPeek } from './RowPeek';
@@ -15,7 +17,8 @@ import { RowPeek } from './RowPeek';
  * mostra as fotos da peça ao lado do ponteiro (`RowPeek`), para comparar sem abrir cada página. Clicar em qualquer
  * lugar da linha abre a peça (`RowLinks`); categoria, linha e designer são links próprios.
  */
-export function TechTable({ rows }: { rows: TechnicalRow[] }) {
+export function TechTable({ rows: unsorted }: { rows: TechnicalRow[] }) {
+  const rows = withDimensionsFirst(unsorted);
   const t = useTranslations('catalog.table');
   const tDimensions = useTranslations('dimensions');
   const locale = useLocale() as Locale;
@@ -65,13 +68,30 @@ export function TechTable({ rows }: { rows: TechnicalRow[] }) {
                 >
                   <td>
                     {product.cover ? (
-                      <Link href={productHref} tabIndex={-1} aria-hidden="true">
-                        <ApiImage image={product.cover} sizes="64px" className="thumb" />
+                      <Link
+                        href={productHref}
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        transitionTypes={morphTypes(productMorphName(product.slug))}
+                        data-morph-link={productMorphName(product.slug)}
+                      >
+                        <MorphImage
+                          name={productMorphName(product.slug)}
+                          image={product.cover}
+                          sizes="64px"
+                          fit="contain"
+                          className="thumb"
+                        />
                       </Link>
                     ) : null}
                   </td>
                   <th scope="row">
-                    <Link href={productHref} data-row-link="">
+                    <Link
+                      href={productHref}
+                      data-row-link=""
+                      transitionTypes={product.cover ? morphTypes(productMorphName(product.slug)) : undefined}
+                      data-morph-link={product.cover ? productMorphName(product.slug) : undefined}
+                    >
                       <strong>{product.name}</strong>
                     </Link>
                     <div className="meta">
