@@ -55,10 +55,16 @@ class Scene extends Model implements HasMedia
         return $this->belongsTo(Project::class);
     }
 
-    /** Published scenes that have a photo: the ones the API shows. */
-    public static function shown(Builder $query): Builder
+    /**
+     * Published scenes that have a photo: the ones the API shows.
+     *
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
+    public function scopeShown(Builder $query): Builder
     {
-        return $query->published()->whereHas('media', fn ($media) => $media->where('collection_name', 'image'));
+        return $query->where('is_published', true)
+            ->whereHas('media', fn ($media) => $media->where('collection_name', 'image'));
     }
 
     /**

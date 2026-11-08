@@ -13,10 +13,11 @@ class SceneController extends Controller
     public function index(): AnonymousResourceCollection
     {
         // The scenes of a project show up in the project (Corporativo and its page), not on the home page.
-        $scenes = Scene::shown(Scene::query())
+        $scenes = Scene::query()
+            ->shown()
             ->whereNull('project_id')
-            ->with(Scene::apiRelations())
             ->ordered()
+            ->with(Scene::apiRelations())
             ->get();
 
         return SceneResource::collection($scenes);

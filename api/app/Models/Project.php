@@ -56,6 +56,6 @@ class Project extends Model implements HasMedia
      */
     public function scene(): HasOne
     {
-        return $this->hasOne(Scene::class)->ofMany(['sort_order' => 'min', 'id' => 'min'], fn ($query) => Scene::shown($query));
+        return $this->hasOne(Scene::class)->ofMany(['sort_order' => 'min', 'id' => 'min'], fn ($query) => $query->shown());
     }
 }

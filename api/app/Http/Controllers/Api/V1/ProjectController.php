@@ -58,12 +58,11 @@ class ProjectController extends Controller
             ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media',
-                'scene',
-                ...Scene::apiRelations('scene.'),
                 'products' => fn ($query) => $query->published(),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),
             ])
+            ->with(['scene', ...Scene::apiRelations('scene.')])
             ->firstOrFail();
 
         return response()->json(['data' => (new ProjectResource($project))->resolve()]);
