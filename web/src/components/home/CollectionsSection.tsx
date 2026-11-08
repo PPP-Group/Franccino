@@ -57,6 +57,7 @@ export function CollectionsSection({ collections, tone }: { collections: Collect
                 key={collection.id}
                 className={`strip strip--${size}`}
                 data-reveal="curtain"
+                data-parallax=""
                 style={second ? ({ '--reveal-index': 1 } as CSSProperties) : undefined}
               >
                 <Link
@@ -73,6 +74,7 @@ export function CollectionsSection({ collections, tone }: { collections: Collect
                         name={morphName('collection', collection.slug)}
                         image={collection.cover}
                         sizes={size === 'wide' ? WIDE_SIZES : HALF_SIZES}
+                        parallax
                       />
                     ) : null}
                   </span>

@@ -9,7 +9,7 @@ import type { Image } from '@/lib/api/types';
  *   a volta pelo navegador, o caminho (breadcrumb) ou o logo para a página de onde a peça foi aberta. Entre duas
  *   listagens nada se mexe, mesmo que a mesma peça apareça nas duas.
  * - O nome identifica o par: `product-<slug>`, `feature-<slug>` (a peça em destaque da home), `collection-<slug>`,
- *   `project-<slug>`, `area-<key>`. A foto grande da página de destino adota o nome da origem clicada.
+ *   `project-<slug>`, `area-<key>`, `designer-<slug>` (o retrato abre a página do designer, retorno de 07/11/2026). A foto grande da página de destino adota o nome da origem clicada.
  * - Para a foto de destino não sair em branco no meio do movimento, a primeira pintura usa uma versão da foto que já
  *   foi baixada nesta visita; a versão do tamanho certo entra logo depois do movimento.
  */
@@ -27,7 +27,7 @@ export function morphTypes(name: string): string[] {
   return [morphType(name)];
 }
 
-export type MorphKind = 'product' | 'feature' | 'collection' | 'project' | 'area';
+export type MorphKind = 'product' | 'feature' | 'collection' | 'project' | 'area' | 'designer';
 
 /** Como a foto se encaixa no quadro durante o movimento: produto em fundo branco (inteiro) ou foto recortada. */
 export type MorphFit = 'contain' | 'cover';

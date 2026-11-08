@@ -104,16 +104,20 @@
   escreve o progresso da rolagem em `--parallax-progress` e marca `data-parallax-js` no <html>, com as mesmas
   distâncias.
 */
+/*
+  Retorno de 07/11/2026 ("nunca vi a paralaxe"): ±20 px não aparecia. A foto anda 8% da própria altura em cada sentido
+  (com 20% de sobra pela escala, a borda nunca aparece) e o texto, 32 px no sentido oposto: bem visível, ainda calmo.
+*/
 [data-parallax] {
-  --parallax-back: 40px;
-  --parallax-front: 14px;
-  --parallax-scale: 1.12;
+  --parallax-back: 8%;
+  --parallax-front: 32px;
+  --parallax-scale: 1.2;
 }
 
 @media (max-width: 56.25rem) {
   [data-parallax] {
-    --parallax-back: 20px;
-    --parallax-front: 7px;
+    --parallax-back: 5%;
+    --parallax-front: 16px;
   }
 }
 

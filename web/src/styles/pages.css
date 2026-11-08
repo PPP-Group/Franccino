@@ -1671,13 +1671,17 @@
 }
 
 .feature-piece__media {
-  display: grid;
-  place-items: center;
+  position: relative;
+  display: block;
   aspect-ratio: 4 / 3;
   background: var(--paper);
 }
 
+/* Por posição absoluta: a altura de 100% num item de grade não valia e a foto em pé (Cadeira Toé) era cortada. */
 .feature-piece__media img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 100%;
   height: 100%;
   max-width: var(--plate-img-max, 100%);

@@ -5,6 +5,7 @@ import {
   parsePlan,
   planEntries,
   planToQuoteInputs,
+  refreshPlanProducts,
   removePiece,
   setRoom,
   updatePiece,
@@ -95,5 +96,17 @@ describe('plan operations', () => {
     expect(parsePlan(JSON.stringify({ ...plan, room: { w: 10, d: 10 } }))).toBe(EMPTY_PLAN);
     const orphan = { ...plan, products: {} };
     expect(parsePlan(JSON.stringify(orphan)).pieces).toEqual([]);
+  });
+});
+
+describe('refreshPlanProducts', () => {
+  it('swaps the saved photo and name for the current catalogue ones, and keeps the plan when nothing changed', () => {
+    const plan = addPiece(EMPTY_PLAN, sofa);
+    const fresh = { ...sofa, name: 'Sofá novo', image: { src: '/nova.webp', alt: 'Sofá' } };
+    const refreshed = refreshPlanProducts(plan, [fresh, table]);
+    expect(refreshed.products[String(sofa.id)].image?.src).toBe('/nova.webp');
+    expect(refreshed.products[String(sofa.id)].name).toBe('Sofá novo');
+    expect(refreshed.products[String(table.id)]).toBeUndefined();
+    expect(refreshPlanProducts(refreshed, [fresh])).toBe(refreshed);
   });
 });

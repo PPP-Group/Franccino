@@ -10,6 +10,7 @@ import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getDesigners, getHome } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { morphName } from '@/lib/ui/morph';
 
 /** Qual destaque da home esta página mostra (cada página de lista mostra um diferente). */
 const FEATURE_OFFSET = 1;
@@ -66,6 +67,7 @@ export default async function DesignersPage({ params }: Props) {
               meta={designer.location ? [designer.location] : []}
               text={designer.short_bio}
               portrait
+              morph={morphName('designer', designer.slug)}
               priority={index < 4}
               sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 25vw"
             />

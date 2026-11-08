@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { DesignerDetail } from '@/lib/api/types';
 import { ProductPlate, type PlateProduct } from './ProductPlate';
+import { MorphImage } from '@/components/media/MorphImage';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /** Coluna das peças (5/12 da página, duas lado a lado), com folga para o zoom do hover. */
 const PIECE_SIZES = '(max-width: 56.25rem) 48vw, 20vw';
@@ -27,7 +28,9 @@ export function DesignerStrip({
     <section className="section section--paper section--tight" aria-labelledby="designer-title">
       <div className="wrap">
         <div className={classes.join(' ')}>
-          {designer.portrait ? <ApiImage image={designer.portrait} sizes="160px" /> : null}
+          {designer.portrait ? (
+            <MorphImage name={morphName('designer', designer.slug)} image={designer.portrait} sizes="160px" />
+          ) : null}
           <div className="designer-strip__copy">
             <h2 id="designer-title">{designer.name}</h2>
             {designer.short_bio ? <p className="lead">{designer.short_bio}</p> : null}
@@ -35,6 +38,10 @@ export function DesignerStrip({
               <Link
                 className="link-arrow"
                 href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+                transitionTypes={
+                  designer.portrait ? morphTypes(morphName('designer', designer.slug)) : undefined
+                }
+                data-morph-link={designer.portrait ? morphName('designer', designer.slug) : undefined}
               >
                 <span>{t('piecesBy', { name: designer.name })}</span>
                 <Icon name="arrow" />

@@ -26,6 +26,7 @@ import { toProductCard } from '@/lib/catalog/card';
 import { galleryImages } from '@/lib/product/gallery';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld';
 import { absoluteUrl, alternateHrefs, buildMetadata, type Href } from '@/lib/seo/metadata';
+import { productMorphName } from '@/components/products/ProductPlate';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -111,7 +112,11 @@ export default async function ProductPage({ params }: Props) {
       <JsonLd data={breadcrumb} />
       <TrackView product={card} />
       <div className="wrap">
-        <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
+        <Breadcrumbs
+          label={common('breadcrumb')}
+          items={crumbs}
+          morph={product.cover ? productMorphName(product.slug) : undefined}
+        />
         <div className="product">
           <ProductStage
             images={galleryImages(product)}

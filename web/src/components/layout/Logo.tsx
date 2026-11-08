@@ -3,12 +3,14 @@
  * oficial da marca (Adobe Garamond Pro, pasta "_FONTE FRANCCINO OFICIAL" do Drive), com o espaçamento e a proporção
  * da logo do site atual (franccino.com.br, logo-franccino.png). Só os contornos destas nove letras entram no site,
  * nunca o arquivo da fonte. Herda a cor do texto (`currentColor`) e o nome fica para os leitores de tela no link.
+ * A caixa tem uma folga em volta das letras: a borda do "O" encostava no limite e saía cortada (07/11/2026).
  */
 export function Logo({ className }: { className?: string }) {
   return (
     <svg
       className={className ? `logo ${className}` : 'logo'}
-      viewBox="0 -617 6019 632"
+      viewBox="-24 -617 6067 632"
+      overflow="visible"
       aria-hidden="true"
       focusable="false"
     >

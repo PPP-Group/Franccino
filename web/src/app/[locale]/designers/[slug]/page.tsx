@@ -8,7 +8,6 @@ import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
@@ -18,6 +17,8 @@ import { Link } from '@/i18n/navigation';
 import { getDesigner, getDesigners } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
+import { MorphImage } from '@/components/media/MorphImage';
+import { morphName } from '@/lib/ui/morph';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -77,7 +78,13 @@ export default async function DesignerPage({ params }: Props) {
         <div className="detail-hero detail-hero--portrait">
           <div className="detail-hero__media designer__photo">
             {designer.portrait ? (
-              <ApiImage image={designer.portrait} sizes="(max-width: 56.25rem) 100vw, 36vw" priority />
+              <MorphImage
+                name={morphName('designer', designer.slug)}
+                image={designer.portrait}
+                sizes="(max-width: 56.25rem) 100vw, 36vw"
+                priority
+                hero
+              />
             ) : null}
           </div>
           <div className="detail-hero__copy">

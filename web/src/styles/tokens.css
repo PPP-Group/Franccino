@@ -9,6 +9,8 @@
   /* Areia: fundo alternado de seções (retorno de 06/11/2026: mesclar branco e areia, como o site atual). */
   --sand: #f4efe6;
   --sand-strong: #e9e1d3;
+  /* Roxo do selo "uma solução Vortex" no rodapé (marca da Vortex, não da Franccino). */
+  --vortex-accent: #7d27fc;
   --ink: #171717;
   --ink-muted: #57564f;
   --line: #dcd9d1;

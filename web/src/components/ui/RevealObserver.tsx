@@ -81,7 +81,8 @@ export function RevealObserver() {
           }
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+      // Sem limiar de área: uma grade alta (36 peças) nunca chegava a 12% à vista no topo e ficava em branco (07/11).
+      { rootMargin: '0px 0px -8% 0px', threshold: 0 },
     );
     // As cortinas começam a baixar a foto um pouco antes de entrar na tela, para abrir sem esperar.
     const early = new IntersectionObserver(
@@ -97,31 +98,38 @@ export function RevealObserver() {
       },
       { rootMargin: '600px 0px 600px 0px' },
     );
-    const watch = (scope: ParentNode) => {
-      scope.querySelectorAll(`${SELECTOR}:not(.is-revealed)`).forEach((element) => {
+    // Cada bloco é observado uma vez. A varredura roda depois de cada mudança da página (num quadro), e não só nos nós
+    // adicionados: o React às vezes insere o elemento e só depois põe o `data-reveal`, e a grade voltava em branco ao
+    // trocar a tabela técnica pela grade (retorno de 07/11/2026).
+    const tracked = new WeakSet<Element>();
+    const watch = () => {
+      document.querySelectorAll(`${SELECTOR}:not(.is-revealed)`).forEach((element) => {
+        if (tracked.has(element)) return;
+        tracked.add(element);
         prepare(element);
         io.observe(element);
         if ((element.getAttribute('data-reveal') ?? '').startsWith('curtain')) early.observe(element);
       });
     };
-    watch(document);
-    const mo = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof Element) {
-            if (node.matches(SELECTOR)) {
-              prepare(node);
-              io.observe(node);
-              if ((node.getAttribute('data-reveal') ?? '').startsWith('curtain')) early.observe(node);
-            }
-            watch(node);
-          }
+    watch();
+    let frame = 0;
+    const mo = new MutationObserver(() => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(() => {
+          frame = 0;
+          watch();
         });
       }
     });
-    mo.observe(document.body, { childList: true, subtree: true });
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-reveal'],
+    });
     root.dataset.revealReady = '';
     return () => {
+      window.cancelAnimationFrame(frame);
       io.disconnect();
       early.disconnect();
       mo.disconnect();
