@@ -32,6 +32,10 @@ class ProjectCardResource extends JsonResource
             'year' => $project->year,
             'summary' => Localized::value($project, 'summary'),
             'cover' => ImagePresenter::present($project->getFirstMedia('cover'), $title),
+            // Photo with clickable points, only where the controller loaded it (list and page of projects).
+            'scene' => $project->relationLoaded('scene') && $project->scene !== null
+                ? (new SceneResource($project->scene))->resolve($request)
+                : null,
         ];
     }
 }

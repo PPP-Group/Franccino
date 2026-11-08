@@ -105,6 +105,8 @@ export function MorphImage({
         priority={priority || src !== null}
         className={className}
         parallax={parallax}
+        // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
+        fade={start.src === null}
       />
     </ViewTransition>
   );

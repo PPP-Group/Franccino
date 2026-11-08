@@ -309,6 +309,43 @@
   }
 }
 
+/* ---------- 12g. Fotos: placeholder enquanto carregam e fade quando chegam ---------- */
+
+/*
+  Retorno de 07/11/2026: a prévia borrada (`blur_data_url`) deixava a peça embaçada até a foto chegar. Agora a caixa da
+  foto mostra um tom claro e liso (com o brilho do esqueleto correndo devagar) e a foto entra com um fade quando chega.
+  O BootScript marca `data-loaded` em cada foto (`late` quando chega da rede, `instant` quando já estava no cache: essa
+  aparece sem animar, inclusive a foto de chegada do movimento de abrir a peça). Sem JavaScript, nada muda.
+*/
+html[data-img-fade] img[data-img]:not([data-loaded]) {
+  background-color: var(--shimmer-base);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-img-fade] img[data-img]:not([data-loaded]) {
+    background-image: linear-gradient(
+      100deg,
+      var(--shimmer-base) 30%,
+      var(--shimmer-light) 50%,
+      var(--shimmer-base) 70%
+    );
+    background-size: 300% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* As fotos que já têm movimento próprio (paralaxe, aproximação do banner) não trocam de animação: só saem do tom. */
+  html[data-img-fade]
+    img[data-img][data-loaded='late']:not([data-parallax-layer], .hero__img, [data-reveal^='curtain'] *) {
+    animation: img-arrive var(--t-slow) var(--ease-out) both;
+  }
+}
+
+@keyframes img-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
 /* ---------- abrir a peça e voltar dela (ideia 10) ---------- */
 
 /*
@@ -375,6 +412,29 @@
 ::view-transition-new(.morph-cover) {
   block-size: 100%;
   object-fit: cover;
+  overflow: clip;
+}
+
+/*
+  O `cover` amplia a foto além do quadro e o navegador não recorta essa sobra na camada do movimento: a foto do projeto
+  passava do tamanho do banner (cobria a tela) e depois "pulava" para o lugar (retorno de 07/11/2026). O par recorta no
+  quadro, que anda do card até o banner.
+*/
+::view-transition-image-pair(.morph-cover) {
+  overflow: clip;
+}
+
+/*
+  Foto recortada: o banner e a faixa mostram recortes diferentes da mesma foto, e a troca de um pelo outro no meio do
+  movimento parecia uma imagem dupla na volta do projeto (retorno de 07/11/2026). Só a foto de destino aparece, do
+  começo ao fim, crescendo ou encolhendo com o quadro; ela já está pronta (MorphImage usa a versão baixada).
+*/
+::view-transition-old(.morph-cover) {
+  opacity: 0;
+}
+
+::view-transition-new(.morph-cover) {
+  animation: none;
 }
 
 @keyframes morph-arrive {
@@ -395,6 +455,14 @@
 [data-reveal-instant] [data-reveal],
 [data-reveal-instant] [data-reveal] > * {
   transition: none !important;
+}
+
+/* Na volta, o bloco que o RevealObserver ainda não marcou já aparece pronto (sem subir, sem cortina). */
+[data-reveal-instant] [data-reveal]:not(.is-revealed),
+[data-reveal-instant] [data-reveal]:not(.is-revealed) > * {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

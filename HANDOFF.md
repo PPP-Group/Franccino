@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (21, de 06/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (23, de 08/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -828,3 +828,98 @@ MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o pi
   servida pelo próprio site via `next/font`). Substitui Cormorant Garamond e EB Garamond. O painel continua como estava.
 - **Projetos virou "Corporativo"** (menu, título, rodapé e seção da home), sem os filtros Todos e Residencial.
 - **Movimento:** saiu a faixa de carregamento das fotos; a cortina da esquerda para a direita ficou só nas coleções.
+
+## 22. 07/11/2026: revisão do preview (carrossel, fotos, tabela técnica, Corporativo, Cadeira Toé)
+
+Retorno do tech lead sobre o preview publicado em 06/11. Branch `claude/francine-site-review-htegfp`. Tudo conferido
+num `next dev` local apontado para a API do preview, com Playwright (capturas e vídeo da navegação).
+
+- **Carrossel da home (ideia 01):** saiu o degradê do palco (quebrava nos cantos); as peças ficam direto no fundo da
+  seção e as das pontas passam da largura do conteúdo. As distantes deixaram de ficar transparentes (uma aparecia dentro
+  da outra): agora um véu branco por filtro (`invert` + `brightness` + `invert`) as clareia e elas continuam opacas. A
+  peça do centro cabe com o nome embaixo numa tela de notebook (altura limitada pela janela, nome logo abaixo da sombra).
+- **Fotos carregando:** sem a prévia borrada (`blur_data_url` não é mais usado). Enquanto a foto não chega, a caixa
+  mostra um tom claro com brilho lento, e a foto entra com fade (`ApiImage` marca `data-img`; o `BootScript` marca
+  `data-loaded`; bloco 12g de `motion.css`). Foto que já estava no cache entra sem animar.
+- **Cortina das coleções:** só abre com a foto pronta (espera carregar e decodificar, até 2,5 s); a foto começa a baixar
+  600 px antes de entrar na tela.
+- **Fábrica na home:** o "tranco" da foto fixa vinha da revelação ao rolar aplicada na faixa inteira (o `transform`
+  mudava a referência do `position: fixed`). A revelação ficou só no texto.
+- **Tabela técnica:** as fotos do hover (até 4) saem empilhadas e se abrem lado a lado; clicar em qualquer lugar da
+  linha abre a peça (`RowLinks`); categoria, linha (Franccino Casa/Giardini) e designer são links próprios.
+- **Corporativo → projeto:** a foto passava do tamanho do banner e depois "pulava". Causa: o `object-fit: cover` da
+  camada do movimento não era recortado; `motion.css` recorta o par (`overflow: clip`).
+- **Cadeira Toé cortada:** no palco da peça, a foto em pé (4:5, coleção TEMPO) ignorava a altura do quadro 4:3 e
+  transbordava. A foto agora ocupa o quadro por posição absoluta (`product.css`). Vale para todas as fotos em pé.
+- **Fotos repetidas na galeria:** a API não manda na galeria um arquivo igual ao da capa (mesmos bytes e tipo;
+  `docs/api.md`). Entre as 15 peças do carrossel, afetava Toé, Sopro, Orvalho, Terezinha, Royale e Buffet Heritage.
+- **Capa da Toé:** nova lista de capas `api/database/data/covers/2026-11-07-diagonal-esquerda-3.json` (foto 1972, marrom,
+  na diagonal para a esquerda), aplicada no deploy. O recorte do carrossel precisa acompanhar: ver a seção 23 (o arquivo
+  não fica no repositório).
+- **Recortes das outras 14 peças:** a borda está limpa (conferido sobre fundo escuro). O "embaçado em volta" vinha do
+  estilo antigo do carrossel (transparência, filtros e degradê) e da resolução das fontes: os recortes da TEMPO têm de
+  600 a 1000 px e o carrossel mostra a peça do centro com até 520 px (1040 px em tela retina). Fica nítido só com as
+  fotos originais em alta.
+- **Rolagem:** não entrou rolagem suavizada por script (seria dependência nova, como Lenis, ou código que briga com o
+  trackpad). O que deixava a rolagem estranha era a foto da Fábrica, as fotos aparecendo de uma vez e a cortina sobre o
+  tom de carregamento, corrigidos acima.
+- **Verificação:** lint, typecheck e 415 testes do site. API: testes novos em `ProductShowTest` e `CoversTest` (rodar no
+  CI: nesta máquina o PHP é 8.3 e o Composer não termina a instalação).
+
+### 22.1 Depois do merge na `main`
+
+1. Conferir o deploy da API e do site. O entrypoint troca a capa da Toé na primeira subida (o recorte, seção 23).
+2. Diagonal para a esquerda: além da Toé, Sofá Antônio e Sofá Royale continuam sem foto na diagonal (seção 21.4);
+   precisam de foto nova da Franccino.
+
+## 23. 07 e 08/11/2026: conteúdo do site antigo, ambientes nos projetos, importação em massa e capas
+
+Mesma branch (`claude/francine-site-review-htegfp`). **O push foi recusado (403):** o app do Claude não tem acesso ao
+`PPP-Group/Franccino` nesta conta. Os commits estão só na sessão até o acesso ser liberado (claude.ai → conectar o
+GitHub, ou um dono da organização instala o app do Claude no repositório).
+
+- **Extração do site antigo (o que faltou na P5b T4):** o importador nunca lia a frase de destaque nem a descrição das
+  peças (ficam em blocos de texto do Elementor, não na API REST do WordPress). Corrigido em
+  `ProductPageParser::texts()` e no `WordPressImporter`. A extração de 07/11 está em
+  `api/database/data/wordpress/2026-11-07-site-antigo.json`, aplicada no deploy por `franccino:content:apply` (uma vez;
+  só preenche o que está vazio; baixa as fotos de franccino.com.br na hora):
+  - frase e descrição de 377 das 400 peças (23 não têm texto no site antigo);
+  - foto de 13 lojas (Porto Alegre não existe no preview; as 10 revendas sem foto no site antigo também não);
+  - galeria dos 3 projetos do Corporativo (Clara Arte +3, Boa Vista +1, Kûara +2) e os logos de 6 clientes (Cyrela e
+    Botânico Shopping não têm logo no site antigo);
+  - Fábrica: bloco Vídeo ("Conheça a Franccino", YouTube, com a capa do site antigo) e galeria com as fotos
+    institucionais e a fachada;
+  - ambiente de teste com pontos no Fazenda Boa Vista (espreguiçadeira → Chaise Madri; poltrona de madeira → Poltrona
+    Derby; as peças exatas da foto não estão no catálogo).
+- **Ambiente ligado a projeto:** migration `2026_11_07_100000_add_project_id_to_scenes_table`; campo "Projeto" no
+  Ambiente (painel); `ProjectCard.scene` em `GET /projects` e `GET /projects/{slug}`; `GET /scenes` só traz os sem
+  projeto (`docs/api.md`, `docs/data-model.md`). No site: pontos sobre a foto da faixa do Corporativo (acompanham o
+  recorte 3:2 e o zoom do hover; `ScenePoints`, `coverPoint`) e a seção "Peças no ambiente" na página do projeto.
+- **Importação em massa (`/api/import/*`):** fotos (capa, galeria, foto sem fundo de peça; capa e galeria de projeto;
+  foto de loja; logo; foto de ambiente) e listas de capas ou de conteúdo, por `curl`, sem painel e sem passar pelo
+  repositório. Desligada sem `CONTENT_IMPORT_TOKEN` na API. Uso em `design/recortes/LEIA-ME.md`; contrato em
+  `docs/api.md`. É o caminho para a auditoria do Drive: baixar as pastas e enviar com o laço do LEIA-ME.
+- **Recorte da Toé:** saiu do repositório (regra de mídia), junto com o comando de recortes. O script que gera o recorte
+  (rembg + borda refinada no fundo branco) está em `design/recortes/recortar.py`; depois do deploy, gerar da foto 1972 e
+  enviar como `cutout` pela importação.
+- **Capas na diagonal para a esquerda:** revisadas as 197 peças fora das listas de 06/11 (139 têm outra foto além da
+  capa). Entraram na lista de 07/11: Aparador Hera, Balanço Dome, Cadeira Arp e Mesa de centro Noá Quadrada, além da
+  Toé. As demais já estão na diagonal para a esquerda ou não têm essa foto (Sofá Antônio, Sofá Royale, Poltrona Costa,
+  Banco Adhara, Banco Julia, entre outras: precisam de foto nova).
+- **Volta do projeto para o Corporativo:** a foto pousava e "piscava" (trocava de versão com o fade de carregamento) e a
+  faixa estava 20 px abaixo, invisível, até o observador marcá-la. Agora a volta já começa com os blocos à vista
+  (`data-reveal-instant` no `popstate`), a foto do movimento não refaz o fade e, nas fotos recortadas, só a de destino
+  aparece durante o movimento (sem imagem dupla). Conferido em vídeo, ida e volta.
+- **Paralaxe:** só na home: blocos Casa e Giardini, peça em destaque, mosaico de projetos e o texto da faixa da Fábrica
+  (e em `/pt/ideias`, ideia 04). Não há paralaxe nas páginas de peça.
+- **Verificação:** lint, typecheck, 418 testes e build do site; pontos e volta conferidos num `next dev` contra a API do
+  preview, com o ambiente injetado por um proxy local. API: testes novos (`LegacyContentTest`, `ImportTest`,
+  `ScenesTest`, `ProductPageParserTest`), só no CI (PHP 8.3 aqui e o Composer não instala).
+
+### 23.1 Depois do merge na `main`
+
+1. Deploy da API e do site. Nos logs da API, a tabela do `franccino:content:apply` mostra o que foi preenchido.
+2. Preencher `CONTENT_IMPORT_TOKEN` na API (só letras e números), redeploy, e enviar o recorte da Toé
+   (`design/recortes/LEIA-ME.md`). Depois dos lotes, apagar a variável.
+3. Conferir no preview: Corporativo → Fazenda Boa Vista (pontos na faixa e na página), Lojas (fotos), Fábrica (vídeo e
+   galeria), uma peça sem descrição antes (ex.: Mesa Joey).

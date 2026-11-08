@@ -102,7 +102,7 @@ type ProductDetail = ProductCard & {
     group: string;
     items: { id: number; name: string; code: string | null; swatch: Image | null }[];
   }[];
-  gallery: Image[];
+  gallery: Image[]; // sem a capa: um arquivo igual ao da capa (mesmos bytes e tipo) não entra (07/11/2026)
   // null se não houver GLB ou 3D desligado. O GLB fica em disco privado (contrato 13.2): o endereço vem de
   // POST /products/{slug}/model-3d/link, pedido quando o visitante abre o 3D.
   model_3d: { size: number | null } | null;
@@ -133,13 +133,13 @@ type ProductDetail = ProductCard & {
 | `GET /designers/{slug}`   |                                                                                                          | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo` |
 | `GET /launches`           |                                                                                                          | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                                            |
 | `GET /launches/{slug}`    |                                                                                                          | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`, `slugs`                                       |
-| `GET /projects`           | `type?`                                                                                                  | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`)                                                               |
+| `GET /projects`           | `type?`                                                                                                  | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`, `scene`)                                                      |
 | `GET /projects/{slug}`    |                                                                                                          | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                              |
 | `GET /clients`            |                                                                                                          | `{ id, name, url, logo }[]`                                                                                                                                                   |
 | `GET /stores`             | `state?` `type?`                                                                                         | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                            |
 | `GET /finishes`           |                                                                                                          | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                              |
 | `GET /banners`            | `placement` (default `home_hero`)                                                                        | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                                   |
-| `GET /scenes`             |                                                                                                          | `Scene[]` (ver abaixo): ambientes publicados com foto, cada ponto com o `ProductCard` da peça                                                                                 |
+| `GET /scenes`             |                                                                                                          | `Scene[]` (ver abaixo): ambientes publicados com foto e sem projeto, cada ponto com o `ProductCard` da peça                                                                   |
 | `GET /pages/{key}`        |                                                                                                          | `{ key, title, intro, content: Block[], cover, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo)                                                             |
 | `GET /settings`           |                                                                                                          | configurações públicas (ver shape completo abaixo)                                                                                                                            |
 | `GET /downloads`          | `area?` `category?` `q?` `page` `per_page`                                                               | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado)                                                                                        |
@@ -205,6 +205,10 @@ type Banner = {
 Ambiente com pontos clicáveis. `x` e `y` são a posição do ponto na foto, em porcentagem (0–100; `x` a partir da
 esquerda, `y` a partir do topo), para valer em qualquer tamanho de tela. Só saem ambientes publicados com foto, e só os
 pontos de peças publicadas, na ordem do painel.
+
+`ProjectCard.scene` (`GET /projects` e `GET /projects/{slug}`, 2026-11-07): o ambiente publicado com foto ligado ao
+projeto no painel (o primeiro pela ordem), ou `null`. Nos outros lugares em que um `ProjectCard` aparece, vem `null`.
+Ambientes com projeto não saem em `GET /scenes`.
 
 ```ts
 type Scene = {
@@ -348,6 +352,22 @@ Sem corpo; `slug` no idioma de `?locale=`. Gera URL temporária (10 minutos) par
 privado `downloads`. `201 { "data": { "url": "...", "expires_at": "..." } }`. Peça não publicada, com o 3D desligado ou
 sem modelo: `404`. Limite: o mesmo dos downloads (30 por minuto por IP). A página do produto é estática: o site pede o
 link no navegador, quando o visitante abre o 3D, e nunca grava a URL no HTML.
+
+## Importação em massa (`/api/import/*`)
+
+Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fotos e listas sem o painel e sem passar
+pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
+`Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
+
+| Rota                       | Corpo                                                                                     | Resposta                                   |
+| -------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `POST /api/import/media`   | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?` | 201 `{ data: { id, collection } }`         |
+| `POST /api/import/covers`  | JSON no formato de `api/database/data/covers/*.json`                                      | 202 `{ data: { queued, version } }` (fila) |
+| `POST /api/import/content` | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)    | 202 `{ data: { queued, version } }` (fila) |
+
+`target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`; `key`
+= slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id. Coleção de um arquivo só
+substitui a foto atual; `gallery` acrescenta. Coleção fora da lista: 422; registro não encontrado: 404.
 
 ## Limites e cabeçalhos
 

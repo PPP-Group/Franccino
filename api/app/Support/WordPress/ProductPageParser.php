@@ -55,6 +55,40 @@ final class ProductPageParser
         return $pairs;
     }
 
+    /**
+     * Tagline and description of the product: the first two Elementor text widgets of the page (the product block comes
+     * before the footer, whose text widgets are left out). A page with a single text has only the description.
+     *
+     * @return array{tagline: ?string, description: ?string} description as paragraphs (`<p>`)
+     */
+    public function texts(string $html): array
+    {
+        preg_match_all(
+            '/data-widget_type="text-editor\.default">\s*<div class="elementor-widget-container">(.*?)<\/div>\s*<\/div>/su',
+            $html,
+            $matches,
+        );
+        $texts = [];
+        foreach ($matches[1] as $block) {
+            $block = (string) preg_replace('/<\/p>\s*<p[^>]*>/i', "\n\n", $block);
+            $text = self::text($block);
+            if ($text !== '' && ! preg_match('/^(relat[óo]rio de transpar|todos os direitos|receba nossa newsletter)/iu', $text)) {
+                $texts[] = $text;
+            }
+        }
+        if ($texts === []) {
+            return ['tagline' => null, 'description' => null];
+        }
+        $tagline = count($texts) > 1 ? array_shift($texts) : null;
+        $paragraphs = preg_split('/\n\s*\n/u', implode("\n\n", $texts)) ?: [];
+        $description = implode('', array_map(
+            fn (string $paragraph) => '<p>'.nl2br(e(trim($paragraph)), false).'</p>',
+            array_filter($paragraphs, fn (string $paragraph) => trim($paragraph) !== ''),
+        ));
+
+        return ['tagline' => $tagline, 'description' => $description];
+    }
+
     /** Slug of the first designer page linked from the product (the product block comes before related items). */
     public function designerSlug(string $html): ?string
     {

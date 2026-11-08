@@ -29,3 +29,29 @@ export function placeHotspot(x: number, y: number): HotspotPlacement {
     vertical: top > 55 ? 'above' : 'below',
   };
 }
+
+/**
+ * Ponto de uma foto mostrada com `object-fit: cover` num quadro de outra proporção (a faixa do Corporativo, 3:2): a
+ * foto cresce até cobrir o quadro e a sobra sai igual dos dois lados. Devolve a posição no quadro, em porcentagem, ou
+ * `null` quando o ponto ficou na parte recortada. `imageRatio` e `frameRatio` são largura / altura.
+ */
+export function coverPoint(
+  x: number,
+  y: number,
+  imageRatio: number,
+  frameRatio: number,
+): { x: number; y: number } | null {
+  if (!(imageRatio > 0) || !(frameRatio > 0)) {
+    return { x, y };
+  }
+  // Fração da foto que fica à vista em cada eixo.
+  const visibleX = Math.min(1, frameRatio / imageRatio);
+  const visibleY = Math.min(1, imageRatio / frameRatio);
+  const mappedX = (x - ((1 - visibleX) / 2) * 100) / visibleX;
+  const mappedY = (y - ((1 - visibleY) / 2) * 100) / visibleY;
+  // Um ponto colado na borda do quadro esconderia metade do círculo: só os que ficam com folga de 2%.
+  if (mappedX < 2 || mappedX > 98 || mappedY < 2 || mappedY > 98) {
+    return null;
+  }
+  return { x: Math.round(mappedX * 100) / 100, y: Math.round(mappedY * 100) / 100 };
+}

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\ProjectCardResource;
 use App\Http\Resources\V1\ProjectResource;
 use App\Models\Project;
+use App\Models\Scene;
 use App\Support\ContentLocale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class ProjectController extends Controller
 
         $paginator = Project::published()
             ->when($validated['type'] ?? null, fn ($query, $type) => $query->where('type', $type))
-            ->with('media')
+            ->with(['media', 'scene', ...Scene::apiRelations('scene.')])
             ->ordered()
             ->paginate($perPage, ['*'], 'page', $page)
             ->appends($request->query());
@@ -57,6 +58,8 @@ class ProjectController extends Controller
             ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media',
+                'scene',
+                ...Scene::apiRelations('scene.'),
                 'products' => fn ($query) => $query->published(),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),

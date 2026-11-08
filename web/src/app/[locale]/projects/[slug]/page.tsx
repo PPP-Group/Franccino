@@ -9,6 +9,7 @@ import { RichText } from '@/components/content/RichText';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { morphName } from '@/lib/ui/morph';
 import { FeaturePiece } from '@/components/products/FeaturePiece';
+import { SceneViewer } from '@/components/home/SceneViewer';
 import { ProductRail } from '@/components/products/ProductRail';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
@@ -101,6 +102,17 @@ export default async function ProjectPage({ params }: Props) {
             {project.description ? <RichText html={project.description} className="prose" /> : null}
             {feature ? <FeaturePiece product={feature} /> : null}
           </div>
+        ) : null}
+        {project.scene && project.scene.hotspots.length > 0 ? (
+          <section aria-labelledby="project-scene" className="project-section" data-reveal>
+            <div className="section-head">
+              <div>
+                <h2 id="project-scene">{t('sceneTitle')}</h2>
+                <p className="lead">{t('sceneLead')}</p>
+              </div>
+            </div>
+            <SceneViewer scene={project.scene} />
+          </section>
         ) : null}
         <EditorialGallery images={project.gallery} label={t('gallery')} />
         {project.products.length > 0 ? (

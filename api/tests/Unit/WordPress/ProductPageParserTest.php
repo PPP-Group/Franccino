@@ -38,3 +38,18 @@ it('takes the first linked designer', function () {
     expect((new ProductPageParser)->designerSlug(productPageHtml()))->toBe('la-mamba')
         ->and((new ProductPageParser)->designerSlug('<p>sem designer</p>'))->toBeNull();
 });
+
+it('reads the tagline and the description from the text widgets, leaving the footer out', function () {
+    $widget = fn (string $html) => '<div class="elementor-widget" data-widget_type="text-editor.default"> <div class="elementor-widget-container">'.$html.'</div> </div>';
+    $html = $widget(' Entre peso e leveza ')
+        .$widget('<p>A Mesa Joey nasce do diálogo.</p><p>Base em pedra & tampo.</p>')
+        .$widget('Todos os Direitos Reservados Franccino 2024');
+
+    expect((new ProductPageParser)->texts($html))->toBe([
+        'tagline' => 'Entre peso e leveza',
+        'description' => '<p>A Mesa Joey nasce do diálogo.</p><p>Base em pedra &amp; tampo.</p>',
+    ])->and((new ProductPageParser)->texts($widget('<p>Só a descrição.</p>')))->toBe([
+        'tagline' => null,
+        'description' => '<p>Só a descrição.</p>',
+    ]);
+});

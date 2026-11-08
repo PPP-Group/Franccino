@@ -9,18 +9,13 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SceneController extends Controller
 {
-    /** Published scenes with a photo, each with the points whose product is published. */
+    /** Published scenes with a photo and no project, each with the points whose product is published. */
     public function index(): AnonymousResourceCollection
     {
-        $scenes = Scene::published()
-            ->whereHas('media', fn ($query) => $query->where('collection_name', 'image'))
-            ->with([
-                'media',
-                'hotspots' => fn ($query) => $query->whereHas('product', fn ($product) => $product->published()),
-                'hotspots.product.area', 'hotspots.product.category', 'hotspots.product.designer',
-                'hotspots.product.media',
-                'hotspots.product.launches' => fn ($query) => $query->published(),
-            ])
+        // The scenes of a project show up in the project (Corporativo and its page), not on the home page.
+        $scenes = Scene::shown(Scene::query())
+            ->whereNull('project_id')
+            ->with(Scene::apiRelations())
             ->ordered()
             ->get();
 

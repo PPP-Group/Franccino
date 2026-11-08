@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\NoStoreCache;
+use App\Http\Middleware\RequireImportToken;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetContentLocale;
 use Illuminate\Foundation\Application;
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'content.locale' => SetContentLocale::class,
             'no-store' => NoStoreCache::class,
+            'import.token' => RequireImportToken::class,
         ]);
 
         // Route middleware order in routes/api.php is NOT the actual execution

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use App\Models\Scene;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -49,4 +50,21 @@ it('answers in english when asked', function () {
     $this->getJson('/api/v1/scenes?locale=en')
         ->assertOk()
         ->assertJsonPath('data.0.title', 'Porch with the Tempo collection');
+});
+
+it('shows the scene of a project on the project, not on the home list', function () {
+    $project = Project::factory()->create(['slug' => ['pt' => 'fazenda-boa-vista-jhsf', 'en' => 'fazenda-boa-vista']]);
+    $scene = sceneWithPhoto(['project_id' => $project->id]);
+    $scene->hotspots()->create(['product_id' => publishedProduct()->id, 'x' => 38, 'y' => 56]);
+    sceneWithPhoto(['project_id' => $project->id, 'is_published' => false, 'sort_order' => -1]);
+
+    expect($this->getJson('/api/v1/scenes')->assertOk()->json('data'))->toHaveCount(0);
+
+    $detail = $this->getJson('/api/v1/projects/fazenda-boa-vista-jhsf')->assertOk();
+    expect($detail->json('data.scene.id'))->toBe($scene->id)
+        ->and($detail->json('data.scene.hotspots.0'))->toMatchArray(['x' => 38, 'y' => 56])
+        ->and($detail->json('data.scene.hotspots.0.product.slug'))->toBe('cadeira-aura');
+
+    $list = $this->getJson('/api/v1/projects')->assertOk();
+    expect($list->json('data.0.scene.id'))->toBe($scene->id);
 });

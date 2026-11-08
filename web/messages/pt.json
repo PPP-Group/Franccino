@@ -594,7 +594,9 @@
     "gallery": "Imagens do projeto",
     "piecesTitle": "Peças usadas neste projeto",
     "type": "Tipo",
-    "othersTitle": "Outros projetos"
+    "othersTitle": "Outros projetos",
+    "sceneTitle": "Peças no ambiente",
+    "sceneLead": "Selecione os pontos para conhecer cada peça."
   },
   "corporate": {
     "title": "Corporativo",
