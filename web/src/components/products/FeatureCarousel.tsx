@@ -78,15 +78,16 @@ function poseStyle(pose: CoverflowPose): CSSProperties {
 
 /**
  * Carrossel com a peça em destaque (banco de ideias, ideia 01, aprovada com ajustes em 26/10/2026), no desenho da
- * referência da Franccino: as peças sem fundo, empilhadas num palco claro, a do centro grande e na frente, com a sombra
- * de contato no chão, e as vizinhas encostadas nela, menores e mais apagadas quanto mais longe. Embaixo, o nome e a
- * categoria da peça do centro e o contador. Sem acabamentos, sem "ver peça" e sem 3D (o 3D fica na página da peça).
+ * referência da Franccino: as peças sem fundo, empilhadas direto no fundo da seção, a do centro grande e na frente,
+ * com a sombra de contato no chão, e as vizinhas encostadas nela, menores e cobertas por um véu branco quanto
+ * mais longe (nunca transparentes: uma peça não aparece dentro da outra). Logo embaixo, o nome e a categoria da peça
+ * do centro e o contador. Sem acabamentos, sem "ver peça" e sem 3D (o 3D fica na página da peça).
  *
  * A foto é a `cutout` (PNG/WebP sem fundo) quando o painel tem; sem ela, a capa em fundo branco, que some no palco por
  * `mix-blend-mode: multiply`. O clique na peça do centro abre a peça, com a foto crescendo até a página
  * (`ViewTransition`, ideia 10); o clique numa vizinha a traz para o centro.
  *
- * Nada rola: as peças ficam no mesmo lugar e só mudam `transform`, `opacity` e `filter` (a pose vem de `coverflowPose`).
+ * Nada rola: as peças ficam no mesmo lugar e só mudam `transform`, `opacity` e o véu (a pose vem de `coverflowPose`).
  * Arrasta com o dedo e com o mouse (com o cursor redondo "Arraste" da ideia 12), anda com as setas do teclado, com os
  * botões e com a rolagem lateral do trackpad. Com movimento reduzido as peças trocam sem animar.
  */

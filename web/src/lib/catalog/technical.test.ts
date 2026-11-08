@@ -41,18 +41,18 @@ describe('technical rows', () => {
       product: toProductCard(detail),
       dimension: detail.dimensions[0],
       files: [file],
-      preview: [detail.cover, ...detail.gallery].filter(Boolean).slice(0, 3),
+      preview: [detail.cover, ...detail.gallery].filter(Boolean).slice(0, 4),
     });
   });
 
-  it('previews at most three photos, cover first, without repeating it', () => {
+  it('previews at most four photos, cover first, without repeating it', () => {
     const detail = productDetail();
     const cover = detail.cover;
     if (!cover) {
       throw new Error('fixture sem capa');
     }
     const extra = (id: number) => ({ ...cover, id, src: `/foto-${id}.jpg` });
-    const row = toTechnicalRow({ ...detail, gallery: [cover, extra(2), extra(3), extra(4)] });
-    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3]);
+    const row = toTechnicalRow({ ...detail, gallery: [cover, extra(2), extra(3), extra(4), extra(5)] });
+    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3, 4]);
   });
 });

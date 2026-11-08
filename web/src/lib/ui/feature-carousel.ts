@@ -25,13 +25,15 @@ export const WHEEL_STEP_PX = 60;
 
 /**
  * Pose de cada degrau a partir do centro (0 = peça do centro, 1 = vizinha, 2 = a seguinte...). `x` é a distância ao
- * centro em larguras da peça do centro (a do lado encosta e passa um pouco por trás dela), `scale` o tamanho, `fade`
- * o quanto a foto vai para o claro (filtro no CSS) e `opacity` some só com as das pontas.
+ * centro em larguras da peça do centro (a do lado encosta e passa um pouco por trás dela), `scale` o tamanho e `fade` o
+ * quanto um véu da cor do fundo cobre a peça (0 nítida, 1 toda coberta). A peça nunca fica transparente (retorno de
+ * 07/11/2026: com transparência, uma peça aparecia dentro da outra): `opacity` só some com a das pontas, já coberta
+ * pelo véu.
  */
 const STEP_X = [0, 0.42, 0.7, 0.92, 1.1];
 const STEP_SCALE = [1, 0.62, 0.46, 0.36, 0.28];
-const STEP_FADE = [0, 0.4, 0.7, 0.9, 1];
-const STEP_OPACITY = [1, 1, 1, 0.6, 0];
+const STEP_FADE = [0, 0.38, 0.62, 0.82, 1];
+const STEP_OPACITY = [1, 1, 1, 1, 0];
 
 /** Peças à vista de cada lado do centro; a partir daí a peça fica invisível e fora do alcance do ponteiro. */
 export const VISIBLE_PER_SIDE = 3;
@@ -40,7 +42,7 @@ export type CoverflowPose = {
   /** Deslocamento horizontal em larguras da peça do centro (negativo = à esquerda). */
   x: number;
   scale: number;
-  /** 0 (foto nítida) a 1 (toda apagada). */
+  /** Véu da cor do fundo por cima da peça: 0 (foto nítida) a 1 (toda coberta). */
   fade: number;
   opacity: number;
   /** Ordem de empilhamento: a do centro na frente. */

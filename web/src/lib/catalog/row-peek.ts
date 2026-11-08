@@ -1,10 +1,25 @@
 /**
  * Posição da prévia de fotos da tabela técnica (`RowPeek`). Lógica pura, sem DOM, para testar: a caixa fica ao lado
  * do ponteiro, nunca por cima dele, e dentro da janela.
+ *
+ * As fotos saem empilhadas e se abrem lado a lado, como cartas que se separam (retorno de 07/11/2026: "ficam uma atrás
+ * da outra, não vejo"): a caixa tem a largura das fotos abertas, com um respiro entre elas.
  */
 
-/** Caixa da prévia (px): três fotos de 4:3 espalhadas cabem nela com a rotação. */
-export const PEEK_BOX = { width: 240, height: 190, photo: 180 } as const;
+/** Uma foto da prévia (px, 4:3) e o passo entre uma foto e a seguinte quando abertas (a largura e o respiro). */
+export const PEEK_PHOTO = { width: 168, height: 126, step: 180 } as const;
+
+/** Folga em volta das fotos, para a leve rotação de cada uma não ser cortada. */
+const PAD = 12;
+
+/** Caixa da prévia aberta, para `count` fotos (de 1 a `PREVIEW_COUNT`). */
+export function peekBox(count: number): { width: number; height: number } {
+  const photos = Math.max(1, count);
+  return {
+    width: PEEK_PHOTO.width + (photos - 1) * PEEK_PHOTO.step + PAD * 2,
+    height: PEEK_PHOTO.height + PAD * 2,
+  };
+}
 
 /** Distância entre o ponteiro e a prévia, e a folga até a borda da janela. */
 const GAP = 28;
@@ -15,12 +30,13 @@ export function peekPosition(
   pointerY: number,
   viewportWidth: number,
   viewportHeight: number,
-  box: { width: number; height: number } = PEEK_BOX,
+  box: { width: number; height: number } = peekBox(3),
 ): { x: number; y: number } {
   // À direita do ponteiro; sem espaço, à esquerda. Assim a caixa nunca cobre a seta.
   const right = pointerX + GAP;
   const x = right + box.width <= viewportWidth - EDGE ? right : pointerX - GAP - box.width;
-  // Centrada na altura do ponteiro, presa dentro da janela.
-  const y = Math.min(Math.max(pointerY - box.height / 2, EDGE), viewportHeight - box.height - EDGE);
-  return { x: Math.max(x, EDGE), y };
+  // Logo abaixo do ponteiro (a linha de cima continua à vista), presa dentro da janela.
+  const below = pointerY + GAP;
+  const y = below + box.height <= viewportHeight - EDGE ? below : pointerY - GAP - box.height;
+  return { x: Math.max(x, EDGE), y: Math.max(y, EDGE) };
 }
