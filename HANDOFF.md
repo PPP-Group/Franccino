@@ -959,6 +959,9 @@ carrosséis das coleções e dos designers, que agora seguem o padrão da home (
   - as fotos das coleções no site antigo são as miniaturas das peças e o banner, que o preview já tem; as fotos de
     ambiente residencial ficaram de fora (o Corporativo não tem mais Residencial).
 - **Scroll suave:** descartado pelo tech lead.
+- **Publicado (08/11, 22h30 UTC):** PRs #73 e #74 mergeados; no preview, 22 lojas no mapa, 7 fotos na galeria da
+  Fábrica e o inglês das peças aplicado pela rota `POST /api/import/translations` (amostra de 40 peças no `/en`: nenhuma
+  volta para o português).
 
 ### 24.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
 
