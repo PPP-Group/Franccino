@@ -11,6 +11,7 @@ use App\Support\RichText;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * `ProductDetail` from docs/api.md. Expects the product loaded with `area`,
@@ -43,7 +44,7 @@ class ProductDetailResource extends ProductCardResource
             'materials' => Localized::value($product, 'materials'),
             'finishes_note' => Localized::value($product, 'finishes_note'),
             'finishes' => $this->finishes($product),
-            'gallery' => ImagePresenter::presentMany($product->getMedia('gallery'), $name),
+            'gallery' => ImagePresenter::presentMany($this->galleryWithoutCover($product), $name),
             'model_3d' => $this->model3d($product),
             'files' => DownloadFileResource::collection($product->files)->resolve(),
             'media_links' => MediaLinkResource::collection($product->mediaLinks)->resolve(),
@@ -157,5 +158,23 @@ class ProductDetailResource extends ProductCardResource
             ->orderBy('id')
             ->limit(8)
             ->get();
+    }
+
+    /**
+     * Gallery without a copy of the cover. The WordPress import and the panel uploads of 06/11/2026 left the cover file
+     * also in the gallery (same file, another id), and the page showed the same photo twice (feedback of 07/11/2026).
+     * A copy is the same number of bytes and the same MIME type.
+     *
+     * @return Collection<int, Media>
+     */
+    private function galleryWithoutCover(Product $product): Collection
+    {
+        $cover = $product->getFirstMedia('cover');
+
+        return collect($product->getMedia('gallery'))
+            ->reject(fn ($media) => $cover !== null
+                && (int) $media->size === (int) $cover->size
+                && $media->mime_type === $cover->mime_type)
+            ->values();
     }
 }

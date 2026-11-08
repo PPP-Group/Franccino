@@ -315,9 +315,11 @@ Mídia: `image` (1, desktop), `image_mobile` (1, opcional), `video` (1, opcional
 ### scenes / scene_hotspots
 
 Ambientes com pontos clicáveis (2026-10-30, banco de ideias, ideia 7): a foto de um ambiente montado e, por cima, um
-ponto em cada peça que leva à página dela. Aparecem na home.
+ponto em cada peça que leva à página dela. Aparecem na home; ligados a um projeto (2026-11-07), aparecem no Corporativo
+e na página do projeto, e não na home.
 
-`scenes`: `title` (json tr), `is_published`, `sort_order`. Mídia: `image` (1).
+`scenes`: `project_id` (FK projects, nullable, null on delete; migration `2026_11_07_100000`), `title` (json tr),
+`is_published`, `sort_order`. Mídia: `image` (1).
 
 | Coluna (`scene_hotspots`) | Tipo         | Notas                                                  |
 | ------------------------- | ------------ | ------------------------------------------------------ |

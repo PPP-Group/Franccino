@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(fn () => useScratchDownloadsDisk());
 
@@ -117,4 +119,20 @@ it('refuses a 3d link for a product with the 3d off, without a model or unpublis
 
 it('rejects unsupported locales', function () {
     $this->getJson('/api/v1/products/x?locale=es')->assertStatus(422)->assertJsonValidationErrors('locale');
+});
+
+it('leaves out of the gallery a copy of the cover file', function () {
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $product = publishedProduct();
+    $fake = UploadedFile::fake();
+    $product->addMedia($fake->image('capa.jpg', 800, 600))->toMediaCollection('cover');
+    // Same file uploaded again to the gallery (WordPress import, panel): same bytes, another id.
+    $product->addMedia($fake->image('capa-copia.jpg', 800, 600))->toMediaCollection('gallery');
+    $side = $product->addMedia($fake->image('lateral.jpg', 640, 480))->toMediaCollection('gallery');
+
+    $gallery = $this->getJson('/api/v1/products/cadeira-aura')->assertOk()->json('data.gallery');
+
+    expect($gallery)->toHaveCount(1)
+        ->and($gallery[0]['id'])->toBe($side->id);
 });

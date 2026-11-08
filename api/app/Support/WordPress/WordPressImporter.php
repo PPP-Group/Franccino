@@ -278,6 +278,7 @@ class WordPressImporter
         $gallery = $this->parser->gallery($html);
         $specs = $this->parser->specs($html);
         $designerSlug = $this->parser->designerSlug($html);
+        $texts = $this->parser->texts($html);
 
         $areaKey = $this->areaTerms[(int) ($item['areas'][0] ?? 0)] ?? self::areaFromCategory($item);
         $categoryId = $this->categoryFor((int) ($item['categorias-produtos'][0] ?? 0), $dryRun, $publish);
@@ -321,6 +322,10 @@ class WordPressImporter
             'legacy_wp_id' => $item['id'],
             'legacy_url' => $item['link'],
         ]);
+        $this->fillEmptyTranslation($product, 'tagline', $texts['tagline']);
+        if (blank(strip_tags((string) $product->getTranslation('description', 'pt', false))) && filled($texts['description'])) {
+            $product->setTranslation('description', 'pt', $texts['description']);
+        }
         $this->fillEmptyTranslation($product, 'materials', $materials);
         $this->fillEmptyTranslation($product, 'finishes_note', $finishes);
         $this->fillEmptyTranslation($product, 'seo_title', isset($seo['title']) ? (string) preg_replace('/\s+-\s+Franccino$/u', '', (string) $seo['title']) : null);

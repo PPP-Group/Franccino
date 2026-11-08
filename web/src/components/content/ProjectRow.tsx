@@ -1,8 +1,12 @@
 import { useTranslations } from 'next-intl';
+import { ScenePoints } from '@/components/home/SceneViewer';
 import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { ProjectCard } from '@/lib/api/types';
 import { morphName, morphTypes } from '@/lib/ui/morph';
+
+/** Proporção da foto na faixa (`.project-row__media`, 3:2 em pages.css): os pontos acompanham o recorte. */
+const PROJECT_ROW_RATIO = 3 / 2;
 
 type ProjectRowProps = {
   project: ProjectCard;
@@ -22,26 +26,32 @@ export function ProjectRow({ project, meta = [], priority = false }: ProjectRowP
   const href = { pathname: '/projects/[slug]', params: { slug: project.slug } } as const;
   // A foto cresce até a capa da página do projeto (ideia 10), por qualquer um dos três links.
   const morph = morphName('project', project.slug);
-  const morphLink = project.cover ? { transitionTypes: morphTypes(morph), 'data-morph-link': morph } : {};
+  // Com um ambiente ligado ao projeto, a faixa mostra a foto dele, com os pontos por cima.
+  const scene = project.scene && project.scene.hotspots.length > 0 ? project.scene : null;
+  const image = scene ? scene.image : project.cover;
+  const morphLink = image ? { transitionTypes: morphTypes(morph), 'data-morph-link': morph } : {};
   return (
     <article className="project-row">
-      <Link
-        className="project-row__media hover-zoom"
-        href={href}
-        {...morphLink}
-        tabIndex={-1}
-        aria-hidden="true"
-        data-reveal={priority ? undefined : ''}
-      >
-        {project.cover ? (
-          <MorphImage
-            name={morph}
-            image={project.cover}
-            sizes="(max-width: 56.25rem) 100vw, 50vw"
-            priority={priority}
-          />
-        ) : null}
-      </Link>
+      <div className="project-row__figure" data-reveal={priority ? undefined : ''}>
+        <Link
+          className="project-row__media hover-zoom"
+          href={href}
+          {...morphLink}
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          {image ? (
+            <MorphImage
+              name={morph}
+              image={image}
+              sizes="(max-width: 56.25rem) 100vw, 50vw"
+              priority={priority}
+            />
+          ) : null}
+        </Link>
+        {/* Foto com pontos (Ambiente ligado ao projeto no painel): cada ponto abre a peça; o resto da foto, o projeto. */}
+        {scene ? <ScenePoints scene={scene} frameRatio={PROJECT_ROW_RATIO} /> : null}
+      </div>
       <div className="project-row__copy" data-reveal="">
         <h2 className="project-row__title">
           <Link href={href} {...morphLink}>

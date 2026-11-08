@@ -88,6 +88,25 @@
   font-weight: 500;
 }
 
+/* A linha inteira abre a peça (RowLinks); categoria, linha e designer são links próprios, sublinhados no hover. */
+.tech-table tbody tr.is-linked {
+  cursor: pointer;
+}
+
+.tech-table td > a:has(.thumb) {
+  display: block;
+}
+
+.tech-table__sublink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tech-table__sublink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /*
   Fotos que saem da linha da tabela no hover (RowPeek): uma camada fixa que segue o ponteiro (o `transform` vem do
   script), sem eventos de ponteiro. Só desktop com mouse; com "menos movimento", aparece parada e sem crescer.
@@ -120,18 +139,24 @@
   height: 100%;
 }
 
+/*
+  Fotos abertas lado a lado (`--i` é a posição, vinda do RowPeek), cada uma com uma inclinação leve e alternada. No
+  hover elas saem da pilha, uma atrás da outra, e deslizam até o lugar (retorno de 07/11/2026): a primeira (a capa)
+  fica na frente e não anda; as outras saem de trás dela, em sequência.
+*/
 .row-peek__photo {
+  --peek-step: 180px;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 180px;
+  top: 12px;
+  left: calc(12px + var(--i, 0) * var(--peek-step));
+  width: 168px;
   aspect-ratio: 4 / 3;
   display: grid;
   place-items: center;
+  overflow: hidden;
   background: var(--paper);
   border: 1px solid var(--line);
-  translate: -50% -50%;
-  transform: rotate(var(--peek-rotate, 0deg)) translate(var(--peek-x, 0), var(--peek-y, 0));
+  rotate: var(--peek-rotate, 0deg);
 }
 
 .row-peek__photo img {
@@ -140,60 +165,30 @@
   object-fit: contain;
 }
 
-/* Espalhadas de leve: a primeira (a capa) fica na frente, as outras saem por trás, uma para cada lado. */
-.row-peek__photo:nth-child(1) {
-  z-index: 3;
-}
-
-.row-peek__group--2 .row-peek__photo:nth-child(1) {
-  --peek-rotate: -3deg;
-  --peek-x: -14px;
-}
-
-.row-peek__group--2 .row-peek__photo:nth-child(2) {
-  z-index: 2;
-  --peek-rotate: 5deg;
-  --peek-x: 18px;
-  --peek-y: -10px;
-}
-
-.row-peek__group--3 .row-peek__photo:nth-child(1) {
-  --peek-rotate: -2deg;
-  --peek-y: 8px;
-}
-
-.row-peek__group--3 .row-peek__photo:nth-child(2) {
-  z-index: 2;
-  --peek-rotate: -8deg;
-  --peek-x: -26px;
-  --peek-y: -14px;
-}
-
-.row-peek__group--3 .row-peek__photo:nth-child(3) {
-  z-index: 1;
-  --peek-rotate: 7deg;
-  --peek-x: 26px;
-  --peek-y: -18px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .row-peek__photo {
-    animation: row-peek-in var(--t-mid) var(--ease-out) both;
+    animation: row-peek-deal var(--t-slow) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
   }
 
-  .row-peek__photo:nth-child(2) {
-    animation-delay: 40ms;
-  }
-
-  .row-peek__photo:nth-child(3) {
-    animation-delay: 80ms;
+  .row-peek__photo:first-child {
+    animation-name: row-peek-in;
+    animation-duration: var(--t-mid);
   }
 }
 
 @keyframes row-peek-in {
   from {
     opacity: 0;
-    scale: 0.9;
+    scale: 0.94;
+  }
+}
+
+/* Sai de trás da capa (na posição dela, sem inclinação) e desliza até o lugar. */
+@keyframes row-peek-deal {
+  from {
+    translate: calc(-1 * var(--i, 0) * var(--peek-step)) 0;
+    rotate: 0deg;
   }
 }
 

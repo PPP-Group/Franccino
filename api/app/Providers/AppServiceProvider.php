@@ -190,6 +190,9 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configureRateLimiters(): void
     {
+        // Bulk import (`/api/import/*`): one request per photo, so a batch of hundreds goes through in a few minutes.
+        RateLimiter::for('api-import', fn (Request $request) => Limit::perMinute(240)->by($request->ip()));
+
         RateLimiter::for('api-read', function (Request $request) {
             $key = config('franccino.frontend.api_key');
 

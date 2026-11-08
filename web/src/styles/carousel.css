@@ -2,23 +2,34 @@
 
 /*
   FeatureCarousel (components/products/FeatureCarousel.tsx), no desenho da referência da Franccino: um "coverflow"
-  empilhado num palco claro (degradê de branco para areia). Todas as peças ficam no mesmo ponto do chão do palco; cada
-  uma recebe do componente a pose (`coverflowPose`, lib/ui/feature-carousel.ts) em variáveis:
+  empilhado direto no fundo da seção (sem caixa nem degradê próprio: retorno de 07/11/2026, o degradê só dentro do
+  carrossel quebrava nos cantos). Todas as peças ficam no mesmo ponto do chão; cada uma recebe do componente a pose
+  (`coverflowPose`, lib/ui/feature-carousel.ts) em variáveis:
     --fc-x  deslocamento, em larguras da peça do centro    --fc-s  escala (a partir do chão)
-    --fc-f  quanto a foto vai para o claro (0 a 1)          --fc-o  opacidade (só as das pontas somem)
+    --fc-f  véu branco sobre a peça (0 a 1)                 --fc-o  opacidade (só as das pontas somem)
   Só `transform`, `opacity` e `filter` animam (--t-slow); arrastando, nada anima e a peça segue o dedo.
 
+  Quanto mais longe do centro, mais a peça vai para o branco (um véu branco por cima da silhueta dela, por filtro), e
+  continua opaca: uma peça não aparece dentro da outra.
+
   A foto é a recortada (`.is-cutout`, PNG/WebP sem fundo). Sem ela vem a capa em fundo branco (`.is-packshot`), que o
-  `mix-blend-mode: multiply` funde no palco: o branco some e fica só a peça.
+  `mix-blend-mode: multiply` funde no fundo: o branco some e fica só a peça.
 */
 .feature-carousel {
-  --fc-item: clamp(280px, 36vw, 560px);
+  /* Cabe com o nome embaixo numa tela de notebook: a peça do centro limita pela largura e pela altura da janela. */
+  --fc-item: clamp(240px, min(34vw, 50svh), 520px);
   --fc-spread: 1;
-  --fc-stage-top: var(--space-5);
-  --fc-stage-bottom: var(--space-8);
+  --fc-stage-top: var(--space-4);
+  --fc-stage-bottom: var(--space-5);
+  --fc-ground: var(--paper);
   position: relative;
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-3);
+}
+
+/* Seções em areia: o fundo atrás das capas em fundo branco é areia. */
+:is(.section--sand, .band--sand, .tone-stack > :nth-child(odd)) .feature-carousel {
+  --fc-ground: var(--sand);
 }
 
 /*
@@ -32,16 +43,19 @@
 .feature-carousel__stage {
   position: relative;
   isolation: isolate;
-  overflow: clip;
+  /* As peças das pontas passam da largura do conteúdo e somem no fundo da seção, sem corte reto nas laterais. */
+  overflow: visible;
   height: calc(var(--fc-item) + var(--fc-stage-top) + var(--fc-stage-bottom));
-  background:
-    radial-gradient(120% 90% at 50% 34%, var(--paper) 0%, transparent 62%),
-    linear-gradient(180deg, var(--paper) 0%, var(--sand) 58%, var(--sand-strong) 100%);
   touch-action: pan-y;
   user-select: none;
 }
 
-/* Cada peça: um quadro quadrado em pé no chão do palco, no meio; a pose desloca, encolhe e apaga. */
+/* As capas em fundo branco precisam do fundo da seção atrás para o `multiply` (o palco é um grupo isolado). */
+.feature-carousel--packshots .feature-carousel__stage {
+  background: var(--fc-ground);
+}
+
+/* Cada peça: um quadro quadrado em pé no chão do palco, no meio; a pose desloca, encolhe e cobre com o véu. */
 .feature-carousel__item {
   position: absolute;
   left: 50%;
@@ -50,9 +64,13 @@
   margin-left: calc(var(--fc-item) / -2);
   transform-origin: 50% 100%;
   transform: translate3d(calc(var(--fc-x, 0) * var(--fc-item) * var(--fc-spread)), 0, 0) scale(var(--fc-s, 1));
-  opacity: calc(var(--fc-o, 1) * (1 - 0.3 * var(--fc-f, 0)));
-  /* Apagar = ir para o claro sem acinzentar: o branco continua branco (some no palco) e a cor perde força. */
-  filter: saturate(calc(1 - 0.6 * var(--fc-f, 0))) brightness(calc(1 + 0.22 * var(--fc-f, 0)));
+  opacity: var(--fc-o, 1);
+  /*
+    Véu branco por cima da peça (retorno de 07/11/2026: "um fade por cima, branco, sem ficar transparente"): inverter,
+    escurecer e inverter de volta leva cada cor em direção ao branco na medida de --fc-f (cor = 1 - (1 - cor)(1 - f)),
+    sem mexer na transparência do recorte. Na capa em fundo branco o branco continua branco e some no `multiply`.
+  */
+  filter: invert(1) brightness(calc(1 - var(--fc-f, 0))) invert(1);
 }
 
 .feature-carousel__item.is-packshot {
@@ -156,7 +174,7 @@
     color-mix(in srgb, var(--ink) 12%, transparent) 40%,
     transparent 100%
   );
-  opacity: calc(1 - var(--fc-f, 0) * 2);
+  opacity: calc(1 - var(--fc-f, 0) * 1.6);
   pointer-events: none;
 }
 
@@ -165,11 +183,13 @@
   display: none;
 }
 
-/* Nome, categoria e contador da peça do centro, embaixo do palco; trocam com a peça. */
+/* Nome, categoria e contador da peça do centro, logo embaixo da sombra dela (à vista junto com a peça); trocam com ela. */
 .feature-carousel__caption {
+  position: relative;
+  z-index: 2;
   display: grid;
   justify-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   text-align: center;
 }
 
@@ -338,11 +358,11 @@
 @media (max-width: 48rem) {
   .feature-carousel {
     /* No celular a peça do centro ocupa mais da largura, e as vizinhas ficam mais juntas para caber dos dois lados. */
-    --fc-item: 62vw;
+    --fc-item: min(62vw, 46svh);
     --fc-spread: 0.82;
-    --fc-stage-top: var(--space-5);
-    --fc-stage-bottom: var(--space-7);
-    gap: var(--space-5);
+    --fc-stage-top: var(--space-4);
+    --fc-stage-bottom: var(--space-5);
+    gap: var(--space-3);
   }
 
   .feature-carousel--packshots {

@@ -62,13 +62,20 @@ if [ "${RUN_QUEUE_WORKER:-true}" = "true" ]; then
 fi
 
 # Manutenção das fotos, uma vez por versão (a marca em storage/ pula nas próximas subidas), em segundo plano para
-# não atrasar a API: as capas revisadas de database/data/covers/ (diagonal para a esquerda) e, depois de mudar o
+# não atrasar a API: as capas revisadas de database/data/covers/ (diagonal para a esquerda), o conteúdo extraído do
+# site antigo (database/data/wordpress/) e, depois de mudar o
 # tamanho ou a qualidade das versões redimensionadas, a fila para refazê-las. O site mostra as antigas até as novas
 # ficarem prontas. A trava evita rodar em dobro quando dois containers sobem juntos no redeploy.
 (
     for list in database/data/covers/*.json; do
         [ -f "$list" ] && flock storage/.media.lock php artisan franccino:covers:apply "$list" \
             || echo "Capas de $list não aplicadas; a API segue com as atuais."
+    done
+    # Conteúdo extraído do site antigo (textos das peças, fotos das lojas e dos projetos, logos, Fábrica, ambientes):
+    # só preenche o que está vazio.
+    for list in database/data/wordpress/*.json; do
+        [ -f "$list" ] && flock storage/.media.lock php artisan franccino:content:apply "$list" \
+            || echo "Conteúdo de $list não aplicado; a API segue com o atual."
     done
     flock storage/.media.lock php artisan franccino:media:refresh "${MEDIA_REFRESH_VERSION:-2026-11-06-qualidade-90}" \
         || echo "Fila das fotos redimensionadas não montada; a API segue com as atuais."

@@ -1,0 +1,26 @@
+{
+  "version": "2026-11-07-diagonal-esquerda-3",
+  "note": "Retorno de 07/11/2026: revisão de todas as peças fora das listas de 06/11 (197 com galeria; 139 com outra foto além da capa). Trocadas as capas que não estavam na diagonal virada para a esquerda quando a galeria tinha essa foto: Cadeira Toé (1972, marrom; o recorte do carrossel acompanha: design/recortes/LEIA-ME.md), Aparador Hera, Balanço Dome, Cadeira Arp e Mesa de centro Noá Quadrada. Ids das fotos do preview.",
+  "covers": [
+    {
+      "product": "cadeira-toe",
+      "media": 1972
+    },
+    {
+      "product": "aparador-hera",
+      "media": 1642
+    },
+    {
+      "product": "balanco-dome",
+      "media": 1248
+    },
+    {
+      "product": "cadeira-arp",
+      "media": 200
+    },
+    {
+      "product": "mesa-de-centro-noa-quadrada",
+      "media": 240
+    }
+  ]
+}

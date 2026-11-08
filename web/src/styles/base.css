@@ -22,6 +22,8 @@ body {
   font-variation-settings: 'wdth' var(--text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Nada passa da largura da tela (as peças das pontas do carrossel); `clip` não quebra o `position: sticky`. */
+  overflow-x: clip;
 }
 
 img {

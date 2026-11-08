@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Link } from '@/i18n/navigation';
 import type { Scene } from '@/lib/api/types';
-import { placeHotspot } from '@/lib/scenes/hotspot';
+import { coverPoint, placeHotspot } from '@/lib/scenes/hotspot';
 
 /**
  * Ambiente com pontos clicáveis (banco de ideias, ideia 7, aprovado pela Franccino e pelo marketing em 26/10/2026):
@@ -14,9 +14,24 @@ import { placeHotspot } from '@/lib/scenes/hotspot';
  * fecha; o clique fora também fecha.
  */
 export function SceneViewer({ scene, priority = false }: { scene: Scene; priority?: boolean }) {
+  return (
+    <div className="scene">
+      <ApiImage image={scene.image} sizes="(max-width: 97.5rem) 94vw, 1448px" priority={priority} />
+      <ScenePoints scene={scene} />
+    </div>
+  );
+}
+
+/**
+ * Só a camada de pontos, por cima de uma foto que já está na página (a faixa do Corporativo, retorno de 07/11/2026).
+ * `frameRatio` (largura / altura do quadro): a foto aparece recortada com `object-fit: cover` nessa proporção, e os
+ * pontos acompanham o recorte (os que caem fora do quadro somem).
+ */
+export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: number }) {
   const t = useTranslations('home.scenes');
   const [open, setOpen] = useState<number | null>(null);
-  const rootRef = useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLUListElement | null>(null);
+  const imageRatio = scene.image.width && scene.image.height ? scene.image.width / scene.image.height : 0;
 
   useEffect(() => {
     if (open === null) {
@@ -41,48 +56,51 @@ export function SceneViewer({ scene, priority = false }: { scene: Scene; priorit
   }, [open]);
 
   return (
-    <div ref={rootRef} className="scene">
-      <ApiImage image={scene.image} sizes="(max-width: 97.5rem) 94vw, 1448px" priority={priority} />
-      <ul className="scene__points" aria-label={t('points', { title: scene.title })}>
-        {scene.hotspots.map((hotspot, index) => {
-          const place = placeHotspot(hotspot.x, hotspot.y);
-          const isOpen = open === index;
-          const cardId = `scene-${scene.id}-point-${index}`;
-          return (
-            <li
-              key={`${hotspot.product.id}-${index}`}
-              className={isOpen ? 'scene__point is-open' : 'scene__point'}
-              style={{ left: place.left, top: place.top }}
-              data-horizontal={place.horizontal}
-              data-vertical={place.vertical}
+    <ul ref={rootRef} className="scene__points" aria-label={t('points', { title: scene.title })}>
+      {scene.hotspots.map((hotspot, index) => {
+        const point = frameRatio
+          ? coverPoint(hotspot.x, hotspot.y, imageRatio, frameRatio)
+          : { x: hotspot.x, y: hotspot.y };
+        if (!point) {
+          return null;
+        }
+        const place = placeHotspot(point.x, point.y);
+        const isOpen = open === index;
+        const cardId = `scene-${scene.id}-point-${index}`;
+        return (
+          <li
+            key={`${hotspot.product.id}-${index}`}
+            className={isOpen ? 'scene__point is-open' : 'scene__point'}
+            style={{ left: place.left, top: place.top }}
+            data-horizontal={place.horizontal}
+            data-vertical={place.vertical}
+          >
+            <button
+              type="button"
+              className="scene__dot"
+              aria-expanded={isOpen}
+              aria-controls={cardId}
+              aria-label={t('point', { name: hotspot.product.name })}
+              onClick={() => setOpen(isOpen ? null : index)}
             >
-              <button
-                type="button"
-                className="scene__dot"
-                aria-expanded={isOpen}
-                aria-controls={cardId}
-                aria-label={t('point', { name: hotspot.product.name })}
-                onClick={() => setOpen(isOpen ? null : index)}
+              <span aria-hidden="true" className="scene__dot-core" />
+            </button>
+            <div id={cardId} className="scene__card" hidden={!isOpen}>
+              <Link
+                className="scene__card-link"
+                href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
               >
-                <span aria-hidden="true" className="scene__dot-core" />
-              </button>
-              <div id={cardId} className="scene__card" hidden={!isOpen}>
-                <Link
-                  className="scene__card-link"
-                  href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
-                >
-                  {hotspot.product.cover ? (
-                    <span className="scene__card-media hover-zoom">
-                      <ApiImage image={hotspot.product.cover} sizes="160px" />
-                    </span>
-                  ) : null}
-                  <span className="scene__card-name">{hotspot.product.name}</span>
-                </Link>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+                {hotspot.product.cover ? (
+                  <span className="scene__card-media hover-zoom">
+                    <ApiImage image={hotspot.product.cover} sizes="160px" />
+                  </span>
+                ) : null}
+                <span className="scene__card-name">{hotspot.product.name}</span>
+              </Link>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

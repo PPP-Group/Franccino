@@ -335,6 +335,7 @@ Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no coment
 | 12d Peça adicionada: o visto entra e o ícone e o contador da lista pulsam uma vez                            | "12d"                                                 | O visto e "Adicionada à lista" aparecem sem movimento |
 | 12e Números que contam (`CountUp`)                                                                           | é o componente: trocar `<CountUp value=…>` pelo valor | O número aparece pronto                               |
 | 12f Faixa de carregamento (só `.skeleton`; as fotos não têm)                                                 | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
+| 12g Foto carregando: tom claro com brilho lento, e a foto entra com fade (sem prévia borrada; `ApiImage`)    | "12g"                                                 | A foto aparece de uma vez sobre o tom claro           |
 
 A Franccino escolhe quais microinterações ficam (PDF de retorno: "validar quais serão utilizados"); cada uma está
 sozinha em `/pt/ideias`, ideia 12.

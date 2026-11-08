@@ -44,7 +44,14 @@
   place-items: center;
 }
 
-.gallery__stage img {
+/*
+  A foto ocupa o quadro 4:3 inteiro, por posição absoluta: a altura de 100% de um item da grade não valia, e a foto em
+  pé (4:5, como as da coleção TEMPO) crescia pela proporção e era cortada embaixo (retorno de 07/11/2026, Cadeira Toé).
+*/
+.gallery__stage > img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 100%;
   height: 100%;
   max-width: var(--stage-img-max, 100%);
@@ -109,7 +116,7 @@
   display: grid;
 }
 
-.gallery__stage.is-3d img {
+.gallery__stage.is-3d > img {
   opacity: 0;
 }
 
