@@ -37,7 +37,7 @@ export function FactorySection({ page, tone }: { page: PageContent; tone: Tone }
     );
   }
   return (
-    <section className="factory-band" aria-labelledby="factory-title" data-reveal="">
+    <section className="factory-band" aria-labelledby="factory-title">
       <Link className="factory-band__link hover-zoom" href="/factory" data-parallax="">
         <span className="factory-band__media">
           <ApiImage image={page.cover} sizes={heroSizes(page.cover)} />

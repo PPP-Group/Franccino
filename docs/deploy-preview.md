@@ -231,6 +231,16 @@ O relatório sai em `redirects-relatorio.csv`, com um endereço por linha: `ok` 
 410 de propósito), `pagina` (abre direto) e `quebrado`. O comando termina com erro se houver algum quebrado; os 20
 primeiros aparecem na tela.
 
+### Conteúdo do site antigo e importação em massa
+
+- No deploy, o entrypoint aplica uma vez cada lista de `database/data/wordpress/` (`franccino:content:apply`): textos
+  das peças, fotos das lojas, galerias dos projetos, logos dos clientes, vídeo e fotos da Fábrica e o ambiente com
+  pontos do Fazenda Boa Vista. Só preenche o que está vazio e baixa as fotos de franccino.com.br na hora. Para
+  conferir antes: `php artisan franccino:content:apply database/data/wordpress/2026-11-07-site-antigo.json --dry-run`.
+- Para subir fotos em massa (recortes, fotos do Drive) sem o painel: preencha `CONTENT_IMPORT_TOKEN` na API (só letras e
+  números), faça o redeploy e siga `design/recortes/LEIA-ME.md`. Depois do lote, apague a variável para desligar as
+  rotas.
+
 ### Problemas comuns
 
 | Sintoma                                                                                                     | Causa e correção                                                                                                                                                                                                                                                 |

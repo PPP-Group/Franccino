@@ -185,6 +185,8 @@ export type ProjectCard = {
   year: number | null;
   summary: string | null;
   cover: Image | null;
+  /** Foto com pontos clicáveis ligada ao projeto no painel (Corporativo e página do projeto); `null` sem ela. */
+  scene?: Scene | null;
 };
 
 export type ProjectDetail = ProjectCard & {

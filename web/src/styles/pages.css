@@ -995,8 +995,13 @@
   align-items: center;
 }
 
-.project-row:nth-child(even) .project-row__media {
+.project-row:nth-child(even) .project-row__figure {
   order: 2;
+}
+
+/* A foto (link do projeto) e, por cima, os pontos do ambiente ligado a ele (ScenePoints). */
+.project-row__figure {
+  position: relative;
 }
 
 .project-row__media {
@@ -1015,6 +1020,15 @@
 /* A faixa inteira é o gatilho do zoom da foto (o título e o "Saiba mais" levam ao mesmo projeto). */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .project-row:hover .project-row__media img {
+    transform: scale(1.05);
+  }
+
+  /* Os pontos acompanham o zoom da foto, para continuar em cima da peça. */
+  .project-row__figure .scene__points {
+    transition: transform var(--t-slow) var(--ease-out);
+  }
+
+  .project-row:hover .project-row__figure .scene__points {
     transform: scale(1.05);
   }
 }
@@ -1060,7 +1074,7 @@
     gap: var(--space-5);
   }
 
-  .project-row:nth-child(even) .project-row__media {
+  .project-row:nth-child(even) .project-row__figure {
     order: 0;
   }
 }

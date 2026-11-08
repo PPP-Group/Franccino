@@ -60,6 +60,13 @@ return [
         'image_cache' => storage_path('app/demo-cache'),
     ],
 
+    /*
+     * Importação em massa (`/api/import/*`, docs/api.md): sem token, as rotas não existem.
+     */
+    'import' => [
+        'token' => env('CONTENT_IMPORT_TOKEN'),
+    ],
+
     'wordpress' => [
         'base_url' => env('WORDPRESS_BASE_URL', 'https://franccino.com.br'),
         'per_page' => 100,

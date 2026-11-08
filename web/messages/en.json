@@ -594,7 +594,9 @@
     "gallery": "Project images",
     "piecesTitle": "Pieces used in this project",
     "type": "Type",
-    "othersTitle": "Other projects"
+    "othersTitle": "Other projects",
+    "sceneTitle": "Pieces in the space",
+    "sceneLead": "Select the points to discover each piece."
   },
   "corporate": {
     "title": "Contract",

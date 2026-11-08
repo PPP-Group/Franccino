@@ -265,6 +265,9 @@ function onPopState(event: PopStateEvent) {
     return;
   }
   restoring = true;
+  // A página de volta já entra com os blocos à vista (motion.css), antes da foto do movimento ser fotografada: sem
+  // isso a faixa pousava 20 px abaixo, invisível, e pulava depois (retorno de 07/11/2026).
+  document.documentElement.setAttribute('data-reveal-instant', '');
   const visualTransition = (event as PopStateEvent & { hasUAVisualTransition?: boolean })
     .hasUAVisualTransition;
   if (!name || visualTransition || reducedMotion()) {

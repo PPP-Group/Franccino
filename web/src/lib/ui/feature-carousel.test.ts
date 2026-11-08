@@ -65,6 +65,11 @@ describe('coverflowPose', () => {
     expect(one.x - one.scale / 2).toBeLessThan(0.5);
   });
 
+  it('never makes a visible piece see-through: the veil covers it instead', () => {
+    [1, 2, 3].forEach((step) => expect(coverflowPose(step).opacity).toBe(1));
+    expect(coverflowPose(3).fade).toBeGreaterThan(coverflowPose(2).fade);
+  });
+
   it('interpolates between steps while dragging', () => {
     const half = coverflowPose(0.5);
     expect(half.scale).toBeLessThan(1);

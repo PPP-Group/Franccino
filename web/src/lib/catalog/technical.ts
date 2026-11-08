@@ -12,8 +12,8 @@ export function primaryDimension(dimensions: Dimension[]): Dimension | null {
   );
 }
 
-/** Quantas fotos saem da linha da tabela no hover (capa e as primeiras da galeria). */
-export const PREVIEW_COUNT = 3;
+/** Quantas fotos saem da linha da tabela no hover (capa e as primeiras da galeria), abertas lado a lado. */
+export const PREVIEW_COUNT = 4;
 
 export type TechnicalRow = {
   product: ProductCard;

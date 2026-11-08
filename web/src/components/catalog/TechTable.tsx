@@ -7,11 +7,13 @@ import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import type { TechnicalRow } from '@/lib/catalog/technical';
 import { formatDimension } from '@/lib/format/dimensions';
+import { RowLinks } from './RowLinks';
 import { RowPeek } from './RowPeek';
 
 /**
  * Assinatura do DESIGN.md para arquitetos: densa, com rolagem horizontal própria. No desktop, passar o mouse numa linha
- * mostra as fotos da peça ao lado do ponteiro (`RowPeek`), para comparar sem abrir cada página.
+ * mostra as fotos da peça ao lado do ponteiro (`RowPeek`), para comparar sem abrir cada página. Clicar em qualquer
+ * lugar da linha abre a peça (`RowLinks`); categoria, linha e designer são links próprios.
  */
 export function TechTable({ rows }: { rows: TechnicalRow[] }) {
   const t = useTranslations('catalog.table');
@@ -49,44 +51,82 @@ export function TechTable({ rows }: { rows: TechnicalRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ product, dimension, files }) => (
-              <tr key={product.id} data-row-id={withPeek.has(product.id) ? product.id : undefined}>
-                <td>
-                  {product.cover ? <ApiImage image={product.cover} sizes="64px" className="thumb" /> : null}
-                </td>
-                <th scope="row">
-                  <Link href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}>
-                    <strong>{product.name}</strong>
-                  </Link>
-                  <div className="meta">{product.category.name}</div>
-                </th>
-                <td>
-                  <AreaDot area={product.area.key} />
-                  {product.area.brand_name}
-                </td>
-                <td>{product.designer?.name}</td>
-                <td className="num nowrap">
-                  {dimension ? formatDimension(dimension, locale, dimensionLabels) : t('empty')}
-                </td>
-                <td>
-                  {files.length > 0 ? (
-                    <div className="file-links">
-                      {files.map((file) => (
-                        <DownloadButton key={file.id} file={file} variant="link" />
-                      ))}
+            {rows.map(({ product, dimension, files }) => {
+              const productHref = {
+                pathname: '/products/[slug]' as const,
+                params: { slug: product.slug },
+              };
+              const areaPath = product.area.key === 'outdoor' ? '/outdoor' : '/indoor';
+              return (
+                <tr
+                  key={product.id}
+                  className="is-linked"
+                  data-row-id={withPeek.has(product.id) ? product.id : undefined}
+                >
+                  <td>
+                    {product.cover ? (
+                      <Link href={productHref} tabIndex={-1} aria-hidden="true">
+                        <ApiImage image={product.cover} sizes="64px" className="thumb" />
+                      </Link>
+                    ) : null}
+                  </td>
+                  <th scope="row">
+                    <Link href={productHref} data-row-link="">
+                      <strong>{product.name}</strong>
+                    </Link>
+                    <div className="meta">
+                      <Link
+                        className="tech-table__sublink"
+                        href={
+                          product.area.key === 'outdoor'
+                            ? { pathname: '/outdoor/[category]', params: { category: product.category.slug } }
+                            : { pathname: '/indoor/[category]', params: { category: product.category.slug } }
+                        }
+                      >
+                        {product.category.name}
+                      </Link>
                     </div>
-                  ) : (
-                    t('empty')
-                  )}
-                </td>
-                <td>
-                  <QuickAddButton product={product} variant="table" />
-                </td>
-              </tr>
-            ))}
+                  </th>
+                  <td>
+                    <Link className="tech-table__sublink" href={areaPath}>
+                      <AreaDot area={product.area.key} />
+                      {product.area.brand_name}
+                    </Link>
+                  </td>
+                  <td>
+                    {product.designer ? (
+                      <Link
+                        className="tech-table__sublink"
+                        href={{ pathname: '/designers/[slug]', params: { slug: product.designer.slug } }}
+                      >
+                        {product.designer.name}
+                      </Link>
+                    ) : null}
+                  </td>
+                  <td className="num nowrap">
+                    {dimension ? formatDimension(dimension, locale, dimensionLabels) : t('empty')}
+                  </td>
+                  <td>
+                    {files.length > 0 ? (
+                      <div className="file-links">
+                        {files.map((file) => (
+                          <DownloadButton key={file.id} file={file} variant="link" />
+                        ))}
+                      </div>
+                    ) : (
+                      t('empty')
+                    )}
+                  </td>
+                  <td>
+                    <QuickAddButton product={product} variant="table" />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
+      <RowLinks />
       {peeks.length > 0 ? <RowPeek items={peeks} /> : null}
     </div>
   );

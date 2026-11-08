@@ -32,6 +32,13 @@ class SceneForm
                         ->maxLength(160),
                 ]),
                 ...CommonFields::publication(),
+                // With a project, the photo and its points show in the Corporativo list and on the project page.
+                Select::make('project_id')
+                    ->label(__('Project'))
+                    ->relationship('project', 'title')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label(__('Image'))
                     ->collection('image')
