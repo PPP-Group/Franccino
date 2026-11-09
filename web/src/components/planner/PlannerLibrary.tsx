@@ -3,11 +3,14 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, useTransition } from 'react';
 import { Icon } from '@/components/ui/Icon';
-import { SnapshotImage } from '@/components/ui/SnapshotImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { htmlLang, type Locale } from '@/i18n/config';
+import { Link } from '@/i18n/navigation';
 import { searchPlannerPieces } from '@/lib/planner/actions';
 import { parsePlannerQuery } from '@/lib/planner/query';
 import type { PlannerProduct } from '@/lib/planner/types';
+import { snapshotAsImage } from '@/lib/quote/snapshot';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 const DEBOUNCE_MS = 300;
 
@@ -72,33 +75,60 @@ export function PlannerLibrary({
         {status}
       </p>
       <ul className="piece-list">
-        {list.map((product) => (
-          <li key={product.id} className="piece-option">
-            {product.image ? (
-              <SnapshotImage image={product.image} />
-            ) : (
-              <span className="piece-option__blank" aria-hidden="true" />
-            )}
-            <div>
-              <div className="piece-option__name">{product.name}</div>
-              <div className="meta num">
-                {product.shape === 'round'
-                  ? t('sizeRound', { diameter: numberFormat.format(product.width) })
-                  : t('sizeRect', {
-                      width: numberFormat.format(product.width),
-                      depth: numberFormat.format(product.depth),
-                    })}
+        {list.map((product) => {
+          // A foto e o nome abrem a página da peça, para ver antes de pôr na planta; a foto cresce até ela (ideia 10,
+          // retorno de 09/11/2026). O "+" continua pondo a peça na planta.
+          const morph = morphName('piece', `planner-${product.slug}`);
+          const href = { pathname: '/products/[slug]', params: { slug: product.slug } } as const;
+          return (
+            <li key={product.id} className="piece-option">
+              {product.image ? (
+                <Link
+                  className="piece-option__media"
+                  href={href}
+                  transitionTypes={morphTypes(morph)}
+                  data-morph-link={morph}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                >
+                  <MorphImage
+                    name={morph}
+                    image={snapshotAsImage(product.image)}
+                    sizes="56px"
+                    fit="contain"
+                  />
+                </Link>
+              ) : (
+                <span className="piece-option__blank" aria-hidden="true" />
+              )}
+              <div>
+                <Link
+                  className="piece-option__name"
+                  href={href}
+                  transitionTypes={product.image ? morphTypes(morph) : undefined}
+                  data-morph-link={product.image ? morph : undefined}
+                >
+                  {product.name}
+                </Link>
+                <div className="meta num">
+                  {product.shape === 'round'
+                    ? t('sizeRound', { diameter: numberFormat.format(product.width) })
+                    : t('sizeRect', {
+                        width: numberFormat.format(product.width),
+                        depth: numberFormat.format(product.depth),
+                      })}
+                </div>
               </div>
-            </div>
-            <button
-              type="button"
-              aria-label={t('add', { name: product.name })}
-              onClick={() => onAdd(product)}
-            >
-              <Icon name="plus" />
-            </button>
-          </li>
-        ))}
+              <button
+                type="button"
+                aria-label={t('add', { name: product.name })}
+                onClick={() => onAdd(product)}
+              >
+                <Icon name="plus" />
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </details>
   );

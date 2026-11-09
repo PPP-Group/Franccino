@@ -15,6 +15,15 @@ const FOLLOW = 0.2;
 
 export type RowPeekItem = { id: number; images: Image[] };
 
+/** Ao lado da lista (`beside`), centrada na altura do ponteiro e presa dentro da janela. */
+function besidePosition(list: DOMRect, pointerY: number, box: { width: number; height: number }) {
+  const gap = 16;
+  const x =
+    list.right + gap + box.width <= window.innerWidth - gap ? list.right + gap : list.left - gap - box.width;
+  const y = Math.min(Math.max(gap, pointerY - box.height / 2), window.innerHeight - box.height - gap);
+  return { x, y };
+}
+
 /**
  * Fotos da peça que saem da linha da tabela técnica quando o mouse passa por ela (retornos de 06 e 07/11/2026): até
  * quatro fotos que nascem empilhadas e se abrem lado a lado, como cartas que se separam, para dar para ver todas; ao
@@ -22,7 +31,22 @@ export type RowPeekItem = { id: number; images: Image[] };
  * desktop com mouse; decorativa (o nome e o link da linha já dizem tudo), sem eventos de ponteiro. Com "menos
  * movimento", a prévia aparece aberta e parada.
  */
-export function RowPeek({ items }: { items: RowPeekItem[] }) {
+export function RowPeek({
+  items,
+  container = 'tbody',
+  className,
+  beside = false,
+}: {
+  items: RowPeekItem[];
+  /** Onde ficam as linhas (`[data-row-id]`), entre os irmãos da prévia: o corpo da tabela ou a lista da busca. */
+  container?: string;
+  className?: string;
+  /**
+   * Ao lado da lista inteira, não do ponteiro (lista de opções, onde a foto cobriria os nomes de baixo): à direita da
+   * lista, ou à esquerda sem espaço, na altura da opção sob o mouse.
+   */
+  beside?: boolean;
+}) {
   const layerRef = useRef<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [shownId, setShownId] = useState<number | null>(null);
@@ -34,7 +58,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
 
   useEffect(() => {
     const layer = layerRef.current;
-    const body = layer?.parentElement?.querySelector('tbody');
+    const body = layer?.parentElement?.querySelector<HTMLElement>(container);
     if (!layer || !body || !window.matchMedia(FINE_POINTER).matches) {
       return;
     }
@@ -61,7 +85,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
       if (event.pointerType !== 'mouse') {
         return;
       }
-      const row = (event.target as Element).closest<HTMLElement>('tr[data-row-id]');
+      const row = (event.target as Element).closest<HTMLElement>('[data-row-id]');
       if (!row) {
         setActiveId(null);
         return;
@@ -70,7 +94,9 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
       setActiveId(id);
       setShownId(id);
       const box = peekBox(counts.current.get(id) ?? 1);
-      const next = peekPosition(event.clientX, event.clientY, window.innerWidth, window.innerHeight, box);
+      const next = beside
+        ? besidePosition(body.getBoundingClientRect(), event.clientY, box)
+        : peekPosition(event.clientX, event.clientY, window.innerWidth, window.innerHeight, box);
       target.x = next.x;
       target.y = next.y;
       // Primeira entrada (ou sem movimento): a prévia nasce no lugar, sem atravessar a tela.
@@ -100,7 +126,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
       body.removeEventListener('pointerleave', hide);
       window.removeEventListener('scroll', hide);
     };
-  }, []);
+  }, [container, beside]);
 
   const shown = items.find((item) => item.id === shownId);
   const photos = shown ? shown.images.slice(0, PREVIEW_COUNT) : [];
@@ -108,7 +134,9 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
   return (
     <div
       ref={layerRef}
-      className={activeId !== null && shown ? 'row-peek is-visible' : 'row-peek'}
+      className={['row-peek', className, activeId !== null && shown ? 'is-visible' : '']
+        .filter(Boolean)
+        .join(' ')}
       style={{ width: box.width, height: box.height }}
       aria-hidden="true"
     >

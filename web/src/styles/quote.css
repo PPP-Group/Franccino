@@ -42,6 +42,10 @@
   border-bottom: 1px solid var(--line);
 }
 
+.quote-item__media {
+  display: block;
+}
+
 .quote-item img,
 .quote-item__blank {
   width: 140px;

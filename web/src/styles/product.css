@@ -59,6 +59,16 @@
   transition: opacity var(--t-mid) var(--ease-out);
 }
 
+/* A foto anterior por cima, sumindo devagar enquanto a nova aparece embaixo (ProductStage). */
+.gallery__stage > img.gallery__leaving {
+  pointer-events: none;
+  transition: opacity 450ms var(--ease-out);
+}
+
+.gallery__stage > img.gallery__leaving.is-fading {
+  opacity: 0;
+}
+
 .stage-toggle {
   position: absolute;
   top: var(--space-4);

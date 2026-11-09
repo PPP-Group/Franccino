@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (24, de 08/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (26, de 09/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -959,8 +959,101 @@ carrosséis das coleções e dos designers, que agora seguem o padrão da home (
   - as fotos das coleções no site antigo são as miniaturas das peças e o banner, que o preview já tem; as fotos de
     ambiente residencial ficaram de fora (o Corporativo não tem mais Residencial).
 - **Scroll suave:** descartado pelo tech lead.
+- **Publicado (08/11, 22h30 UTC):** PRs #73 e #74 mergeados; no preview, 22 lojas no mapa, 7 fotos na galeria da
+  Fábrica e o inglês das peças aplicado pela rota `POST /api/import/translations` (amostra de 40 peças no `/en`: nenhuma
+  volta para o português).
 
-### 24.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
+## 25. 09/11/2026: retorno do tech lead sobre o preview de 08/11
+
+Mesma branch (`claude/francine-site-review-htegfp`). Cada item conferido num `next dev` local contra a API do preview,
+com Playwright (medidas, capturas e quadros da transição).
+
+- **Paralaxe:** funcionava no Chrome, mas a foto andava só 8% da altura na passagem inteira (quase imperceptível), e no
+  Safari sem `animation-timeline` dependia de um script que só existia na home. Agora o componente `Parallax` (script,
+  todos os navegadores) escreve `--parallax-shift` em cada bloco: a foto anda 14% da altura em cada sentido (escala 1.3)
+  e o texto 80 px no sentido oposto. A peça em destaque anda menos (foto de estúdio, 5%).
+- **Capa da Tempo cortada na home:** era a escala da paralaxe nas faixas das coleções (a arte tem texto). As coleções
+  saíram da paralaxe.
+- **Grade em branco ao voltar da tabela técnica (Casa):** o nó da grade voltava sem a classe `is-revealed` e ficava
+  fora da observação. O `RevealObserver` observa de novo qualquer bloco sem a classe (também quando o `class` muda).
+- **Foto que cresce e encaixa em todo lugar:** peça em destaque (projeto, Corporativo, Designers, Lançamentos), sugestões
+  da busca do cabeçalho (peça, designer e coleção), miniaturas da lista de orçamento e da área de downloads.
+- **Carrossel → página da peça (o "tranco" no fim):** a página da peça mostrava a peça sem fundo do carrossel como foto
+  provisória e trocava pela foto real (com margem branca) só no fim. Agora o par usa o encaixe `cutout`: a página usa a
+  própria foto (o carrossel a baixa quando o mouse passa pela peça) e as duas se misturam do começo ao fim.
+- **Caminho (breadcrumb) da peça para a categoria:** anima quando a peça está na primeira página da categoria. Se a peça
+  está numa página seguinte da lista, não há foto de destino na tela, e a troca é sem movimento.
+- **Banner da home:** a troca não pausa mais com o mouse em cima (o banner ocupa a tela toda; era por isso que "às vezes
+  não trocava"); 6 s por slide, aproximação de 8% no mesmo tempo; no lugar do traço embaixo do título, uma barra por
+  slide que enche no tempo dele (clicar leva ao slide).
+- **Clientes (Corporativo e Projetos):** faixa em loop contínuo, para no hover; logos em preto e branco com a cor no
+  hover, todas com o mesmo peso visual (`logoBox`). As 6 logos foram recortadas (sem fundo nem margem; a da Clara, que
+  era clara em fundo verde, ficou verde) e reenviadas pela importação. Cyrela e Botânico Shopping seguem sem logo (nome).
+- **Selo Vortex:** a regra `.site-footer a` (inline-block) deixava o selo no topo da área de toque; agora alinhado.
+- **Lojas na home:** as lojas mostram a foto também ali.
+- **Fábrica:** o vídeo com capa não mostra mais o nosso botão de play (a capa já tem o desenho).
+- **"+" no card:** no hover, o "+" no canto da foto põe a peça na lista sem abrir a página. Ao adicionar (card, tabela,
+  destaque ou página da peça), a foto vira um quadradinho que voa até o ícone da lista, que pulsa quando ela chega
+  (`lib/ui/fly-to-quote.ts`).
+- **Etiqueta "Lançamentos":** fica como está (o tech lead acha que não precisa voltar).
+
+## 26. 09/11/2026 (tarde): segundo retorno do dia
+
+- **Busca do cabeçalho como a tabela técnica:** cada peça sugerida mostra foto, nome e categoria, linha, designer e
+  medida, e as fotos se abrem ao lado do ponteiro no hover (`RowPeek` passou a servir à lista da busca). A ação da
+  busca pede o detalhe das peças sugeridas; sem ele, a linha sai só com foto e nome. O clique faz a foto crescer: a lista
+  some no mesmo quadro em que a página nova entra (o cabeçalho não desmonta, e sem isso não havia foto de origem).
+- **Esteiras ("Peças que você viu", "Recomendadas", da mesma linha, relacionadas, do designer, carrossel e ambiente):**
+  cada uma com o próprio nome na transição (`ProductRail scope`, `ProductPlate morphScope`). A mesma peça em duas
+  esteiras dava dois nomes iguais, e a transição falhava na ida (na volta funcionava).
+- **Sala para montar:** a foto e o nome de cada peça da biblioteca abrem a página da peça, com a foto que cresce; o "+"
+  continua pondo na planta. **Lista de orçamento:** o nome também abre a peça com a foto que cresce.
+- **Coleções e designers no mesmo formato:** carrossel (quando cabe) e, embaixo, grade e tabela técnica com a barra do
+  catálogo (`PiecesSection`, troca no navegador; as páginas seguem estáticas). Na Avito, por exemplo, só havia o
+  carrossel. Lançamento já tinha a barra.
+- **Designer na coleção:** retrato com no máximo 168 px, mesmo sozinho (ocupava a coluna e deixava o texto com vão).
+- **Coleções (índice):** sem a faixa branca entre a última linha e o rodapé.
+- **Banner das páginas pelo menu:** sobe de leve e encaixa com fade (650 ms) quando a página abre sem a foto que cresce
+  (`is-arriving` no `MorphImage` de destino).
+- **Favicon:** F da logo em preto num quadrado branco de cantos arredondados (`src/app/icon.svg`, `favicon.ico`,
+  `apple-icon.png`).
+- **Volta da página da peça com outra foto:** a foto do palco é sempre a da transição; trocada a foto na galeria, a volta
+  encolhe a foto que está à vista até o card (sair e voltar de novo mostra a capa).
+- **Capas na diagonal para a esquerda, segunda revisão:** "virada para a esquerda" = a frente da peça voltada para a
+  esquerda da foto (o encosto fica à direita; nas mesas, bancos e aparadores, a ponta direita mais perto). A revisão a olho
+  em miniatura errava o lado. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (11 peças: cadeiras
+  com a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
+  na galeria (`franccino:covers:apply`). A medida automática da direção serve nas cadeiras (lado do encosto), mas
+  erra nas peças compridas (a sombra no chão engana o lado do pé mais perto): nelas, só a conferência a olho vale.
+  Espelhadas pela importação, com o ok do tech lead e a foto original na galeria: Mesa lateral Petra, Rack Coda e
+  Poltrona Tereré. Banco Hera, Mesa de jantar Minas, Sofá Mumbai e Sofá Snodo chegaram a ser espelhados por engano da
+  medida (já estavam virados para a esquerda) e voltaram à capa original no mesmo dia. Sem foto para a esquerda e
+  assimétricas (o espelho mostraria uma configuração que não existe), à espera de foto nova da Franccino: Mesa de centro
+  Kit, Buffet Bloco e Sofá Nu.
+- **Troca de página nas listas:** "Anterior" e "Próxima" também na barra de cima, lado a lado logo depois da contagem
+  (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
+  na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
+  catálogo e nos downloads.
+- **Filtro sem recarregar:** "Aplicar" (designer no catálogo; linha, busca e área nos downloads) troca só a lista, pelo
+  roteador e sem rolar (`FilterForm`); a lista remonta e as peças entram de novo com a revelação. Sem JavaScript, o
+  formulário GET continua funcionando.
+- **"Peças que você viu" no catálogo:** o mesmo respiro em cima e embaixo (saiu a regra que zerava o de cima).
+- **"Outros projetos", "Outras coleções" e "Outros designers":** a foto cresce até o topo da página aberta e volta
+  (`CardRail` com `morph`).
+- **Troca de foto na página da peça:** fade cruzado; a foto anterior fica por cima e some quando a nova carrega
+  (`gallery__leaving` no `ProductStage`), sem desmontar a foto da transição de abrir e voltar.
+- **Filtro de designer:** ao passar o mouse num nome da lista aberta, o retrato do designer flutua ao lado da lista
+  (em preto e branco, como nas páginas de designer), como as fotos da tabela técnica (`SelectOption.image`,
+  `RowPeek beside`).
+- **Faixa da Fábrica na home → página da Fábrica:** a foto cresce até o banner e volta (`morphName('page', 'factory')`).
+  Durante a transição a foto da faixa deixa de ser fixa (`:active-view-transition`), para o movimento partir do recorte
+  à vista.
+- **Logo:** recarrega a página inicial e abre no topo, sempre (link comum, `data-no-motion`), sem a foto que volta.
+- **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
+  Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
+  banners por ela.
+
+### 26.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
 
 Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar"). Caminho combinado em 08/11: o tech lead
 gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o

@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { DownloadButton } from '@/components/products/DownloadButton';
 import { AreaDot } from '@/components/ui/AreaDot';
 import { Link } from '@/i18n/navigation';
 import type { DownloadFile, ProductCard } from '@/lib/api/types';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 export type DownloadRow = ProductCard & { files: DownloadFile[] };
 
@@ -26,9 +27,23 @@ export function DownloadsTable({ rows }: { rows: DownloadRow[] }) {
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td>{row.cover ? <ApiImage image={row.cover} sizes="64px" className="thumb" /> : null}</td>
+              <td>
+                {row.cover ? (
+                  <MorphImage
+                    name={morphName('piece', row.slug)}
+                    image={row.cover}
+                    sizes="64px"
+                    className="thumb"
+                    fit="contain"
+                  />
+                ) : null}
+              </td>
               <th scope="row">
-                <Link href={{ pathname: '/products/[slug]', params: { slug: row.slug } }}>
+                <Link
+                  href={{ pathname: '/products/[slug]', params: { slug: row.slug } }}
+                  transitionTypes={row.cover ? morphTypes(morphName('piece', row.slug)) : undefined}
+                  data-morph-link={row.cover ? morphName('piece', row.slug) : undefined}
+                >
                   <strong>{row.name}</strong>
                 </Link>
                 <div className="meta">{row.category.name}</div>

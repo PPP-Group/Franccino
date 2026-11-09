@@ -1,5 +1,4 @@
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import type { NavMenus } from './area-menu';
 import { Logo } from './Logo';
 import { HeaderNav } from './HeaderNav';
@@ -10,12 +9,18 @@ import { HeaderNav } from './HeaderNav';
  */
 export function SiteHeader({ menus }: { menus: NavMenus }) {
   const t = useTranslations('header');
+  const locale = useLocale();
   return (
     <header className="site-header">
       <div className="wrap site-header__bar">
-        <Link className="wordmark" href="/" aria-label={t('homeLabel')}>
+        {/*
+          A logo recarrega a página inicial e abre no topo, sempre (retorno de 09/11/2026): link comum, fora da navegação
+          do roteador, sem a foto que volta nem a rolagem guardada.
+        */}
+        {}
+        <a className="wordmark" href={`/${locale}`} aria-label={t('homeLabel')} data-no-motion="">
           <Logo />
-        </Link>
+        </a>
         <HeaderNav menus={menus} />
       </div>
     </header>

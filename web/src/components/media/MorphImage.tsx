@@ -21,7 +21,7 @@ type MorphImageProps = {
   parallax?: boolean;
 };
 
-type Start = { name: string; src: string | null };
+type Start = { name: string; src: string | null; fit: MorphFit };
 
 /** Espera o movimento terminar (as animações `::view-transition`), com um limite. */
 function afterViewTransition(callback: () => void): () => void {
@@ -67,14 +67,21 @@ export function MorphImage({
   const [start] = useState<Start>(() => {
     const pending = pendingMorphFor(pathname);
     if (!pending || (!hero && pending.name !== name)) {
-      return { name, src: null };
+      return { name, src: null, fit };
     }
     return {
       name: hero ? pending.name : name,
-      src: pickLoadedSource(image, isImageLoaded) ?? (hero ? pending.src : null),
+      // A peça sem fundo (carrossel) não serve de foto provisória na página da peça: ela ocupa o quadro inteiro e a foto
+      // da página tem margem branca; a troca no fim era o "tranco" (retorno de 09/11/2026). Ali a foto é a própria.
+      src: pickLoadedSource(image, isImageLoaded) ?? (hero && pending.fit !== 'cutout' ? pending.src : null),
+      // A foto de destino adota o encaixe que a origem pediu (a peça sem fundo do carrossel).
+      fit: hero ? (pending.fit ?? fit) : fit,
     };
   });
   const [src, setSrc] = useState(start.src);
+  // Foto grande aberta sem movimento de foto (menu, link de texto, endereço digitado): sobe e encaixa de leve
+  // (retorno de 09/11/2026: "não abrir de uma vez"). Com movimento, quem anima é a transição.
+  const [arriving] = useState(() => hero && pendingMorphFor(pathname) === null);
 
   // Depois do movimento, a versão do tamanho certo é baixada e decodificada antes de entrar: a troca não pisca.
   useEffect(() => {
@@ -96,14 +103,16 @@ export function MorphImage({
     };
   }, [src, image, sizes]);
 
-  const shown = src ? { ...image, src, srcset: [] } : image;
+  // A versão provisória vale só para a foto com que a página abriu: trocada a foto (galeria), entra a nova inteira.
+  const [startImageId] = useState(image.id);
+  const shown = src && image.id === startImageId ? { ...image, src, srcset: [] } : image;
   return (
-    <ViewTransition name={start.name} share={morphShare(fit, start.name)} default="none">
+    <ViewTransition name={start.name} share={morphShare(start.fit, start.name)} default="none">
       <ApiImage
         image={shown}
         sizes={sizes}
         priority={priority || src !== null}
-        className={className}
+        className={arriving ? [className, 'is-arriving'].filter(Boolean).join(' ') : className}
         parallax={parallax}
         // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
         fade={start.src === null}

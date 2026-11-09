@@ -1,9 +1,11 @@
 import type { CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Rail } from '@/components/ui/Rail';
 import { Link, type AppHref } from '@/i18n/navigation';
 import type { Image } from '@/lib/api/types';
 import { fixedBoxCoverSizes, type CoverSlot } from '@/lib/images/cover-sizes';
+import { morphTypes } from '@/lib/ui/morph';
 
 export type RailCard = {
   id: number;
@@ -12,6 +14,11 @@ export type RailCard = {
   image: Image | null;
   /** Fatos curtos abaixo do nome (tipo, local), já traduzidos. */
   meta?: string[];
+  /**
+   * Nome da foto na transição (`morphName`): a foto cresce até o topo da página que abre e volta (ideia 10, retorno de
+   * 09/11/2026: "Outros projetos" abria sem o movimento).
+   */
+  morph?: string;
 };
 
 type Variant = 'wide' | 'portrait';
@@ -56,9 +63,20 @@ export function CardRail({
     >
       {items.map((item) => (
         <li key={item.id}>
-          <Link className="card-rail__card" href={item.href}>
+          <Link
+            className="card-rail__card"
+            href={item.href}
+            transitionTypes={item.morph && item.image ? morphTypes(item.morph) : undefined}
+            data-morph-link={item.morph && item.image ? item.morph : undefined}
+          >
             <div className="card-rail__media hover-zoom">
-              {item.image ? (
+              {item.image && item.morph ? (
+                <MorphImage
+                  name={item.morph}
+                  image={item.image}
+                  sizes={fixedBoxCoverSizes(item.image, ratio, cardSlots)}
+                />
+              ) : item.image ? (
                 <ApiImage image={item.image} sizes={fixedBoxCoverSizes(item.image, ratio, cardSlots)} />
               ) : null}
             </div>

@@ -12,3 +12,6 @@ export function galleryImages(product: Pick<ProductDetail, 'cover' | 'gallery'>)
     return true;
   });
 }
+
+/** Largura real da foto grande da página da peça (palco da galeria); também serve ao carrossel, que a baixa antes. */
+export const STAGE_SIZES = '(max-width: 61.25rem) 92vw, (min-width: 97.5rem) 810px, 52vw';

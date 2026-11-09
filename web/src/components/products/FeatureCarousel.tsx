@@ -15,8 +15,10 @@ import {
 import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
-import type { ProductCard } from '@/lib/api/types';
-import { morphTypes } from '@/lib/ui/morph';
+import type { Image, ProductCard } from '@/lib/api/types';
+import { buildSrcSet } from '@/lib/images/srcset';
+import { STAGE_SIZES } from '@/lib/product/gallery';
+import { markImageLoaded, morphName, morphTypes } from '@/lib/ui/morph';
 import {
   clampIndex,
   counterNumber,
@@ -30,7 +32,6 @@ import {
   type CoverflowPose,
 } from '@/lib/ui/feature-carousel';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
-import { productMorphName } from './ProductPlate';
 
 export type FeatureCarouselProduct = Pick<
   ProductCard,
@@ -74,6 +75,22 @@ function poseStyle(pose: CoverflowPose): CSSProperties {
     '--fc-o': pose.opacity.toFixed(4),
     zIndex: pose.z,
   } as CSSProperties;
+}
+
+/**
+ * Baixa a foto do palco da página da peça antes do clique (mouse em cima ou foco): a peça sem fundo não serve de foto
+ * provisória lá (MorphImage), e o movimento precisa pousar sobre a foto pronta, sem quadro vazio.
+ */
+function preloadStage(image: Image | null) {
+  if (!image || typeof window === 'undefined') return;
+  const next = new window.Image();
+  next.sizes = STAGE_SIZES;
+  next.srcset = buildSrcSet(image);
+  next.src = image.src;
+  next
+    .decode()
+    .then(() => markImageLoaded(next.currentSrc))
+    .catch(() => undefined);
 }
 
 /**
@@ -361,12 +378,17 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 }}
                 className="feature-carousel__link"
                 href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
-                transitionTypes={image ? morphTypes(productMorphName(product.slug)) : undefined}
-                data-morph-link={image ? productMorphName(product.slug) : undefined}
+                transitionTypes={
+                  image ? morphTypes(morphName('piece', `carousel-${product.slug}`)) : undefined
+                }
+                data-morph-link={image ? morphName('piece', `carousel-${product.slug}`) : undefined}
+                data-morph-fit={product.cutout ? 'cutout' : undefined}
                 tabIndex={isActive ? 0 : -1}
                 draggable={false}
                 aria-label={product.name}
                 onClick={(event) => onItemClick(event, index)}
+                onPointerEnter={product.cutout ? () => preloadStage(product.cover) : undefined}
+                onFocus={product.cutout ? () => preloadStage(product.cover) : undefined}
               >
                 <span
                   className={
@@ -377,10 +399,10 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 >
                   {image ? (
                     <MorphImage
-                      name={productMorphName(product.slug)}
+                      name={morphName('piece', `carousel-${product.slug}`)}
                       image={image}
                       sizes={ITEM_SIZES}
-                      fit="contain"
+                      fit={product.cutout ? 'cutout' : 'contain'}
                     />
                   ) : null}
                 </span>

@@ -67,12 +67,14 @@ function prepare(element: Element) {
 export function RevealObserver() {
   useEffect(() => {
     const root = document.documentElement;
+    const observing = new WeakSet<Element>();
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const target = entry.target;
             io.unobserve(target);
+            observing.delete(target);
             if ((target.getAttribute('data-reveal') ?? '').startsWith('curtain')) {
               whenImagesReady(target, () => target.classList.add('is-revealed'));
             } else {
@@ -98,14 +100,14 @@ export function RevealObserver() {
       },
       { rootMargin: '600px 0px 600px 0px' },
     );
-    // Cada bloco é observado uma vez. A varredura roda depois de cada mudança da página (num quadro), e não só nos nós
-    // adicionados: o React às vezes insere o elemento e só depois põe o `data-reveal`, e a grade voltava em branco ao
-    // trocar a tabela técnica pela grade (retorno de 07/11/2026).
-    const tracked = new WeakSet<Element>();
+    // A varredura roda depois de cada mudança da página (num quadro), e não só nos nós adicionados: o React às vezes
+    // insere o elemento e só depois põe o `data-reveal`. E um bloco já revelado pode voltar sem a classe (o React
+    // reaproveita o nó e reescreve o `class`): a grade voltava em branco ao trocar a tabela técnica pela grade
+    // (retornos de 07 e 09/11/2026). Por isso só fica de fora quem está sendo observado agora.
     const watch = () => {
       document.querySelectorAll(`${SELECTOR}:not(.is-revealed)`).forEach((element) => {
-        if (tracked.has(element)) return;
-        tracked.add(element);
+        if (observing.has(element)) return;
+        observing.add(element);
         prepare(element);
         io.observe(element);
         if ((element.getAttribute('data-reveal') ?? '').startsWith('curtain')) early.observe(element);
@@ -125,7 +127,7 @@ export function RevealObserver() {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['data-reveal'],
+      attributeFilter: ['data-reveal', 'class'],
     });
     root.dataset.revealReady = '';
     return () => {

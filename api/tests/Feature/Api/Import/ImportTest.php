@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Banner;
 use App\Models\Product;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
@@ -46,6 +47,30 @@ it('adds a photo to the listed collection of a product', function () {
 
     expect($product->refresh()->getMedia('cutout'))->toHaveCount(1)
         ->and(Product::query()->count())->toBe(1);
+});
+
+it('replaces the photo of a home banner by its position in the carousel', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $first = Banner::factory()->create(['sort_order' => 1]);
+    $second = Banner::factory()->create(['sort_order' => 2]);
+    $auth = ['Authorization' => 'Bearer abc123'];
+
+    $this->post('/api/import/media', [
+        'target' => 'banner',
+        'key' => '2',
+        'collection' => 'image',
+        'file' => UploadedFile::fake()->image('projeto.jpg', 2560, 1440),
+    ], $auth)->assertCreated();
+
+    $this->post('/api/import/media', [
+        'target' => 'banner',
+        'key' => '9',
+        'collection' => 'image',
+        'file' => UploadedFile::fake()->image('x.jpg'),
+    ], $auth)->assertNotFound();
+
+    expect($second->refresh()->getMedia('image'))->toHaveCount(1)
+        ->and($first->refresh()->getMedia('image'))->toHaveCount(0);
 });
 
 it('queues a covers or content list', function () {

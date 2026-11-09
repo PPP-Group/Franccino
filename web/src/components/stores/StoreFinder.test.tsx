@@ -73,13 +73,13 @@ describe('StoreFinder', () => {
     expect(html).toContain('Seg a sex, 9h às 18h');
   });
 
-  it('shows the store photo and description only on the stores page', () => {
+  it('shows the store photo everywhere and the description only on the stores page', () => {
     const withImage = store({ description: 'Showroom com a linha completa.', image: image() });
     const page = renderWithIntl(<StoreFinder stores={[withImage]} states={['MG']} allStates detailed />);
     expect(page).toContain('Showroom com a linha completa.');
     expect(page).toContain('store__image');
     const home = renderWithIntl(<StoreFinder stores={[withImage]} states={['MG']} />);
-    expect(home).not.toContain('store__image');
+    expect(home).toContain('store__image');
     expect(home).not.toContain('Showroom com a linha completa.');
   });
 });

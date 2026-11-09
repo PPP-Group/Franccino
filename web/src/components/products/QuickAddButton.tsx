@@ -1,15 +1,19 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import type { ProductCard } from '@/lib/api/types';
 import { toQuoteSnapshot } from '@/lib/quote/snapshot';
 import { quoteActions } from '@/lib/quote/store';
+import { flyToQuote } from '@/lib/ui/fly-to-quote';
 import { showToast } from '@/lib/ui/toast';
 
 export type QuickAddVariant = 'plate' | 'table' | 'button';
+
+/** O que o botão usa da peça (também serve ao card, que não tem todos os campos de `ProductCard`). */
+export type QuickAddProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover'>;
 
 const CLASS_BY_VARIANT: Record<QuickAddVariant, string> = {
   plate: 'quick-add',
@@ -28,7 +32,7 @@ export function QuickAddButton({
   product,
   variant = 'plate',
 }: {
-  product: ProductCard;
+  product: QuickAddProduct;
   variant?: QuickAddVariant;
 }) {
   const t = useTranslations('quote');
@@ -39,12 +43,14 @@ export function QuickAddButton({
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  function handleClick() {
+  function handleClick(event: MouseEvent<HTMLButtonElement>) {
     const status = quoteActions.add(toQuoteSnapshot(product, locale));
     if (status === 'full') {
       showToast({ text: t('listFull'), quoteLink: true });
       return;
     }
+    // A foto da peça (no card, na linha da tabela ou no bloco) voa até a lista no cabeçalho.
+    flyToQuote(event.currentTarget.closest('.plate, tr, section, article')?.querySelector('img'));
     setAdded(true);
     setConfirming(true);
     clearTimeout(timer.current);

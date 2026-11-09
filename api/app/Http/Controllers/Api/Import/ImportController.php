@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Import;
 
+use App\Enums\BannerPlacement;
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Project;
@@ -31,6 +33,8 @@ class ImportController extends Controller
         'store' => ['model' => Store::class, 'key' => 'id', 'collections' => ['image']],
         'client' => ['model' => Client::class, 'key' => 'id', 'collections' => ['logo']],
         'scene' => ['model' => Scene::class, 'key' => 'id', 'collections' => ['image']],
+        // Banners da home pela posição na ordem do carrossel (1, 2, 3...): a API pública não mostra o id.
+        'banner' => ['model' => Banner::class, 'key' => 'position', 'collections' => ['image', 'image_mobile']],
     ];
 
     /** One photo for one record: `cover`, `cutout`, `image` and `logo` replace the current one; `gallery` adds. */
@@ -48,7 +52,9 @@ class ImportController extends Controller
 
         /** @var class-string<Model&HasMedia> $class */
         $class = $target['model'];
-        $record = $class::query()->where($target['key'], $data['key'])->firstOrFail();
+        $record = $target['key'] === 'position'
+            ? $this->bannerAt((int) $data['key'])
+            : $class::query()->where($target['key'], $data['key'])->firstOrFail();
 
         $media = $record->addMedia($data['file'])
             ->usingFileName($data['file']->getClientOriginalName())
@@ -56,6 +62,18 @@ class ImportController extends Controller
             ->toMediaCollection($data['collection']);
 
         return response()->json(['data' => ['id' => $media->id, 'collection' => $data['collection']]], 201);
+    }
+
+    /** The home hero banner at a position of the carousel (1-based), published or not, in the panel order. */
+    private function bannerAt(int $position): Banner
+    {
+        abort_if($position < 1, 404);
+
+        return Banner::query()
+            ->where('placement', BannerPlacement::HomeHero->value)
+            ->ordered()
+            ->skip($position - 1)
+            ->firstOrFail();
     }
 
     /** A covers list (`database/data/covers/*.json` format), applied on the queue. */
