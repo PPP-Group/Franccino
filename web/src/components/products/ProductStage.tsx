@@ -56,8 +56,9 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   return (
     <div className="gallery">
       <div className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage'} style={stageStyle}>
-        {current && index === 0 ? (
-          // Só a primeira foto recebe a foto do card que foi clicado (ideia 10); as outras trocam sem transição.
+        {current ? (
+          // A foto do palco é sempre a da transição (ideia 10): chega como a foto do card clicado e, na volta, encolhe
+          // até o card com a foto que estiver à vista, mesmo que a pessoa tenha trocado de foto (retorno de 09/11/2026).
           <MorphImage
             name={productMorphName(slug)}
             image={current}
@@ -66,8 +67,6 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
             fit="contain"
             hero
           />
-        ) : current ? (
-          <ApiImage image={current} sizes={STAGE_SIZES} />
         ) : null}
         {model && mode === '3d' ? (
           <div className="stage-3d">

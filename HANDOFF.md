@@ -1017,6 +1017,16 @@ com Playwright (medidas, capturas e quadros da transição).
   (`is-arriving` no `MorphImage` de destino).
 - **Favicon:** F da logo em preto num quadrado branco de cantos arredondados (`src/app/icon.svg`, `favicon.ico`,
   `apple-icon.png`).
+- **Volta da página da peça com outra foto:** a foto do palco é sempre a da transição; trocada a foto na galeria, a volta
+  encolhe a foto que está à vista até o card (sair e voltar de novo mostra a capa).
+- **Capas na diagonal para a esquerda, segunda revisão:** "virada para a esquerda" = a frente da peça voltada para a
+  esquerda da foto (o encosto fica à direita; nas mesas, bancos e aparadores, a ponta direita mais perto). A revisão a olho
+  em miniatura errava o lado; agora a direção é medida na própria foto (lado do encosto, nos assentos; lado do pé mais
+  baixo, no resto) e conferida a olho. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (12 peças: cadeiras com
+  a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
+  na galeria (`franccino:covers:apply`). Viradas para a direita sem foto para a esquerda (precisam de foto nova ou de
+  espelhar a foto, a decidir): Banco Hera, Mesa lateral Petra, Mesa de centro Kit, Mesa de jantar Minas, Rack Coda,
+  Buffet Bloco, Poltrona Tereré, Sofá Mumbai, Sofá Nu e Sofá Snodo.
 - **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
   banners por ela.

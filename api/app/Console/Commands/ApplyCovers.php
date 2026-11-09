@@ -61,6 +61,16 @@ class ApplyCovers extends Command
             }
 
             if (! $dryRun) {
+                // The old cover stays as a gallery photo (09/11/2026), unless the gallery already has the same file.
+                $old = $product->getFirstMedia('cover');
+                if ($old !== null) {
+                    $known = $product->getMedia('gallery')->contains(
+                        fn (Media $photo) => $photo->size === $old->size && $photo->mime_type === $old->mime_type,
+                    );
+                    if (! $known) {
+                        $old->copy($product, 'gallery');
+                    }
+                }
                 // Copy into the single-file cover collection (the old cover goes) and remove it from the gallery.
                 $media->move($product, 'cover');
             }

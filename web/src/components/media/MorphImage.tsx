@@ -103,7 +103,9 @@ export function MorphImage({
     };
   }, [src, image, sizes]);
 
-  const shown = src ? { ...image, src, srcset: [] } : image;
+  // A versão provisória vale só para a foto com que a página abriu: trocada a foto (galeria), entra a nova inteira.
+  const [startImageId] = useState(image.id);
+  const shown = src && image.id === startImageId ? { ...image, src, srcset: [] } : image;
   return (
     <ViewTransition name={start.name} share={morphShare(start.fit, start.name)} default="none">
       <ApiImage
