@@ -16,12 +16,19 @@
  * `error.tsx`, which handles everything else through next-intl as usual.
  */
 
+import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/ui/chunk-reload';
+
 type GlobalErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
 };
 
-export default function GlobalError({ reset }: GlobalErrorProps) {
+export default function GlobalError({ error, reset }: GlobalErrorProps) {
+  // Script de outra versão do site que não carregou (deploy em andamento): recarrega uma vez.
+  useEffect(() => {
+    reloadOnceForChunkError(error);
+  }, [error]);
   return (
     <html lang="pt">
       <body>
