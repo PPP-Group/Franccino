@@ -7,9 +7,12 @@
  * distância (em peças, fracionária durante o arrasto) até o centro: `coverflowPose`.
  */
 
-/** O carrossel serve de 2 a 12 peças; fora disso a página fica com a grade (coleção e designer). */
+/**
+ * O carrossel serve a partir de 2 peças. Com mais de 24 (coleção ou designer grande), ele mostra as 24 primeiras e a
+ * grade embaixo traz todas (retorno de 09/11/2026: a Tempo, com 15 peças, ficava sem carrossel).
+ */
 export const FEATURE_CAROUSEL_MIN = 2;
-export const FEATURE_CAROUSEL_MAX = 12;
+export const FEATURE_CAROUSEL_MAX = 24;
 
 /** Distância, em px, que o ponteiro anda antes de virar arrasto (abaixo disso é clique). */
 export const DRAG_THRESHOLD_PX = 6;
@@ -88,7 +91,12 @@ export function dragPosition(start: number, dx: number, stepPx: number, total: n
 }
 
 export function fitsFeatureCarousel(total: number): boolean {
-  return total >= FEATURE_CAROUSEL_MIN && total <= FEATURE_CAROUSEL_MAX;
+  return total >= FEATURE_CAROUSEL_MIN;
+}
+
+/** As peças que entram no carrossel: todas, até o limite. */
+export function carouselPieces<T>(items: readonly T[]): T[] {
+  return items.slice(0, FEATURE_CAROUSEL_MAX);
 }
 
 export function clampIndex(index: number, total: number): number {

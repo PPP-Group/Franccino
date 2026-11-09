@@ -4,6 +4,7 @@ import {
   counterNumber,
   coverflowPose,
   dragPosition,
+  carouselPieces,
   fitsFeatureCarousel,
   initialIndex,
   keyTarget,
@@ -13,11 +14,17 @@ import {
 } from './feature-carousel';
 
 describe('fitsFeatureCarousel', () => {
-  it('accepts 2 to 12 pieces', () => {
+  it('accepts 2 or more pieces', () => {
     expect(fitsFeatureCarousel(1)).toBe(false);
     expect(fitsFeatureCarousel(2)).toBe(true);
-    expect(fitsFeatureCarousel(12)).toBe(true);
-    expect(fitsFeatureCarousel(13)).toBe(false);
+    expect(fitsFeatureCarousel(15)).toBe(true);
+    expect(fitsFeatureCarousel(40)).toBe(true);
+  });
+
+  it('limita as peças do carrossel', () => {
+    const items = Array.from({ length: 30 }, (_, index) => index);
+    expect(carouselPieces(items)).toHaveLength(24);
+    expect(carouselPieces(items.slice(0, 15))).toHaveLength(15);
   });
 });
 

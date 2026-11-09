@@ -4,7 +4,7 @@ import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
 import type { ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
-import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
+import { carouselPieces, fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
 import { PiecesViews } from './PiecesViews';
 import { ProductGrid } from './ProductGrid';
 import { TechTable } from './TechTable';
@@ -42,7 +42,7 @@ export async function PiecesSection({
         {title}
       </h2>
       {carousel && fitsFeatureCarousel(products.length) ? (
-        <FeatureCarousel label={title} products={products} />
+        <FeatureCarousel label={title} products={carouselPieces(products)} />
       ) : null}
       <PiecesViews
         count={t('count', { count: products.length })}

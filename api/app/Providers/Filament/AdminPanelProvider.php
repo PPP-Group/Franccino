@@ -35,6 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->brandName('Franccino')
             ->brandLogo(fn (): View => view('filament.hooks.brand'))
+            // Favicon do painel: o F da logo claro no fundo escuro, o contrário do site (09/11/2026).
+            ->favicon(asset('favicon-panel.svg'))
             ->darkMode(false)
             ->sidebarCollapsibleOnDesktop()
             ->login()
