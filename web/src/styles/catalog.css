@@ -167,6 +167,18 @@
   object-fit: contain;
 }
 
+/* Retrato do designer na lista do filtro: em pé, preenchendo o quadro, em preto e branco como nas páginas de designer. */
+.row-peek--portrait .row-peek__photo {
+  width: 126px;
+  aspect-ratio: 4 / 5;
+  background: var(--portrait-ground);
+}
+
+.row-peek--portrait .row-peek__photo img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.02);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .row-peek__photo {
     animation: row-peek-deal var(--t-slow) var(--ease-out) both;

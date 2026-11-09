@@ -1,10 +1,16 @@
 'use client';
 
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
+import { RowPeek } from '@/components/catalog/RowPeek';
+import type { Image } from '@/lib/api/types';
 import { isTypeAheadKey, nextListboxIndex, typeAheadIndex } from '@/lib/ui/listbox';
 import { Icon } from './Icon';
 
-export type SelectOption = { value: string; label: string };
+/**
+ * `image`: foto que flutua ao lado do ponteiro quando o mouse passa pela opção (o retrato do designer no filtro, como as
+ * fotos da tabela técnica; retorno de 09/11/2026).
+ */
+export type SelectOption = { value: string; label: string; image?: Image | null };
 
 export type SelectProps = {
   /** Id do botão: o `<label htmlFor>` do campo aponta para ele. */
@@ -223,6 +229,10 @@ export function Select({
     buttonRef.current?.focus();
   }
 
+  const peeks = options.flatMap((option, index) =>
+    option.image ? [{ id: index, images: [option.image] }] : [],
+  );
+
   // O clique na lista não tira o foco do botão (o botão continua dono do teclado e do leitor de tela).
   function keepFocus(event: MouseEvent) {
     event.preventDefault();
@@ -269,6 +279,7 @@ export function Select({
           <li
             key={option.value}
             id={optionId(index)}
+            data-row-id={option.image ? index : undefined}
             role="option"
             className="select__option"
             data-value={option.value}
@@ -282,6 +293,14 @@ export function Select({
           </li>
         ))}
       </ul>
+      {peeks.length > 0 ? (
+        <RowPeek
+          items={peeks}
+          container=".select__list"
+          className="row-peek--top row-peek--portrait"
+          beside
+        />
+      ) : null}
     </div>
   );
 }

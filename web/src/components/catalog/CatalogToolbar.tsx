@@ -52,6 +52,7 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
                 { value: '', label: t('allDesigners') },
                 ...props.designerOptions.map((option) => ({
                   value: option.value,
+                  image: option.image,
                   label:
                     option.count === null
                       ? option.label

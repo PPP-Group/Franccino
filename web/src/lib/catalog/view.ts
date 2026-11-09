@@ -6,7 +6,7 @@
 
 import type { ProductListParams, ProductSort } from '@/lib/api/catalog';
 import { firstValue } from '@/lib/api/listing-params';
-import type { Facets } from '@/lib/api/types';
+import type { Facets, Image } from '@/lib/api/types';
 
 export type CatalogView = 'grid' | 'table';
 
@@ -73,7 +73,8 @@ export function listingQuery(
 }
 
 export type FacetOption = Facets['categories'][number];
-export type FilterOption = { value: string; label: string; count: number | null };
+/** `image`: o retrato do designer, que flutua ao lado do ponteiro na lista aberta (retorno de 09/11/2026). */
+export type FilterOption = { value: string; label: string; count: number | null; image?: Image | null };
 
 export function toFilterOption(option: FacetOption): FilterOption {
   return {

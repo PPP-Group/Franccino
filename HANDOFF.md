@@ -1037,6 +1037,9 @@ com Playwright (medidas, capturas e quadros da transição).
 - **"Peças que você viu" no catálogo:** o mesmo respiro em cima e embaixo (saiu a regra que zerava o de cima).
 - **"Outros projetos", "Outras coleções" e "Outros designers":** a foto cresce até o topo da página aberta e volta
   (`CardRail` com `morph`).
+- **Filtro de designer:** ao passar o mouse num nome da lista aberta, o retrato do designer flutua ao lado da lista
+  (em preto e branco, como nas páginas de designer), como as fotos da tabela técnica (`SelectOption.image`,
+  `RowPeek beside`).
 - **Logo:** recarrega a página inicial e abre no topo, sempre (link comum, `data-no-motion`), sem a foto que volta.
 - **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três

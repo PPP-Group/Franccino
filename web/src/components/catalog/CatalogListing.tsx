@@ -12,6 +12,7 @@ import {
   type ProductFacetsParams,
   type ProductListParams,
 } from '@/lib/api/catalog';
+import { getDesigners } from '@/lib/api/content';
 import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
@@ -51,10 +52,13 @@ const EMPTY_FACETS: Facets = { categories: [], designers: [], collections: [], l
 
 export async function CatalogListing(props: CatalogListingProps) {
   const { locale, params, view, hrefFor } = props;
-  const [t, common] = await Promise.all([
+  const [t, common, designerCards] = await Promise.all([
     getTranslations({ locale, namespace: 'catalog' }),
     getTranslations({ locale, namespace: 'common' }),
+    // Retratos para a lista do filtro de designer (o filtro só traz nome e contagem).
+    getDesigners(locale).catch(() => []),
   ]);
+  const portraits = new Map(designerCards.map((designer) => [designer.slug, designer.portrait]));
 
   const query: ProductListParams = { ...props.apiParams, ...params, per_page: PER_PAGE };
   if (!query.designer) {
@@ -117,7 +121,10 @@ export async function CatalogListing(props: CatalogListingProps) {
           count={t('count', { count: page.meta.total })}
           view={view}
           hrefFor={hrefFor}
-          designerOptions={facets.designers.map(toFilterOption)}
+          designerOptions={facets.designers.map((option) => {
+            const filter = toFilterOption(option);
+            return { ...filter, image: portraits.get(filter.value) ?? null };
+          })}
           activeDesigner={params.designer}
           formAction={props.formAction}
           hiddenQuery={hiddenQuery}
