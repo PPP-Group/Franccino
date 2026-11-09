@@ -973,7 +973,11 @@ body:has(.hero--full) #conteudo {
   gap: var(--space-4);
 }
 
-.footer-vortex {
+/*
+  O seletor leva o `.site-footer` para vencer o `.site-footer a` (inline-block), que deixava o selo no topo da área de
+  toque, acima da linha do "© 2026 Franccino" (retorno de 09/11/2026).
+*/
+.site-footer .footer-vortex {
   display: inline-flex;
   align-items: center;
   min-height: 44px;

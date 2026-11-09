@@ -100,73 +100,41 @@
   - `data-parallax-layer="back"` na foto (ou no quadro dela): ganha sobra (`--parallax-scale`) para nunca mostrar a
     borda; quadros baixos (mosaico) pedem mais sobra.
   - `data-parallax-layer="front"` no texto.
-  Navegador com `animation-timeline` (Chrome, Edge, Safari 26): só CSS. Sem ele (Firefox), o `ParallaxFallback` da home
-  escreve o progresso da rolagem em `--parallax-progress` e marca `data-parallax-js` no <html>, com as mesmas
-  distâncias.
+  O componente `Parallax` (na página) escreve a posição de cada bloco em `--parallax-shift` e marca
+  `data-parallax-on` no <html>.
 */
 /*
-  Retorno de 07/11/2026 ("nunca vi a paralaxe"): ±20 px não aparecia. A foto anda 8% da própria altura em cada sentido
-  (com 20% de sobra pela escala, a borda nunca aparece) e o texto, 32 px no sentido oposto: bem visível, ainda calmo.
+  Retorno de 09/11/2026 ("nunca consegui ver nada de paralaxe"): o movimento por `animation-timeline` dependia do
+  navegador (no Safari sem suporte nada andava) e era pequeno demais para se notar. Agora o `Parallax` (script) escreve
+  em cada bloco visível `--parallax-shift`, de -1 (entrando por baixo) a 1 (saindo por cima), em todos os navegadores.
+  A foto anda 14% da própria altura em cada sentido, mais devagar que a página (a escala de 1.3 dá a sobra para a borda
+  nunca aparecer), e o texto anda 80 px no sentido oposto: a foto e o texto se separam mais de 300 px na passagem.
+  Fotos com texto na própria arte (capas das coleções) não entram: a escala cortaria o texto.
 */
 [data-parallax] {
-  --parallax-back: 8%;
-  --parallax-front: 32px;
-  --parallax-scale: 1.2;
+  --parallax-back: 14%;
+  --parallax-front: 80px;
+  --parallax-scale: 1.3;
 }
 
 @media (max-width: 56.25rem) {
   [data-parallax] {
-    --parallax-back: 5%;
-    --parallax-front: 16px;
+    --parallax-back: 8%;
+    --parallax-front: 32px;
+    --parallax-scale: 1.18;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    [data-parallax] {
-      view-timeline: --parallax block;
-    }
-
-    [data-parallax-layer='back'] {
-      scale: var(--parallax-scale);
-      animation: parallax-back linear both;
-      animation-timeline: --parallax;
-      animation-range: cover 0% cover 100%;
-    }
-
-    [data-parallax-layer='front'] {
-      animation: parallax-front linear both;
-      animation-timeline: --parallax;
-      animation-range: cover 0% cover 100%;
-    }
-  }
-
-  /* Sem `animation-timeline`: o mesmo movimento pelo progresso que o ParallaxFallback escreve (0 a 1). */
-  [data-parallax-js] [data-parallax-layer='back'] {
+  [data-parallax-on] [data-parallax-layer='back'] {
     scale: var(--parallax-scale);
-    translate: 0 calc((var(--parallax-progress, 0.5) * 2 - 1) * var(--parallax-back));
+    translate: 0 calc(var(--parallax-shift, 0) * var(--parallax-back));
+    will-change: translate;
   }
 
-  [data-parallax-js] [data-parallax-layer='front'] {
-    translate: 0 calc((1 - var(--parallax-progress, 0.5) * 2) * var(--parallax-front));
-  }
-}
-
-@keyframes parallax-back {
-  from {
-    translate: 0 calc(-1 * var(--parallax-back));
-  }
-  to {
-    translate: 0 var(--parallax-back);
-  }
-}
-
-@keyframes parallax-front {
-  from {
-    translate: 0 var(--parallax-front);
-  }
-  to {
-    translate: 0 calc(-1 * var(--parallax-front));
+  [data-parallax-on] [data-parallax-layer='front'] {
+    translate: 0 calc(var(--parallax-shift, 0) * -1 * var(--parallax-front));
+    will-change: translate;
   }
 }
 
@@ -266,6 +234,23 @@
   .list-count[data-pulse] {
     animation-delay: var(--t-press);
   }
+
+  /* A foto está voando até a lista (flyToQuote): o ícone e o contador pulsam quando ela chega. */
+  [data-quote-incoming] .list-icon[data-pulse],
+  [data-quote-incoming] .list-count[data-pulse] {
+    animation-delay: 700ms;
+  }
+}
+
+/* O quadradinho da foto a caminho da lista (lib/ui/fly-to-quote.ts): peça em fundo branco, inteira. */
+.quote-fly {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  background: var(--paper) center / contain no-repeat;
+  transform-origin: center;
+  will-change: transform;
 }
 
 @keyframes add-check {
@@ -347,6 +332,25 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 @keyframes img-arrive {
   from {
     opacity: 0;
+  }
+}
+
+/* ---------- faixa de clientes em loop (Corporativo e Projetos) ---------- */
+
+/* Uma volta por logo a cada ~4 s; para no hover, para a pessoa ver a cor da logo e clicar. */
+@media (prefers-reduced-motion: no-preference) {
+  .clients__track {
+    animation: clients-loop calc(var(--clients-count, 8) * 4s) linear infinite;
+  }
+
+  .clients__marquee:hover .clients__track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes clients-loop {
+  to {
+    translate: -50% 0;
   }
 }
 
@@ -439,6 +443,44 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 
 ::view-transition-new(.morph-cover) {
   animation: none;
+}
+
+/*
+  Peça sem fundo do carrossel (ida e volta da página da peça): no carrossel ela ocupa o quadro inteiro e é grande; na
+  página, a foto tem margem branca. Trocar uma pela outra no fim dava um "tranco" (a peça encolhia de repente,
+  retorno de 09/11/2026). As duas se misturam do começo ao fim do movimento, cada uma inteira no quadro que anda, e o
+  fim cai exatamente na foto da página, seja a origem maior ou menor que o destino.
+*/
+::view-transition-group(.morph-cutout) {
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(.morph-cutout),
+::view-transition-new(.morph-cutout) {
+  block-size: 100%;
+  object-fit: contain;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(.morph-cutout) {
+  animation: morph-leave var(--t-slow) var(--ease-out) both;
+}
+
+::view-transition-new(.morph-cutout) {
+  animation: morph-enter var(--t-slow) var(--ease-out) both;
+}
+
+@keyframes morph-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-enter {
+  from {
+    opacity: 0;
+  }
 }
 
 @keyframes morph-arrive {

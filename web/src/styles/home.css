@@ -211,7 +211,7 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.04);
+    transform: scale(1.08);
   }
 }
 
@@ -346,6 +346,105 @@
   display: none;
 }
 
+/*
+  Uma barra por slide no lugar do traço do título (retorno de 09/11/2026): a do slide ativo enche no tempo dele, e o fim
+  da barra troca o slide (HeroCarousel). As anteriores ficam cheias, as próximas vazias. A aproximação da foto dura o
+  mesmo tempo (mais a fusão), para a troca nunca parecer parada.
+*/
+.hero-carousel {
+  --hero-bar-w: min(280px, 64vw);
+  position: relative;
+}
+
+.hero-carousel .hero__title::after {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-carousel .hero--photo .hero__img {
+    animation-duration: calc(var(--hero-interval) + var(--t-slow));
+  }
+}
+
+.hero-carousel__bars {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  display: flex;
+  gap: var(--space-2);
+  width: var(--hero-bar-w);
+  translate: -50% -50%;
+  transition: top var(--t-mid) var(--ease-out);
+}
+
+.hero-carousel__bars.is-unplaced {
+  visibility: hidden;
+}
+
+.hero-carousel__bars.is-bottom {
+  top: auto;
+  bottom: var(--space-9);
+  translate: -50% 0;
+}
+
+.hero-carousel__bar {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.hero-carousel__bar::before,
+.hero-carousel__fill {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+}
+
+.hero-carousel__bar::before {
+  right: 0;
+  background: var(--on-photo-rule);
+}
+
+.hero-carousel__fill {
+  width: 0;
+  background: var(--paper);
+}
+
+.hero-carousel__bar.is-done .hero-carousel__fill {
+  width: 100%;
+}
+
+.hero-carousel__bar.is-active .hero-carousel__fill {
+  width: 100%;
+  animation: hero-bar var(--hero-interval) linear both;
+}
+
+.hero-carousel.is-paused .hero-carousel__bar.is-active .hero-carousel__fill {
+  animation-play-state: paused;
+}
+
+.hero-carousel__bar:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+@keyframes hero-bar {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 /* Pausa só para o teclado e o leitor de tela: aparece com o foco, como o "pular para o conteúdo". */
 .hero-carousel__pause {
   position: absolute;
@@ -371,6 +470,10 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-carousel__slide {
     transition: none;
+  }
+
+  .hero-carousel__bar.is-active .hero-carousel__fill {
+    animation: none;
   }
 }
 
@@ -661,6 +764,12 @@
   align-items: center;
 }
 
+/* A peça é foto de estúdio (pode encostar na borda): a foto anda menos e ganha menos sobra; o texto anda o normal. */
+.feature__grid[data-parallax] {
+  --parallax-back: 5%;
+  --parallax-scale: 1.1;
+}
+
 /* O quadro interno aproxima no hover: a própria foto já tem a animação de saída de motion.css. */
 .feature__media {
   display: block;
@@ -785,11 +894,6 @@
   min-height: 0;
 }
 
-/* As duas fotos baixas do mosaico precisam de mais sobra para a paralaxe (motion.css) nunca mostrar a borda. */
-.mosaic--3 > :not(:first-child) {
-  --parallax-scale: 1.22;
-}
-
 .mosaic__link {
   position: relative;
   display: block;
@@ -858,7 +962,6 @@
 
   .mosaic__item,
   .mosaic--3 > :not(:first-child) {
-    --parallax-scale: 1.16;
     aspect-ratio: 4 / 3;
   }
 }

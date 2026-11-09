@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
+import { STAGE_SIZES } from '@/lib/product/gallery';
 import { Icon } from '@/components/ui/Icon';
 import type { Image, ProductDetail } from '@/lib/api/types';
 import { ModelViewer } from './ModelViewer';
@@ -15,7 +16,6 @@ const subscribeNoop = () => () => {};
 const wants3dFromUrl = () => new URLSearchParams(window.location.search).get('view') === '3d';
 
 /** Largura real do palco (`.product`, 7 de 12 colunas; uma coluna abaixo de 61,25rem; até ~810 px no `--max`). */
-const STAGE_SIZES = '(max-width: 61.25rem) 92vw, (min-width: 97.5rem) 810px, 52vw';
 /** Miniaturas: 5 por linha ao lado do painel, 4 no celular. */
 const THUMB_SIZES = '(max-width: 35rem) 24vw, (max-width: 61.25rem) 18vw, 160px';
 

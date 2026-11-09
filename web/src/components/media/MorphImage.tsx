@@ -21,7 +21,7 @@ type MorphImageProps = {
   parallax?: boolean;
 };
 
-type Start = { name: string; src: string | null };
+type Start = { name: string; src: string | null; fit: MorphFit };
 
 /** Espera o movimento terminar (as animações `::view-transition`), com um limite. */
 function afterViewTransition(callback: () => void): () => void {
@@ -67,11 +67,15 @@ export function MorphImage({
   const [start] = useState<Start>(() => {
     const pending = pendingMorphFor(pathname);
     if (!pending || (!hero && pending.name !== name)) {
-      return { name, src: null };
+      return { name, src: null, fit };
     }
     return {
       name: hero ? pending.name : name,
-      src: pickLoadedSource(image, isImageLoaded) ?? (hero ? pending.src : null),
+      // A peça sem fundo (carrossel) não serve de foto provisória na página da peça: ela ocupa o quadro inteiro e a foto
+      // da página tem margem branca; a troca no fim era o "tranco" (retorno de 09/11/2026). Ali a foto é a própria.
+      src: pickLoadedSource(image, isImageLoaded) ?? (hero && pending.fit !== 'cutout' ? pending.src : null),
+      // A foto de destino adota o encaixe que a origem pediu (a peça sem fundo do carrossel).
+      fit: hero ? (pending.fit ?? fit) : fit,
     };
   });
   const [src, setSrc] = useState(start.src);
@@ -98,7 +102,7 @@ export function MorphImage({
 
   const shown = src ? { ...image, src, srcset: [] } : image;
   return (
-    <ViewTransition name={start.name} share={morphShare(fit, start.name)} default="none">
+    <ViewTransition name={start.name} share={morphShare(start.fit, start.name)} default="none">
       <ApiImage
         image={shown}
         sizes={sizes}

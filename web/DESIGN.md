@@ -302,10 +302,10 @@ Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
   (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
   não conta como visível e nunca abriria.
 - Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
-  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`: 80 px na foto e 28 px no texto, em
-  sentidos opostos, de ponta a ponta da passagem do bloco pela tela (metade no celular; desde 06/11/2026, para ficar
-  visível). Sem `animation-timeline`, o `ParallaxFallback` da home faz o mesmo. Não usar em arte com texto (faixas das
-  coleções), porque a foto ganha 12% de sobra (`--parallax-scale`).
+  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`, pelo componente `Parallax` (script,
+  todos os navegadores, desde 09/11/2026): a foto anda 14% da altura em cada sentido, mais devagar que a página, e o
+  texto 80 px no sentido oposto (8% e 32 px no celular). Não usar em arte com texto (capas das coleções), porque a foto
+  ganha 30% de sobra (`--parallax-scale`).
 - Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
   outra coleção, chamada) ou a grade muda o número de colunas.
 - Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você

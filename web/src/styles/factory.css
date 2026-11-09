@@ -227,6 +227,11 @@
   outline-offset: -6px;
 }
 
+/* A capa do vídeo já traz o desenho do play: com capa, o nosso botão não aparece (retorno de 09/11/2026). */
+.block-video .video__play--poster .icon {
+  display: none;
+}
+
 @media (hover: hover) {
   .block-video .video__play:hover .video__poster {
     transform: scale(1.05);

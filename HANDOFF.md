@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (24, de 08/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (25, de 09/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -963,7 +963,41 @@ carrosséis das coleções e dos designers, que agora seguem o padrão da home (
   Fábrica e o inglês das peças aplicado pela rota `POST /api/import/translations` (amostra de 40 peças no `/en`: nenhuma
   volta para o português).
 
-### 24.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
+## 25. 09/11/2026: retorno do tech lead sobre o preview de 08/11
+
+Mesma branch (`claude/francine-site-review-htegfp`). Cada item conferido num `next dev` local contra a API do preview,
+com Playwright (medidas, capturas e quadros da transição).
+
+- **Paralaxe:** funcionava no Chrome, mas a foto andava só 8% da altura na passagem inteira (quase imperceptível), e no
+  Safari sem `animation-timeline` dependia de um script que só existia na home. Agora o componente `Parallax` (script,
+  todos os navegadores) escreve `--parallax-shift` em cada bloco: a foto anda 14% da altura em cada sentido (escala 1.3)
+  e o texto 80 px no sentido oposto. A peça em destaque anda menos (foto de estúdio, 5%).
+- **Capa da Tempo cortada na home:** era a escala da paralaxe nas faixas das coleções (a arte tem texto). As coleções
+  saíram da paralaxe.
+- **Grade em branco ao voltar da tabela técnica (Casa):** o nó da grade voltava sem a classe `is-revealed` e ficava
+  fora da observação. O `RevealObserver` observa de novo qualquer bloco sem a classe (também quando o `class` muda).
+- **Foto que cresce e encaixa em todo lugar:** peça em destaque (projeto, Corporativo, Designers, Lançamentos), sugestões
+  da busca do cabeçalho (peça, designer e coleção), miniaturas da lista de orçamento e da área de downloads.
+- **Carrossel → página da peça (o "tranco" no fim):** a página da peça mostrava a peça sem fundo do carrossel como foto
+  provisória e trocava pela foto real (com margem branca) só no fim. Agora o par usa o encaixe `cutout`: a página usa a
+  própria foto (o carrossel a baixa quando o mouse passa pela peça) e as duas se misturam do começo ao fim.
+- **Caminho (breadcrumb) da peça para a categoria:** anima quando a peça está na primeira página da categoria. Se a peça
+  está numa página seguinte da lista, não há foto de destino na tela, e a troca é sem movimento.
+- **Banner da home:** a troca não pausa mais com o mouse em cima (o banner ocupa a tela toda; era por isso que "às vezes
+  não trocava"); 6 s por slide, aproximação de 8% no mesmo tempo; no lugar do traço embaixo do título, uma barra por
+  slide que enche no tempo dele (clicar leva ao slide).
+- **Clientes (Corporativo e Projetos):** faixa em loop contínuo, para no hover; logos em preto e branco com a cor no
+  hover, todas com o mesmo peso visual (`logoBox`). As 6 logos foram recortadas (sem fundo nem margem; a da Clara, que
+  era clara em fundo verde, ficou verde) e reenviadas pela importação. Cyrela e Botânico Shopping seguem sem logo (nome).
+- **Selo Vortex:** a regra `.site-footer a` (inline-block) deixava o selo no topo da área de toque; agora alinhado.
+- **Lojas na home:** as lojas mostram a foto também ali.
+- **Fábrica:** o vídeo com capa não mostra mais o nosso botão de play (a capa já tem o desenho).
+- **"+" no card:** no hover, o "+" no canto da foto põe a peça na lista sem abrir a página. Ao adicionar (card, tabela,
+  destaque ou página da peça), a foto vira um quadradinho que voa até o ícone da lista, que pulsa quando ela chega
+  (`lib/ui/fly-to-quote.ts`).
+- **Etiqueta "Lançamentos":** fica como está (o tech lead acha que não precisa voltar).
+
+### 25.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
 
 Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar"). Caminho combinado em 08/11: o tech lead
 gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o

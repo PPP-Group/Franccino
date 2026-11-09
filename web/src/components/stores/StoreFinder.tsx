@@ -35,7 +35,8 @@ function StoreCard({ store, detailed, active = false, flash = null, onHover }: S
   const t = useTranslations('stores');
   const type = t.has(`types.${store.type}`) ? t(`types.${store.type}`) : store.type;
   const whatsapp = detailed ? whatsappUrl(store.whatsapp) : null;
-  const className = ['store', detailed && store.image ? 'store--with-image' : '', active ? 'is-active' : '']
+  // A foto aparece também na seção de lojas da home (retorno de 09/11/2026), não só na página Lojas.
+  const className = ['store', store.image ? 'store--with-image' : '', active ? 'is-active' : '']
     .filter(Boolean)
     .join(' ');
   return (
@@ -47,7 +48,7 @@ function StoreCard({ store, detailed, active = false, flash = null, onHover }: S
       onMouseEnter={onHover ? () => onHover(store.id) : undefined}
       onMouseLeave={onHover ? () => onHover(null) : undefined}
     >
-      {detailed && store.image ? (
+      {store.image ? (
         <div className="store__image">
           <ApiImage image={store.image} sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw" />
         </div>

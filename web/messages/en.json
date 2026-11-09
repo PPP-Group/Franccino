@@ -496,7 +496,8 @@
         "slideRoleDescription": "highlight",
         "slide": "{current} of {total}",
         "pause": "Pause automatic rotation",
-        "play": "Resume automatic rotation"
+        "play": "Resume automatic rotation",
+        "goTo": "Go to highlight {current} of {total}"
       }
     },
     "scenes": {

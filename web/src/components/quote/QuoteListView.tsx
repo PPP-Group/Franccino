@@ -6,7 +6,7 @@ import { ContactForm } from '@/components/forms/ContactForm';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
-import { SnapshotImage } from '@/components/ui/SnapshotImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { htmlLang } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { whatsappUrl } from '@/lib/contact-links';
@@ -15,6 +15,7 @@ import { quoteItemKey, totalQuantity } from '@/lib/quote/list';
 import { buildQuoteMessage, buildWhatsAppText, formatFinishes, toContactItems } from '@/lib/quote/message';
 import { quoteActions } from '@/lib/quote/store';
 import type { QuoteItem } from '@/lib/quote/types';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 import { showToast } from '@/lib/ui/toast';
 import { useIsClient } from '@/lib/ui/use-is-client';
 
@@ -33,7 +34,31 @@ function QuoteItemRow({ item, onRemoved }: { item: QuoteItem; onRemoved: () => v
   return (
     <li className="quote-item">
       {item.image ? (
-        <SnapshotImage image={item.image} />
+        // A miniatura cresce até a foto da peça e volta (ideia 10, retorno de 09/11/2026: "todo lugar").
+        <Link
+          className="quote-item__media"
+          href={{ pathname: '/products/[slug]', params: { slug: item.slug } }}
+          locale={item.locale}
+          transitionTypes={morphTypes(morphName('piece', item.slug))}
+          data-morph-link={morphName('piece', item.slug)}
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <MorphImage
+            name={morphName('piece', item.slug)}
+            image={{
+              id: 0,
+              alt: '',
+              width: 120,
+              height: 90,
+              src: item.image.src,
+              srcset: [],
+              blur_data_url: null,
+            }}
+            sizes="140px"
+            fit="contain"
+          />
+        </Link>
       ) : (
         <span className="quote-item__blank" aria-hidden="true" />
       )}

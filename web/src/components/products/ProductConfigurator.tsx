@@ -20,6 +20,7 @@ import { useQuoteCount } from '@/lib/quote/hooks';
 import { formatFinishes } from '@/lib/quote/message';
 import { toQuoteSnapshot } from '@/lib/quote/snapshot';
 import { quoteActions } from '@/lib/quote/store';
+import { flyToQuote } from '@/lib/ui/fly-to-quote';
 import { FinishSelector } from './FinishSelector';
 
 export type ConfiguratorProduct = ProductCard & Pick<ProductDetail, 'finishes'>;
@@ -75,6 +76,8 @@ export function ProductConfigurator({
       setFeedback({ kind: 'full', text: q('listFull') });
       return;
     }
+    // A foto do palco da peça voa até a lista no cabeçalho.
+    flyToQuote(document.querySelector<HTMLImageElement>('.gallery__stage img'));
     setFeedback({ kind: 'added', text: t('added', { quantity, name: product.name, finishes: summary }) });
     setJustAdded(true);
     clearTimeout(timer.current);

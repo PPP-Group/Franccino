@@ -4,6 +4,7 @@ import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { ProductCard } from '@/lib/api/types';
 import { morphName, morphTypes } from '@/lib/ui/morph';
+import { QuickAddButton } from './QuickAddButton';
 
 /** O que o card usa: foto, nome e o sinal de lançamento (também serve às peças guardadas em "Peças que você viu"). */
 export type PlateProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>;
@@ -74,6 +75,8 @@ export function ProductPlate({
           {showNew && product.is_new ? <p className="plate__flag">{t('newTag')}</p> : null}
         </div>
       </Link>
+      {/* "+" no canto da foto, no hover: põe a peça na lista sem abrir a página (retorno de 09/11/2026). */}
+      <QuickAddButton product={product} variant="plate" />
     </article>
   );
 }

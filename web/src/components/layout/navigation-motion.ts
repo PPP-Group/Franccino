@@ -172,7 +172,7 @@ type StartViewTransition = (options?: unknown) => ViewTransition;
  */
 function markFit() {
   const contain = Array.from(document.querySelectorAll<HTMLElement>('[style*="view-transition-class"]')).some(
-    (element) => element.style.getPropertyValue('view-transition-class').includes('morph-contain'),
+    (element) => /morph-(contain|cutout)/.test(element.style.getPropertyValue('view-transition-class')),
   );
   if (contain) document.documentElement.dataset.morphFit = 'contain';
   else delete document.documentElement.dataset.morphFit;
@@ -245,7 +245,13 @@ function onClick(event: MouseEvent) {
     const source =
       link.querySelector('img') ??
       document.querySelector<HTMLImageElement>(`a[data-morph-link="${CSS.escape(name)}"] img`);
-    setPendingMorph({ name, path: url.pathname, src: source?.currentSrc || null });
+    const fit = link.getAttribute('data-morph-fit');
+    setPendingMorph({
+      name,
+      path: url.pathname,
+      src: source?.currentSrc || null,
+      fit: fit === 'cutout' || fit === 'contain' || fit === 'cover' ? fit : undefined,
+    });
     pendingEdge = { from: entryKey(), fromHref: location.href, name };
   } else {
     setPendingMorph(null);

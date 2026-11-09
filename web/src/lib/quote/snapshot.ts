@@ -7,7 +7,7 @@ import type { QuoteFinish, QuoteItemInput } from './types';
 export const SNAPSHOT_IMAGE_WIDTH = 480;
 
 export function toQuoteSnapshot(
-  product: ProductCard,
+  product: Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover'>,
   locale: Locale,
   finishes: QuoteFinish[] = [],
 ): QuoteItemInput {

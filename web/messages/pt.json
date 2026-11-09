@@ -496,7 +496,8 @@
         "slideRoleDescription": "destaque",
         "slide": "{current} de {total}",
         "pause": "Pausar a troca automática",
-        "play": "Retomar a troca automática"
+        "play": "Retomar a troca automática",
+        "goTo": "Ir para o destaque {current} de {total}"
       }
     },
     "scenes": {

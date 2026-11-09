@@ -3,10 +3,12 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { type CSSProperties, type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { suggestSearch } from '@/lib/search/actions';
 import { normalizeSuggestQuery, type Suggestion } from '@/lib/search/suggest';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 const DEBOUNCE_MS = 250;
 
@@ -147,20 +149,37 @@ export function HeaderSearch() {
           <div aria-live="polite">
             {items.length > 0 ? (
               <ul className="header-search__list">
-                {items.map((item, index) => (
-                  <li key={`${item.kind}-${item.slug}`} style={{ '--i': index } as CSSProperties}>
-                    <Link href={suggestionHref(item)} onClick={close}>
-                      <span
-                        className={`header-search__thumb header-search__thumb--${item.kind}`}
-                        aria-hidden="true"
+                {items.map((item, index) => {
+                  // A miniatura cresce até a foto grande da página que abre (ideia 10, retorno de 09/11/2026).
+                  const morph = item.image ? morphName('search', `${item.kind}-${item.slug}`) : undefined;
+                  return (
+                    <li key={`${item.kind}-${item.slug}`} style={{ '--i': index } as CSSProperties}>
+                      <Link
+                        href={suggestionHref(item)}
+                        transitionTypes={morph ? morphTypes(morph) : undefined}
+                        data-morph-link={morph}
                       >
-                        <ApiImage image={item.image ? { ...item.image, alt: '' } : null} sizes="88px" />
-                      </span>
-                      <span className="header-search__name">{item.name}</span>
-                      <small>{tSearch(`kind.${item.kind}`)}</small>
-                    </Link>
-                  </li>
-                ))}
+                        <span
+                          className={`header-search__thumb header-search__thumb--${item.kind}`}
+                          aria-hidden="true"
+                        >
+                          {morph && item.image ? (
+                            <MorphImage
+                              name={morph}
+                              image={{ ...item.image, alt: '' }}
+                              sizes="88px"
+                              fit={item.kind === 'product' ? 'contain' : 'cover'}
+                            />
+                          ) : (
+                            <ApiImage image={null} sizes="88px" />
+                          )}
+                        </span>
+                        <span className="header-search__name">{item.name}</span>
+                        <small>{tSearch(`kind.${item.kind}`)}</small>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             ) : searched ? (
               <p className="header-search__empty">{tSearch('noResults')}</p>

@@ -1156,53 +1156,94 @@
   margin-top: var(--section-y);
 }
 
+/*
+  As logos passam sozinhas em loop (retorno de 09/11/2026): duas cópias da lista lado a lado, e a faixa anda a largura
+  de uma (motion.css); as bordas somem num degradê da cor da faixa. Todas em preto e branco; a cor volta no hover.
+*/
+.clients__marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.clients__track {
+  display: flex;
+  width: max-content;
+}
+
 .clients__list {
-  gap: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-9);
+  padding-right: var(--space-9);
+  margin: 0;
+  list-style: none;
 }
 
 .clients__item {
-  width: 176px;
-}
-
-/* Cada cliente numa caixa quadrada com fio: logo ou, sem logo, o nome. */
-.clients__item > a,
-.clients__item > img,
-.clients__item > .clients__name {
   display: grid;
   place-items: center;
-  height: 112px;
-  padding: var(--space-4);
-  border: 1px solid var(--line);
-  background: var(--paper);
+  height: 96px;
+}
+
+.clients__item > a {
+  display: grid;
+  place-items: center;
+  height: 100%;
   color: inherit;
   text-decoration: none;
 }
 
-.clients__item img {
-  max-width: 100%;
-  max-height: 72px;
-  width: auto;
-  height: auto;
+.clients__logo {
+  display: block;
+  width: var(--logo-w);
+  height: var(--logo-h);
+}
+
+.clients__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  filter: grayscale(1) contrast(1.15);
+  opacity: 0.85;
+  transition:
+    filter var(--t-mid) var(--ease-out),
+    opacity var(--t-mid) var(--ease-out);
+}
+
+.clients__item:hover .clients__logo img {
+  filter: none;
+  opacity: 1;
 }
 
 .clients__name {
   font-family: var(--font-heading);
   font-size: var(--fs-lead);
   line-height: var(--lh-h3);
-  text-align: center;
-  text-wrap: balance;
+  white-space: nowrap;
+  color: var(--ink-muted);
 }
 
 @media (max-width: 35rem) {
-  .clients__item {
-    width: 144px;
+  .clients__list {
+    gap: var(--space-7);
+    padding-right: var(--space-7);
   }
 
-  .clients__item > a,
-  .clients__item > img,
-  .clients__item > .clients__name {
-    height: 96px;
+  .clients__item {
+    height: 80px;
+  }
+}
+
+/* Parada (movimento reduzido): a faixa rola com o dedo, sem a cópia. */
+@media (prefers-reduced-motion: reduce) {
+  .clients__marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .clients__list[aria-hidden] {
+    display: none;
   }
 }
 
