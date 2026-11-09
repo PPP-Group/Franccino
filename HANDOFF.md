@@ -1053,6 +1053,17 @@ com Playwright (medidas, capturas e quadros da transição).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
   banners por ela.
 
+### 26.0 Complemento (09/11, noite)
+
+- **Painel:** favicon com o F claro no fundo escuro, o contrário do site (`api/public/favicon-panel.svg`, `favicon.ico`,
+  `->favicon()` no `AdminPanelProvider`).
+- **Lojas na home:** cada loja ganhou o "Ver no mapa", como na página Lojas.
+- **Tabela técnica nas listas:** as fotos do hover saíam longe do ponteiro (no topo e no fim da página). A animação de
+  entrada da lista ficava presa no fim (`both`) e o `transform` dela virava a referência do `position: fixed` da prévia;
+  agora a animação não fica depois do fim (`backwards`). Na home e na busca já funcionava (sem essa animação).
+- **Carrossel nas coleções e designers grandes:** a Tempo (15 peças) ficava sem carrossel, que ia só até 12. Agora aparece
+  a partir de 2 peças e mostra até 24 (`carouselPieces`); a grade embaixo continua com todas.
+
 ### 26.1 Deploy de 09/11: duas versões do site no ar
 
 Depois do merge do #76, o preview passou a servir duas versões do site ao mesmo tempo: o mesmo arquivo de script responde
