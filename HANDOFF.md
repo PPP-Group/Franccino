@@ -1061,6 +1061,8 @@ com Playwright (medidas, capturas e quadros da transição).
 - **Tabela técnica nas listas:** as fotos do hover saíam longe do ponteiro (no topo e no fim da página). A animação de
   entrada da lista ficava presa no fim (`both`) e o `transform` dela virava a referência do `position: fixed` da prévia;
   agora a animação não fica depois do fim (`backwards`). Na home e na busca já funcionava (sem essa animação).
+- **Carrossel nas coleções e designers grandes:** a Tempo (15 peças) ficava sem carrossel, que ia só até 12. Agora aparece
+  a partir de 2 peças e mostra até 24 (`carouselPieces`); a grade embaixo continua com todas.
 
 ### 26.1 Deploy de 09/11: duas versões do site no ar
 
