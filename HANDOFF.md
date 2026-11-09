@@ -1021,14 +1021,15 @@ com Playwright (medidas, capturas e quadros da transição).
   encolhe a foto que está à vista até o card (sair e voltar de novo mostra a capa).
 - **Capas na diagonal para a esquerda, segunda revisão:** "virada para a esquerda" = a frente da peça voltada para a
   esquerda da foto (o encosto fica à direita; nas mesas, bancos e aparadores, a ponta direita mais perto). A revisão a olho
-  em miniatura errava o lado; agora a direção é medida na própria foto (lado do encosto, nos assentos; lado do pé mais
-  baixo, no resto) e conferida a olho. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (12 peças: cadeiras com
-  a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
-  na galeria (`franccino:covers:apply`). Viradas para a direita sem foto para a esquerda: com o ok do tech lead, as
-  simétricas ganharam a capa espelhada, enviada pela importação, e a foto original ficou na galeria (Banco Hera, Mesa
-  lateral Petra, Mesa de jantar Minas, Rack Coda, Poltrona Tereré, Sofá Mumbai e Sofá Snodo). As assimétricas não foram
-  espelhadas, porque mostrariam uma configuração que não existe, e precisam de foto nova da Franccino: Mesa de centro Kit
-  (nicho num lado), Buffet Bloco (madeira fora do centro) e Sofá Nu (chaise num lado).
+  em miniatura errava o lado. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (11 peças: cadeiras
+  com a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
+  na galeria (`franccino:covers:apply`). A medida automática da direção serve nas cadeiras (lado do encosto), mas
+  erra nas peças compridas (a sombra no chão engana o lado do pé mais perto): nelas, só a conferência a olho vale.
+  Espelhadas pela importação, com o ok do tech lead e a foto original na galeria: Mesa lateral Petra, Rack Coda e
+  Poltrona Tereré. Banco Hera, Mesa de jantar Minas, Sofá Mumbai e Sofá Snodo chegaram a ser espelhados por engano da
+  medida (já estavam virados para a esquerda) e voltaram à capa original no mesmo dia. Sem foto para a esquerda e
+  assimétricas (o espelho mostraria uma configuração que não existe), à espera de foto nova da Franccino: Mesa de centro
+  Kit, Buffet Bloco e Sofá Nu.
 - **Troca de página nas listas:** "Anterior" e "Próxima" também na barra de cima, lado a lado logo depois da contagem
   (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
   na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
