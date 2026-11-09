@@ -66,8 +66,19 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
     downloads = EMPTY_DOWNLOADS;
   }
 
+  const pageHref = (next: number) =>
+    ({
+      pathname: '/downloads',
+      query: {
+        ...(area ? { area } : {}),
+        ...(category ? { category } : {}),
+        ...(q ? { q } : {}),
+        page: String(next),
+      },
+    }) as const;
+
   return (
-    <main className="wrap catalog">
+    <main className="wrap catalog" data-page-anchor="">
       <PageHead
         title={page?.title ?? t('title')}
         lead={page?.intro}
@@ -101,21 +112,17 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
       {downloads.data.length === 0 ? (
         <EmptyNotice text={t('empty')} />
       ) : (
-        <DownloadsTable rows={downloads.data} />
+        <>
+          <div className="toolbar">
+            <Pagination meta={downloads.meta} label={t('pagination')} hrefFor={pageHref} position="top" />
+          </div>
+          {/* A chave remonta a tabela a cada página: as linhas novas entram com fade, não de uma vez. */}
+          <div key={downloads.meta.current_page} className="catalog-results">
+            <DownloadsTable rows={downloads.data} />
+          </div>
+        </>
       )}
-      <Pagination
-        meta={downloads.meta}
-        label={t('pagination')}
-        hrefFor={(next) => ({
-          pathname: '/downloads',
-          query: {
-            ...(area ? { area } : {}),
-            ...(category ? { category } : {}),
-            ...(q ? { q } : {}),
-            page: String(next),
-          },
-        })}
-      />
+      <Pagination meta={downloads.meta} label={t('pagination')} hrefFor={pageHref} />
     </main>
   );
 }

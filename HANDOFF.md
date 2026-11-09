@@ -1027,6 +1027,10 @@ com Playwright (medidas, capturas e quadros da transição).
   na galeria (`franccino:covers:apply`). Viradas para a direita sem foto para a esquerda (precisam de foto nova ou de
   espelhar a foto, a decidir): Banco Hera, Mesa lateral Petra, Mesa de centro Kit, Mesa de jantar Minas, Rack Coda,
   Buffet Bloco, Poltrona Tereré, Sofá Mumbai, Sofá Nu e Sofá Snodo.
+- **Troca de página nas listas:** "Anterior" e "Próxima" também na barra de cima, lado a lado logo depois da contagem
+  (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
+  na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
+  catálogo e nos downloads.
 - **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
   banners por ela.

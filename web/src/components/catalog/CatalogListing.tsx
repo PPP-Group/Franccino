@@ -97,7 +97,7 @@ export async function CatalogListing(props: CatalogListingProps) {
   return (
     <main>
       {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
-      <div className="wrap catalog">
+      <div className="wrap catalog" data-page-anchor="">
         <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
         {banner ? (
           props.intro ? (
@@ -121,8 +121,17 @@ export async function CatalogListing(props: CatalogListingProps) {
           activeDesigner={params.designer}
           formAction={props.formAction}
           hiddenQuery={hiddenQuery}
+          pager={
+            <Pagination
+              meta={page.meta}
+              hrefFor={(next) => hrefFor({ page: next })}
+              label={t('pagination.label')}
+              position="top"
+            />
+          }
         />
-        <section className="catalog-results" aria-label={t('resultsLabel')}>
+        {/* A chave remonta a lista a cada página: as peças novas entram com a revelação, não de uma vez. */}
+        <section key={page.meta.current_page} className="catalog-results" aria-label={t('resultsLabel')}>
           {page.data.length === 0 ? (
             <div className="empty">
               <h2>{t('emptyState.title')}</h2>

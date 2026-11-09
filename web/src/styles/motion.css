@@ -357,6 +357,22 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
   }
 }
 
+/* ---------- troca de página da lista (retorno de 09/11/2026) ---------- */
+
+/* A tabela da página nova entra com um fade curto; a grade já entra peça por peça (data-reveal="stagger"). */
+@media (prefers-reduced-motion: no-preference) {
+  .catalog-results > :not(.grid-plates, .empty) {
+    animation: results-in var(--t-slow) var(--ease-out) both;
+  }
+}
+
+@keyframes results-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
 /* ---------- faixa de clientes em loop (Corporativo e Projetos) ---------- */
 
 /* Uma volta por logo a cada ~4 s; para no hover, para a pessoa ver a cor da logo e clicar. */

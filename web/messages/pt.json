@@ -308,7 +308,8 @@
       "label": "Páginas",
       "previous": "Anterior",
       "next": "Próxima",
-      "status": "Página {current} de {last}"
+      "status": "Página {current} de {last}",
+      "short": "{current} / {last}"
     },
     "empty": "Nenhuma peça encontrada.",
     "emptyState": {

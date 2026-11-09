@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import type { AppHref } from '@/i18n/navigation';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
@@ -15,6 +16,8 @@ type CatalogToolbarProps = {
   formAction: string;
   /** Demais filtros da URL, preservados no envio do form. */
   hiddenQuery: Record<string, string>;
+  /** "Anterior" e "Próxima" ao lado da contagem (`Pagination position="top"`). */
+  pager?: ReactNode;
 };
 
 /**
@@ -26,7 +29,10 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
   const t = useTranslations('catalog.filters');
   return (
     <div className="toolbar toolbar--catalog">
-      <p className="meta num">{props.count}</p>
+      <div className="toolbar__start">
+        <p className="meta num">{props.count}</p>
+        {props.pager}
+      </div>
       <div className="toolbar__end">
         {props.designerOptions.length > 0 ? (
           <form className="filter-form" action={props.formAction} method="get">

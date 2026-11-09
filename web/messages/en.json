@@ -308,7 +308,8 @@
       "label": "Pages",
       "previous": "Previous",
       "next": "Next",
-      "status": "Page {current} of {last}"
+      "status": "Page {current} of {last}",
+      "short": "{current} / {last}"
     },
     "empty": "No pieces found.",
     "emptyState": {
