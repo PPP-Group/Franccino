@@ -1024,9 +1024,11 @@ com Playwright (medidas, capturas e quadros da transição).
   em miniatura errava o lado; agora a direção é medida na própria foto (lado do encosto, nos assentos; lado do pé mais
   baixo, no resto) e conferida a olho. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (12 peças: cadeiras com
   a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
-  na galeria (`franccino:covers:apply`). Viradas para a direita sem foto para a esquerda (precisam de foto nova ou de
-  espelhar a foto, a decidir): Banco Hera, Mesa lateral Petra, Mesa de centro Kit, Mesa de jantar Minas, Rack Coda,
-  Buffet Bloco, Poltrona Tereré, Sofá Mumbai, Sofá Nu e Sofá Snodo.
+  na galeria (`franccino:covers:apply`). Viradas para a direita sem foto para a esquerda: com o ok do tech lead, as
+  simétricas ganharam a capa espelhada, enviada pela importação, e a foto original ficou na galeria (Banco Hera, Mesa
+  lateral Petra, Mesa de jantar Minas, Rack Coda, Poltrona Tereré, Sofá Mumbai e Sofá Snodo). As assimétricas não foram
+  espelhadas, porque mostrariam uma configuração que não existe, e precisam de foto nova da Franccino: Mesa de centro Kit
+  (nicho num lado), Buffet Bloco (madeira fora do centro) e Sofá Nu (chaise num lado).
 - **Troca de página nas listas:** "Anterior" e "Próxima" também na barra de cima, lado a lado logo depois da contagem
   (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
   na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
