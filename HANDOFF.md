@@ -1037,6 +1037,8 @@ com Playwright (medidas, capturas e quadros da transição).
 - **"Peças que você viu" no catálogo:** o mesmo respiro em cima e embaixo (saiu a regra que zerava o de cima).
 - **"Outros projetos", "Outras coleções" e "Outros designers":** a foto cresce até o topo da página aberta e volta
   (`CardRail` com `morph`).
+- **Troca de foto na página da peça:** fade cruzado; a foto anterior fica por cima e some quando a nova carrega
+  (`gallery__leaving` no `ProductStage`), sem desmontar a foto da transição de abrir e voltar.
 - **Filtro de designer:** ao passar o mouse num nome da lista aberta, o retrato do designer flutua ao lado da lista
   (em preto e branco, como nas páginas de designer), como as fotos da tabela técnica (`SelectOption.image`,
   `RowPeek beside`).
