@@ -2,18 +2,19 @@
 
 import { useEffect } from 'react';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
+import { parallaxShift } from '@/lib/ui/parallax';
 
 /**
- * Paralaxe da home (ideia 04) nos navegadores sem `animation-timeline` (Firefox): escreve em cada bloco
- * `[data-parallax]` visível o quanto ele já passou pela tela (`--parallax-progress`, de 0 a 1) e marca
- * `data-parallax-js` no <html>; o movimento em si (só `translate`) fica em motion.css. Onde o CSS dá conta sozinho,
- * ou para quem pediu menos movimento, não faz nada.
+ * Paralaxe (ideia 04) em todos os navegadores: escreve em cada bloco `[data-parallax]` perto da tela a posição dele
+ * na passagem (`--parallax-shift`, de -1 a 1) e marca `data-parallax-on` no <html>; o movimento (só `translate`) fica
+ * em motion.css. Antes era CSS puro (`animation-timeline`), que não andava no Safari sem suporte e brigava com a
+ * animação de carregamento das fotos. Para quem pediu menos movimento, não faz nada.
  */
-export function ParallaxFallback() {
+export function Parallax() {
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reducedMotion || typeof CSS === 'undefined' || CSS.supports('animation-timeline: view()')) {
+    if (reducedMotion) {
       return;
     }
     const blocks = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'));
@@ -28,8 +29,7 @@ export function ParallaxFallback() {
       const viewport = window.innerHeight;
       for (const block of visible) {
         const box = block.getBoundingClientRect();
-        const progress = Math.min(1, Math.max(0, (viewport - box.top) / (viewport + box.height)));
-        block.style.setProperty('--parallax-progress', progress.toFixed(4));
+        block.style.setProperty('--parallax-shift', parallaxShift(box.top, box.height, viewport).toFixed(4));
       }
     }
 
@@ -48,10 +48,10 @@ export function ParallaxFallback() {
         }
         schedule();
       },
-      { rootMargin: '20% 0px' },
+      { rootMargin: '25% 0px' },
     );
     blocks.forEach((block) => observer.observe(block));
-    document.documentElement.dataset.parallaxJs = '';
+    document.documentElement.dataset.parallaxOn = '';
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
 
@@ -60,8 +60,8 @@ export function ParallaxFallback() {
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
       if (frame !== 0) window.cancelAnimationFrame(frame);
-      delete document.documentElement.dataset.parallaxJs;
-      blocks.forEach((block) => block.style.removeProperty('--parallax-progress'));
+      delete document.documentElement.dataset.parallaxOn;
+      blocks.forEach((block) => block.style.removeProperty('--parallax-shift'));
     };
   }, [reducedMotion]);
 

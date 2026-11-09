@@ -35,7 +35,7 @@ export function QuoteListLink() {
   const pulsing = pulse > 0 ? '' : undefined;
   return (
     <Link href="/quote-list" aria-label={t('quoteList', { count })}>
-      <span key={`icon-${pulse}`} className="list-icon" data-pulse={pulsing}>
+      <span key={`icon-${pulse}`} className="list-icon" data-pulse={pulsing} data-quote-target="">
         <Icon name="list" />
       </span>
       <span className="label-optional" aria-hidden="true">

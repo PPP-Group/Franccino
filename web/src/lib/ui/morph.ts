@@ -27,10 +27,21 @@ export function morphTypes(name: string): string[] {
   return [morphType(name)];
 }
 
-export type MorphKind = 'product' | 'feature' | 'collection' | 'project' | 'area' | 'designer';
+export type MorphKind =
+  'product' | 'feature' | 'piece' | 'search' | 'collection' | 'project' | 'area' | 'designer' | 'page';
 
-/** Como a foto se encaixa no quadro durante o movimento: produto em fundo branco (inteiro) ou foto recortada. */
-export type MorphFit = 'contain' | 'cover';
+/**
+ * Como a foto se encaixa no quadro durante o movimento: produto em fundo branco (inteiro), foto recortada, ou a peça
+ * sem fundo do carrossel (`cutout`), que ocupa o quadro todo enquanto a foto da página da peça tem margem branca: as
+ * duas se misturam do começo ao fim, para o fim cair no tamanho real da peça (retorno de 09/11/2026).
+ */
+export type MorphFit = 'contain' | 'cover' | 'cutout';
+
+const MORPH_CLASS: Record<MorphFit, string> = {
+  contain: 'morph-contain',
+  cover: 'morph-cover',
+  cutout: 'morph-cutout',
+};
 
 export function morphName(kind: MorphKind, slug: string): string {
   return `${kind}-${slug}`;
@@ -38,7 +49,7 @@ export function morphName(kind: MorphKind, slug: string): string {
 
 /** `share` do `<ViewTransition>`: anima o par só na navegação marcada com o nome dele; nas outras, nenhum nome. */
 export function morphShare(fit: MorphFit, name: string): ViewTransitionClass {
-  return { [morphType(name)]: fit === 'contain' ? 'morph-contain' : 'morph-cover', default: 'none' };
+  return { [morphType(name)]: MORPH_CLASS[fit], default: 'none' };
 }
 
 /**
@@ -89,8 +100,11 @@ export function sameDocumentHref(a: string, b: string): boolean {
 
 /* ---------- estado da navegação em curso (só no navegador) ---------- */
 
-/** Origem clicada (ou destino da volta): nome do par, caminho da página que vai abrir e a foto já pintada. */
-export type PendingMorph = { name: string; path: string; src: string | null; at: number };
+/**
+ * Origem clicada (ou destino da volta): nome do par, caminho da página que vai abrir, a foto já pintada e, quando a
+ * origem pede, o encaixe que a foto de destino adota (`data-morph-fit` no link).
+ */
+export type PendingMorph = { name: string; path: string; src: string | null; fit?: MorphFit; at: number };
 
 const PENDING_TTL_MS = 10_000;
 let pending: PendingMorph | null = null;

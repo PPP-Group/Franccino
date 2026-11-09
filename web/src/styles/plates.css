@@ -236,6 +236,7 @@
 
 .quick-add {
   position: absolute;
+  z-index: 1;
   top: var(--space-2);
   right: var(--space-2);
   width: 44px;

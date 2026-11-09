@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { PiecesSection } from '@/components/catalog/PiecesSection';
 import { CardRail } from '@/components/content/CardRail';
 import { neighbours } from '@/components/content/layout';
 import { distinctLead } from '@/components/content/lead';
@@ -9,14 +9,12 @@ import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
 import { MediaLinks } from '@/components/media/MediaLinks';
-import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getDesigner, getDesigners } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
-import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
 import { MorphImage } from '@/components/media/MorphImage';
 import { morphName } from '@/lib/ui/morph';
 
@@ -128,18 +126,12 @@ export default async function DesignerPage({ params }: Props) {
           headingId="designer-media"
           className="media-links--wide block"
         />
-        {designer.products.length > 0 ? (
-          <section aria-labelledby="designer-pieces" className="page-section">
-            <h2 id="designer-pieces" className="section-title">
-              {t('piecesTitle')}
-            </h2>
-            {fitsFeatureCarousel(designer.products.length) ? (
-              <FeatureCarousel label={t('piecesTitle')} products={designer.products} />
-            ) : (
-              <ProductGrid products={designer.products} />
-            )}
-          </section>
-        ) : null}
+        <PiecesSection
+          id="designer-pieces"
+          title={t('piecesTitle')}
+          locale={locale}
+          products={designer.products}
+        />
       </div>
       {others.length > 0 ? (
         <section className="band band--sand" aria-labelledby="other-designers">
@@ -152,6 +144,7 @@ export default async function DesignerPage({ params }: Props) {
               variant="portrait"
               items={others.map((item) => ({
                 id: item.id,
+                morph: morphName('designer', item.slug),
                 href: designerHref(item.slug),
                 title: item.name,
                 image: item.portrait,

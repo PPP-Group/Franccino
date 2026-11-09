@@ -308,7 +308,8 @@
       "label": "Pages",
       "previous": "Previous",
       "next": "Next",
-      "status": "Page {current} of {last}"
+      "status": "Page {current} of {last}",
+      "short": "{current} / {last}"
     },
     "empty": "No pieces found.",
     "emptyState": {
@@ -496,7 +497,8 @@
         "slideRoleDescription": "highlight",
         "slide": "{current} of {total}",
         "pause": "Pause automatic rotation",
-        "play": "Resume automatic rotation"
+        "play": "Resume automatic rotation",
+        "goTo": "Go to highlight {current} of {total}"
       }
     },
     "scenes": {

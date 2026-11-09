@@ -45,7 +45,7 @@ export default async function QuoteListPage({ params }: Props) {
               <div className="section-head">
                 <h2 id="quote-recommended-title">{t('recommendedTitle')}</h2>
               </div>
-              <ProductRail label={t('recommendedTitle')} products={recommended.data} />
+              <ProductRail label={t('recommendedTitle')} products={recommended.data} scope="recommended" />
             </div>
           </section>
         ) : null}

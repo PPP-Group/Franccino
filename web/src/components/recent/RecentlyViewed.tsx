@@ -20,7 +20,7 @@ export function RecentlyViewed({ excludeIds = [] }: { excludeIds?: number[] }) {
         <div className="section-head">
           <h2 id="recent-title">{t('title')}</h2>
         </div>
-        <ProductRail label={t('title')} products={products} />
+        <ProductRail label={t('title')} products={products} scope="recent" />
       </div>
     </section>
   );

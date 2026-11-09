@@ -43,7 +43,7 @@ src/
     fonts.ts, globals.css
   components/
     layout/{SiteHeader,HeaderNav,HeaderSearch,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead,PageBanner}.tsx, nav.ts, area-menu.ts
-    ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
+    ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,ToastRegion}.tsx
     media/{ApiImage,MediaLinks,VideoFacade}.tsx
     content/{RichText,Blocks,Tile,EmptyNotice}.tsx
     downloads/{DownloadsTable,FileDownloads}.tsx

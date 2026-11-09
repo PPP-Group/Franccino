@@ -124,10 +124,22 @@
   background: var(--portrait-ground);
 }
 
+.piece-option__media {
+  display: block;
+}
+
 .piece-option__name {
+  display: block;
+  color: inherit;
+  text-decoration: none;
   font-size: var(--fs-ui);
   font-weight: 500;
   line-height: var(--lh-ui);
+}
+
+.piece-option__name:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .piece-option button {

@@ -9,7 +9,7 @@ import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { HeroSection } from '@/components/home/HeroSection';
 import { LaunchesSection } from '@/components/home/LaunchesSection';
 import { LinesSection } from '@/components/home/LinesSection';
-import { ParallaxFallback } from '@/components/home/ParallaxFallback';
+import { Parallax } from '@/components/home/Parallax';
 import { PlannerTeaser } from '@/components/home/PlannerTeaser';
 import { ProjectsSection } from '@/components/home/ProjectsSection';
 import { ScenesSection } from '@/components/home/ScenesSection';
@@ -190,7 +190,7 @@ export default async function HomePage({ params }: Props) {
       {rest.map((block, index) => (
         <Fragment key={block.key}>{block.render(toneOf(index + 1))}</Fragment>
       ))}
-      <ParallaxFallback />
+      <Parallax />
     </main>
   );
 }

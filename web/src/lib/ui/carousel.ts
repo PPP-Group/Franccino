@@ -1,5 +1,8 @@
-/** Intervalo entre os slides do carrossel da home, em milissegundos. */
-export const CAROUSEL_INTERVAL_MS = 7000;
+/**
+ * Tempo de cada slide do carrossel da home, em milissegundos: é a duração da barra que enche e da aproximação da foto
+ * (retorno de 09/11/2026: a aproximação estava lenta demais e a troca demorava).
+ */
+export const CAROUSEL_INTERVAL_MS = 6000;
 
 /** Índice circular: depois do último volta ao primeiro, antes do primeiro vai ao último. */
 export function wrapIndex(index: number, total: number): number {

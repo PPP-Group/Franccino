@@ -367,7 +367,8 @@ pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchid
 | `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila) |
 
 `target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`; `key`
-= slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id. Coleção de um arquivo só
+= slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
+`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel). Coleção de um arquivo só
 substitui a foto atual; `gallery` acrescenta. Coleção fora da lista: 422; registro não encontrado: 404.
 
 ## Limites e cabeçalhos

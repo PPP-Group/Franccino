@@ -3,8 +3,14 @@ import type { DesignerCard, DesignerRef } from '@/lib/api/types';
 import { MorphImage } from '@/components/media/MorphImage';
 import { morphName, morphTypes } from '@/lib/ui/morph';
 
-/** Até três designers, retratos grandes lado a lado; mais que isso, lista com retrato pequeno (sem buraco na grade). */
+/** Até três designers, retratos lado a lado; mais que isso, lista com retrato pequeno (sem buraco na grade). */
 const GRID_MAX = 3;
+
+/**
+ * Largura máxima de cada retrato: um designer sozinho ocupava a coluna inteira, e a foto ficava mais alta que o texto
+ * da coleção ao lado, deixando um vão em branco (retorno de 09/11/2026).
+ */
+const PORTRAIT_MAX = 168;
 
 /**
  * Designers de uma coleção, ao lado do texto dela (rodada 3): retrato quadrado em preto e branco e o nome, cada um
@@ -32,7 +38,11 @@ export function DesignerPortraits({
       </h2>
       <ul
         className={asGrid ? 'designer-portraits__grid' : 'designer-portraits__list'}
-        style={asGrid ? { gridTemplateColumns: `repeat(${designers.length}, minmax(0, 1fr))` } : undefined}
+        style={
+          asGrid
+            ? { gridTemplateColumns: `repeat(${designers.length}, minmax(0, ${PORTRAIT_MAX}px))` }
+            : undefined
+        }
         data-reveal="stagger"
       >
         {designers.map((designer) => {
@@ -52,7 +62,7 @@ export function DesignerPortraits({
                     <MorphImage
                       name={morphName('designer', designer.slug)}
                       image={card.portrait}
-                      sizes={asGrid ? '(max-width: 56.25rem) 33vw, 14vw' : '96px'}
+                      sizes={asGrid ? `${PORTRAIT_MAX}px` : '96px'}
                     />
                   ) : null}
                 </div>

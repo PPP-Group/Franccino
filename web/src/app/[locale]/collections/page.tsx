@@ -38,7 +38,8 @@ export default async function CollectionsPage({ params }: Props) {
   const launch = launches.find((item) => item.cover !== null) ?? null;
   const fill = missingCells(collections.length, 2) > 0;
   return (
-    <main className="page-end">
+    // A grade de coleções vai na largura toda e encosta no rodapé, sem faixa branca (retorno de 09/11/2026).
+    <main className={collections.length === 0 ? 'page-end' : undefined}>
       <div className="wrap">
         <PageHead title={t('title')} centered />
       </div>

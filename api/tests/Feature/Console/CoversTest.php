@@ -45,6 +45,19 @@ it('turns the listed gallery photo into the cover, once', function () {
     expect($product->refresh()->getMedia('gallery'))->toHaveCount(1);
 });
 
+it('keeps the old cover as a gallery photo', function () {
+    $product = publishedProduct(['slug' => ['pt' => 'cadeira-aura']]);
+    $product->addMedia(UploadedFile::fake()->image('frente.jpg', 800, 600))->toMediaCollection('cover');
+    $diagonal = $product->addMedia(UploadedFile::fake()->image('diagonal.jpg', 640, 480))->toMediaCollection('gallery');
+    writeCoverList($this->list, [['product' => 'cadeira-aura', 'media' => $diagonal->id]]);
+
+    $this->artisan('franccino:covers:apply', ['file' => $this->list])->assertSuccessful();
+
+    $product->refresh();
+    expect($product->getFirstMedia('cover')->file_name)->toBe('diagonal.jpg')
+        ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente.jpg']);
+});
+
 it('skips a photo that is not in that product gallery and changes nothing on a dry run', function () {
     $product = publishedProduct(['slug' => ['pt' => 'cadeira-aura']]);
     $other = Product::factory()->create(['slug' => ['pt' => 'poltrona-maria', 'en' => 'maria-armchair']]);

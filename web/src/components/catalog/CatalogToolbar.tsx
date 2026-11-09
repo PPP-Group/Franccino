@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+import { FilterForm } from './FilterForm';
 import { useTranslations } from 'next-intl';
 import type { AppHref } from '@/i18n/navigation';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
@@ -15,6 +17,8 @@ type CatalogToolbarProps = {
   formAction: string;
   /** Demais filtros da URL, preservados no envio do form. */
   hiddenQuery: Record<string, string>;
+  /** "Anterior" e "Próxima" ao lado da contagem (`Pagination position="top"`). */
+  pager?: ReactNode;
 };
 
 /**
@@ -26,10 +30,13 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
   const t = useTranslations('catalog.filters');
   return (
     <div className="toolbar toolbar--catalog">
-      <p className="meta num">{props.count}</p>
+      <div className="toolbar__start">
+        <p className="meta num">{props.count}</p>
+        {props.pager}
+      </div>
       <div className="toolbar__end">
         {props.designerOptions.length > 0 ? (
-          <form className="filter-form" action={props.formAction} method="get">
+          <FilterForm className="filter-form" action={props.formAction}>
             {Object.entries(props.hiddenQuery).map(([name, value]) => (
               <input key={name} type="hidden" name={name} value={value} />
             ))}
@@ -45,6 +52,7 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
                 { value: '', label: t('allDesigners') },
                 ...props.designerOptions.map((option) => ({
                   value: option.value,
+                  image: option.image,
                   label:
                     option.count === null
                       ? option.label
@@ -55,7 +63,7 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
             <button type="submit" className="btn btn--ghost btn--compact">
               {t('apply')}
             </button>
-          </form>
+          </FilterForm>
         ) : null}
         <ViewToggle view={props.view} hrefFor={(next) => props.hrefFor({ view: next })} />
       </div>

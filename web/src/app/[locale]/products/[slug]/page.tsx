@@ -192,6 +192,7 @@ export default async function ProductPage({ params }: Props) {
               <ProductRail
                 label={product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
                 products={product.line_products}
+                scope="line"
               />
             </div>
           </section>
@@ -207,7 +208,11 @@ export default async function ProductPage({ params }: Props) {
                   <Icon name="arrow" />
                 </Link>
               </div>
-              <ProductRail label={t('related', { category: product.category.name })} products={related} />
+              <ProductRail
+                label={t('related', { category: product.category.name })}
+                products={related}
+                scope="related"
+              />
             </div>
           </section>
         ) : null}

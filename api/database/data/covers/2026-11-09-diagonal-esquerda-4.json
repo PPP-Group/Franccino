@@ -1,0 +1,50 @@
+{
+  "version": "2026-11-09-diagonal-esquerda-4",
+  "note": "Retorno de 09/11/2026: segunda revisão das capas na diagonal virada para a esquerda (a frente da peça voltada para a esquerda da foto: nas cadeiras o encosto fica à direita; nas mesas, bancos, aparadores e sofás, a ponta direita mais perto). Cadeiras cuja capa era a vista de trás em três quartos (Carola, Lisa com braço, Maria com e sem braço, Melina sem braço, Málaga sem braço), Poltrona Adélia (capa quase de perfil), Vest com braço e Arp (viradas para a direita), Mesa de jantar Málaga outdoor e Mesa de centro Noá Quadrada (de frente). Conferidas a olho, uma a uma. Ids das fotos do preview. A capa antiga vai para a galeria.",
+  "covers": [
+    {
+      "product": "cadeira-carola",
+      "media": 1376
+    },
+    {
+      "product": "cadeira-lisa-com-braco",
+      "media": 1236
+    },
+    {
+      "product": "cadeira-maria-com-braco",
+      "media": 1086
+    },
+    {
+      "product": "cadeira-maria-sem-braco",
+      "media": 1080
+    },
+    {
+      "product": "cadeira-melina-sem-braco",
+      "media": 1401
+    },
+    {
+      "product": "cadeira-malaga-sem-braco",
+      "media": 1096
+    },
+    {
+      "product": "poltrona-adelia",
+      "media": 1030
+    },
+    {
+      "product": "cadeira-vest-com-braco",
+      "media": 989
+    },
+    {
+      "product": "cadeira-arp",
+      "media": 202
+    },
+    {
+      "product": "mesa-de-jantar-malaga-outdoor",
+      "media": 483
+    },
+    {
+      "product": "mesa-de-centro-noa-quadrada",
+      "media": 237
+    }
+  ]
+}

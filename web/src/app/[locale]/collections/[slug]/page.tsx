@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { PiecesSection } from '@/components/catalog/PiecesSection';
 import { CardRail } from '@/components/content/CardRail';
 import { DesignerPortraits } from '@/components/content/DesignerPortraits';
 import { EditorialGallery } from '@/components/content/EditorialGallery';
@@ -10,12 +10,10 @@ import { RichText } from '@/components/content/RichText';
 import { PageCoverArt } from '@/components/layout/PageBanner';
 import { morphName } from '@/lib/ui/morph';
 import { PageHead } from '@/components/layout/PageHead';
-import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getCollection, getCollections, getDesigners } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
-import { fitsFeatureCarousel } from '@/lib/ui/feature-carousel';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -90,18 +88,12 @@ export default async function CollectionPage({ params }: Props) {
           ) : null}
         </PageHead>
         <EditorialGallery images={collection.gallery} label={t('gallery')} />
-        {collection.products.length > 0 ? (
-          <section aria-labelledby="collection-pieces" className="page-section">
-            <h2 id="collection-pieces" className="section-title">
-              {t('piecesTitle')}
-            </h2>
-            {fitsFeatureCarousel(collection.products.length) ? (
-              <FeatureCarousel label={t('piecesTitle')} products={collection.products} />
-            ) : (
-              <ProductGrid products={collection.products} />
-            )}
-          </section>
-        ) : null}
+        <PiecesSection
+          id="collection-pieces"
+          title={t('piecesTitle')}
+          locale={locale}
+          products={collection.products}
+        />
       </div>
       {others.length > 0 ? (
         <section className="band band--sand" aria-labelledby="other-collections">
@@ -113,6 +105,7 @@ export default async function CollectionPage({ params }: Props) {
               label={t('othersTitle')}
               items={others.map((item) => ({
                 id: item.id,
+                morph: morphName('collection', item.slug),
                 href: collectionHref(item.slug),
                 title: item.name,
                 image: item.cover,
