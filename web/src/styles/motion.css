@@ -362,7 +362,11 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 /* A tabela da página nova entra com um fade curto; a grade já entra peça por peça (data-reveal="stagger"). */
 @media (prefers-reduced-motion: no-preference) {
   .catalog-results > :not(.grid-plates, .empty) {
-    animation: results-in var(--t-slow) var(--ease-out) both;
+    /*
+      `backwards`, não `both`: um `transform` que fica no contêiner depois do fim vira a referência do `position: fixed`
+      das fotos que flutuam na linha (RowPeek), e elas saíam longe do ponteiro (retorno de 09/11/2026).
+    */
+    animation: results-in var(--t-slow) var(--ease-out) backwards;
   }
 }
 
