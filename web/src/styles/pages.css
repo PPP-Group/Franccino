@@ -833,10 +833,10 @@
 
 /* ---------- coleções no modelo do site antigo (ajustes do cliente, 06/10/2026) ---------- */
 
+/* A última linha de coleções encosta no rodapé, sem faixa branca entre os dois (retorno de 09/11/2026). */
 .collection-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding-bottom: var(--section-y);
 }
 
 .collection-tile {
@@ -1507,9 +1507,9 @@
 
 .designer-portraits__name {
   font-family: var(--font-heading);
-  font-size: var(--fs-h3);
+  font-size: var(--fs-lead);
   font-weight: 500;
-  line-height: var(--lh-h3);
+  line-height: var(--lh-lead, var(--lh-h3));
   text-wrap: balance;
 }
 

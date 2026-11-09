@@ -4,11 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
-import { productMorphName } from '@/components/products/ProductPlate';
 import { Link } from '@/i18n/navigation';
 import type { Scene } from '@/lib/api/types';
 import { coverPoint, placeHotspot } from '@/lib/scenes/hotspot';
-import { morphTypes } from '@/lib/ui/morph';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /**
  * Ambiente com pontos clicáveis (banco de ideias, ideia 7, aprovado pela Franccino e pelo marketing em 26/10/2026):
@@ -93,14 +92,18 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
                 className="scene__card-link"
                 href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
                 transitionTypes={
-                  hotspot.product.cover ? morphTypes(productMorphName(hotspot.product.slug)) : undefined
+                  hotspot.product.cover
+                    ? morphTypes(morphName('piece', `scene-${hotspot.product.slug}`))
+                    : undefined
                 }
-                data-morph-link={hotspot.product.cover ? productMorphName(hotspot.product.slug) : undefined}
+                data-morph-link={
+                  hotspot.product.cover ? morphName('piece', `scene-${hotspot.product.slug}`) : undefined
+                }
               >
                 {hotspot.product.cover ? (
                   <span className="scene__card-media hover-zoom">
                     <MorphImage
-                      name={productMorphName(hotspot.product.slug)}
+                      name={morphName('piece', `scene-${hotspot.product.slug}`)}
                       image={hotspot.product.cover}
                       sizes="160px"
                       fit="contain"

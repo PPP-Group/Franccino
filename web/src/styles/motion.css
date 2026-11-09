@@ -324,8 +324,30 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 
   /* As fotos que já têm movimento próprio (paralaxe, aproximação do banner) não trocam de animação: só saem do tom. */
   html[data-img-fade]
-    img[data-img][data-loaded='late']:not([data-parallax-layer], .hero__img, [data-reveal^='curtain'] *) {
+    img[data-img][data-loaded='late']:not(
+      [data-parallax-layer],
+      .hero__img,
+      .is-arriving,
+      [data-reveal^='curtain'] *
+    ) {
     animation: img-arrive var(--t-slow) var(--ease-out) both;
+  }
+
+  /*
+    Foto grande do topo (banner de página, palco da peça) aberta pelo menu ou por um link sem a foto que cresce: sobe um
+    pouco e encaixa, com fade, em vez de aparecer de uma vez (retorno de 09/11/2026). Vem depois do tom de carregamento
+    (mesma força), para valer sobre ele.
+  */
+  html[data-img-fade] img[data-img].is-arriving,
+  img[data-img].is-arriving {
+    animation: banner-arrive 650ms var(--ease-out) both;
+  }
+}
+
+@keyframes banner-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(1.03);
   }
 }
 

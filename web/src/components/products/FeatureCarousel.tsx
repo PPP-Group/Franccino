@@ -18,7 +18,7 @@ import { Link } from '@/i18n/navigation';
 import type { Image, ProductCard } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { STAGE_SIZES } from '@/lib/product/gallery';
-import { markImageLoaded, morphTypes } from '@/lib/ui/morph';
+import { markImageLoaded, morphName, morphTypes } from '@/lib/ui/morph';
 import {
   clampIndex,
   counterNumber,
@@ -32,7 +32,6 @@ import {
   type CoverflowPose,
 } from '@/lib/ui/feature-carousel';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
-import { productMorphName } from './ProductPlate';
 
 export type FeatureCarouselProduct = Pick<
   ProductCard,
@@ -379,8 +378,10 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 }}
                 className="feature-carousel__link"
                 href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
-                transitionTypes={image ? morphTypes(productMorphName(product.slug)) : undefined}
-                data-morph-link={image ? productMorphName(product.slug) : undefined}
+                transitionTypes={
+                  image ? morphTypes(morphName('piece', `carousel-${product.slug}`)) : undefined
+                }
+                data-morph-link={image ? morphName('piece', `carousel-${product.slug}`) : undefined}
                 data-morph-fit={product.cutout ? 'cutout' : undefined}
                 tabIndex={isActive ? 0 : -1}
                 draggable={false}
@@ -398,7 +399,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 >
                   {image ? (
                     <MorphImage
-                      name={productMorphName(product.slug)}
+                      name={morphName('piece', `carousel-${product.slug}`)}
                       image={image}
                       sizes={ITEM_SIZES}
                       fit={product.cutout ? 'cutout' : 'contain'}

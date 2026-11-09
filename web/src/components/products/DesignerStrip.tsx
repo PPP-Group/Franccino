@@ -52,7 +52,7 @@ export function DesignerStrip({
             <ul className="designer-strip__pieces" aria-label={t('piecesBy', { name: designer.name })}>
               {pieces.map((piece) => (
                 <li key={piece.id}>
-                  <ProductPlate product={piece} sizes={PIECE_SIZES} />
+                  <ProductPlate product={piece} sizes={PIECE_SIZES} morphScope="designer" />
                 </li>
               ))}
             </ul>

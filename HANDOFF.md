@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (25, de 09/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (26, de 09/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -997,7 +997,31 @@ com Playwright (medidas, capturas e quadros da transição).
   (`lib/ui/fly-to-quote.ts`).
 - **Etiqueta "Lançamentos":** fica como está (o tech lead acha que não precisa voltar).
 
-### 25.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
+## 26. 09/11/2026 (tarde): segundo retorno do dia
+
+- **Busca do cabeçalho como a tabela técnica:** cada peça sugerida mostra foto, nome e categoria, linha, designer e
+  medida, e as fotos se abrem ao lado do ponteiro no hover (`RowPeek` passou a servir à lista da busca). A ação da
+  busca pede o detalhe das peças sugeridas; sem ele, a linha sai só com foto e nome. O clique faz a foto crescer: a lista
+  some no mesmo quadro em que a página nova entra (o cabeçalho não desmonta, e sem isso não havia foto de origem).
+- **Esteiras ("Peças que você viu", "Recomendadas", da mesma linha, relacionadas, do designer, carrossel e ambiente):**
+  cada uma com o próprio nome na transição (`ProductRail scope`, `ProductPlate morphScope`). A mesma peça em duas
+  esteiras dava dois nomes iguais, e a transição falhava na ida (na volta funcionava).
+- **Sala para montar:** a foto e o nome de cada peça da biblioteca abrem a página da peça, com a foto que cresce; o "+"
+  continua pondo na planta. **Lista de orçamento:** o nome também abre a peça com a foto que cresce.
+- **Coleções e designers no mesmo formato:** carrossel (quando cabe) e, embaixo, grade e tabela técnica com a barra do
+  catálogo (`PiecesSection`, troca no navegador; as páginas seguem estáticas). Na Avito, por exemplo, só havia o
+  carrossel. Lançamento já tinha a barra.
+- **Designer na coleção:** retrato com no máximo 168 px, mesmo sozinho (ocupava a coluna e deixava o texto com vão).
+- **Coleções (índice):** sem a faixa branca entre a última linha e o rodapé.
+- **Banner das páginas pelo menu:** sobe de leve e encaixa com fade (650 ms) quando a página abre sem a foto que cresce
+  (`is-arriving` no `MorphImage` de destino).
+- **Favicon:** F da logo em preto num quadrado branco de cantos arredondados (`src/app/icon.svg`, `favicon.ico`,
+  `apple-icon.png`).
+- **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
+  Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
+  banners por ela.
+
+### 26.1 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
 
 Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar"). Caminho combinado em 08/11: o tech lead
 gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o

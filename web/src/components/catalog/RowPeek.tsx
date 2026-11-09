@@ -22,7 +22,16 @@ export type RowPeekItem = { id: number; images: Image[] };
  * desktop com mouse; decorativa (o nome e o link da linha já dizem tudo), sem eventos de ponteiro. Com "menos
  * movimento", a prévia aparece aberta e parada.
  */
-export function RowPeek({ items }: { items: RowPeekItem[] }) {
+export function RowPeek({
+  items,
+  container = 'tbody',
+  className,
+}: {
+  items: RowPeekItem[];
+  /** Onde ficam as linhas (`[data-row-id]`), entre os irmãos da prévia: o corpo da tabela ou a lista da busca. */
+  container?: string;
+  className?: string;
+}) {
   const layerRef = useRef<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [shownId, setShownId] = useState<number | null>(null);
@@ -34,7 +43,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
 
   useEffect(() => {
     const layer = layerRef.current;
-    const body = layer?.parentElement?.querySelector('tbody');
+    const body = layer?.parentElement?.querySelector<HTMLElement>(container);
     if (!layer || !body || !window.matchMedia(FINE_POINTER).matches) {
       return;
     }
@@ -61,7 +70,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
       if (event.pointerType !== 'mouse') {
         return;
       }
-      const row = (event.target as Element).closest<HTMLElement>('tr[data-row-id]');
+      const row = (event.target as Element).closest<HTMLElement>('[data-row-id]');
       if (!row) {
         setActiveId(null);
         return;
@@ -100,7 +109,7 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
       body.removeEventListener('pointerleave', hide);
       window.removeEventListener('scroll', hide);
     };
-  }, []);
+  }, [container]);
 
   const shown = items.find((item) => item.id === shownId);
   const photos = shown ? shown.images.slice(0, PREVIEW_COUNT) : [];
@@ -108,7 +117,9 @@ export function RowPeek({ items }: { items: RowPeekItem[] }) {
   return (
     <div
       ref={layerRef}
-      className={activeId !== null && shown ? 'row-peek is-visible' : 'row-peek'}
+      className={['row-peek', className, activeId !== null && shown ? 'is-visible' : '']
+        .filter(Boolean)
+        .join(' ')}
       style={{ width: box.width, height: box.height }}
       aria-hidden="true"
     >

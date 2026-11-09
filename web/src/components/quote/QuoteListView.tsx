@@ -13,6 +13,7 @@ import { whatsappUrl } from '@/lib/contact-links';
 import { useQuoteItems } from '@/lib/quote/hooks';
 import { quoteItemKey, totalQuantity } from '@/lib/quote/list';
 import { buildQuoteMessage, buildWhatsAppText, formatFinishes, toContactItems } from '@/lib/quote/message';
+import { snapshotAsImage } from '@/lib/quote/snapshot';
 import { quoteActions } from '@/lib/quote/store';
 import type { QuoteItem } from '@/lib/quote/types';
 import { morphName, morphTypes } from '@/lib/ui/morph';
@@ -46,15 +47,7 @@ function QuoteItemRow({ item, onRemoved }: { item: QuoteItem; onRemoved: () => v
         >
           <MorphImage
             name={morphName('piece', item.slug)}
-            image={{
-              id: 0,
-              alt: '',
-              width: 120,
-              height: 90,
-              src: item.image.src,
-              srcset: [],
-              blur_data_url: null,
-            }}
+            image={snapshotAsImage(item.image)}
             sizes="140px"
             fit="contain"
           />
@@ -69,6 +62,8 @@ function QuoteItemRow({ item, onRemoved }: { item: QuoteItem; onRemoved: () => v
             href={{ pathname: '/products/[slug]', params: { slug: item.slug } }}
             locale={item.locale}
             lang={htmlLang(item.locale)}
+            transitionTypes={item.image ? morphTypes(morphName('piece', item.slug)) : undefined}
+            data-morph-link={item.image ? morphName('piece', item.slug) : undefined}
           >
             {item.name}
           </Link>

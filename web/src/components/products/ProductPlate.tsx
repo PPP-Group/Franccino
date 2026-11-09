@@ -30,6 +30,8 @@ type ProductPlateProps = {
   showNew?: boolean;
   sizes?: string;
   priority?: boolean;
+  /** Esteira ou bloco em que o card está: o nome da transição fica único na página (`ProductRail`). */
+  morphScope?: string;
 };
 
 /**
@@ -43,7 +45,11 @@ export function ProductPlate({
   showNew = false,
   sizes = PLATE_SIZES,
   priority = false,
+  morphScope,
 }: ProductPlateProps) {
+  const morph = morphScope
+    ? morphName('piece', `${morphScope}-${product.slug}`)
+    : productMorphName(product.slug);
   const t = useTranslations('catalog');
   const cover = product.cover;
   // A foto nunca passa da própria largura: as originais do catálogo são pequenas, e ampliar borra.
@@ -53,21 +59,15 @@ export function ProductPlate({
       <Link
         className="plate__link"
         href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
-        transitionTypes={cover ? morphTypes(productMorphName(product.slug)) : undefined}
-        data-morph-link={cover ? productMorphName(product.slug) : undefined}
+        transitionTypes={cover ? morphTypes(morph) : undefined}
+        data-morph-link={cover ? morph : undefined}
       >
         <div
           className={cover ? 'plate__media hover-zoom' : 'plate__media plate__media--empty'}
           style={mediaStyle}
         >
           {cover ? (
-            <MorphImage
-              name={productMorphName(product.slug)}
-              image={cover}
-              sizes={sizes}
-              priority={priority}
-              fit="contain"
-            />
+            <MorphImage name={morph} image={cover} sizes={sizes} priority={priority} fit="contain" />
           ) : null}
         </div>
         <div className="plate__body">

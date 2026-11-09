@@ -32,8 +32,9 @@ curl -fsS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' 
 ```
 
 Tipos (`target`) e coleções aceitas: `product` (cover, gallery, cutout; `key` = slug), `project` (cover, gallery;
-`key` = slug), `store` (image), `client` (logo) e `scene` (image), esses três com `key` = id. `cover`, `cutout`,
-`image` e `logo` substituem a foto atual; `gallery` acrescenta.
+`key` = slug), `store` (image), `client` (logo) e `scene` (image), esses três com `key` = id, e `banner` (image,
+image_mobile; `key` = posição no carrossel da home, 1, 2, 3...). `cover`, `cutout`, `image` e `logo` substituem a foto
+atual; `gallery` acrescenta.
 
 ## Pendente em 07/11/2026
 

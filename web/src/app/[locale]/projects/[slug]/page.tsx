@@ -120,7 +120,7 @@ export default async function ProjectPage({ params }: Props) {
             <div className="section-head">
               <h2 id="project-pieces">{t('piecesTitle')}</h2>
             </div>
-            <ProductRail label={t('piecesTitle')} products={project.products} />
+            <ProductRail label={t('piecesTitle')} products={project.products} scope="project" />
           </section>
         ) : null}
       </div>

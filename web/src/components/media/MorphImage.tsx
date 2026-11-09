@@ -79,6 +79,9 @@ export function MorphImage({
     };
   });
   const [src, setSrc] = useState(start.src);
+  // Foto grande aberta sem movimento de foto (menu, link de texto, endereço digitado): sobe e encaixa de leve
+  // (retorno de 09/11/2026: "não abrir de uma vez"). Com movimento, quem anima é a transição.
+  const [arriving] = useState(() => hero && pendingMorphFor(pathname) === null);
 
   // Depois do movimento, a versão do tamanho certo é baixada e decodificada antes de entrar: a troca não pisca.
   useEffect(() => {
@@ -107,7 +110,7 @@ export function MorphImage({
         image={shown}
         sizes={sizes}
         priority={priority || src !== null}
-        className={className}
+        className={arriving ? [className, 'is-arriving'].filter(Boolean).join(' ') : className}
         parallax={parallax}
         // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
         fade={start.src === null}
