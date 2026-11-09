@@ -9,6 +9,7 @@ import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { morphName } from '@/lib/ui/morph';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -47,7 +48,12 @@ export default async function FactoryPage({ params }: Props) {
   return (
     <main className="factory-page">
       {/* Abre com a foto da fachada (capa da página no painel), como pedido nos ajustes de 06/10/2026. */}
-      <PageBanner image={page?.cover ?? null} title={page?.title ?? t('title')} lead={page?.intro} />
+      <PageBanner
+        image={page?.cover ?? null}
+        title={page?.title ?? t('title')}
+        lead={page?.intro}
+        morph={morphName('page', 'factory')}
+      />
       {blocks.length > 0 ? (
         <Blocks blocks={blocks} editorial />
       ) : (

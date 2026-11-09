@@ -1045,6 +1045,9 @@ com Playwright (medidas, capturas e quadros da transição).
 - **Filtro de designer:** ao passar o mouse num nome da lista aberta, o retrato do designer flutua ao lado da lista
   (em preto e branco, como nas páginas de designer), como as fotos da tabela técnica (`SelectOption.image`,
   `RowPeek beside`).
+- **Faixa da Fábrica na home → página da Fábrica:** a foto cresce até o banner e volta (`morphName('page', 'factory')`).
+  Durante a transição a foto da faixa deixa de ser fixa (`:active-view-transition`), para o movimento partir do recorte
+  à vista.
 - **Logo:** recarrega a página inicial e abre no topo, sempre (link comum, `data-no-motion`), sem a foto que volta.
 - **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três

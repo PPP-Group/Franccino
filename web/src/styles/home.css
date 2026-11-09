@@ -1103,6 +1103,16 @@
     width: 100vw;
     height: 100vh;
   }
+
+  /*
+    Durante a foto que cresce até a página da Fábrica (e volta), a foto deixa de ser fixa e ocupa só a faixa: o movimento
+    parte do recorte que está à vista, não da tela inteira (retorno de 09/11/2026).
+  */
+  :root:active-view-transition .factory-band__media img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .factory-band__link::after {

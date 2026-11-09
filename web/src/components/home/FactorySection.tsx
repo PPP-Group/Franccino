@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl';
-import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { PageContent } from '@/lib/api/types';
 import { heroSizes } from '@/lib/images/cover';
+import { morphName, morphTypes } from '@/lib/ui/morph';
 import { sectionClass, type Tone } from './tone';
 
 /**
@@ -36,11 +37,19 @@ export function FactorySection({ page, tone }: { page: PageContent; tone: Tone }
       </section>
     );
   }
+  // A foto da faixa cresce até o banner da página da Fábrica e volta (ideia 10, retorno de 09/11/2026).
+  const morph = morphName('page', 'factory');
   return (
     <section className="factory-band" aria-labelledby="factory-title">
-      <Link className="factory-band__link hover-zoom" href="/factory" data-parallax="">
+      <Link
+        className="factory-band__link hover-zoom"
+        href="/factory"
+        data-parallax=""
+        transitionTypes={morphTypes(morph)}
+        data-morph-link={morph}
+      >
         <span className="factory-band__media">
-          <ApiImage image={page.cover} sizes={heroSizes(page.cover)} />
+          <MorphImage name={morph} image={page.cover} sizes={heroSizes(page.cover)} />
         </span>
         <div className="wrap factory-band__wrap">
           <div className="factory-band__copy" data-parallax-layer="front" data-reveal="">

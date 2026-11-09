@@ -28,7 +28,7 @@ export function morphTypes(name: string): string[] {
 }
 
 export type MorphKind =
-  'product' | 'feature' | 'piece' | 'search' | 'collection' | 'project' | 'area' | 'designer';
+  'product' | 'feature' | 'piece' | 'search' | 'collection' | 'project' | 'area' | 'designer' | 'page';
 
 /**
  * Como a foto se encaixa no quadro durante o movimento: produto em fundo branco (inteiro), foto recortada, ou a peça
