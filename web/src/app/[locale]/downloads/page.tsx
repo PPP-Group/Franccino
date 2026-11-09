@@ -1,3 +1,4 @@
+import { FilterForm } from '@/components/catalog/FilterForm';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
@@ -84,7 +85,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
         lead={page?.intro}
         meta={<p className="meta num">{t('count', { count: downloads.meta.total })}</p>}
       />
-      <form className="search-form" role="search">
+      <FilterForm className="search-form" role="search">
         <div className="field">
           <label id="downloads-area-label" htmlFor="downloads-area">
             {t('filters.area')}
@@ -108,7 +109,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
         <button className="btn" type="submit">
           {t('filters.submit')}
         </button>
-      </form>
+      </FilterForm>
       {downloads.data.length === 0 ? (
         <EmptyNotice text={t('empty')} />
       ) : (
@@ -117,7 +118,10 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
             <Pagination meta={downloads.meta} label={t('pagination')} hrefFor={pageHref} position="top" />
           </div>
           {/* A chave remonta a tabela a cada página: as linhas novas entram com fade, não de uma vez. */}
-          <div key={downloads.meta.current_page} className="catalog-results">
+          <div
+            key={`${area ?? ''}-${category ?? ''}-${q ?? ''}-${downloads.meta.current_page}`}
+            className="catalog-results"
+          >
             <DownloadsTable rows={downloads.data} />
           </div>
         </>

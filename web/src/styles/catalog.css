@@ -471,8 +471,3 @@ a.pagination__step:hover span {
 [data-page-anchor] {
   scroll-margin-top: calc(var(--header) + var(--space-4));
 }
-
-/* "Peças que você viu" logo depois da lista: o respiro de baixo da lista já separa as duas (sem somar dois --section-y). */
-.catalog + .recent {
-  padding-top: 0;
-}

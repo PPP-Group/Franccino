@@ -144,6 +144,7 @@ export default async function DesignerPage({ params }: Props) {
               variant="portrait"
               items={others.map((item) => ({
                 id: item.id,
+                morph: morphName('designer', item.slug),
                 href: designerHref(item.slug),
                 title: item.name,
                 image: item.portrait,

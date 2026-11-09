@@ -130,8 +130,14 @@ export async function CatalogListing(props: CatalogListingProps) {
             />
           }
         />
-        {/* A chave remonta a lista a cada página: as peças novas entram com a revelação, não de uma vez. */}
-        <section key={page.meta.current_page} className="catalog-results" aria-label={t('resultsLabel')}>
+        {/*
+          A chave remonta a lista a cada página e a cada filtro: as peças novas entram com a revelação, não de uma vez.
+        */}
+        <section
+          key={`${JSON.stringify(params)}-${page.meta.current_page}`}
+          className="catalog-results"
+          aria-label={t('resultsLabel')}
+        >
           {page.data.length === 0 ? (
             <div className="empty">
               <h2>{t('emptyState.title')}</h2>

@@ -1031,6 +1031,13 @@ com Playwright (medidas, capturas e quadros da transição).
   (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
   na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
   catálogo e nos downloads.
+- **Filtro sem recarregar:** "Aplicar" (designer no catálogo; linha, busca e área nos downloads) troca só a lista, pelo
+  roteador e sem rolar (`FilterForm`); a lista remonta e as peças entram de novo com a revelação. Sem JavaScript, o
+  formulário GET continua funcionando.
+- **"Peças que você viu" no catálogo:** o mesmo respiro em cima e embaixo (saiu a regra que zerava o de cima).
+- **"Outros projetos", "Outras coleções" e "Outros designers":** a foto cresce até o topo da página aberta e volta
+  (`CardRail` com `morph`).
+- **Logo:** recarrega a página inicial e abre no topo, sempre (link comum, `data-no-motion`), sem a foto que volta.
 - **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
   Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
   banners por ela.

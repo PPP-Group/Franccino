@@ -18,8 +18,8 @@ import {
      no lugar certo, e a página não abre no topo para depois descer.
   2. Volta pelo navegador: o React trata o `popstate` de forma síncrona e sem transição. Quando a volta desfaz uma
      abertura de peça, o evento é repassado ao roteador logo depois, dentro de uma transição com o tipo do movimento.
-  3. Caminho (breadcrumb) e logo: o link que leva à página de onde a peça foi aberta vira um "voltar" do navegador,
-     com a rolagem e o movimento de volta.
+  3. Caminho (breadcrumb): o link que leva à página de onde a peça foi aberta vira um "voltar" do navegador, com a
+     rolagem e o movimento de volta. A logo não (`data-no-motion`): recarrega a home no topo (retorno de 09/11/2026).
   4. Antes da foto da página nova: nomes repetidos (que cancelariam a transição inteira) ficam num elemento só, o que
      está na tela; e as fotos da tela já baixadas terminam de decodificar (até 200 ms), para nada sair em branco.
   5. Fotos já baixadas: lista das versões que já chegaram, para a foto de destino pintar na hora (`MorphImage`).
@@ -229,6 +229,12 @@ function onClick(event: MouseEvent) {
   if (link.target && link.target !== '_self') return;
   const url = new URL(link.href);
   if (url.origin !== location.origin) return;
+  // A logo recarrega a home no topo: nada de "voltar" nem de movimento (retorno de 09/11/2026).
+  if (link.hasAttribute('data-no-motion')) {
+    setPendingMorph(null);
+    pendingEdge = null;
+    return;
+  }
   positions.set(entryKey(), window.scrollY);
 
   // Caminho ou logo que leva à página de onde a peça foi aberta: é um "voltar".

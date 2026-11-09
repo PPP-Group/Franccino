@@ -105,6 +105,7 @@ export default async function CollectionPage({ params }: Props) {
               label={t('othersTitle')}
               items={others.map((item) => ({
                 id: item.id,
+                morph: morphName('collection', item.slug),
                 href: collectionHref(item.slug),
                 title: item.name,
                 image: item.cover,
