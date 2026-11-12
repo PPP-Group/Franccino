@@ -29,6 +29,12 @@ class HomeController extends Controller
             ->ordered()
             ->with('media')
             ->get();
+        // Banner de campanha (revisão da Franccino, 12/11/2026): com data de início ou de fim, ele entra no lugar dos
+        // banners de sempre enquanto estiver no período; acabado o período, os de sempre voltam sozinhos.
+        $campaign = $banners->filter(fn (Banner $banner): bool => $banner->starts_at !== null || $banner->ends_at !== null);
+        if ($campaign->isNotEmpty()) {
+            $banners = $campaign->values();
+        }
 
         $featuredProducts = Product::published()
             ->where('is_featured', true)

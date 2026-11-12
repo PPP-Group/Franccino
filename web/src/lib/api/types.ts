@@ -35,8 +35,12 @@ export type CollectionRef = { id: number; slug: string; name: string; year: numb
 export type Dimension = {
   label: string | null;
   width: number | null;
+  /** Medida flexível (revisão de 12/11/2026): de `width` a `width_max`. Ausente na API antiga. */
+  width_max?: number | null;
   depth: number | null;
+  depth_max?: number | null;
   height: number | null;
+  height_max?: number | null;
   seat_height: number | null;
   diameter: number | null;
 };
@@ -74,6 +78,8 @@ export type ProductCard = {
   is_new: boolean;
 };
 
+export type ProductVariant = { id: number; slug: string; name: string; image: Image | null };
+
 export type ProductDetail = ProductCard & {
   slugs: Record<Locale, string | null>;
   sku: string | null;
@@ -90,6 +96,12 @@ export type ProductDetail = ProductCard & {
   }[];
   gallery: Image[];
   /** O GLB fica em disco privado: o visualizador pede o link na hora (`requestModelLink`). */
+  /** Vista de cima (planta) para a sala para montar; sem ela, a sala usa a capa (item 29). */
+  top_view?: Image | null;
+  /** Ambientes da peça (item 8). */
+  rooms?: string[];
+  /** Outras versões publicadas da peça (item 13). */
+  variants?: ProductVariant[];
   model_3d: { size: number | null } | null;
   files: DownloadFile[];
   media_links: MediaLink[];
@@ -321,6 +333,8 @@ export type PageContent = {
   intro: string | null;
   content: Block[];
   cover: Image | null;
+  /** Peça em destaque ao lado do título, escolhida no painel (só publicada). Ausente na API antiga. */
+  featured_product?: ProductCard | null;
   seo: Seo;
   /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
   locale_fallback: boolean;
@@ -367,6 +381,8 @@ export type Facets = {
   collections: FacetOption[];
   lines: FacetOption[];
   finish_groups: FacetOption[];
+  /** Ambientes com peça (item 8), na ordem da API; o site traduz a chave. Ausente em respostas antigas. */
+  rooms?: { key: string; count: number }[];
 };
 
 export type SearchResult = {

@@ -23,6 +23,7 @@ import {
   clampIndex,
   counterNumber,
   coverflowPose,
+  pieceWidthFactor,
   DRAG_THRESHOLD_PX,
   dragPosition,
   initialIndex,
@@ -39,7 +40,7 @@ export type FeatureCarouselProduct = Pick<
 >;
 
 /** Largura da peça do centro (`--fc-item` em carousel.css), com folga para o zoom de 5% do hover. */
-const ITEM_SIZES = '(max-width: 48rem) 66vw, (min-width: 100rem) 560px, 36vw';
+const ITEM_SIZES = '(max-width: 48rem) 96vw, (min-width: 100rem) 660px, 42vw';
 
 /** Uma peça de arrasto vale esta fração da largura da peça do centro (a vizinha está a meia largura dela). */
 const DRAG_STEP_RATIO = 0.55;
@@ -366,7 +367,12 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
               className={['feature-carousel__item', kind, isActive ? 'is-active' : null]
                 .filter(Boolean)
                 .join(' ')}
-              style={poseStyle(pose)}
+              style={
+                {
+                  ...poseStyle(pose),
+                  '--fc-w': pieceWidthFactor(image?.width, image?.height).toFixed(3),
+                } as CSSProperties
+              }
               data-hidden={pose.hidden ? '' : undefined}
               role="group"
               aria-roledescription={t('slideRoleDescription')}

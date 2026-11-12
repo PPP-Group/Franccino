@@ -530,6 +530,13 @@
   font-size: var(--fs-h1);
 }
 
+/* O nome da linha (Franccino Casa, Franccino Giardini) embaixo de "Área interna" / "Área externa". */
+.line-panel__copy .line-panel__brand {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
 .line-panel__copy p {
   max-width: 44ch;
   color: var(--on-photo-muted);
@@ -762,12 +769,6 @@
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: clamp(var(--space-6), 5vw, var(--space-8));
   align-items: center;
-}
-
-/* A peça é foto de estúdio (pode encostar na borda): a foto anda menos e ganha menos sobra; o texto anda o normal. */
-.feature__grid[data-parallax] {
-  --parallax-back: 5%;
-  --parallax-scale: 1.1;
 }
 
 /* O quadro interno aproxima no hover: a própria foto já tem a animação de saída de motion.css. */

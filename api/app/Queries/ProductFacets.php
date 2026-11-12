@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Enums\ProductRoom;
 use App\Models\Category;
 use App\Models\Collection as CollectionModel;
 use App\Models\Designer;
@@ -28,7 +29,7 @@ final class ProductFacets
 {
     /**
      * @param  array<string, mixed>  $filters
-     * @return array{categories: list<array>, designers: list<array>, collections: list<array>, lines: list<array>, finish_groups: list<array>}
+     * @return array{categories: list<array>, designers: list<array>, collections: list<array>, lines: list<array>, finish_groups: list<array>, rooms: list<array{key: string, count: int}>}
      */
     public static function for(array $filters): array
     {
@@ -77,7 +78,33 @@ final class ProductFacets
                     'name' => Localized::value($group, 'name'),
                 ],
             ),
+            'rooms' => self::rooms($products),
         ];
+    }
+
+    /**
+     * Ambientes com peça (item 8), na ordem do enum. O site traduz a chave.
+     *
+     * @param  Collection<int, Product>  $products
+     * @return list<array{key: string, count: int}>
+     */
+    private static function rooms(Collection $products): array
+    {
+        $counts = [];
+        foreach ($products as $product) {
+            foreach (array_unique($product->rooms ?? []) as $room) {
+                $counts[$room] = ($counts[$room] ?? 0) + 1;
+            }
+        }
+
+        $rooms = [];
+        foreach (ProductRoom::cases() as $room) {
+            if (isset($counts[$room->value])) {
+                $rooms[] = ['key' => $room->value, 'count' => $counts[$room->value]];
+            }
+        }
+
+        return $rooms;
     }
 
     /**

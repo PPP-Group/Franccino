@@ -28,14 +28,17 @@ export const WHEEL_STEP_PX = 60;
 
 /**
  * Pose de cada degrau a partir do centro (0 = peça do centro, 1 = vizinha, 2 = a seguinte...). `x` é a distância ao
- * centro em larguras da peça do centro (a do lado encosta e passa um pouco por trás dela), `scale` o tamanho e `fade` o
- * quanto um véu da cor do fundo cobre a peça (0 nítida, 1 toda coberta). A peça nunca fica transparente (retorno de
- * 07/11/2026: com transparência, uma peça aparecia dentro da outra): `opacity` só some com a das pontas, já coberta
- * pelo véu.
+ * centro em larguras da peça do centro, `scale` o tamanho e `fade` o quanto um véu da cor do fundo cobre a peça (0
+ * nítida, 1 toda coberta). A peça nunca fica transparente (retorno de 07/11/2026: com transparência, uma peça aparecia
+ * dentro da outra): `opacity` só some com a das pontas, já coberta pelo véu.
+ *
+ * Revisão da Franccino (12/11/2026: "embaraçado, necessário maior espaçamento"): as vizinhas deixaram de passar por
+ * trás da peça do centro. Cada uma fica a mais de uma largura de distância, e a queda de tamanho é mais suave; na tela
+ * de um notebook ficam cinco peças à vista (a do centro e duas de cada lado).
  */
-const STEP_X = [0, 0.42, 0.7, 0.92, 1.1];
-const STEP_SCALE = [1, 0.62, 0.46, 0.36, 0.28];
-const STEP_FADE = [0, 0.38, 0.62, 0.82, 1];
+const STEP_X = [0, 1.02, 1.78, 2.4, 2.9];
+const STEP_SCALE = [1, 0.56, 0.42, 0.33, 0.26];
+const STEP_FADE = [0, 0.3, 0.55, 0.78, 1];
 const STEP_OPACITY = [1, 1, 1, 1, 0];
 
 /** Peças à vista de cada lado do centro; a partir daí a peça fica invisível e fora do alcance do ponteiro. */
@@ -163,4 +166,23 @@ export function wheelStep(accumulated: number): { step: -1 | 0 | 1; rest: number
 /** Número com dois algarismos para o contador ("02 / 12"). */
 export function counterNumber(value: number): string {
   return String(value).padStart(2, '0');
+}
+
+/** Largura máxima e altura máxima de uma peça, em larguras da peça do centro (`--fc-item`). */
+const MAX_WIDE = 1.55;
+const MAX_TALL = 1.12;
+
+/**
+ * Largura da foto no quadro da peça, em larguras de `--fc-item` (revisão da Franccino, 12/11/2026: um sofá largo no
+ * centro parecia menor que a cadeira ao lado). Todas as peças ocupam mais ou menos a mesma área: a foto larga cresce na
+ * largura (raiz da proporção) e a alta cresce um pouco na altura, com limites para nada sair do palco. Sem medida, 1.
+ */
+export function pieceWidthFactor(
+  width: number | null | undefined,
+  height: number | null | undefined,
+): number {
+  if (!width || !height || width <= 0 || height <= 0) return 1;
+  const ratio = width / height;
+  if (ratio >= 1) return Math.min(MAX_WIDE, Math.sqrt(ratio));
+  return ratio * Math.min(MAX_TALL, 1 / Math.sqrt(ratio));
 }

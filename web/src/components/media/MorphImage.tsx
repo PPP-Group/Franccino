@@ -18,7 +18,6 @@ type MorphImageProps = {
   hero?: boolean;
   priority?: boolean;
   className?: string;
-  parallax?: boolean;
 };
 
 type Start = { name: string; src: string | null; fit: MorphFit };
@@ -61,7 +60,6 @@ export function MorphImage({
   hero = false,
   priority = false,
   className,
-  parallax = false,
 }: MorphImageProps) {
   const pathname = usePathname();
   const [start] = useState<Start>(() => {
@@ -113,7 +111,6 @@ export function MorphImage({
         sizes={sizes}
         priority={priority || src !== null}
         className={arriving ? [className, 'is-arriving'].filter(Boolean).join(' ') : className}
-        parallax={parallax}
         // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
         fade={start.src === null}
       />

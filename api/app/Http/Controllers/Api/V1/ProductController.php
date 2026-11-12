@@ -51,6 +51,8 @@ class ProductController extends Controller
                 'finishes.group', 'media', 'mediaLinks',
                 'files' => fn ($query) => $query->published(),
                 'launches' => fn ($query) => $query->published(),
+                'variants' => fn ($query) => $query->published()->with('media'),
+                'variantOf' => fn ($query) => $query->published()->with('media'),
             ])
             ->firstOrFail();
 

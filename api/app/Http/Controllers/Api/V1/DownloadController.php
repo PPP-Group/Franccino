@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Actions\CreateDownloadLink;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\DownloadProductResource;
+use App\Models\DownloadLead;
 use App\Models\ProductFile;
 use App\Queries\ProductQuery;
 use Illuminate\Http\JsonResponse;
@@ -62,6 +63,15 @@ class DownloadController extends Controller
     {
         abort_unless($file->is_published && $file->owner()?->is_published, 404);
 
-        return response()->json(['data' => $action->handle($file, $request)], 201);
+        // Só baixa quem se cadastrou (revisão da Franccino, 12/11/2026, item 22): o site manda o token do cadastro.
+        $lead = DownloadLead::findByToken($request->input('lead_token'));
+        if ($lead === null) {
+            return response()->json([
+                'message' => __('Please fill in your details to download.'),
+                'errors' => ['lead_token' => [__('Please fill in your details to download.')]],
+            ], 422);
+        }
+
+        return response()->json(['data' => $action->handle($file, $request, $lead)], 201);
     }
 }

@@ -44,7 +44,6 @@ export function FactorySection({ page, tone }: { page: PageContent; tone: Tone }
       <Link
         className="factory-band__link hover-zoom"
         href="/factory"
-        data-parallax=""
         transitionTypes={morphTypes(morph)}
         data-morph-link={morph}
       >
@@ -52,7 +51,7 @@ export function FactorySection({ page, tone }: { page: PageContent; tone: Tone }
           <MorphImage name={morph} image={page.cover} sizes={heroSizes(page.cover)} />
         </span>
         <div className="wrap factory-band__wrap">
-          <div className="factory-band__copy" data-parallax-layer="front" data-reveal="">
+          <div className="factory-band__copy" data-reveal="">
             {copy}
           </div>
         </div>

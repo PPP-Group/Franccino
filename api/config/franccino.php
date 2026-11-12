@@ -29,6 +29,7 @@ return [
     'retention' => [
         'activity_logs' => env('RETENTION_ACTIVITY_LOGS_DAYS', 365),
         'download_logs' => env('RETENTION_DOWNLOAD_LOGS_DAYS', 365),
+        'download_leads' => env('RETENTION_DOWNLOAD_LEADS_DAYS', 730),
         'consent_records' => env('RETENTION_CONSENT_RECORDS_DAYS', 1825),
     ],
 

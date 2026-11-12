@@ -144,10 +144,39 @@ export async function recordConsent(payload: ConsentPayload): Promise<FormResult
  * `POST /downloads/{file}/link`. Returns the temporary download URL, or
  * throws `ApiError` (e.g. `404` for a missing/unpublished file).
  */
-export async function requestDownloadLink(fileId: number): Promise<{ url: string; expires_at: string }> {
+/** Cadastro antes de baixar (revisão da Franccino, 12/11/2026, item 22): `POST /download-leads`. */
+export type DownloadLeadPayload = {
+  profile: 'professional' | 'client';
+  first_name: string;
+  last_name: string;
+  email: string;
+  interest?: string;
+  phone?: string;
+  locale: string;
+  consent: boolean;
+};
+
+/** `POST /download-leads`. `201` com o token que vai em cada pedido de link. */
+export async function registerDownloadLead(
+  payload: DownloadLeadPayload,
+): Promise<{ ok: true; token: string } | Extract<FormResult, { ok: false }>> {
+  const response = await postJson('/download-leads', payload);
+  if (!response.ok) {
+    return (await toFormResult(response)) as Extract<FormResult, { ok: false }>;
+  }
+  const json = (await response.json()) as { data: { token: string } };
+  return { ok: true, token: json.data.token };
+}
+
+/** `POST /downloads/{file}/link` com o token do cadastro; sem cadastro válido, a API responde `422`. */
+export async function requestDownloadLink(
+  fileId: number,
+  leadToken: string | null = null,
+): Promise<{ url: string; expires_at: string }> {
   const response = await fetch(apiUrl(`/downloads/${fileId}/link`), {
     method: 'POST',
-    headers: { Accept: 'application/json' },
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ lead_token: leadToken }),
   });
 
   if (!response.ok) {

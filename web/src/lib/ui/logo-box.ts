@@ -1,7 +1,8 @@
 /** Área que cada logo ocupa na faixa de clientes (px²): logos largas ficam baixas, logos compactas ficam altas. */
-const LOGO_AREA = 7200;
-const MAX_WIDTH = 200;
-const MAX_HEIGHT = 64;
+// Revisão da Franccino (12/11/2026: "aumentar só um pouco"): cerca de 25% maiores que as de 09/11.
+const LOGO_AREA = 11000;
+const MAX_WIDTH = 250;
+const MAX_HEIGHT = 80;
 
 /**
  * Tamanho de uma logo na faixa de clientes com o mesmo peso visual das outras (retorno de 09/11/2026: "cada uma de um

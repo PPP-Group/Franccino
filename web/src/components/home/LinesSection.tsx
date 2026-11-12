@@ -25,6 +25,7 @@ function panelSizes(cover: Image): string {
  */
 export function LinesSection({ areas }: { areas: Area[] }) {
   const t = useTranslations('home.lines');
+  const nav = useTranslations('nav');
   return (
     <section className="lines" aria-label={t('label')} data-reveal="stagger">
       {areas.map((area) => (
@@ -32,7 +33,6 @@ export function LinesSection({ areas }: { areas: Area[] }) {
           key={area.key}
           className="line-panel hover-zoom"
           href={areaPath(area.key)}
-          data-parallax=""
           transitionTypes={area.cover ? morphTypes(morphName('area', area.key)) : undefined}
           data-morph-link={area.cover ? morphName('area', area.key) : undefined}
         >
@@ -41,11 +41,12 @@ export function LinesSection({ areas }: { areas: Area[] }) {
               name={morphName('area', area.key)}
               image={area.cover}
               sizes={panelSizes(area.cover)}
-              parallax
             />
           ) : null}
-          <div className="line-panel__copy" data-parallax-layer="front" data-reveal="">
-            <h2 className="line-panel__title">{area.brand_name}</h2>
+          <div className="line-panel__copy" data-reveal="">
+            {/* "Área interna" e "Área externa" no título; o nome da linha embaixo (revisão da Franccino, item 3). */}
+            <h2 className="line-panel__title">{nav(area.key)}</h2>
+            <p className="line-panel__brand">{area.brand_name}</p>
             {area.description ? <p className="lead">{area.description}</p> : null}
             <span className="link-arrow">
               <span>{t('viewPieces')}</span>

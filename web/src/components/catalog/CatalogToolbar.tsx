@@ -13,6 +13,9 @@ type CatalogToolbarProps = {
   hrefFor: (patch: ListingPatch) => AppHref;
   designerOptions: FilterOption[];
   activeDesigner?: string;
+  /** Ambientes com peça (revisão da Franccino, item 8); vazio, o filtro não aparece. */
+  roomOptions?: FilterOption[];
+  activeRoom?: string;
   /** Caminho público da listagem (form GET do filtro de designer, sem JS). */
   formAction: string;
   /** Demais filtros da URL, preservados no envio do form. */
@@ -35,31 +38,58 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
         {props.pager}
       </div>
       <div className="toolbar__end">
-        {props.designerOptions.length > 0 ? (
+        {props.designerOptions.length > 0 || (props.roomOptions?.length ?? 0) > 0 ? (
           <FilterForm className="filter-form" action={props.formAction}>
             {Object.entries(props.hiddenQuery).map(([name, value]) => (
               <input key={name} type="hidden" name={name} value={value} />
             ))}
-            <label className="visually-hidden" id="designer-filter-label" htmlFor="designer-filter">
-              {t('designer')}
-            </label>
-            <Select
-              id="designer-filter"
-              labelId="designer-filter-label"
-              name="designer"
-              defaultValue={props.activeDesigner ?? ''}
-              options={[
-                { value: '', label: t('allDesigners') },
-                ...props.designerOptions.map((option) => ({
-                  value: option.value,
-                  image: option.image,
-                  label:
-                    option.count === null
-                      ? option.label
-                      : t('facetOption', { name: option.label, count: option.count }),
-                })),
-              ]}
-            />
+            {props.roomOptions && props.roomOptions.length > 0 ? (
+              <>
+                <label className="visually-hidden" id="room-filter-label" htmlFor="room-filter">
+                  {t('room')}
+                </label>
+                <Select
+                  id="room-filter"
+                  labelId="room-filter-label"
+                  name="room"
+                  defaultValue={props.activeRoom ?? ''}
+                  options={[
+                    { value: '', label: t('allRooms') },
+                    ...props.roomOptions.map((option) => ({
+                      value: option.value,
+                      label:
+                        option.count === null
+                          ? option.label
+                          : t('facetOption', { name: option.label, count: option.count }),
+                    })),
+                  ]}
+                />
+              </>
+            ) : null}
+            {props.designerOptions.length > 0 ? (
+              <>
+                <label className="visually-hidden" id="designer-filter-label" htmlFor="designer-filter">
+                  {t('designer')}
+                </label>
+                <Select
+                  id="designer-filter"
+                  labelId="designer-filter-label"
+                  name="designer"
+                  defaultValue={props.activeDesigner ?? ''}
+                  options={[
+                    { value: '', label: t('allDesigners') },
+                    ...props.designerOptions.map((option) => ({
+                      value: option.value,
+                      image: option.image,
+                      label:
+                        option.count === null
+                          ? option.label
+                          : t('facetOption', { name: option.label, count: option.count }),
+                    })),
+                  ]}
+                />
+              </>
+            ) : null}
             <button type="submit" className="btn btn--ghost btn--compact">
               {t('apply')}
             </button>

@@ -483,3 +483,22 @@ a.pagination__step:hover span {
 [data-page-anchor] {
   scroll-margin-top: calc(var(--header) + var(--space-4));
 }
+
+/* ---------- "Ver mais" das listagens (revisão da Franccino, 12/11/2026, item 11) ---------- */
+
+/* As peças somadas continuam a grade de cima, com o mesmo respiro entre as linhas. */
+.load-more__grid {
+  margin-top: var(--space-8);
+}
+
+.load-more {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  text-align: center;
+}
+
+.load-more .btn {
+  min-width: 220px;
+}

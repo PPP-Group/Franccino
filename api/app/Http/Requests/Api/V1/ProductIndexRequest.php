@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Api\V1;
 
 use App\Enums\AreaKey;
+use App\Enums\ProductRoom;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Validates `GET /products` filters. An unrecognized enum-like value (bad
- * `area`, `sort`, `finish`, `page` or `per_page`) is a 422 — the front treats
+ * `area`, `room`, `sort`, `finish`, `page` or `per_page`) is a 422 — the front treats
  * that as an empty result. Free-text slug filters (`category`, `designer`,
  * `collection`, `line`, `launch`) are not validated against existing records:
  * an unknown slug simply matches nothing.
@@ -30,6 +31,7 @@ class ProductIndexRequest extends FormRequest
             'collection' => ['sometimes', 'string'],
             'line' => ['sometimes', 'string'],
             'finish' => ['sometimes', 'integer'],
+            'room' => ['sometimes', 'string', Rule::in(array_column(ProductRoom::cases(), 'value'))],
             'launch' => ['sometimes', 'string'],
             'q' => ['sometimes', 'string'],
             'sort' => ['sometimes', Rule::in(['featured', 'name', 'newest'])],

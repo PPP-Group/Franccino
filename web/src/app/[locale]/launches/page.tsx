@@ -4,7 +4,6 @@ import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
 import { ViewToggle } from '@/components/catalog/ViewToggle';
-import { firstWithCover } from '@/components/content/layout';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { MediaLinks } from '@/components/media/MediaLinks';
@@ -17,9 +16,6 @@ import type { LaunchDetail, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { parseCatalogView } from '@/lib/catalog/view';
 import { buildMetadata } from '@/lib/seo/metadata';
-
-/** Peças da primeira linha da grade (3 colunas no desktop). */
-const FIRST_ROW = 3;
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
 
@@ -77,8 +73,8 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
     launches.find((launch) => launch.cover)?.cover ??
     launches.flatMap((launch) => launch.gallery)[0] ??
     null;
-  // A peça em destaque não repete a primeira linha da grade logo abaixo (quando houver outras).
-  const feature = firstWithCover([products.slice(FIRST_ROW), products]);
+  // Peça em destaque escolhida no painel (Páginas → Lançamentos); sem escolha, nenhuma (revisão da Franccino).
+  const feature = page?.featured_product?.cover ? page.featured_product : null;
   const rows =
     view === 'table'
       ? (

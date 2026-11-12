@@ -5,7 +5,7 @@ import { useEffect, useSyncExternalStore } from 'react';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { recordConsent } from '@/lib/api/forms';
-import { loadGtm } from '@/lib/consent/gtm';
+import { denyConsentByDefault, loadGtm } from '@/lib/consent/gtm';
 import {
   COOKIE_POLICY_VERSION,
   getConsent,
@@ -26,16 +26,28 @@ export function ConsentBanner() {
   const t = useTranslations('consent');
   const locale = useLocale() as Locale;
   const isClient = useIsClient();
-  const gtmId = getPublicEnv().NEXT_PUBLIC_GTM_ID ?? null;
+  const env = getPublicEnv();
+  const gtmId = env.NEXT_PUBLIC_GTM_ID ?? null;
+  // Com a AdOpt, o banner é o dela (dentro do Tag Manager): o site só carrega o Tag Manager com tudo negado.
+  const adopt = env.NEXT_PUBLIC_CONSENT_PROVIDER === 'adopt';
   const consent = useSyncExternalStore(subscribeConsent, getConsent, getServerConsent);
 
   useEffect(() => {
-    if (gtmId && consent === 'granted') {
+    if (!gtmId) {
+      return;
+    }
+    if (adopt) {
+      // `loadGtm` não carrega duas vezes; o padrão "negado" entra só antes da primeira carga.
+      if (!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
+        denyConsentByDefault();
+      }
+      loadGtm(gtmId);
+    } else if (consent === 'granted') {
       loadGtm(gtmId);
     }
-  }, [gtmId, consent]);
+  }, [gtmId, adopt, consent]);
 
-  if (!isClient || !gtmId || consent !== null) {
+  if (!isClient || !gtmId || adopt || consent !== null) {
     return null;
   }
 

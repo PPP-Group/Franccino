@@ -23,6 +23,8 @@ export type PlannerProduct = {
   depth: number;
   shape: PieceShape;
   image: QuoteImage | null;
+  /** Vista de cima (planta) da peça: na planta, vem no lugar da foto e ocupa o contorno inteiro (item 29). */
+  topView?: QuoteImage | null;
 };
 
 /** Posição do canto superior esquerdo da caixa ocupada, em cm. */

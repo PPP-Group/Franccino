@@ -37,6 +37,7 @@ class Product extends Model implements HasMedia
     {
         return [
             'dimensions' => 'array',
+            'rooms' => 'array',
             'is_3d_enabled' => 'boolean',
             'is_featured' => 'boolean',
             'is_published' => 'boolean',
@@ -66,6 +67,10 @@ class Product extends Model implements HasMedia
             ->singleFile()
             ->acceptsMimeTypes(['image/png', 'image/webp']);
         // Private disk: the viewer gets a temporary link (`CreateModelLink`, contract 13.2).
+        // Vista de cima (planta) da peça, para a sala para montar (revisão da Franccino, item 29).
+        $this->addMediaCollection('top_view')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/png', 'image/webp']);
         $this->addMediaCollection('model_3d')
             ->useDisk('downloads')
             ->singleFile()
@@ -122,6 +127,25 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(CollectionModel::class, 'collection_product')
             ->withPivot('sort_order')
             ->orderByPivot('sort_order');
+    }
+
+    /**
+     * Variações da peça (outras versões dela, item 13). A ligação vale nos dois sentidos: a API junta
+     * `variants` e `variantOf`.
+     *
+     * @return BelongsToMany<Product, $this>
+     */
+    public function variants(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_variants', 'product_id', 'variant_id')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
+    }
+
+    /** @return BelongsToMany<Product, $this> */
+    public function variantOf(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_variants', 'variant_id', 'product_id');
     }
 
     /** @return BelongsToMany<Launch, $this> */
