@@ -1,6 +1,9 @@
 <?php
 
+use App\Enums\ProductFileType;
 use App\Models\Banner;
+use App\Models\Designer;
+use App\Models\Page;
 use App\Models\Product;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
@@ -8,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('media');
+    Storage::fake('downloads');
     config(['media-library.queue_conversions_by_default' => false]);
 });
 
@@ -47,6 +51,23 @@ it('adds a photo to the listed collection of a product', function () {
 
     expect($product->refresh()->getMedia('cutout'))->toHaveCount(1)
         ->and(Product::query()->count())->toBe(1);
+});
+
+it('does not add the same source twice to a gallery', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $product = publishedProduct();
+    $send = fn () => $this->post('/api/import/media', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'collection' => 'gallery',
+        'source' => 'drive:abc',
+        'file' => UploadedFile::fake()->image('aura.jpg', 800, 600),
+    ], ['Authorization' => 'Bearer abc123']);
+
+    $send()->assertCreated();
+    $send()->assertOk()->assertJsonPath('data.skipped', true);
+
+    expect($product->refresh()->getMedia('gallery'))->toHaveCount(1);
 });
 
 it('replaces the photo of a home banner by its position in the carousel', function () {
@@ -91,4 +112,86 @@ it('queues a translations list', function () {
     $this->postJson('/api/import/translations', ['version' => 'en-teste', 'items' => [['model' => 'product', 'field' => 'tagline', 'pt' => 'Olá', 'en' => 'Hello']]], ['Authorization' => 'Bearer abc123'])
         ->assertStatus(202)
         ->assertJsonPath('data.queued', 'franccino:translations:import');
+});
+
+it('adds a technical file to a product and replaces it when the same file comes again', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $product = publishedProduct();
+    $auth = ['Authorization' => 'Bearer abc123'];
+
+    $this->post('/api/import/files', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'type' => 'block_3d',
+        'title' => 'Bloco 3D (SketchUp)',
+        'title_en' => '3D block (SketchUp)',
+        'file' => UploadedFile::fake()->create('CADEIRA AURA.skp', 2048, 'application/octet-stream'),
+    ], $auth)->assertCreated()->assertJsonPath('data.replaced', false);
+
+    $file = $product->files()->sole();
+    $first = $file->path;
+    expect($file->type)->toBe(ProductFileType::Block3d)
+        ->and($file->format)->toBe('SKP')
+        ->and($file->is_published)->toBeTrue()
+        ->and($file->getTranslation('title', 'en'))->toBe('3D block (SketchUp)')
+        ->and($first)->toEndWith('.skp');
+    Storage::disk('downloads')->assertExists($first);
+
+    $this->post('/api/import/files', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'type' => 'block_3d',
+        'title' => 'Bloco 3D (SketchUp)',
+        'file' => UploadedFile::fake()->create('CADEIRA AURA.skp', 1024, 'application/octet-stream'),
+    ], $auth)->assertOk()->assertJsonPath('data.replaced', true);
+
+    expect($product->files()->count())->toBe(1);
+    Storage::disk('downloads')->assertMissing($first);
+});
+
+it('refuses a technical file of a type, extension or owner it does not know', function () {
+    config(['franccino.import.token' => 'abc123']);
+    publishedProduct();
+    $auth = ['Authorization' => 'Bearer abc123'];
+    $send = fn (array $data) => $this->post('/api/import/files', $data + [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'type' => 'block_2d',
+        'title' => 'Bloco 2D',
+        'file' => UploadedFile::fake()->create('aura.dwg', 100, 'application/octet-stream'),
+    ], $auth);
+
+    $send(['type' => 'video'])->assertStatus(422);
+    $send(['file' => UploadedFile::fake()->create('aura.html', 1, 'text/html')])->assertStatus(422);
+    $send(['target' => 'store'])->assertStatus(422);
+    $send(['key' => 'nao-existe'])->assertNotFound();
+    $send([])->assertCreated();
+});
+
+it('adds a designer portrait and a photo to the gallery of a page', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $designer = Designer::factory()->create(['slug' => 'andrea-zanocchi']);
+    $page = Page::factory()->create(['key' => 'factory', 'content' => [['type' => 'rich_text', 'data' => ['body' => ['pt' => '<p>Oi</p>']]]]]);
+    $auth = ['Authorization' => 'Bearer abc123'];
+
+    $this->post('/api/import/media', [
+        'target' => 'designer',
+        'key' => 'andrea-zanocchi',
+        'collection' => 'portrait',
+        'file' => UploadedFile::fake()->image('andrea.jpg', 640, 960),
+    ], $auth)->assertCreated();
+    expect($designer->refresh()->getMedia('portrait'))->toHaveCount(1);
+
+    $photo = fn () => UploadedFile::fake()->image('Fábrica Metal 01.jpg', 1600, 1200);
+    $this->post('/api/import/media', ['target' => 'page', 'key' => 'factory', 'collection' => 'gallery', 'file' => $photo()], $auth)
+        ->assertCreated();
+    $this->post('/api/import/media', ['target' => 'page', 'key' => 'factory', 'collection' => 'gallery', 'file' => $photo()], $auth)
+        ->assertOk()->assertJsonPath('data.skipped', true);
+
+    $content = $page->refresh()->content;
+    expect($content)->toHaveCount(2)
+        ->and($content[1]['type'])->toBe('gallery')
+        ->and($content[1]['data']['images'])->toHaveCount(1)
+        ->and($content[1]['data']['images'][0])->toStartWith('pages/')->toEndWith('-fabrica-metal-01.jpg');
+    Storage::disk('media')->assertExists($content[1]['data']['images'][0]);
 });
