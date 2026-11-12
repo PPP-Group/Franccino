@@ -9,6 +9,7 @@ import {
   initialIndex,
   keyTarget,
   nearestIndex,
+  pieceWidthFactor,
   releaseIndex,
   wheelStep,
 } from './feature-carousel';
@@ -66,10 +67,11 @@ describe('coverflowPose', () => {
     expect(two.z).toBeLessThan(one.z);
   });
 
-  it('overlaps the neighbour with the centre piece (packed stack)', () => {
+  it('keeps the neighbour clear of the centre piece (revisão de 12/11/2026: sem peça embaralhada)', () => {
     const one = coverflowPose(1);
-    // Borda esquerda da vizinha (em larguras da peça do centro) antes da borda direita da peça do centro (0,5).
-    expect(one.x - one.scale / 2).toBeLessThan(0.5);
+    // Borda esquerda da vizinha (em larguras da peça do centro) depois da borda direita da peça do centro (0,5).
+    expect(one.x - one.scale / 2).toBeGreaterThan(0.5);
+    expect(one.scale).toBeLessThan(0.6);
   });
 
   it('never makes a visible piece see-through: the veil covers it instead', () => {
@@ -163,5 +165,25 @@ describe('counterNumber', () => {
   it('pads to two digits', () => {
     expect(counterNumber(3)).toBe('03');
     expect(counterNumber(12)).toBe('12');
+  });
+});
+
+describe('pieceWidthFactor', () => {
+  it('gives wide pieces more width and tall pieces a little more height, with limits', () => {
+    expect(pieceWidthFactor(1000, 1000)).toBe(1);
+    expect(pieceWidthFactor(2000, 1000)).toBeCloseTo(Math.SQRT2);
+    expect(pieceWidthFactor(5000, 1000)).toBe(1.55);
+    // Alta (3:4): altura 1/√0.75 ≈ 1.155, limitada a 1.12; a largura segue a proporção.
+    expect(pieceWidthFactor(750, 1000)).toBeCloseTo(0.75 * 1.12);
+    expect(pieceWidthFactor(null, 1000)).toBe(1);
+    expect(pieceWidthFactor(0, 0)).toBe(1);
+  });
+
+  it('keeps the visible area of wide and square pieces close', () => {
+    const area = (w: number, h: number) => {
+      const factor = pieceWidthFactor(w, h);
+      return factor * ((factor * h) / w);
+    };
+    expect(area(2000, 1000)).toBeCloseTo(area(1000, 1000), 1);
   });
 });

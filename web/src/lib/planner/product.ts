@@ -28,5 +28,9 @@ export function toPlannerProduct(detail: ProductDetail, locale: Locale): Planner
     image: detail.cover
       ? { src: pickSource(detail.cover, SNAPSHOT_IMAGE_WIDTH), alt: detail.cover.alt }
       : null,
+    // A vista de cima (planta) substitui a foto dentro da planta (revisão da Franccino, item 29).
+    topView: detail.top_view
+      ? { src: pickSource(detail.top_view, SNAPSHOT_IMAGE_WIDTH), alt: detail.top_view.alt }
+      : null,
   };
 }

@@ -94,6 +94,9 @@ export function PlanSvg({
         const box = footprint(product, piece.r);
         const [px, py] = rotationPivot(product, piece.r);
         const text = pieceText?.(entry);
+        // A vista de cima já é o desenho da peça na medida: ocupa o contorno inteiro, sem a margem da foto (item 29).
+        const drawing = product.topView ?? product.image;
+        const inset = product.topView ? 0 : PHOTO_INSET_CM;
         const className = [
           'piece',
           piece.uid === selectedUid ? 'is-selected' : '',
@@ -125,25 +128,25 @@ export function PlanSvg({
               ) : (
                 <rect className="piece__ground" width={product.width} height={product.depth} rx={2} />
               )}
-              {product.image ? (
+              {drawing ? (
                 <>
                   {product.shape === 'round' ? (
                     <clipPath id={`piece-clip-${piece.uid}`}>
                       <ellipse
                         cx={product.width / 2}
                         cy={product.depth / 2}
-                        rx={product.width / 2 - PHOTO_INSET_CM}
-                        ry={product.depth / 2 - PHOTO_INSET_CM}
+                        rx={product.width / 2 - inset}
+                        ry={product.depth / 2 - inset}
                       />
                     </clipPath>
                   ) : null}
                   <image
                     className="piece__photo"
-                    href={product.image.src}
-                    x={PHOTO_INSET_CM}
-                    y={PHOTO_INSET_CM}
-                    width={Math.max(0, product.width - 2 * PHOTO_INSET_CM)}
-                    height={Math.max(0, product.depth - 2 * PHOTO_INSET_CM)}
+                    href={drawing.src}
+                    x={inset}
+                    y={inset}
+                    width={Math.max(0, product.width - 2 * inset)}
+                    height={Math.max(0, product.depth - 2 * inset)}
                     preserveAspectRatio="xMidYMid meet"
                     clipPath={product.shape === 'round' ? `url(#piece-clip-${piece.uid})` : undefined}
                   />
@@ -162,7 +165,7 @@ export function PlanSvg({
               )}
             </g>
             {text && Math.max(box.w, box.d) > LABEL_MIN_CM ? (
-              product.image ? (
+              drawing ? (
                 // Com foto, só o nome, junto da borda de baixo, para não cobrir a peça.
                 <g aria-hidden="true" className="piece__label">
                   <text x={box.w / 2} y={box.d - 6} textAnchor="middle">

@@ -32,6 +32,16 @@ class DownloadLog extends Model
         return $this->belongsTo(Product::class);
     }
 
+    /**
+     * Quem baixou (cadastro antes do download, item 22 da revisão de 12/11/2026).
+     *
+     * @return BelongsTo<DownloadLead, $this>
+     */
+    public function downloadLead(): BelongsTo
+    {
+        return $this->belongsTo(DownloadLead::class);
+    }
+
     protected static function retentionKey(): string
     {
         return 'download_logs';

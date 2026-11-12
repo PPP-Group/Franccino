@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (26, de 09/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (27, de 12/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1078,3 +1078,49 @@ Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar")
 gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o
 entrega pelo formulário seguro da sessão (`request_credential`, host `www.googleapis.com`); a sessão baixa os arquivos
 marcados "Usar" e envia pela importação em massa (`design/recortes/LEIA-ME.md`), sem passar pelo repositório nem pelo painel.
+
+## 27. 12/11/2026: revisão da Franccino ("Revisão Novo website", 29 itens)
+
+Branch `claude/banner-cover-images-vcdpmb`, PR #80 para a `develop`. Decisões tomadas por padrão (o tech lead pode
+mudar): menu "Produtos" com as abas Área interna e Área externa em cima (exemplo 2 do PDF); "Ver mais" traz 24 peças
+por vez, 3 vezes, e depois um link para a página seguinte; todo download pede o cadastro.
+
+- **Bloco 1 (visual e textos):** paralaxe removida do site inteiro; carrossel mais arrumado (círculo de arrastar menor,
+  a peça do centro sempre a maior, peças largas e altas na mesma medida visual); categorias do menu em ordem
+  alfabética com "Ver todos"; "Lista de desejos" (ícone de sacola) e envio "por e-mail à equipe de vendas" ou pelo
+  WhatsApp; o cabeçalho some ao rolar para baixo e volta ao subir; botão "Topo" no rodapé; Área do Profissional
+  (`/pt/area-do-profissional`, com 301 do `/pt/downloads`); designers sem a peça em destaque, retrato colorido no
+  hover; logos dos clientes no mesmo peso; títulos das páginas legais sem repetição.
+- **Bloco 2:** menu Produtos (Área interna e externa); "Ver mais" na grade (a tabela técnica continua paginada);
+  peça em destaque escolhida no painel em cada página (Páginas → "Peça em destaque"; migration
+  `2026_11_12_100000`), sem a peça automática; páginas novas **Tire suas dúvidas** (`/pt/tire-suas-duvidas`) e **Seja um
+  parceiro** (`/pt/seja-um-parceiro`, formulário de parceria), com o texto pelo painel (migration `2026_11_12_110000`);
+  banner de campanha: com um banner no período (`starts_at`/`ends_at`), só ele aparece, e o agendador revalida o site
+  no início e no fim.
+- **Bloco 3:**
+  - **Cadastro antes do download** (Boca do Lobo): perfil, nome, sobrenome, e-mail, interesse e telefone opcionais,
+    aceite da privacidade. O navegador guarda o token; sem ele, a API recusa o link (`422`). Tabela
+    `download_leads` (retenção de 730 dias, `RETENTION_DOWNLOAD_LEADS_DAYS`); no painel, "Quem baixou" e "Perfil" no
+    registro de downloads.
+  - **"Integre ao seu projeto"** na peça: um botão por programa (SketchUp `.skp` e Revit `.rfa` como "Bloco 3D",
+    AutoCAD `.dwg`/`.dxf` como "Bloco 2D", em Arquivos da peça) e o caminho para a Área do Profissional.
+  - **Medidas com intervalo** (largura, profundidade e altura "até", no painel) e setas por medida.
+  - **Ambientes** (Produtos → Geral → Ambientes) e o filtro "Ambiente" no catálogo (some enquanto nenhuma peça tiver
+    ambiente).
+  - **Variações** (Produtos → Geral → Variações): ligar numa peça mostra nas duas.
+  - **Vista de cima** (Produtos → Mídia e 3D): na sala para montar, entra no lugar da foto.
+  - Migrations `2026_11_12_120000` e `2026_11_12_130000`; `docs/api.md` e `docs/data-model.md` atualizados.
+- **Bloco 4 (prontos para ligar, dependem das contas):** GA4 pelo Tag Manager; AdOpt pelo modelo dela no Tag Manager,
+  ligada com `NEXT_PUBLIC_CONSENT_PROVIDER=adopt` (o aviso do site some e o Consent Mode nasce negado); newsletter:
+  exportação do painel até confirmar a ferramenta (Zoho?) e a chave; saúde do site com UptimeRobot. Passo a passo em
+  `docs/runbook-deploy.md`, seção "Cookies, Analytics, marketing e monitoramento".
+- **Verificação:** site com lint, typecheck e 443 testes; API com Pint (Pest e Larastan só no CI: PHP 8.3 aqui).
+
+### 27.1 Pendências
+
+- Da Franccino: o conteúdo das páginas Tire suas dúvidas e Seja um parceiro; ambientes, variações e vistas de cima
+  das peças; os arquivos de bloco por programa; as contas do Tag Manager, GA4 e AdOpt; confirmar a ferramenta de
+  marketing; o slogan; quem decide o lugar das abas do menu e a grade dos designers (Marcelo); o que é a "Coleção
+  Franccino".
+- Do tech lead: rodar `php artisan migrate` (vai no deploy) e conferir o cadastro do download no preview.
+- A auditoria do Drive continua à espera do link das pastas (seção 26.2).

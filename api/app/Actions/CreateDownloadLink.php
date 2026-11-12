@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\DownloadLead;
 use App\Models\DownloadLog;
 use App\Models\ProductFile;
 use App\Support\ContentLocale;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 class CreateDownloadLink
 {
     /** @return array{url: string, expires_at: string} */
-    public function handle(ProductFile $file, Request $request): array
+    public function handle(ProductFile $file, Request $request, ?DownloadLead $lead = null): array
     {
         $expiresAt = now()->addMinutes((int) config('franccino.downloads.link_ttl_minutes'));
 
@@ -33,6 +34,7 @@ class CreateDownloadLink
         DownloadLog::create([
             'product_file_id' => $file->id,
             'product_id' => $file->product_id,
+            'download_lead_id' => $lead?->id,
             'locale' => app(ContentLocale::class)->current(),
             'ip_hash' => IpHasher::hash($request->ip()),
             'user_agent' => $this->truncate($request->userAgent()),

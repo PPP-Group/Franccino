@@ -133,6 +133,7 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 | line_id                               | fk lines, null       |                                                                   |
 | designer_id                           | fk designers, null   |                                                                   |
 | dimensions                            | json                 | lista de variantes, ver abaixo                                    |
+| rooms                                 | json, null           | ambientes (chaves de `ProductRoom`), filtro do catálogo           |
 | materials                             | json tr, null        | texto livre ("Tabela técnica > Material")                         |
 | finishes_note                         | json tr, null        | texto livre ("Tabela técnica > Acabamento")                       |
 | is_3d_enabled                         | bool, default `true` | chave do visualizador 3D; o botão só aparece com GLB enviado      |
@@ -157,10 +158,13 @@ Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`,
 ]
 ```
 
-`label` é opcional (produto de medida única). Todos os valores em mm e opcionais individualmente.
+`label` é opcional (produto de medida única). Todos os valores em mm e opcionais individualmente. Medida flexível
+(revisão de 2026-11-12): `width_max`, `depth_max` e `height_max` (opcionais) fecham o intervalo, ex. largura de 1000
+a 1500 = `width: 1000, width_max: 1500`. Várias opções de tamanho continuam sendo várias variantes.
 
-Mídia: `cover` (1, imagem de listagem), `gallery` (n), `cutout` (1, opcional, PNG ou WebP com fundo transparente para o carrossel; as conversões WebP mantêm a transparência), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
-Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`.
+Mídia: `cover` (1, imagem de listagem), `gallery` (n), `cutout` (1, opcional, PNG ou WebP com fundo transparente para o carrossel; as conversões WebP mantêm a transparência), `top_view` (1, opcional, PNG ou WebP, vista de cima para a sala para montar), `model_3d` (1, GLB, sem conversões, disco privado `downloads`).
+Pivots: `finish_product` (`sort_order`), `collection_product`, `launch_product`, `product_project`,
+`product_variants` (`product_id`, `variant_id`, `sort_order`; variações da peça, lidas nos dois sentidos).
 
 ### finish_groups / finishes
 
@@ -219,15 +223,31 @@ Vídeos (YouTube/Vimeo) e links externos de produto, designer ou lançamento. Po
 
 Um registro por link gerado. Sem dado pessoal em claro (LGPD).
 
-| Coluna          | Tipo              | Notas                                                                            |
-| --------------- | ----------------- | -------------------------------------------------------------------------------- |
-| product_file_id | fk                |                                                                                  |
-| product_id      | fk, null          | desnormalizado para relatório; null quando o arquivo é de designer ou lançamento |
-| locale          | string(2)         |                                                                                  |
-| ip_hash         | string(64)        | `sha256(ip + APP_KEY)`                                                           |
-| user_agent      | string(512), null |                                                                                  |
-| referer         | string(512), null |                                                                                  |
-| created_at      | timestamp         | sem `updated_at`                                                                 |
+| Coluna           | Tipo              | Notas                                                                            |
+| ---------------- | ----------------- | -------------------------------------------------------------------------------- |
+| product_file_id  | fk                |                                                                                  |
+| product_id       | fk, null          | desnormalizado para relatório; null quando o arquivo é de designer ou lançamento |
+| download_lead_id | fk, null          | quem baixou (cadastro antes do download, 2026-11-12)                             |
+| locale           | string(2)         |                                                                                  |
+| ip_hash          | string(64)        | `sha256(ip + APP_KEY)`                                                           |
+| user_agent       | string(512), null |                                                                                  |
+| referer          | string(512), null |                                                                                  |
+| created_at       | timestamp         | sem `updated_at`                                                                 |
+
+### download_leads
+
+Cadastro antes de baixar arquivos técnicos (revisão da Franccino, 2026-11-12, item 22; migration
+`2026_11_12_120000`). Dado pessoal: sai pela retenção `RETENTION_DOWNLOAD_LEADS_DAYS` (padrão 730 dias).
+
+| Coluna                 | Tipo              | Notas                                  |
+| ---------------------- | ----------------- | -------------------------------------- |
+| profile                | string(20)        | `professional` \| `client`             |
+| first_name, last_name  | string(80)        |                                        |
+| email                  | string(190)       | indexado                               |
+| interest, phone        | string, null      |                                        |
+| locale                 | string(2)         |                                        |
+| token_hash             | string(64), único | sha256 do token que o navegador guarda |
+| created_at, updated_at |                   |                                        |
 
 ## Conteúdo editorial
 
@@ -333,16 +353,18 @@ e na página do projeto, e não na home.
 Conteúdo e SEO das páginas fixas do site. Cada página corresponde a uma rota do front, identificada por `key`.
 Chaves semeadas: `home`, `indoor`, `outdoor`, `products`, `launches`, `collections`, `designers`,
 `projects`, `corporate`, `factory`, `stores`, `finishes`, `downloads`, `contact`, `privacy`, `terms`,
-`cookies` (política de cookies, acrescentada em 2026-10-01; o `PageSeeder` cria a página que faltar).
+`cookies` (política de cookies, acrescentada em 2026-10-01; o `PageSeeder` cria a página que faltar), `faq` e `partner`
+(revisão de 2026-11-12; a migration `2026_11_12_110000` cria as duas no banco que já existe).
 
-| Coluna                     | Tipo          | Notas                    |
-| -------------------------- | ------------- | ------------------------ |
-| key                        | string, único |                          |
-| title                      | json tr       |                          |
-| intro                      | json tr, null |                          |
-| content                    | json          | lista de blocos (abaixo) |
-| is_published               | bool          |                          |
-| seo_title, seo_description | json tr       |                          |
+| Coluna                     | Tipo              | Notas                                                                                   |
+| -------------------------- | ----------------- | --------------------------------------------------------------------------------------- |
+| key                        | string, único     |                                                                                         |
+| featured_product_id        | FK products, null | peça em destaque ao lado do título (escolhida no painel; migration `2026_11_12_100000`) |
+| title                      | json tr           |                                                                                         |
+| intro                      | json tr, null     |                                                                                         |
+| content                    | json              | lista de blocos (abaixo)                                                                |
+| is_published               | bool              |                                                                                         |
+| seo_title, seo_description | json tr           |                                                                                         |
 
 Mídia: `cover` (1), `og_image` (1).
 

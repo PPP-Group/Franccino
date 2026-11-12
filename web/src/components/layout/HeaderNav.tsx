@@ -24,8 +24,11 @@ const CLOSE_DELAY_MS = 250;
 const OPEN_DELAY_MS = 120;
 
 function isMenuKey(key: string): key is NavMenuKey {
-  return key === 'indoor' || key === 'outdoor' || key === 'collections';
+  return key === 'products' || key === 'indoor' || key === 'outdoor' || key === 'collections';
 }
+
+/** Linhas que viram abas no painel de Produtos, na ordem da referência da Franccino (Área interna, Área externa). */
+const PRODUCT_AREAS: AreaMenuKey[] = ['indoor', 'outdoor'];
 
 function isDesktop() {
   return !window.matchMedia(COLLAPSED_NAV_QUERY).matches;
@@ -38,9 +41,10 @@ function categoryHref(area: AreaMenuKey, category: string) {
 }
 
 function entryHref(menu: NavMenuKey, slug: string) {
-  return menu === 'collections'
-    ? ({ pathname: '/collections/[slug]', params: { slug } } as const)
-    : categoryHref(menu, slug);
+  if (menu === 'collections') return { pathname: '/collections/[slug]', params: { slug } } as const;
+  // Produtos sem aba escolhida: a categoria com as peças das duas linhas.
+  if (menu === 'products') return { pathname: '/products', query: { category: slug } } as const;
+  return categoryHref(menu, slug);
 }
 
 export function HeaderNav({ menus }: { menus: NavMenus }) {
@@ -52,6 +56,8 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
   // lista completa; o painel abre só ao passar o mouse (com a intenção de hover) ou pela seta ao lado do nome (teclado,
   // toque e leitor de tela; a seta para baixo no nome também abre). No menu recolhido, a seta abre a sanfona.
   const [panel, setPanel] = useState<NavMenuKey | null>(null);
+  // Aba do painel de Produtos: nenhuma (todas as categorias) ou uma das linhas (só as categorias dela).
+  const [productsTab, setProductsTab] = useState<AreaMenuKey | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
   // Aberto pela seta (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
@@ -77,6 +83,7 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
   }
 
   function closePanel() {
+    setProductsTab(null);
     cancelClose();
     cancelOpen();
     pinned.current = false;
@@ -321,18 +328,48 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
               </button>
               <div id={panelId} className="nav-panel" hidden={!expanded}>
                 <div className="wrap nav-panel__inner">
-                  <Link
-                    className="nav-panel__all"
-                    href={item.href}
-                    aria-current={area === active ? 'page' : undefined}
-                    onClick={() => setOpen(false)}
-                  >
-                    {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
-                  </Link>
+                  {area === 'products' ? (
+                    <div className="nav-panel__tabs" role="group" aria-label={nav('products')}>
+                      {PRODUCT_AREAS.filter((line) => menus[line].length > 0).map((line) => (
+                        <div key={line} className="nav-panel__tab">
+                          <button
+                            type="button"
+                            aria-pressed={productsTab === line}
+                            onClick={() => setProductsTab((current) => (current === line ? null : line))}
+                          >
+                            {nav(line)}
+                          </button>
+                          <Link
+                            className="nav-panel__see-all"
+                            href={line === 'outdoor' ? '/outdoor' : '/indoor'}
+                            onClick={() => setOpen(false)}
+                          >
+                            {t('seeAllLine')}
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Link
+                      className="nav-panel__all"
+                      href={item.href}
+                      aria-current={area === active ? 'page' : undefined}
+                      onClick={() => setOpen(false)}
+                    >
+                      {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
+                    </Link>
+                  )}
                   <ul className="nav-panel__list">
-                    {entries.map((entry) => (
+                    {(area === 'products' && productsTab ? menus[productsTab] : entries).map((entry) => (
                       <li key={entry.slug}>
-                        <Link href={entryHref(area, entry.slug)} onClick={() => setOpen(false)}>
+                        <Link
+                          href={
+                            area === 'products' && productsTab
+                              ? categoryHref(productsTab, entry.slug)
+                              : entryHref(area, entry.slug)
+                          }
+                          onClick={() => setOpen(false)}
+                        >
                           {entry.name}
                         </Link>
                       </li>

@@ -61,6 +61,10 @@ final class ProductQuery
             $query->whereHas('finishes', fn (Builder $query) => $query->where('finishes.id', $finish));
         }
 
+        if (filled($filters['room'] ?? null)) {
+            $query->whereJsonContains('rooms', (string) $filters['room']);
+        }
+
         if (filled($filters['launch'] ?? null)) {
             $launch = $filters['launch'];
             $query->whereHas('launches', fn (Builder $query) => $query->published()->whereLocalizedSlug($launch, $locale));

@@ -50,7 +50,7 @@ it('links a designer file and logs the download without a product', function () 
     $file = ownerFile(['designer_id' => Designer::factory()->create()->id, 'path' => 'designers/catalogo.pdf']);
     Storage::disk('downloads')->put($file->path, 'pdf');
 
-    $this->postJson("/api/v1/downloads/{$file->id}/link")->assertCreated()->assertJsonStructure(['data' => ['url', 'expires_at']]);
+    $this->postJson("/api/v1/downloads/{$file->id}/link", ['lead_token' => downloadLeadToken()])->assertCreated()->assertJsonStructure(['data' => ['url', 'expires_at']]);
 
     expect(DownloadLog::sole())->product_file_id->toBe($file->id)->product_id->toBeNull();
 });

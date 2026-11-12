@@ -46,4 +46,18 @@ describe('formatCentimeters', () => {
     expect(formatCentimeters(605, 'en')).toBe('60.5');
     expect(formatCentimeters(5200, 'pt')).toBe('520');
   });
+
+  it('shows a flexible measure as a range (revisão de 12/11/2026)', () => {
+    const dimension = {
+      label: null,
+      width: 1000,
+      width_max: 1500,
+      depth: 600,
+      depth_max: 600,
+      height: 750,
+      seat_height: null,
+      diameter: null,
+    };
+    expect(formatDimension(dimension, 'pt')).toBe('L 100–150 × P 60 × A 75 cm');
+  });
 });
