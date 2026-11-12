@@ -6,6 +6,7 @@ use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Models\ContactMessage;
 use App\Models\Finish;
 use App\Models\Product;
+use App\Models\QuoteList;
 use App\Support\Localized;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -56,6 +57,8 @@ class ContactMessageReceived extends Mailable implements ShouldQueue
                 'contactMessage' => $this->contactMessage,
                 'product' => $productId ? $this->productLabel(Product::find($productId), $productId) : null,
                 'items' => $this->resolveItems(),
+                // Lista de desejos com fotos (retorno de 12/11/2026): o e-mail leva o link, não uma linha por peça.
+                'listUrl' => QuoteList::where('contact_message_id', $this->contactMessage->id)->latest('id')->first()?->siteUrl(),
                 'panelUrl' => ContactMessageResource::getUrl('view', ['record' => $this->contactMessage], panel: 'admin'),
             ],
         );

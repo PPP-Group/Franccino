@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
@@ -33,6 +33,25 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
   const t = useTranslations('home.scenes');
   const [open, setOpen] = useState<number | null>(null);
   const rootRef = useRef<HTMLUListElement | null>(null);
+  // Volta da página da peça aberta pelo ponto: o cartão daquele ponto já está aberto, e a foto encolhe até ele
+  // (retorno de 12/11/2026: na volta a foto não tinha para onde ir).
+  const storageKey = `franccino:scene:${scene.id}`;
+  useLayoutEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = window.sessionStorage.getItem(storageKey);
+      window.sessionStorage.removeItem(storageKey);
+    } catch {
+      return;
+    }
+    // Só na página de onde a peça foi aberta (o mesmo ambiente aparece na home e no projeto).
+    const [path, value] = saved?.split('|') ?? [];
+    const index = path === window.location.pathname && value !== undefined ? Number(value) : -1;
+    if (index >= 0 && index < scene.hotspots.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza com a navegação de volta
+      setOpen(index);
+    }
+  }, [storageKey, scene.hotspots.length]);
   const imageRatio = scene.image.width && scene.image.height ? scene.image.width / scene.image.height : 0;
 
   useEffect(() => {
@@ -89,6 +108,13 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
             </button>
             <div id={cardId} className="scene__card" hidden={!isOpen}>
               <Link
+                onClick={() => {
+                  try {
+                    window.sessionStorage.setItem(storageKey, `${window.location.pathname}|${index}`);
+                  } catch {
+                    // Sem armazenamento, a volta mostra a foto sem o cartão aberto.
+                  }
+                }}
                 className="scene__card-link"
                 href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
                 transitionTypes={

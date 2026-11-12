@@ -821,7 +821,7 @@
 
   .page-banner__img {
     position: fixed;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     bottom: auto;
     height: var(--page-banner-h);
   }
@@ -834,7 +834,7 @@
 
   .page-banner-art--fixed img {
     position: fixed;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     left: 0;
     height: var(--art-h);
     max-height: none;
@@ -1827,7 +1827,13 @@
 /* No texto longo do projeto, a peça acompanha a leitura. */
 .project-story--feature .feature-piece {
   position: sticky;
-  top: calc(var(--header) + var(--space-6));
+  top: calc(var(--header-offset, var(--header)) + var(--space-6));
+}
+
+/* No projeto, a peça fica no tamanho compacto das outras páginas, encostada à direita do texto (retorno de 12/11/2026). */
+.project-story--feature .feature-piece--compact {
+  align-self: start;
+  justify-self: end;
 }
 
 /*

@@ -4,6 +4,7 @@ use App\Enums\ContactProfession;
 use App\Mail\ContactMessageReceived;
 use App\Models\ContactMessage;
 use App\Models\Finish;
+use App\Models\QuoteList;
 use Illuminate\Support\Facades\App;
 
 it('is written in portuguese with every field and the quote items, whatever the request locale', function () {
@@ -67,4 +68,19 @@ it('shows the visitor text as typed, never as a disguised link', function () {
     $mail->assertDontSeeInHtml('href="https://golpe.example"', false)
         ->assertDontSeeInHtml('<strong>Souza</strong>', false)
         ->assertSeeInHtml('[o desconto]', false);
+});
+
+it('links the wishlist with photos instead of one line per piece (retorno de 12/11/2026)', function () {
+    $product = publishedProduct();
+    $message = ContactMessage::factory()->create([
+        'items' => [['product_id' => $product->id, 'quantity' => 3]],
+        'locale' => 'pt',
+    ]);
+    $list = QuoteList::share([['product_id' => $product->id, 'quantity' => 3]], 'pt', $message->id);
+
+    $mail = new ContactMessageReceived($message);
+
+    $mail->assertSeeInOrderInText(['Lista de desejos', '3 peças', 'Ver a lista com as fotos']);
+    $mail->assertSeeInHtml("/pt/lista/{$list->code}");
+    $mail->assertDontSeeInText('Quantidade');
 });

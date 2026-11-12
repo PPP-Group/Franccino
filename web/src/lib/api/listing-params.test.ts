@@ -17,7 +17,7 @@ describe('listing params', () => {
   it('keeps only known rooms (item 8)', () => {
     expect(parseListingParams({ room: 'office' })).toEqual({ room: 'office' });
     expect(parseListingParams({ room: 'attic' })).toEqual({});
-    expect(listingQueryString({ room: 'pool', page: 2 })).toBe('?room=pool&page=2');
+    expect(listingQueryString({ room: 'balcony', page: 2 })).toBe('?room=balcony&page=2');
   });
 
   it('serializes back without empty values', () => {

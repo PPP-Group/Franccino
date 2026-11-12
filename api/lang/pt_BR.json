@@ -518,12 +518,16 @@
     "Rooms": "Ambientes",
     "Variations": "Variações",
     "Top view (room planner)": "Vista de cima (sala para montar)",
-    "Living room": "Sala de estar",
     "Dining room": "Sala de jantar",
     "Bedroom": "Quarto",
     "Office": "Escritório",
-    "Balcony": "Varanda",
-    "Gourmet area": "Área gourmet",
-    "Pool": "Piscina",
-    "Garden": "Jardim"
+    "Balcony and garden": "Varanda e jardim",
+    "Living": "Living",
+    "Wishlist": "Lista de desejos",
+    "View the list with photos": "Ver a lista com as fotos",
+    ":count piece|:count pieces": ":count peça|:count peças",
+    "Wishlists": "Listas de desejos",
+    "Pieces": "Peças",
+    "Expires at": "Vale até",
+    "Open on the site": "Abrir no site"
 }

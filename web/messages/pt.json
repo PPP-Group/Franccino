@@ -86,7 +86,7 @@
     "listFull": "A lista atingiu o limite de 50 itens. Envie esta solicitação antes de iniciar uma nova.",
     "inList": "Na lista",
     "inListNamed": "{name} está na lista de desejos.",
-    "addShort": "Adicionar ao orçamento",
+    "addShort": "Adicionar à lista de desejos",
     "pendingFinish": "acabamento a definir",
     "viewListCount": "Ver lista ({count})",
     "decrease": "Diminuir",
@@ -117,7 +117,12 @@
       "body": "Recebemos sua solicitação. A equipe Franccino entrará em contato pelo e-mail informado."
     },
     "addedToList": "Adicionada à lista",
-    "recommendedTitle": "Recomendadas para você"
+    "recommendedTitle": "Recomendadas para você",
+    "whatsappShare": "Olá, gostaria de um orçamento da minha lista de desejos ({count, plural, one {# peça} other {# peças}}): {url}",
+    "shareFailed": "Não foi possível gerar o link da lista. Tente de novo.",
+    "linkCopied": "Link da lista copiado.",
+    "copyLink": "Copiar link da lista",
+    "messageSummary": "Pedido de orçamento da lista de desejos ({count, plural, one {# peça} other {# peças}})."
   },
   "errors": {
     "notFound": {
@@ -318,7 +323,9 @@
       "allDesigners": "Todos os designers",
       "facetOption": "{name} ({count})",
       "room": "Ambiente",
-      "allRooms": "Todos os ambientes"
+      "allRooms": "Todos os ambientes",
+      "allCategories": "Todas as categorias",
+      "allCollections": "Todas as coleções"
     },
     "sort": {
       "featured": "Destaques",
@@ -386,14 +393,11 @@
       "error": "Não foi possível carregar mais peças. Por favor, tente novamente."
     },
     "rooms": {
-      "living": "Sala de estar",
+      "balcony": "Varanda e jardim",
       "dining": "Sala de jantar",
+      "living": "Living",
       "bedroom": "Quarto",
-      "office": "Escritório",
-      "balcony": "Varanda",
-      "gourmet": "Área gourmet",
-      "pool": "Piscina",
-      "garden": "Jardim"
+      "office": "Escritório"
     }
   },
   "stores": {
@@ -543,7 +547,7 @@
       "description": "Catálogo da Franccino: móveis de design autoral das linhas Casa e Giardini, com medidas, acabamentos e arquivos técnicos."
     },
     "hero": {
-      "fallbackTitle": "Móveis de design autoral",
+      "fallbackTitle": "Feito para permanecer",
       "catalog": "Explorar o catálogo",
       "planner": "Planejar um ambiente",
       "open": "Conheça o destaque",
@@ -556,7 +560,8 @@
         "pause": "Pausar a troca automática",
         "play": "Retomar a troca automática",
         "goTo": "Ir para o destaque {current} de {total}"
-      }
+      },
+      "fallbackSubtitle": "Móveis de design autoral"
     },
     "scenes": {
       "title": "Ambientes",
@@ -720,12 +725,22 @@
     "home": "Início"
   },
   "consent": {
-    "title": "Cookies",
-    "body": "Utilizamos cookies de análise para compreender como o site é utilizado. A escolha é sua.",
-    "accept": "Aceitar",
+    "title": "Cookies e privacidade",
+    "body": "Usamos cookies necessários para o site funcionar e, com a sua permissão, cookies de análise e de marketing. Você escolhe o que aceita e pode mudar quando quiser em \"Preferências de cookies\", no rodapé.",
+    "accept": "Aceitar todos",
     "decline": "Recusar",
+    "customize": "Personalizar",
+    "save": "Salvar escolhas",
+    "categories": "Categorias de cookies",
+    "necessary": "Necessários.",
+    "necessaryText": "Fazem o site funcionar (lista de desejos, sala para montar, segurança dos formulários). Sempre ligados.",
+    "analytics": "Análise.",
+    "analyticsText": "Mostram, de forma agregada, como o site é usado (Google Analytics).",
+    "marketing": "Marketing.",
+    "marketingText": "Medem campanhas e anúncios.",
     "policy": "Política de cookies",
-    "privacy": "Política de privacidade"
+    "privacy": "Política de privacidade",
+    "preferences": "Preferências de cookies"
   },
   "mediaLinks": {
     "title": "Vídeos e links",
@@ -892,5 +907,19 @@
     "title": "Seja um parceiro",
     "description": "Para quem deseja abrir uma loja Franccino ou revender as nossas peças.",
     "formTitle": "Fale com a nossa equipe"
+  },
+  "sharedList": {
+    "title": "Lista de desejos",
+    "lead": "Lista compartilhada com {count, plural, one {# peça} other {# peças}}. O link vale até {date}.",
+    "quantity": "Quantidade: {count}",
+    "finishes": "Acabamentos: {list}",
+    "note": "Observação: {note}",
+    "addAll": "Adicionar à minha lista",
+    "openMine": "Ver a minha lista",
+    "missing": {
+      "title": "Este link de lista expirou",
+      "body": "A lista não existe mais ou o link venceu. Peça um link novo a quem enviou ou monte a sua lista pelo catálogo.",
+      "catalog": "Ver o catálogo"
+    }
   }
 }

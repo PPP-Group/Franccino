@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, ViewTransition } from 'react';
+import { useEffect, useState, ViewTransition, type CSSProperties } from 'react';
 import type { Image } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { isImageLoaded, morphShare, pendingMorphFor, pickLoadedSource, type MorphFit } from '@/lib/ui/morph';
@@ -18,6 +18,11 @@ type MorphImageProps = {
   hero?: boolean;
   priority?: boolean;
   className?: string;
+  /**
+   * Caixa em volta da foto que anda no movimento, maior que ela (a peça sem fundo do carrossel dentro do tamanho que a
+   * capa teria): o quadro já sai do carrossel no tamanho da foto da página da peça (retorno de 12/11/2026).
+   */
+  box?: { className: string; style: CSSProperties };
 };
 
 type Start = { name: string; src: string | null; fit: MorphFit };
@@ -60,6 +65,7 @@ export function MorphImage({
   hero = false,
   priority = false,
   className,
+  box,
 }: MorphImageProps) {
   const pathname = usePathname();
   const [start] = useState<Start>(() => {
@@ -104,16 +110,25 @@ export function MorphImage({
   // A versão provisória vale só para a foto com que a página abriu: trocada a foto (galeria), entra a nova inteira.
   const [startImageId] = useState(image.id);
   const shown = src && image.id === startImageId ? { ...image, src, srcset: [] } : image;
+  const picture = (
+    <ApiImage
+      image={shown}
+      sizes={sizes}
+      priority={priority || src !== null}
+      className={arriving ? [className, 'is-arriving'].filter(Boolean).join(' ') : className}
+      // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
+      fade={start.src === null}
+    />
+  );
   return (
     <ViewTransition name={start.name} share={morphShare(start.fit, start.name)} default="none">
-      <ApiImage
-        image={shown}
-        sizes={sizes}
-        priority={priority || src !== null}
-        className={arriving ? [className, 'is-arriving'].filter(Boolean).join(' ') : className}
-        // A foto que entrou no movimento já está na tela: a troca pela versão do tamanho certo não refaz o fade.
-        fade={start.src === null}
-      />
+      {box ? (
+        <span className={box.className} style={box.style}>
+          {picture}
+        </span>
+      ) : (
+        picture
+      )}
     </ViewTransition>
   );
 }

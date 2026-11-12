@@ -272,20 +272,21 @@ Um produto é "novo" (`is_new` na API) quando pertence a um lançamento publicad
 
 Projetos residenciais e cases corporativos (no WP eram `projetos` e `cases`).
 
-| Coluna                                | Tipo           | Notas                        |
-| ------------------------------------- | -------------- | ---------------------------- |
-| type                                  | string enum    | `residential` \| `corporate` |
-| title                                 | json tr        |                              |
-| slug                                  | json tr        |                              |
-| client_name                           | string, null   | "JHSF", "Clara Resorts"      |
-| location                              | string, null   | "Inhotim, MG"                |
-| architect                             | string, null   | escritório/autor             |
-| year                                  | smallint, null |                              |
-| summary                               | json tr        |                              |
-| description                           | json tr        | HTML                         |
-| is_featured, is_published, sort_order |                |                              |
-| seo_title, seo_description            | json tr        |                              |
-| legacy_wp_id, legacy_url              |                |                              |
+| Coluna                                | Tipo              | Notas                        |
+| ------------------------------------- | ----------------- | ---------------------------- |
+| type                                  | string enum       | `residential` \| `corporate` |
+| title                                 | json tr           |                              |
+| slug                                  | json tr           |                              |
+| client_name                           | string, null      | "JHSF", "Clara Resorts"      |
+| location                              | string, null      | "Inhotim, MG"                |
+| architect                             | string, null      | escritório/autor             |
+| year                                  | smallint, null    |                              |
+| featured_product_id                   | fk products, null | peça ao lado do texto        |
+| summary                               | json tr           |                              |
+| description                           | json tr           | HTML                         |
+| is_featured, is_published, sort_order |                   |                              |
+| seo_title, seo_description            | json tr           |                              |
+| legacy_wp_id, legacy_url              |                   |                              |
 
 Mídia: `cover` (1), `gallery` (n). Pivot `product_project`.
 
@@ -434,6 +435,18 @@ não exposta na API).
 | ip_hash     | string(64)        |                                                                                                                    |
 | user_agent  | string(512), null |                                                                                                                    |
 | read_at     | timestamp, null   |                                                                                                                    |
+
+### quote_lists
+
+Lista de desejos compartilhada por link (2026-11-12). Painel: Relacionamento → Listas de desejos (só consulta).
+
+| Coluna             | Tipo                      | Notas                                                         |
+| ------------------ | ------------------------- | ------------------------------------------------------------- |
+| code               | string(16), unique        | 8 letras e números, sem os parecidos                          |
+| items              | json                      | `[{product_id, quantity, finish_ids, note}]`, como no contato |
+| locale             | string(5)                 | idioma do link                                                |
+| contact_message_id | fk contact_messages, null | quando veio de um pedido de orçamento                         |
+| expires_at         | timestamp                 | `QUOTE_LIST_DAYS` (padrão 90); `model:prune` 30 dias depois   |
 
 ### newsletter_subscribers
 

@@ -63,7 +63,12 @@ export function HeroSection({ banner, brandNames, designerCount, index = 0 }: He
         <Heading className="hero__title" id={titleId}>
           {banner.title ?? t('fallbackTitle')}
         </Heading>
-        {banner.subtitle ? <p className="hero__subtitle">{banner.subtitle}</p> : null}
+        {/* Sem texto no painel: o slogan, com o "design autoral" na linha de apoio (revisão da Franccino, item 1). */}
+        {banner.subtitle ? (
+          <p className="hero__subtitle">{banner.subtitle}</p>
+        ) : banner.title ? null : (
+          <p className="hero__subtitle">{t('fallbackSubtitle')}</p>
+        )}
         {cta?.label ? (
           <span className="hero__cta" aria-hidden="true">
             <span>{cta.label}</span>
@@ -100,7 +105,11 @@ function PlainHero({
         <Heading className="display" id={titleId}>
           {banner?.title ?? t('fallbackTitle')}
         </Heading>
-        {banner?.subtitle ? <p className="lead">{banner.subtitle}</p> : null}
+        {banner?.subtitle ? (
+          <p className="lead">{banner.subtitle}</p>
+        ) : banner?.title ? null : (
+          <p className="lead">{t('fallbackSubtitle')}</p>
+        )}
         <div className="hero__actions">
           {banner?.cta_label && banner.cta_url ? (
             <a className="btn" href={banner.cta_url}>

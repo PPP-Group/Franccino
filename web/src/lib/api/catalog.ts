@@ -36,7 +36,7 @@ export type ProductListParams = {
   collection?: string;
   line?: string;
   finish?: number | string;
-  /** Ambiente (revisão da Franccino, item 8): living, dining, bedroom, office, balcony, gourmet, pool, garden. */
+  /** Ambiente (revisão da Franccino, item 8): balcony (varanda e jardim), dining, living, bedroom, office. */
   room?: string;
   launch?: string;
   q?: string;

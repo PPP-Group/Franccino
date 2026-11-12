@@ -86,7 +86,7 @@
     "listFull": "The list has reached its limit of 50 items. Please send this request before starting a new one.",
     "inList": "On the list",
     "inListNamed": "{name} is on the wishlist.",
-    "addShort": "Add to quote",
+    "addShort": "Add to wishlist",
     "pendingFinish": "finish to be defined",
     "viewListCount": "View list ({count})",
     "decrease": "Decrease",
@@ -117,7 +117,12 @@
       "body": "We have received your request. The Franccino team will contact you at the email address provided."
     },
     "addedToList": "Added to the list",
-    "recommendedTitle": "Recommended for you"
+    "recommendedTitle": "Recommended for you",
+    "whatsappShare": "Hello, I would like a quote for my wishlist ({count, plural, one {# piece} other {# pieces}}): {url}",
+    "shareFailed": "We could not create the list link. Please try again.",
+    "linkCopied": "List link copied.",
+    "copyLink": "Copy the list link",
+    "messageSummary": "Quote request for the wishlist ({count, plural, one {# piece} other {# pieces}})."
   },
   "errors": {
     "notFound": {
@@ -318,7 +323,9 @@
       "allDesigners": "All designers",
       "facetOption": "{name} ({count})",
       "room": "Room",
-      "allRooms": "All rooms"
+      "allRooms": "All rooms",
+      "allCategories": "All categories",
+      "allCollections": "All collections"
     },
     "sort": {
       "featured": "Featured",
@@ -386,14 +393,11 @@
       "error": "We could not load more pieces. Please try again."
     },
     "rooms": {
-      "living": "Living room",
+      "balcony": "Balcony and garden",
       "dining": "Dining room",
+      "living": "Living room",
       "bedroom": "Bedroom",
-      "office": "Office",
-      "balcony": "Balcony",
-      "gourmet": "Gourmet area",
-      "pool": "Pool",
-      "garden": "Garden"
+      "office": "Office"
     }
   },
   "stores": {
@@ -543,7 +547,7 @@
       "description": "Franccino catalogue: authorial design furniture from the Casa and Giardini lines, with dimensions, finishes and technical files."
     },
     "hero": {
-      "fallbackTitle": "Authorial design furniture",
+      "fallbackTitle": "Made to last",
       "catalog": "Explore the catalogue",
       "planner": "Plan a room",
       "open": "Discover the highlight",
@@ -556,7 +560,8 @@
         "pause": "Pause automatic rotation",
         "play": "Resume automatic rotation",
         "goTo": "Go to highlight {current} of {total}"
-      }
+      },
+      "fallbackSubtitle": "Authorial design furniture"
     },
     "scenes": {
       "title": "Rooms",
@@ -720,12 +725,22 @@
     "home": "Home"
   },
   "consent": {
-    "title": "Cookies",
-    "body": "We use analytics cookies to understand how the site is used. The choice is yours.",
-    "accept": "Accept",
+    "title": "Cookies and privacy",
+    "body": "We use cookies that the site needs to work and, with your permission, analytics and marketing cookies. You choose what to accept and can change it anytime under \"Cookie preferences\" in the footer.",
+    "accept": "Accept all",
     "decline": "Decline",
+    "customize": "Customize",
+    "save": "Save choices",
+    "categories": "Cookie categories",
+    "necessary": "Necessary.",
+    "necessaryText": "Make the site work (wishlist, room planner, form security). Always on.",
+    "analytics": "Analytics.",
+    "analyticsText": "Show, in aggregate, how the site is used (Google Analytics).",
+    "marketing": "Marketing.",
+    "marketingText": "Measure campaigns and ads.",
     "policy": "Cookie policy",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "preferences": "Cookie preferences"
   },
   "mediaLinks": {
     "title": "Videos and links",
@@ -892,5 +907,19 @@
     "title": "Become a partner",
     "description": "For those who wish to open a Franccino store or resell our pieces.",
     "formTitle": "Talk to our team"
+  },
+  "sharedList": {
+    "title": "Wishlist",
+    "lead": "Shared list with {count, plural, one {# piece} other {# pieces}}. The link is valid until {date}.",
+    "quantity": "Quantity: {count}",
+    "finishes": "Finishes: {list}",
+    "note": "Note: {note}",
+    "addAll": "Add to my list",
+    "openMine": "View my list",
+    "missing": {
+      "title": "This list link has expired",
+      "body": "The list no longer exists or the link has expired. Ask the sender for a new link or build your own list from the catalogue.",
+      "catalog": "View the catalogue"
+    }
   }
 }
