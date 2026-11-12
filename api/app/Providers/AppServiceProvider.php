@@ -28,6 +28,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
+use App\Models\QuoteList;
 use App\Models\Redirect;
 use App\Models\Scene;
 use App\Models\Store;
@@ -114,6 +115,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Redirect::class, AdminOnlyPolicy::class);
 
         Gate::policy(ContactMessage::class, InboxPolicy::class);
+        Gate::policy(QuoteList::class, InboxPolicy::class);
         Gate::policy(NewsletterSubscriber::class, InboxPolicy::class);
         Gate::policy(ConsentRecord::class, InboxPolicy::class);
 

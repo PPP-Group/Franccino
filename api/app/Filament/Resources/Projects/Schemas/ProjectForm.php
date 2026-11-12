@@ -62,6 +62,11 @@ class ProjectForm
                     ->multiple()
                     ->searchable()
                     ->preload(),
+                Select::make('featured_product_id')
+                    ->label(__('Featured piece'))
+                    ->relationship('featuredProduct', 'name')
+                    ->searchable()
+                    ->preload(),
                 Toggle::make('is_featured')
                     ->label(__('Featured')),
                 ...CommonFields::publication(),

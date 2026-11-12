@@ -38,6 +38,7 @@
 .gallery__stage {
   background: var(--paper);
   aspect-ratio: 4 / 3;
+  container-type: size;
   position: relative;
   overflow: hidden;
   display: grid;
@@ -56,6 +57,16 @@
   height: 100%;
   max-width: var(--stage-img-max, 100%);
   object-fit: contain;
+  transition: opacity var(--t-mid) var(--ease-out);
+}
+
+/*
+  Com a proporção da foto (ProductStage, `--stage-ratio`), a caixa da foto é a própria foto, sem a sobra branca do
+  quadro: o movimento que chega do carrossel e dos cards encaixa nela inteira (retorno de 12/11/2026).
+*/
+.gallery__stage[style*='--stage-ratio'] > img {
+  width: min(100cqw, 100cqh * var(--stage-ratio), var(--stage-img-max, 100cqw));
+  height: auto;
   transition: opacity var(--t-mid) var(--ease-out);
 }
 
@@ -344,9 +355,14 @@
   gap: var(--space-2);
 }
 
-.dims__arrow {
-  width: 18px;
-  height: 18px;
+/* A seta de cada medida, do tamanho do texto (a regra `.dims svg` é a do desenho, não vale para ela). */
+.dims .dims__arrow {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  max-width: none;
+  background: none;
+  border: 0;
   color: var(--ink-muted);
 }
 

@@ -51,3 +51,18 @@ it('returns 404 for an unpublished project', function () {
 
     $this->getJson('/api/v1/projects/oculto')->assertNotFound();
 });
+
+it('shows the featured piece chosen in the panel, only when published (retorno de 12/11/2026)', function () {
+    $indoor = area('indoor');
+    $piece = Product::factory()->for($indoor)->create(['slug' => ['pt' => 'poltrona-derby', 'en' => 'derby-armchair']]);
+    $project = Project::factory()->create([
+        'slug' => ['pt' => 'boa-vista', 'en' => 'boa-vista'],
+        'featured_product_id' => $piece->id,
+    ]);
+
+    $this->getJson('/api/v1/projects/boa-vista')->assertOk()->assertJsonPath('data.featured_product.slug', 'poltrona-derby');
+
+    $piece->update(['is_published' => false]);
+    $this->getJson('/api/v1/projects/boa-vista')->assertOk()->assertJsonPath('data.featured_product', null);
+    expect($project->refresh()->featured_product_id)->toBe($piece->id);
+});

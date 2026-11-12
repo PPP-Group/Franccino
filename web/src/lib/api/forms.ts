@@ -214,3 +214,23 @@ export async function requestModelLink(
   const json = (await response.json()) as { data: { url: string; expires_at: string } };
   return json.data;
 }
+
+/**
+ * `POST /quote-lists`: guarda a lista de desejos e devolve o código do link (`/pt/lista/{code}`), que vai no WhatsApp
+ * no lugar de uma linha por peça (retorno de 12/11/2026).
+ */
+export async function createSharedList(
+  items: ContactItem[],
+  locale: string,
+): Promise<{ code: string; expires_at: string }> {
+  const response = await postJson('/quote-lists', { items, locale });
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      await readJsonBody(response),
+      `A API respondeu ${response.status} para /quote-lists.`,
+    );
+  }
+  const json = (await response.json()) as { data: { code: string; expires_at: string } };
+  return json.data;
+}

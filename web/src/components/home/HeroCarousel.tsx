@@ -57,6 +57,17 @@ export function HeroCarousel({ children }: { children: ReactNode }) {
     [total],
   );
 
+  // O mesmo texto em todos os slides (retorno de 12/11/2026): ele entra uma vez e depois fica parado, sem subir de novo a
+  // cada troca de foto. Só o texto que muda anima.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || previous === null || previous === undefined) return;
+    const copy = (index: number) =>
+      root.querySelectorAll('.hero-carousel__slide')[index]?.querySelector('.hero__content')?.textContent ??
+      null;
+    root.classList.toggle('is-steady-copy', copy(active) !== null && copy(active) === copy(previous));
+  }, [active, previous]);
+
   // As barras ficam no lugar do traço do título do slide ativo; sem título (arte com texto), embaixo.
   useLayoutEffect(() => {
     const root = rootRef.current;

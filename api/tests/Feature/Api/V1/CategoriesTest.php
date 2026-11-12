@@ -56,3 +56,18 @@ it('returns 404 for an unpublished category', function () {
 
     $this->getJson('/api/v1/categories/oculta')->assertNotFound();
 });
+
+it('lists every category in the list shape, with its product count (retorno de 12/11/2026)', function () {
+    $indoor = area('indoor');
+    $categories = Category::factory()->count(3)->create();
+    foreach ($categories as $category) {
+        Product::factory()->for($indoor)->for($category)->create();
+    }
+
+    $data = $this->getJson('/api/v1/categories')->assertOk()->json('data');
+
+    expect($data)->toHaveCount(3);
+    foreach ($data as $item) {
+        expect($item)->toHaveKey('product_count', 1)->not->toHaveKey('seo');
+    }
+});

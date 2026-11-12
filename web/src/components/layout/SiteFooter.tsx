@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { ConsentPreferencesButton } from '@/components/consent/ConsentPreferencesButton';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Link } from '@/i18n/navigation';
@@ -11,6 +12,7 @@ import { VortexMark } from './VortexMark';
 
 export function SiteFooter({ settings }: { settings: Settings }) {
   const t = useTranslations('footer');
+  const consent = useTranslations('consent');
   const nav = useTranslations('nav');
   const common = useTranslations('common');
   const quotes = whatsappUrl(settings.quotes_whatsapp);
@@ -136,6 +138,9 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             </li>
             <li>
               <Link href="/cookies">{t('cookies')}</Link>
+            </li>
+            <li>
+              <ConsentPreferencesButton label={consent('preferences')} />
             </li>
             <li>
               <Link href="/site-map">{t('siteMap')}</Link>

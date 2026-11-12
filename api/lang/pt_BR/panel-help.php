@@ -42,6 +42,7 @@ return [
     'product.finishes' => 'Acabamentos em que a peça é feita. Eles aparecem como amostras na página do produto.',
     'product.cover' => 'Foto principal da peça, sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda; fundo branco e peça centralizada. Pelo menos 2000 px. Obrigatória para publicar.',
     'product.gallery' => 'Outras fotos da peça (detalhes, ambientes). Arraste para mudar a ordem.',
+    'project.featured_product_id' => 'A peça que aparece ao lado do texto do projeto. Escolha uma peça do projeto (de preferência uma dos pontos do ambiente). Sem escolha, aparece a primeira peça dos pontos do ambiente ou, sem ambiente, a primeira peça do projeto.',
     'product.rooms' => 'Ambientes em que a peça fica bem. São as opções do filtro "Ambientes" do catálogo; a peça aparece em cada ambiente marcado.',
     'product.variants' => 'Outras versões desta peça (por exemplo, com e sem braço, ou em outra medida). Aparecem na página da peça como "Variações", nas duas peças: basta ligar em uma delas.',
     'product.top_view' => 'Opcional. O desenho da peça vista de cima (planta), em PNG ou WebP com fundo transparente, cortado rente à peça. Na sala para montar, ele substitui a foto; sem ele, a sala mostra a capa.',

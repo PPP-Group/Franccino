@@ -19,6 +19,7 @@ export type ListingPatch = {
   category?: string;
   designer?: string;
   room?: string;
+  collection?: string;
   q?: string;
   sort?: ProductSort;
   page?: number;
@@ -41,6 +42,10 @@ export function listingQuery(
   }
   if ('designer' in patch) {
     merged.designer = patch.designer;
+    filtersChanged = true;
+  }
+  if ('collection' in patch) {
+    merged.collection = patch.collection;
     filtersChanged = true;
   }
   if ('room' in patch) {

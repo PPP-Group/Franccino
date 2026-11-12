@@ -341,6 +341,11 @@
   animation: none;
 }
 
+/* Mesmo texto do slide anterior (HeroCarousel): fica parado, sem a entrada de novo. */
+.hero-carousel.is-steady-copy .hero-carousel__slide .hero__content {
+  animation: none;
+}
+
 /* Vídeo de slide fora da tela some: o observador do vídeo vê que ele não está na tela e pausa (HeroVideo). */
 .hero-carousel__slide:not(.is-active) .hero__video {
   display: none;
@@ -935,7 +940,10 @@
   text-wrap: balance;
 }
 
-.mosaic--3 > :first-child .mosaic__title,
+/*
+  Todos os nomes no mesmo tamanho e à mesma distância da borda de baixo (revisão da Franccino, item 4: o nome da foto
+  grande e o da pequena ao lado ficavam desalinhados). Só o mosaico de uma foto só tem o nome maior.
+*/
 .mosaic--1 .mosaic__title {
   font-size: var(--fs-h2);
 }

@@ -36,6 +36,18 @@ html[data-header-hide] .site-header:not(:has([aria-expanded='true'], :focus-with
   transform: translateY(-100%);
 }
 
+/*
+  O que fica preso embaixo do cabeçalho (a barra de filtros do catálogo, os índices laterais) sobe junto quando ele
+  some e desce junto quando ele volta (retorno de 12/11/2026: os filtros ficavam soltos no meio da tela).
+*/
+:root {
+  --header-offset: var(--header);
+}
+
+html[data-header-hide]:not(:has(.site-header :is([aria-expanded='true'], :focus-within))) {
+  --header-offset: 0px;
+}
+
 .site-header::before,
 .site-header::after {
   content: '';
@@ -488,7 +500,7 @@ body:has(.hero--full) #conteudo {
     align-items: stretch;
     gap: 0;
     position: absolute;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     left: 0;
     right: 0;
     padding: var(--space-3) var(--gutter) var(--space-6);
@@ -764,6 +776,21 @@ body:has(.hero--full) #conteudo {
   color: var(--footer-muted);
 }
 
+.footer-link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.footer-link-button:hover,
+.footer-link-button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .footer-legal {
   display: flex;
   flex-wrap: wrap;
@@ -784,7 +811,8 @@ body:has(.hero--full) #conteudo {
   }
 
   .footer-grid ul a,
-  .footer-legal a {
+  .footer-legal a,
+  .footer-legal .footer-link-button {
     display: inline-flex;
     align-items: center;
     min-height: 44px;

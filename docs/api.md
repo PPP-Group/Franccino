@@ -109,7 +109,7 @@ type ProductDetail = ProductCard & {
   // null se não houver GLB ou 3D desligado. O GLB fica em disco privado (contrato 13.2): o endereço vem de
   // POST /products/{slug}/model-3d/link, pedido quando o visitante abre o 3D.
   top_view: Image | null; // vista de cima (planta) para a sala para montar; sem ela, a sala usa a capa (12/11/2026)
-  rooms: string[]; // ambientes da peça: living, dining, bedroom, office, balcony, gourmet, pool, garden (12/11/2026)
+  rooms: string[]; // ambientes da peça: balcony (varanda e jardim), dining, living, bedroom, office (12/11/2026)
   variants: { id: number; slug: string; name: string; image: Image | null }[]; // outras versões publicadas da peça
   model_3d: { size: number | null } | null;
   files: DownloadFile[];
@@ -127,7 +127,7 @@ type ProductDetail = ProductCard & {
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET /home`               |                                                                                                                  | `{ banners: Banner[], featured_products: ProductCard[], featured_collections: CollectionCard[], current_launch: LaunchCard \| null, designers: DesignerCard[] }` (`banners`: com algum banner de campanha no período, com `starts_at`/`ends_at`, só ele; senão, os de sempre) |
 | `GET /areas`              |                                                                                                                  | `Area[]` (`AreaRef` + `description`, `cover`, `product_count`, `seo`)                                                                                                                                                                                                         |
-| `GET /areas/{key}`        |                                                                                                                  | `Area` + `categories: (CategoryRef & { product_count, cover })[]` (só categorias com produto na área)                                                                                                                                                                         |
+| `GET /areas/{key}`        |                                                                                                                  | `Area` + `categories: (CategoryRef & { product_count, cover })[]` (só categorias com produto na área; sem capa no painel, `cover` é a capa de uma peça da categoria na área)                                                                                                  |
 | `GET /categories`         | `area?`                                                                                                          | `(CategoryRef & { cover, product_count })[]`                                                                                                                                                                                                                                  |
 | `GET /categories/{slug}`  |                                                                                                                  | `CategoryRef` + `description`, `cover`, `seo`, `slugs`                                                                                                                                                                                                                        |
 | `GET /products`           | `area?` `category?` `designer?` `collection?` `line?` `finish?` `room?` `launch?` `q?` `sort?` `page` `per_page` | paginado `ProductCard[]`                                                                                                                                                                                                                                                      |
@@ -140,7 +140,7 @@ type ProductDetail = ProductCard & {
 | `GET /launches`           |                                                                                                                  | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                                                                                                                                            |
 | `GET /launches/{slug}`    |                                                                                                                  | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`, `slugs`                                                                                                                                       |
 | `GET /projects`           | `type?`                                                                                                          | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`, `scene`)                                                                                                                                                      |
-| `GET /projects/{slug}`    |                                                                                                                  | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                                                                                                                              |
+| `GET /projects/{slug}`    |                                                                                                                  | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `featured_product: ProductCard \| null` (escolhida no painel, só se publicada), `seo`, `slugs`                                                                                              |
 | `GET /clients`            |                                                                                                                  | `{ id, name, url, logo }[]`                                                                                                                                                                                                                                                   |
 | `GET /stores`             | `state?` `type?`                                                                                                 | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                                                                                                                            |
 | `GET /finishes`           |                                                                                                                  | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                                                                                                                              |
@@ -351,6 +351,17 @@ Limite: o mesmo dos formulários (5 por minuto por IP).
 "consent": true }`. Cadastro antes de baixar arquivos técnicos (revisão da Franccino, 2026-11-12, item 22).
 `201 { "data": { "token": "<48 caracteres>" } }`: o site guarda o token no navegador e o manda em cada pedido de link; o
 banco guarda só o hash (`download_leads.token_hash`). `422` com os campos inválidos. Limite: o mesmo dos formulários.
+
+### `POST /quote-lists` e `GET /quote-lists/{code}`
+
+Lista de desejos compartilhada por link (retorno de 2026-11-12). `POST` recebe `{ "locale", "items": [{ product_id,
+quantity, finish_ids?, note? }] }` (as mesmas regras dos `items` do contato: até 50 peças publicadas) e responde
+`201 { "data": { "code": "<8 letras e números>", "expires_at": "..." } }`; o site manda o link
+(`/pt/lista/{code}` ou `/en/list/{code}`) no WhatsApp. O pedido de orçamento com `items` (`POST /contact`) também guarda a
+lista, ligada à mensagem, e o e-mail para a equipe leva o link. A lista vale `QUOTE_LIST_DAYS` dias (padrão 90) e sai do
+banco 30 dias depois de vencer. `GET` (leitura, sem cache) devolve `{ code, created_at, expires_at, items: [{ product:
+ProductCard, quantity, finishes: { id, name, code, swatch }[], note }] }`, só com as peças ainda publicadas; vencida ou
+inexistente, `404`.
 
 ### `POST /downloads/{file}/link`
 

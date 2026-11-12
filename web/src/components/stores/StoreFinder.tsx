@@ -81,17 +81,6 @@ function StoreCard({ store, detailed, active = false, flash = null, onHover }: S
                 </ExternalLink>
               </li>
             ) : null}
-            {detailed ? null : (
-              // Na home também (retorno de 09/11/2026): o mesmo "Ver no mapa" da página Lojas.
-              <ul className="store__links">
-                <li>
-                  <ExternalLink href={mapSearchUrl(store)}>
-                    <Icon name="pin" />
-                    <span>{t('map')}</span>
-                  </ExternalLink>
-                </li>
-              </ul>
-            )}
             {store.email ? (
               <li>
                 <a href={`mailto:${store.email}`}>{store.email}</a>
@@ -119,7 +108,17 @@ function StoreCard({ store, detailed, active = false, flash = null, onHover }: S
             </li>
           </ul>
         </>
-      ) : null}
+      ) : (
+        // Na home também (retornos de 09 e 12/11/2026): o mesmo "Ver no mapa" da página Lojas.
+        <ul className="store__links">
+          <li>
+            <ExternalLink href={mapSearchUrl(store)}>
+              <Icon name="pin" />
+              <span>{t('map')}</span>
+            </ExternalLink>
+          </li>
+        </ul>
+      )}
     </article>
   );
 }

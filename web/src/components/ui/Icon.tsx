@@ -35,6 +35,9 @@ const PATHS = {
   'measure-depth': <path d="M16 4h4v4M14 10l6 -6M8 20h-4v-4M4 20l6 -6" />,
   'measure-height': <path d="M8 7l4 -4l4 4M8 17l4 4l4 -4M12 3v18" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  link: (
+    <path d="M9 15l6 -6M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
+  ),
   close: <path d="M6 6l12 12M18 6 6 18" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   plus: <path d="M12 5v14M5 12h14" />,

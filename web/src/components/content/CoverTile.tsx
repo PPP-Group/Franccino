@@ -39,11 +39,12 @@ export function CoverTile({
   const classes = ['collection-tile'];
   if (labelled || !image) classes.push('collection-tile--labelled');
   return (
-    // Abre como cortina ao entrar na tela (ideia 04), menos os primeiros blocos, que já abrem à vista (foto principal).
+    // Abre como cortina ao entrar na tela (ideia 04), todos os blocos, também os primeiros (retorno de 12/11/2026). A foto
+    // dos primeiros continua com prioridade: a cortina espera ela chegar (RevealObserver).
     <Link
       className={classes.join(' ')}
       href={href}
-      data-reveal={priority ? undefined : 'curtain'}
+      data-reveal="curtain"
       transitionTypes={image && morph ? morphTypes(morph) : undefined}
       data-morph-link={image && morph ? morph : undefined}
     >

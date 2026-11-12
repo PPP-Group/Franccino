@@ -18,18 +18,25 @@ import { Link } from '@/i18n/navigation';
 import type { Image, ProductCard } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { STAGE_SIZES } from '@/lib/product/gallery';
+import { usePathname } from 'next/navigation';
 import { markImageLoaded, morphName, morphTypes } from '@/lib/ui/morph';
 import {
+  AUTOPLAY_MS,
   clampIndex,
   counterNumber,
   coverflowPose,
+  cutoutMorphBox,
   pieceWidthFactor,
   DRAG_THRESHOLD_PX,
   dragPosition,
   initialIndex,
   keyTarget,
+  loopOffset,
+  loops,
+  positionFor,
   releaseIndex,
   wheelStep,
+  wrapIndex,
   type CoverflowPose,
 } from '@/lib/ui/feature-carousel';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
@@ -78,6 +85,28 @@ function poseStyle(pose: CoverflowPose): CSSProperties {
   } as CSSProperties;
 }
 
+/** Onde o carrossel guarda a peça do centro, para a volta da página da peça cair nela (retorno de 12/11/2026). */
+function storageKey(pathname: string, label: string): string {
+  return `franccino:carousel:${pathname}:${label}`;
+}
+
+function readSaved(key: string): number | null {
+  try {
+    const value = window.sessionStorage.getItem(key);
+    return value === null ? null : Number(value);
+  } catch {
+    return null;
+  }
+}
+
+function save(key: string, productId: number) {
+  try {
+    window.sessionStorage.setItem(key, String(productId));
+  } catch {
+    // Sem armazenamento, a volta abre na primeira peça.
+  }
+}
+
 /**
  * Baixa a foto do palco da página da peça antes do clique (mouse em cima ou foco): a peça sem fundo não serve de foto
  * provisória lá (MorphImage), e o movimento precisa pousar sobre a foto pronta, sem quadro vazio.
@@ -114,10 +143,20 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   // O nome curto da área, como no menu (Casa, Giardini).
   const nav = useTranslations('nav');
   const reduceMotion = useReducedMotion();
+  const pathname = usePathname();
   const total = products.length;
-  const [active, setActive] = useState(() => initialIndex(total));
+  const looping = loops(total);
+  // Posição do centro: com o carrossel dando a volta ela cresce sem limite, e a peça é `wrapIndex(active)`.
+  const [active, setActive] = useState(() => initialIndex());
+  const activeIndex = wrapIndex(active, total);
   // A peça cujo nome aparece embaixo: acompanha o arrasto antes de `active` mudar no fim do gesto.
-  const [shown, setShown] = useState(active);
+  const [shown, setShown] = useState(activeIndex);
+  // Pausa do automático: mouse em cima, foco do teclado dentro, fora da tela ou aba escondida.
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  // Sem transição na primeira pintura depois de voltar à peça que estava no centro.
+  const [restored, setRestored] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -129,34 +168,96 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   // O nome embaixo troca durante o arrasto só quando muda de peça (sem desenhar o React a cada movimento).
   const shownRef = useRef(active);
   const wheel = useRef({ accumulated: 0, lockedUntil: 0 });
+  const offsets = useRef<number[]>([]);
   const cursor = useRef({ x: 0, y: 0, tx: 0, ty: 0, frame: 0, visible: false });
 
   /** Põe cada peça na pose da posição dada (fracionária durante o arrasto), direto no DOM. */
-  const paint = useCallback((position: number) => {
-    itemRefs.current.forEach((node, index) => {
-      if (!node) return;
-      const pose = coverflowPose(index - position);
-      node.style.setProperty('--fc-x', pose.x.toFixed(4));
-      node.style.setProperty('--fc-s', pose.scale.toFixed(4));
-      node.style.setProperty('--fc-f', pose.fade.toFixed(4));
-      node.style.setProperty('--fc-o', pose.opacity.toFixed(4));
-      node.style.zIndex = String(pose.z);
-      node.toggleAttribute('data-hidden', pose.hidden);
-    });
-  }, []);
+  const paint = useCallback(
+    (position: number) => {
+      itemRefs.current.forEach((node, index) => {
+        if (!node) return;
+        const offset = loopOffset(index, position, total);
+        // Dando a volta, a peça da ponta passa de um lado para o outro: ela troca de lugar sem atravessar o palco.
+        const previous = offsets.current[index];
+        offsets.current[index] = offset;
+        if (previous !== undefined && Math.abs(offset - previous) > 1.5) {
+          node.style.transition = 'none';
+          window.requestAnimationFrame(() => {
+            node.style.transition = '';
+          });
+        }
+        const pose = coverflowPose(offset);
+        node.style.setProperty('--fc-x', pose.x.toFixed(4));
+        node.style.setProperty('--fc-s', pose.scale.toFixed(4));
+        node.style.setProperty('--fc-f', pose.fade.toFixed(4));
+        node.style.setProperty('--fc-o', pose.opacity.toFixed(4));
+        node.style.zIndex = String(pose.z);
+        node.toggleAttribute('data-hidden', pose.hidden);
+      });
+    },
+    [total],
+  );
 
   const goTo = useCallback(
-    (index: number) => {
-      const target = clampIndex(index, total);
+    (position: number) => {
+      const target = loops(total) ? Math.round(position) : clampIndex(position, total);
       activeRef.current = target;
-      shownRef.current = target;
+      shownRef.current = wrapIndex(target, total);
       setActive(target);
-      setShown(target);
+      setShown(wrapIndex(target, total));
       // Mesmo índice (arrasto que voltou): o React não desenha de novo, então a pose volta por aqui.
       paint(target);
     },
     [paint, total],
   );
+
+  // Volta da página da peça: o centro é a peça que estava lá, não a primeira.
+  const key = storageKey(pathname, label);
+  useLayoutEffect(() => {
+    const saved = readSaved(key);
+    const index = saved === null ? -1 : products.findIndex((product) => product.id === saved);
+    if (index > 0) {
+      // Volta da página da peça: a peça vai para o centro sem animar (restaurar é sincronizar com o armazenamento).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setRestored(true);
+      goTo(index);
+    }
+    // Só ao montar.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return undefined;
+    const frame = window.requestAnimationFrame(() => setRestored(false));
+    return () => window.cancelAnimationFrame(frame);
+  }, [restored]);
+
+  useEffect(() => {
+    const product = products[activeIndex];
+    if (product) save(key, product.id);
+  }, [activeIndex, key, products]);
+
+  // Roda sozinho (retorno de 12/11/2026): uma peça a cada AUTOPLAY_MS, recomeçando a contagem a cada troca.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') return undefined;
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry?.isIntersecting ?? false), {
+      threshold: 0.3,
+    });
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
+  const paused = reduceMotion || hovered || focused || !onScreen || total < 2;
+  useEffect(() => {
+    if (paused) return undefined;
+    const timer = window.setTimeout(() => {
+      if (document.hidden || drag.current) return;
+      const next = looping ? activeRef.current + 1 : (activeRef.current + 1) % total;
+      goTo(next);
+    }, AUTOPLAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [active, paused, looping, total, goTo]);
 
   useLayoutEffect(() => {
     activeRef.current = active;
@@ -194,7 +295,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     if (target === null) return;
     event.preventDefault();
     goTo(target);
-    linkRefs.current[target]?.focus({ preventScroll: true });
+    linkRefs.current[wrapIndex(target, total)]?.focus({ preventScroll: true });
   }
 
   // ---------- arrasto (dedo, caneta e mouse) ----------
@@ -202,7 +303,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
     if (total < 2 || (event.pointerType === 'mouse' && event.button !== 0)) return;
     if ((event.target as Element).closest('button')) return;
-    const item = itemRefs.current[active];
+    const item = itemRefs.current[activeIndex];
     drag.current = {
       pointerId: event.pointerId,
       x: event.clientX,
@@ -246,7 +347,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     state.lastT = event.timeStamp;
     state.position = dragPosition(state.startIndex, dx, state.stepPx, total);
     paint(state.position);
-    const nearest = clampIndex(Math.round(state.position), total);
+    const nearest = wrapIndex(Math.round(state.position), total);
     if (nearest !== shownRef.current) {
       shownRef.current = nearest;
       setShown(nearest);
@@ -266,17 +367,17 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     window.setTimeout(() => {
       suppressClick.current = false;
     }, 0);
-    const nearest = clampIndex(Math.round(state.position), total);
+    const nearest = looping ? Math.round(state.position) : clampIndex(Math.round(state.position), total);
     const target = releaseIndex(nearest, state.startIndex, state.velocity, total);
     goTo(target);
     if (event.pointerType !== 'mouse') hideCursor();
   }
 
   function onItemClick(event: MouseEvent<HTMLAnchorElement>, index: number) {
-    if (index === active) return;
+    if (index === activeIndex) return;
     // A vizinha não abre a peça: vem para o centro.
     event.preventDefault();
-    goTo(index);
+    goTo(positionFor(index, active, total));
   }
 
   // ---------- cursor "Arraste" (ideia 12): segue o mouse com um leve atraso ----------
@@ -319,13 +420,14 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
     rootRef.current?.removeAttribute('data-cursor');
   }
 
-  const current = products[shown] ?? products[active];
+  const current = products[shown] ?? products[activeIndex];
   // Só capas em fundo branco (ou uma parte delas): as peças ficam um pouco mais afastadas, porque a capa fundida no
   // palco não tapa a vizinha de trás (carousel.css).
   const rootClass = products.every((product) => product.cutout)
     ? 'feature-carousel'
     : 'feature-carousel feature-carousel--packshots';
-  const stageClass = reduceMotion ? 'feature-carousel__stage' : 'feature-carousel__stage is-animated';
+  const stageClass =
+    reduceMotion || restored ? 'feature-carousel__stage' : 'feature-carousel__stage is-animated';
 
   return (
     <div
@@ -334,6 +436,16 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
       role="region"
       aria-roledescription={t('roleDescription')}
       aria-label={label}
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') setHovered(true);
+      }}
+      onPointerLeave={() => setHovered(false)}
+      onFocus={(event) => {
+        if ((event.target as HTMLElement).matches(':focus-visible')) setFocused(true);
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+      }}
     >
       <div
         ref={stageRef}
@@ -353,11 +465,12 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
         }}
       >
         {products.map((product, index) => {
-          const isActive = index === active;
+          const isActive = index === activeIndex;
           // Sem a foto recortada, a capa em fundo branco: o branco some no palco (multiply, carousel.css).
           const image = product.cutout ?? product.cover;
           const kind = product.cutout ? 'is-cutout' : 'is-packshot';
-          const pose = coverflowPose(index - active);
+          const pose = coverflowPose(loopOffset(index, active, total));
+          const box = product.cutout ? cutoutMorphBox(product.cover, product.cutout) : null;
           return (
             <div
               key={product.id}
@@ -409,6 +522,18 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                       image={image}
                       sizes={ITEM_SIZES}
                       fit={product.cutout ? 'cutout' : 'contain'}
+                      box={
+                        box
+                          ? {
+                              className: 'feature-carousel__morph',
+                              style: {
+                                '--fc-k': box.scale.toFixed(4),
+                                '--fc-cover-r': box.coverRatio.toFixed(4),
+                                '--fc-cut-r': box.cutoutRatio.toFixed(4),
+                              } as CSSProperties,
+                            }
+                          : undefined
+                      }
                     />
                   ) : null}
                 </span>
@@ -423,7 +548,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
               type="button"
               className="feature-carousel__button feature-carousel__button--previous"
               aria-label={t('previous')}
-              disabled={active === 0}
+              disabled={!looping && active === 0}
               onClick={() => goTo(active - 1)}
             >
               <Icon name="arrow" />
@@ -432,7 +557,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
               type="button"
               className="feature-carousel__button feature-carousel__button--next"
               aria-label={t('next')}
-              disabled={active === total - 1}
+              disabled={!looping && active === total - 1}
               onClick={() => goTo(active + 1)}
             >
               <Icon name="arrow" />
@@ -454,7 +579,9 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
         </div>
       ) : null}
       <p className="visually-hidden" aria-live="polite" aria-atomic="true">
-        {products[active] ? t('status', { current: active + 1, total, name: products[active].name }) : null}
+        {products[activeIndex]
+          ? t('status', { current: activeIndex + 1, total, name: products[activeIndex].name })
+          : null}
       </p>
       <span ref={cursorRef} className="feature-carousel__cursor" aria-hidden="true">
         <span className="feature-carousel__cursor-dot">{t('drag')}</span>

@@ -55,7 +55,14 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   const mode: Mode = chosen ?? (model && wants3d ? '3d' : 'photo');
   const current = images[index] ?? images[0] ?? null;
   const natural = current ? naturalWidth(current) : null;
-  const stageStyle = natural ? ({ '--stage-img-max': `${natural}px` } as CSSProperties) : undefined;
+  const ratio = current?.width && current.height ? current.width / current.height : null;
+  const stageStyle =
+    natural || ratio
+      ? ({
+          ...(natural ? { '--stage-img-max': `${natural}px` } : {}),
+          ...(ratio ? { '--stage-ratio': ratio.toFixed(4) } : {}),
+        } as CSSProperties)
+      : undefined;
 
   function showImage(next: number) {
     if (next !== index && current) {

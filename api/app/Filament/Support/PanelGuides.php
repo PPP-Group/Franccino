@@ -14,6 +14,7 @@ use App\Filament\Resources\NewsletterSubscribers\NewsletterSubscriberResource;
 use App\Filament\Resources\Pages\PageResource;
 use App\Filament\Resources\Products\ProductResource;
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\QuoteLists\QuoteListResource;
 use App\Filament\Resources\Scenes\SceneResource;
 use App\Filament\Resources\Stores\StoreResource;
 use App\Filament\Resources\Users\UserResource;
@@ -48,7 +49,7 @@ final class PanelGuides
         'finishes' => [FinishResource::class, FinishGroupResource::class],
         'downloads' => [],
         'model3d' => [],
-        'messages' => [ContactMessageResource::class, NewsletterSubscriberResource::class],
+        'messages' => [ContactMessageResource::class, NewsletterSubscriberResource::class, QuoteListResource::class],
         'writing' => [],
         'photos' => [],
         'users' => [UserResource::class],

@@ -13,7 +13,7 @@ import { SceneViewer } from '@/components/home/SceneViewer';
 import { ProductRail } from '@/components/products/ProductRail';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { getAllProjectSlugs, getHome, getProject, getProjects } from '@/lib/api/content';
+import { getAllProjectSlugs, getProject, getProjects } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -58,17 +58,17 @@ export default async function ProjectPage({ params }: Props) {
     notFound();
   }
   const lead = distinctLead(project.summary, project.description);
-  // Sem a frase de abertura, o texto ficaria sozinho à esquerda: a direita mostra uma peça do projeto ou, sem nenhuma,
-  // um destaque da home (retorno do tech lead de 06/11/2026: nada de metade vazia).
-  const needsFeature = !lead && Boolean(project.description);
-  const [t, list, home] = await Promise.all([
-    getTranslations({ locale, namespace: 'projects' }),
-    getProjects(locale, { per_page: OTHER_PROJECTS + 1 }),
-    needsFeature && !project.products.some((product) => product.cover)
-      ? getHome(locale)
-      : Promise.resolve(null),
-  ]);
-  const feature = needsFeature ? firstWithCover([project.products, home?.featured_products ?? []]) : null;
+  // Ao lado do texto, a peça escolhida no painel (retorno de 12/11/2026: nada de peça sem relação com o projeto). Sem
+  // escolha, a primeira peça dos pontos do ambiente ou, sem ambiente, a primeira peça do projeto; nunca uma peça de fora.
+  const t = await getTranslations({ locale, namespace: 'projects' });
+  const list = await getProjects(locale, { per_page: OTHER_PROJECTS + 1 });
+  const feature = project.description
+    ? firstWithCover([
+        project.featured_product ? [project.featured_product] : [],
+        project.scene?.hotspots.map((hotspot) => hotspot.product) ?? [],
+        project.products,
+      ])
+    : null;
   const typeLabel = (value: string) => (t.has(`types.${value}`) ? t(`types.${value}`) : value);
   // Fatos só com o que foi cadastrado; sem nenhum além do tipo, a linha mostra só o tipo.
   const facts = [
@@ -100,7 +100,7 @@ export default async function ProjectPage({ params }: Props) {
           <div className={feature ? 'project-story project-story--feature' : 'project-story'} data-reveal>
             {lead ? <p className="project-story__lead">{lead}</p> : null}
             {project.description ? <RichText html={project.description} className="prose" /> : null}
-            {feature ? <FeaturePiece product={feature} /> : null}
+            {feature ? <FeaturePiece product={feature} compact /> : null}
           </div>
         ) : null}
         {project.scene && project.scene.hotspots.length > 0 ? (
