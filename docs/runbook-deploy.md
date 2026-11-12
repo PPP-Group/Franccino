@@ -135,3 +135,48 @@ R2. No disco local, os links passam pelo Laravel (`/downloads/...`) e o `config/
 Cloudflare (DNS, R2, Turnstile), hospedagem da API e do site, serviço de e-mail transacional, monitoramento de
 erro (Sentry ou similar), Google Analytics / Tag Manager / Search Console, subdomínio de staging, dump do banco do
 WordPress atual (migração completa), modelos GLB dos produtos.
+
+## Cookies, Analytics, marketing e monitoramento (revisão da Franccino, 12/11/2026)
+
+### Google Analytics
+
+O GA4 entra pelo Google Tag Manager, sem código novo no site:
+
+1. Criar o contêiner do Tag Manager (web) e a propriedade do GA4 na conta Google da Franccino.
+2. No Tag Manager, a tag "Google Tag" com o ID do GA4 (`G-…`), disparada em todas as páginas; publicar o contêiner.
+3. No serviço do site, `NEXT_PUBLIC_GTM_ID=GTM-…` e um novo deploy (a variável entra no build).
+
+Com o aviso de cookies do próprio site (`NEXT_PUBLIC_CONSENT_PROVIDER=site`, o padrão), o Tag Manager só carrega
+depois do "Aceitar".
+
+### AdOpt (aviso de cookies)
+
+A AdOpt instala o banner pelo modelo dela na Galeria de Modelos do Tag Manager. O site já está pronto para isso:
+
+1. No painel da AdOpt, cadastrar o domínio e copiar o código do aviso.
+2. No Tag Manager, adicionar o modelo da AdOpt com esse código (disparo "Consent Initialization - All Pages") e
+   ligar o Consent Mode do Google no modelo, como no guia da AdOpt; publicar o contêiner.
+3. No serviço do site, `NEXT_PUBLIC_CONSENT_PROVIDER=adopt` e um novo deploy. O aviso do site some, o Tag Manager
+   carrega em toda página com o consentimento negado por padrão, e a AdOpt libera conforme a escolha. A CSP passa a
+   aceitar `https://*.goadopt.io`.
+4. Conferir na "Verificação de instalação" do painel da AdOpt e no modo de visualização do Tag Manager (os sinais de
+   consentimento mudam para `granted` depois do aceite).
+
+### Automação de marketing (newsletter)
+
+Os inscritos ficam no painel (Newsletter), com exportação em planilha. A integração automática depende de confirmar
+a ferramenta usada pela Franccino (a reunião citou "Zorro"; provavelmente Zoho Campaigns) e de uma chave de API dela.
+Até lá, a planilha exportada pode ser importada na ferramenta.
+
+### Saúde do site
+
+Recomendado: UptimeRobot (plano gratuito, checagem a cada 5 minutos, alerta por e-mail), ou o Better Stack.
+
+| Monitor        | Endereço                                                       | Esperado |
+| -------------- | -------------------------------------------------------------- | -------- |
+| API e banco    | `https://<api>/up` (a rota testa o banco)                      | 200      |
+| Site           | `https://<site>/robots.txt` (sem a senha do preview)           | 200      |
+| Página da peça | uma URL de peça com "palavra-chave" no conteúdo (nome da peça) | 200      |
+
+Os alertas da fila (job com falha) já vão por e-mail aos administradores. Erros de aplicação ficam para o Sentry,
+na lista de pendências de conta acima.

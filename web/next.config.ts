@@ -15,6 +15,7 @@ const CSP_SOURCES = {
   downloadsUrl: BUILD_ENV.NEXT_PUBLIC_DOWNLOADS_URL,
   tileUrl: TILE_URL,
   gtm: Boolean(process.env.NEXT_PUBLIC_GTM_ID),
+  adopt: process.env.NEXT_PUBLIC_CONSENT_PROVIDER === 'adopt',
   turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
   dev: process.env.NODE_ENV === 'development',
 };
