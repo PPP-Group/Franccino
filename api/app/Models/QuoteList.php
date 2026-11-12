@@ -74,7 +74,7 @@ class QuoteList extends Model
     /** Total de peças (somando as quantidades). */
     public function pieceCount(): int
     {
-        return (int) collect($this->items)->sum(fn (array $item) => (int) ($item['quantity'] ?? 1));
+        return (int) collect($this->items)->sum(fn (array $item) => (int) $item['quantity']);
     }
 
     /** Endereço da lista no site, no idioma em que foi criada. */

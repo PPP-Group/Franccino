@@ -86,11 +86,11 @@ class QuoteListController extends Controller
      */
     public static function cleanItems(array $items): array
     {
-        return array_values(array_map(fn (array $item) => array_filter([
+        return array_map(fn (array $item) => array_filter([
             'product_id' => (int) $item['product_id'],
             'quantity' => (int) $item['quantity'],
             'finish_ids' => array_values(array_map('intval', $item['finish_ids'] ?? [])),
             'note' => filled($item['note'] ?? null) ? (string) $item['note'] : null,
-        ], fn ($value) => $value !== null && $value !== []), $items));
+        ], fn ($value) => $value !== null && $value !== []), $items);
     }
 }
