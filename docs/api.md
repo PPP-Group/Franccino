@@ -384,17 +384,28 @@ Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fot
 pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
 `Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
 
-| Rota                            | Corpo                                                                                           | Resposta                                   |
-| ------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`         |
-| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila) |
-| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila) |
-| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila) |
+| Rota                            | Corpo                                                                                           | Resposta                                      |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`            |
+| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)     | 201 ou 200 `{ data: { id, replaced, size } }` |
+| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila)    |
+| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila)    |
+| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila)    |
 
 `target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`; `key`
 = slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
-`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel). Coleção de um arquivo só
-substitui a foto atual; `gallery` acrescenta. Coleção fora da lista: 422; registro não encontrado: 404.
+`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel), `designer` (`portrait`; `key` =
+slug), `collection` e `launch` (`cover`, `gallery`; `key` = slug pt) e `page` (`gallery`; `key` = chave da página, ex.:
+`factory`: a foto entra no primeiro bloco Galeria da página, criado no fim se não houver; o mesmo nome de arquivo de
+novo é ignorado, 200 com `skipped: true`). Coleção de um arquivo só substitui a foto atual; `gallery` acrescenta.
+Com `source`, a mesma origem de novo na mesma coleção não acrescenta outra foto (200, `skipped: true`). Coleção fora da lista: 422; registro não encontrado: 404.
+
+`/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
+privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um
+dos tipos de arquivo (`block_3d`, `block_2d`, `technical_sheet`, `manual`, `catalog`, `presentation`, `other`),
+`title` em português e `title_en` opcional, publicado salvo `published=0`. Extensões e tamanho de
+`franccino.uploads.downloads_*` (SketchUp, AutoCAD, Revit, PDF...). O mesmo nome de arquivo no mesmo dono troca o
+arquivo (200, `replaced: true`): o lote pode rodar de novo quando a Franccino atualizar um bloco.
 
 ## Limites e cabeçalhos
 

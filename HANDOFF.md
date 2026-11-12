@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (28, de 12/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (29, de 12/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1172,3 +1172,26 @@ Branch `claude/banner-cover-images-vcdpmb`, recriada da `develop` depois do merg
 - As migrations rodam no deploy. Conferir no painel: Projetos → Peça em destaque; Páginas → Política de cookies e
   Tire suas dúvidas (revisar o texto); Relacionamento → Listas de desejos.
 - Marcar ambientes nas peças (Produtos → Geral → Ambientes) para o filtro aparecer.
+
+## 29. 12/11/2026 (noite): auditoria do Drive pronta para enviar
+
+Pedido do Pedro Ivo: subir o que a auditoria do Drive marcou como "Usar", principalmente os blocos 3D e 2D (a
+Franccino pergunta todo dia). Branch `claude/banner-cover-images-vcdpmb`.
+
+- **API:** `POST /api/import/files` grava um arquivo técnico (bloco 3D/2D, ficha, catálogo) de peça, designer ou
+  lançamento, publicado, no disco privado; o mesmo nome de arquivo no mesmo dono troca o arquivo. `/api/import/media`
+  ganhou os destinos `designer`, `collection`, `launch` e `page` (galeria da Fábrica) e ignora a mesma `source` de novo.
+  O limite do arquivo técnico subiu de 50 para 200 MB (o bloco da Poltrona Noa tem 188 MB), com o PHP em 210M.
+- **Site:** "Integre ao seu projeto" agrupa por programa; com várias versões (o Sofá Noa tem 15 blocos SketchUp), o
+  nome do programa fica em cima e cada botão mostra a versão.
+- **Lote:** `design/drive/2026-11-12-auditoria.json` (255 arquivos: 53 blocos de 12 peças, 83 fotos de galeria de
+  peça, 56 da Fábrica, 46 de projetos e 17 de coleções) e `design/drive/importar.py`, que baixa do Drive e envia.
+  O que ficou fora do lote e por quê: `design/drive/LEIA-ME.md`.
+- **Não enviado ainda:** a sessão não tem os tokens do Drive nem da importação, e token não se cola no chat.
+
+### 29.1 Para rodar o envio
+
+1. Merge do PR na `develop` e na `main`, e o deploy (a rota nova e o limite de 200 MB precisam estar no ar).
+2. Gerar o token do Drive no OAuth Playground (`drive.readonly`, passo a passo em `design/drive/LEIA-ME.md`) e pôr
+   `GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOKEN` nas configurações do ambiente da sessão. Abrir uma sessão nova e pedir
+   para rodar `design/drive/importar.py`: primeiro `--so files` (os blocos), depois `--so media`.

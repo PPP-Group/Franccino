@@ -86,7 +86,7 @@ schedule:run`; a imagem Docker roda `schedule:work`). O agendador (`routes/conso
   `RETENTION_DOWNLOAD_LOGS_DAYS` (365) e `RETENTION_CONSENT_RECORDS_DAYS` (1825). Vazio guarda para sempre. O prazo é
   decisão jurídica da Franccino;
 - limpeza dos jobs com falha (30 dias) e das exportações CSV do painel (7 dias);
-- `franccino:backup` do SQLite (preview). Com MySQL, o backup do banco é o do provedor. PHP com `upload_max_filesize` e `post_max_size` de pelo menos 160M (GLB, PDFs e o vídeo das páginas, até 150 MB) e o limite
+- `franccino:backup` do SQLite (preview). Com MySQL, o backup do banco é o do provedor. PHP com `upload_max_filesize` e `post_max_size` de pelo menos 210M (GLB, PDFs, o vídeo das páginas, até 150 MB, e os blocos 3D do SketchUp, até 200 MB) e o limite
   equivalente no servidor web (ex.: `client_max_body_size` no nginx).
 
 CORS da mídia: o visualizador 3D (`@google/model-viewer`) baixa o GLB com `fetch` a partir do domínio do site, então

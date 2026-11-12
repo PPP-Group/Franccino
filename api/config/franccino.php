@@ -53,7 +53,7 @@ return [
         'model_3d_max_kb' => 20480,
         // Technical files (product, designer and launch downloads). HTML, scripts and executables never get in: the
         // signed link serves the file from the API domain.
-        'downloads_max_kb' => 51200,
+        'downloads_max_kb' => 204800,
         'downloads_extensions' => ['pdf', 'dwg', 'dxf', 'skp', 'rfa', 'rvt', '3ds', 'max', 'obj', 'fbx', 'glb', 'gltf', 'stp', 'step', 'igs', 'zip', 'jpg', 'jpeg', 'png', 'webp'],
         // Page video blocks (e.g. the factory film), served by the site itself. Keep in step with `config/livewire.php`
         // and `docker/php.ini`.

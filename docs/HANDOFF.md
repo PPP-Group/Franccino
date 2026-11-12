@@ -21,7 +21,7 @@ Leia nesta ordem: este arquivo, [`CLAUDE.md`](../CLAUDE.md) (regras de código),
 | P5a Páginas     | Todas as páginas construídas (beta). O redesenho completo é o mês 2                                         |
 | P5b Go-live     | Feito o que não depende de conta (redirects, CSP, cookies, importador, backup, alertas); o resto, seção 6.2 |
 | Preview         | VPS (EasyPanel), deploy da `main` (`docs/deploy-preview.md`); em 16/10 o automático estava desligado        |
-| Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · 12/11: Web 443 testes Vitest · imagens testadas no CI     |
+| Testes          | 21/10: API 422 testes Pest (SQLite e MySQL 8.4) · 12/11: Web 453 testes Vitest · imagens testadas no CI     |
 | Próximo passo   | Publicar no preview e conferir a fase 1 (Linear PPP-119, seção 5.1)                                         |
 
 ---
