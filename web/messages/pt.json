@@ -23,24 +23,26 @@
     "corporate": "Projetos corporativos",
     "factory": "Fábrica",
     "finishes": "Acabamentos",
-    "downloads": "Downloads",
+    "downloads": "Área do Profissional",
     "stores": "Lojas",
     "contact": "Contato",
     "planner": "Sala para montar"
   },
   "footer": {
+    "backToTop": "Topo",
+    "backToTopLabel": "Voltar ao topo da página",
     "cookies": "Política de cookies",
     "siteMap": "Mapa do site",
     "privacy": "Privacidade",
-    "terms": "Termos de uso",
+    "terms": "Termos e Condições de Uso",
     "wordmark": "Franccino",
     "factory": "Fábrica: {address}",
     "catalog": "Catálogo",
     "service": "Atendimento",
     "newsletter": "Novidades por e-mail",
-    "quotesWhatsapp": "WhatsApp de orçamentos",
+    "quotesWhatsapp": "Orçamentos",
     "assistanceWhatsapp": "Assistência técnica",
-    "whereToFind": "Onde encontrar",
+    "whereToFind": "Lojas",
     "copyright": "© {year} {company}.",
     "legal": "Informações legais",
     "social": {
@@ -68,41 +70,41 @@
     "search": "Buscar",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
-    "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
-    "quoteListShort": "Lista",
-    "areaAll": "Ver tudo de {area}",
-    "collectionsAll": "Ver todas as coleções",
+    "quoteList": "Lista de desejos, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
+    "quoteListShort": "Lista de desejos",
+    "areaAll": "Ver todos",
+    "collectionsAll": "Ver todas",
     "submenu": "Mostrar as opções de {area}"
   },
   "quote": {
-    "viewList": "Ver a lista de orçamento",
-    "quickAdd": "Adicionar {name} à lista de orçamento",
+    "viewList": "Ver a lista de desejos",
+    "quickAdd": "Adicionar {name} à lista de desejos",
     "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
     "listFull": "A lista atingiu o limite de 50 itens. Envie esta solicitação antes de iniciar uma nova.",
     "inList": "Na lista",
-    "inListNamed": "{name} está na lista de orçamento.",
+    "inListNamed": "{name} está na lista de desejos.",
     "addShort": "Adicionar ao orçamento",
     "pendingFinish": "acabamento a definir",
     "viewListCount": "Ver lista ({count})",
     "decrease": "Diminuir",
     "increase": "Aumentar",
-    "title": "Lista de orçamento",
+    "title": "Lista de desejos",
     "intro": "Revise os acabamentos e as quantidades. A equipe Franccino retornará com o orçamento.",
     "pieces": "{count, plural, one {# peça} other {# peças}}",
     "remove": "Remover",
     "removed": "Peça removida da lista: {name}.",
     "quantityOf": "Quantidade de {name}",
-    "messageHeading": "Peças da lista de orçamento:",
+    "messageHeading": "Peças da lista de desejos:",
     "whatsappIntro": "Olá, gostaria de solicitar um orçamento das seguintes peças:",
     "form": {
       "title": "Seus dados",
       "notes": "Observações",
       "notesPlaceholder": "Prazo desejado, endereço de entrega, medidas especiais…",
-      "submit": "Enviar pedido de orçamento",
-      "whatsapp": "Enviar a lista pelo WhatsApp"
+      "submit": "Enviar por e-mail à equipe de vendas",
+      "whatsapp": "Enviar pelo WhatsApp"
     },
     "empty": {
-      "title": "Sua lista de orçamento está vazia",
+      "title": "Sua lista de desejos está vazia",
       "body": "Selecione as peças de seu interesse, com acabamento e quantidade, e envie uma única solicitação à nossa equipe.",
       "catalog": "Explorar o catálogo",
       "planner": "Planejar um ambiente"
@@ -226,7 +228,7 @@
     "buyLabel": "Orçamento",
     "pendingHint": "Acabamento a definir: {groups}. Selecione agora ou defina posteriormente com nossa equipe.",
     "quantity": "Quantidade",
-    "addToList": "Adicionar à lista de orçamento",
+    "addToList": "Adicionar à lista de desejos",
     "inList": "Na lista",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Onde comprar",
@@ -348,7 +350,7 @@
       "designer": "Designer",
       "dimensions": "Medidas",
       "files": "Arquivos",
-      "list": "Lista de orçamento",
+      "list": "Lista de desejos",
       "empty": "—"
     },
     "gridFill": {
@@ -405,7 +407,7 @@
     "diameter": "Ø"
   },
   "downloads": {
-    "title": "Downloads",
+    "title": "Área do Profissional",
     "count": "{count, plural, one {# peça com arquivos} other {# peças com arquivos}}",
     "empty": "Nenhuma peça com arquivos para estes filtros.",
     "pagination": "Páginas de downloads",
@@ -432,7 +434,7 @@
   "planner": {
     "meta": {
       "title": "Sala para montar",
-      "description": "Desenhe o ambiente com as medidas reais, posicione peças da Franccino em escala e envie a composição para a lista de orçamento."
+      "description": "Desenhe o ambiente com as medidas reais, posicione peças da Franccino em escala e envie a composição para a lista de desejos."
     },
     "title": "Sala para montar",
     "intro": "Desenhe o ambiente com as medidas reais, posicione as peças e confira a composição, tudo em escala.",
@@ -474,8 +476,8 @@
       "empty": "Nenhuma peça adicionada.",
       "count": "{count}×"
     },
-    "sendToList": "Enviar ambiente para a lista de orçamento",
-    "sendHint": "As peças seguem para a lista de orçamento, com as medidas do ambiente anotadas.",
+    "sendToList": "Enviar ambiente para a lista de desejos",
+    "sendHint": "As peças seguem para a lista de desejos, com as medidas do ambiente anotadas.",
     "needPieces": "Adicione ao menos uma peça à sala.",
     "sent": "Ambiente enviado para a lista ({count, plural, one {# peça} other {# peças}}).",
     "roomNote": "Ambiente {width} × {depth} m"
@@ -523,7 +525,7 @@
     },
     "teaser": {
       "title": "Planeje seu ambiente em escala antes de solicitar o orçamento",
-      "body": "Informe as medidas do ambiente, posicione as peças com suas dimensões reais e confira a composição. O ambiente se transforma em uma lista de orçamento.",
+      "body": "Informe as medidas do ambiente, posicione as peças com suas dimensões reais e confira a composição. O ambiente se transforma em uma lista de desejos.",
       "cta": "Abrir a Sala para montar"
     },
     "designers": {
@@ -647,7 +649,7 @@
   "legal": {
     "cookies": "Política de cookies",
     "privacy": "Política de privacidade",
-    "terms": "Termos de uso",
+    "terms": "Termos e Condições de Uso",
     "pending": "O texto desta página ainda não foi publicado."
   },
   "searchPage": {
@@ -754,7 +756,7 @@
         "body": "Sobre o carrossel da ideia 01, o cursor vira um círculo com a palavra \"Arraste\". Passe o mouse sobre as peças lá em cima."
       },
       "added": {
-        "title": "Confirmação na lista de orçamento",
+        "title": "Confirmação na lista de desejos",
         "body": "Ao adicionar uma peça à lista, o botão mostra o visto e \"Adicionada à lista\", e o ícone da lista no topo da página pulsa uma vez. Experimente: a peça entra na lista de verdade e pode ser removida depois."
       },
       "count": {

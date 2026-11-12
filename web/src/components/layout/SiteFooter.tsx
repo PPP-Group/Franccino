@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { socialLinks } from '@/lib/settings';
+import { BackToTop } from './BackToTop';
 import { Logo } from './Logo';
 import { VortexMark } from './VortexMark';
 
@@ -150,6 +151,7 @@ export function SiteFooter({ settings }: { settings: Settings }) {
               </li>
             ))}
           </ul>
+          <BackToTop />
         </div>
       </div>
     </footer>

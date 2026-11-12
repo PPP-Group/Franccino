@@ -764,12 +764,6 @@
   align-items: center;
 }
 
-/* A peça é foto de estúdio (pode encostar na borda): a foto anda menos e ganha menos sobra; o texto anda o normal. */
-.feature__grid[data-parallax] {
-  --parallax-back: 5%;
-  --parallax-scale: 1.1;
-}
-
 /* O quadro interno aproxima no hover: a própria foto já tem a animação de saída de motion.css. */
 .feature__media {
   display: block;

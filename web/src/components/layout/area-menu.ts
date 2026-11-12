@@ -30,12 +30,18 @@ export function navMenus(
     ...areaMenus(indoor, outdoor),
     collections: collections
       .filter((collection) => collection.product_count > 0)
-      .map((collection) => ({ slug: collection.slug, name: collection.name })),
+      .map((collection) => ({ slug: collection.slug, name: collection.name }))
+      .sort(byName),
   };
 }
+
+/** Ordem alfabética no idioma da página (revisão da Franccino, 12/11/2026), sem depender da ordem do painel. */
+const byName = (a: { name: string }, b: { name: string }) =>
+  a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
 
 function categoriesOf(area: AreaDetail | null): AreaMenuCategory[] {
   return (area?.categories ?? [])
     .filter((category) => category.product_count > 0)
-    .map((category) => ({ slug: category.slug, name: category.name }));
+    .map((category) => ({ slug: category.slug, name: category.name }))
+    .sort(byName);
 }

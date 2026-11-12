@@ -65,9 +65,19 @@
   object-fit: cover;
 }
 
-/* Retrato sempre em preto e branco: filtro não anima (só transform e opacity se mexem). */
+/*
+  Retrato em preto e branco; no hover, ganha cor, como no site antigo (revisão da Franccino, 12/11/2026). A troca é
+  suave em motion.css.
+*/
 .tile--portrait .tile__media img {
   filter: grayscale(1) contrast(1.02);
+}
+
+@media (hover: hover) {
+  .tile--portrait:hover .tile__media img,
+  .tile--portrait:focus-visible .tile__media img {
+    filter: none;
+  }
 }
 
 .tile:focus-visible {
@@ -1182,7 +1192,7 @@
 .clients__item {
   display: grid;
   place-items: center;
-  height: 96px;
+  height: 112px;
 }
 
 .clients__item > a {

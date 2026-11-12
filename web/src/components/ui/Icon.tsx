@@ -23,6 +23,13 @@ const PATHS = {
       <path d="M4 5h.01M4 12h.01M4 19h.01" />
     </>
   ),
+  // Sacola de compras (Tabler Icons, shopping-bag, MIT): o ícone da lista de desejos (revisão da Franccino, 12/11/2026).
+  bag: (
+    <>
+      <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
+      <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+    </>
+  ),
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,

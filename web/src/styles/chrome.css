@@ -28,6 +28,14 @@
   color: var(--header-fg);
 }
 
+/*
+  Some ao rolar para baixo e volta ao rolar para cima (`data-header-hide`, BootScript). Com um painel aberto (menu, busca)
+  ou o foco dentro dele, fica à vista. O movimento (transição) está em motion.css.
+*/
+html[data-header-hide] .site-header:not(:has([aria-expanded='true'], :focus-within)) {
+  transform: translateY(-100%);
+}
+
 .site-header::before,
 .site-header::after {
   content: '';
@@ -732,6 +740,10 @@ body:has(.hero--full) #conteudo {
     align-items: flex-start;
     gap: var(--space-2);
   }
+
+  .back-to-top {
+    align-self: flex-end;
+  }
 }
 
 /* Celular: nome e novidades ocupam a largura; Catálogo e Atendimento lado a lado. */
@@ -1038,4 +1050,35 @@ body:has(.hero--full) #conteudo {
 
 .site-footer .footer-vortex::after {
   display: none;
+}
+
+/*
+  "Topo": seta para cima com a palavra ao lado, no canto direito da última linha do rodapé (revisão da Franccino,
+  12/11/2026). Área de toque de 44 px.
+*/
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.back-to-top__arrow {
+  rotate: -90deg;
+}
+
+.back-to-top:hover .back-to-top__label,
+.back-to-top:focus-visible .back-to-top__label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

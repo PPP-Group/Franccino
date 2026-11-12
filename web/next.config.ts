@@ -43,6 +43,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: SECURITY_HEADERS }];
   },
+  // "Downloads" virou "Área do Profissional" (revisão da Franccino, 12/11/2026): o endereço antigo continua valendo.
+  async redirects() {
+    return [
+      { source: '/pt/downloads', destination: '/pt/area-do-profissional', permanent: true },
+      { source: '/en/downloads', destination: '/en/professionals', permanent: true },
+    ];
+  },
 };
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');

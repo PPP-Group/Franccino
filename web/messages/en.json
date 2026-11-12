@@ -23,24 +23,26 @@
     "corporate": "Corporate projects",
     "factory": "Factory",
     "finishes": "Finishes",
-    "downloads": "Downloads",
+    "downloads": "Professionals",
     "stores": "Stores",
     "contact": "Contact",
     "planner": "Room planner"
   },
   "footer": {
+    "backToTop": "Up",
+    "backToTopLabel": "Back to the top of the page",
     "cookies": "Cookie policy",
     "siteMap": "Site map",
     "privacy": "Privacy",
-    "terms": "Terms of use",
+    "terms": "Terms and Conditions of Use",
     "wordmark": "Franccino",
     "factory": "Factory: {address}",
     "catalog": "Catalogue",
     "service": "Customer care",
     "newsletter": "News by email",
-    "quotesWhatsapp": "WhatsApp for quotes",
+    "quotesWhatsapp": "Quotes",
     "assistanceWhatsapp": "Technical assistance",
-    "whereToFind": "Where to find us",
+    "whereToFind": "Stores",
     "copyright": "© {year} {company}.",
     "legal": "Legal information",
     "social": {
@@ -68,41 +70,41 @@
     "search": "Search",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "quoteList": "Quote list, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
-    "quoteListShort": "List",
-    "areaAll": "View all {area}",
-    "collectionsAll": "View all collections",
+    "quoteList": "Wishlist, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
+    "quoteListShort": "Wishlist",
+    "areaAll": "View all",
+    "collectionsAll": "View all",
     "submenu": "Show the {area} options"
   },
   "quote": {
-    "viewList": "View quote list",
-    "quickAdd": "Add {name} to the quote list",
+    "viewList": "View wishlist",
+    "quickAdd": "Add {name} to the wishlist",
     "addedPendingFinish": "{name} is on your list; finish to be defined.",
     "listFull": "The list has reached its limit of 50 items. Please send this request before starting a new one.",
     "inList": "On the list",
-    "inListNamed": "{name} is on the quote list.",
+    "inListNamed": "{name} is on the wishlist.",
     "addShort": "Add to quote",
     "pendingFinish": "finish to be defined",
     "viewListCount": "View list ({count})",
     "decrease": "Decrease",
     "increase": "Increase",
-    "title": "Quote list",
+    "title": "Wishlist",
     "intro": "Review the finishes and quantities. The Franccino team will reply with your quote.",
     "pieces": "{count, plural, one {# piece} other {# pieces}}",
     "remove": "Remove",
     "removed": "Piece removed from the list: {name}.",
     "quantityOf": "Quantity of {name}",
-    "messageHeading": "Pieces on the quote list:",
+    "messageHeading": "Pieces on the wishlist:",
     "whatsappIntro": "Hello, I would like to request a quote for the following pieces:",
     "form": {
       "title": "Your details",
       "notes": "Notes",
       "notesPlaceholder": "Desired timing, delivery address, custom dimensions…",
-      "submit": "Send quote request",
-      "whatsapp": "Send the list by WhatsApp"
+      "submit": "Email it to our sales team",
+      "whatsapp": "Send by WhatsApp"
     },
     "empty": {
-      "title": "Your quote list is empty",
+      "title": "Your wishlist is empty",
       "body": "Select the pieces you are interested in, with finish and quantity, and send a single request to our team.",
       "catalog": "Explore the catalogue",
       "planner": "Plan a room"
@@ -226,7 +228,7 @@
     "buyLabel": "Quote",
     "pendingHint": "Finish to be defined: {groups}. Select it now or define it later with our team.",
     "quantity": "Quantity",
-    "addToList": "Add to quote list",
+    "addToList": "Add to wishlist",
     "inList": "On the list",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Where to buy",
@@ -348,7 +350,7 @@
       "designer": "Designer",
       "dimensions": "Dimensions",
       "files": "Files",
-      "list": "Quote list",
+      "list": "Wishlist",
       "empty": "—"
     },
     "gridFill": {
@@ -405,7 +407,7 @@
     "diameter": "Ø"
   },
   "downloads": {
-    "title": "Downloads",
+    "title": "Professionals",
     "count": "{count, plural, one {# piece with files} other {# pieces with files}}",
     "empty": "No pieces with files for these filters.",
     "pagination": "Download pages",
@@ -432,7 +434,7 @@
   "planner": {
     "meta": {
       "title": "Room planner",
-      "description": "Draw your room with its real measurements, place Franccino pieces to scale and send the layout to the quote list."
+      "description": "Draw your room with its real measurements, place Franccino pieces to scale and send the layout to the wishlist."
     },
     "title": "Room planner",
     "intro": "Draw the room with its real measurements, place the pieces and review the layout, all to scale.",
@@ -474,8 +476,8 @@
       "empty": "No pieces added yet.",
       "count": "{count}×"
     },
-    "sendToList": "Send room to the quote list",
-    "sendHint": "The pieces go to the quote list, with the room dimensions noted.",
+    "sendToList": "Send room to the wishlist",
+    "sendHint": "The pieces go to the wishlist, with the room dimensions noted.",
     "needPieces": "Add at least one piece to the room.",
     "sent": "Room sent to the list ({count, plural, one {# piece} other {# pieces}}).",
     "roomNote": "Room {width} × {depth} m"
@@ -523,7 +525,7 @@
     },
     "teaser": {
       "title": "Plan your room to scale before requesting a quote",
-      "body": "Enter the room dimensions, place the pieces at their real size and review the layout. The room then becomes a quote list.",
+      "body": "Enter the room dimensions, place the pieces at their real size and review the layout. The room then becomes a wishlist.",
       "cta": "Open the room planner"
     },
     "designers": {
@@ -647,7 +649,7 @@
   "legal": {
     "cookies": "Cookie policy",
     "privacy": "Privacy policy",
-    "terms": "Terms of use",
+    "terms": "Terms and Conditions of Use",
     "pending": "The text of this page has not been published yet."
   },
   "searchPage": {
@@ -754,7 +756,7 @@
         "body": "Over the carousel in idea 01, the cursor becomes a circle with the word \"Drag\". Hover over the pieces up there."
       },
       "added": {
-        "title": "Quote list confirmation",
+        "title": "Wishlist confirmation",
         "body": "When a piece goes into the list, the button shows a check and \"Added to the list\", and the list icon at the top of the page pulses once. Try it: the piece really goes into the list and can be removed later."
       },
       "count": {

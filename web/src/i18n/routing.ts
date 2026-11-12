@@ -25,7 +25,7 @@ export const pathnames = {
   '/corporate': { pt: '/corporativo', en: '/contract' },
   '/factory': { pt: '/fabrica', en: '/factory' },
   '/finishes': { pt: '/acabamentos', en: '/finishes' },
-  '/downloads': '/downloads',
+  '/downloads': { pt: '/area-do-profissional', en: '/professionals' },
   '/stores': { pt: '/lojas', en: '/stores' },
   '/contact': { pt: '/contato', en: '/contact' },
   '/search': { pt: '/busca', en: '/search' },
