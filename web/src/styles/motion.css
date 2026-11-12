@@ -467,11 +467,12 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
   animation-timing-function: var(--ease-out);
 }
 
+/* `plus-lighter` (o padrão da troca): a soma das duas fotos fica inteira; com `normal` a peça clareava no meio da troca. */
 ::view-transition-old(.morph-cutout),
 ::view-transition-new(.morph-cutout) {
   block-size: 100%;
   object-fit: contain;
-  mix-blend-mode: normal;
+  mix-blend-mode: plus-lighter;
 }
 
 ::view-transition-old(.morph-cutout) {
@@ -492,7 +493,7 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
     opacity: 1;
   }
 
-  30%,
+  25%,
   100% {
     opacity: 0;
   }
@@ -503,7 +504,7 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
     opacity: 0;
   }
 
-  30%,
+  25%,
   100% {
     opacity: 1;
   }
