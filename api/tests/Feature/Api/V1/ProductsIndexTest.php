@@ -158,6 +158,6 @@ it('filters by room and rejects an unknown room (revisão de 12/11/2026)', funct
     Product::factory()->for($indoor)->create();
 
     $this->getJson('/api/v1/products?room=office')->assertJsonPath('meta.total', 1);
-    $this->getJson('/api/v1/products?room=garden')->assertJsonPath('meta.total', 0);
+    $this->getJson('/api/v1/products?room=balcony')->assertJsonPath('meta.total', 0);
     $this->getJson('/api/v1/products?room=attic')->assertStatus(422);
 });

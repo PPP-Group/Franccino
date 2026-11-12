@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (27, de 12/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (28, de 12/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1124,3 +1124,51 @@ por vez, 3 vezes, e depois um link para a página seguinte; todo download pede o
   Franccino".
 - Do tech lead: rodar `php artisan migrate` (vai no deploy) e conferir o cadastro do download no preview.
 - A auditoria do Drive continua à espera do link das pastas (seção 26.2).
+
+## 28. 12/11/2026 (tarde): segundo retorno do dia e o que faltava do PDF
+
+Branch `claude/banner-cover-images-vcdpmb`, recriada da `develop` depois do merge do #80 e do #81.
+
+- **PDF, o que tinha ficado para trás:**
+  - **Slogan (item 1):** o banner sem texto no painel mostra "Feito para permanecer" (a primeira opção do PDF), com
+    "Móveis de design autoral" na linha de apoio. O título e a linha de cada banner continuam editáveis em Banners.
+  - **Corporativo na home (item 4):** todos os nomes no mesmo tamanho e à mesma distância da borda de baixo.
+  - **Ambientes (item 8):** a lista do PDF (Varanda e jardim, Sala de jantar, Living, Quarto, Escritório). Ainda não
+    havia peça com ambiente, então nada mudou de dado.
+  - "Adicionar ao orçamento" que tinha sobrado virou "Adicionar à lista de desejos".
+- **Carrosséis:** dão a volta (a partir de 3 peças), começam na primeira peça no centro e andam sozinhos (4,5 s por
+  peça; param com o mouse em cima, com o foco do teclado e fora da tela). A volta da página da peça cai na peça que
+  estava no centro (guardada por página na sessão). O encaixe até a página da peça: a caixa do movimento no carrossel
+  tem o tamanho da capa (com o recorte no meio) e, na página, a foto ocupa a caixa da proporção dela (`--stage-ratio`);
+  o recorte vira a capa no primeiro terço e o resto é só a foto encaixando, sem fade no fim.
+- **Filtros nas listagens:** categoria (com a foto de uma peça quando a categoria não tem capa), ambiente, coleção e
+  designer, todos com a foto flutuando no hover. A barra presa no topo sobe e desce junto com o cabeçalho
+  (`--header-offset`).
+- **API:** o `GET /categories` mandava, a partir do segundo item, a forma do detalhe sem `product_count` (a coleção
+  passava o índice como "detalhe"). Corrigido, com teste.
+- **Animações:** a volta da peça aberta por um ponto do ambiente reabre o cartão do ponto e a foto encolhe até ele;
+  durante a foto que cresce nenhuma foto mostra o tom bege de carregamento; o cabeçalho tem camada própria no movimento e
+  fica sempre por cima; as duas primeiras coleções também abrem em cortina; o texto do banner que se repete nos slides
+  entra uma vez só.
+- **Projeto:** "Peça em destaque" no painel (Projetos), migration `2026_11_12_140000`. Sem escolha, a primeira peça dos
+  pontos do ambiente ou a primeira do projeto (nunca uma peça de fora). Tamanho compacto, como nas outras páginas.
+- **Conteúdo:**
+  - Política de cookies e "Tire suas dúvidas" com texto inicial (migration `2026_11_12_150000`, só onde a página estava
+    vazia; a Franccino revisa no painel). O FAQ não promete prazo, preço nem garantia.
+  - Aviso de cookies sempre na primeira visita: Aceitar todos, Recusar e Personalizar (necessários, análise,
+    marketing), com "Preferências de cookies" no rodapé. A versão da política mudou, então todos veem o aviso de novo.
+  - Mapa do site em ordem alfabética (seções e itens), com as categorias de cada área.
+  - Favicon do painel: o endereço saía com `http://` numa página `https://` e o navegador bloqueava.
+  - "Ver no mapa" nas lojas da home: estava dentro do bloco que só aparece na página Lojas.
+  - Setas das medidas com 16 px (a regra do desenho as deixava com 360 px).
+- **Lista de desejos por link:** `POST /quote-lists` e `GET /quote-lists/{code}` (migration `2026_11_12_160000`,
+  tabela `quote_lists`, validade `QUOTE_LIST_DAYS`, padrão 90 dias). O WhatsApp manda um link curto
+  (`/pt/lista/{código}`) no lugar das linhas; "Copiar link da lista"; o pedido por e-mail guarda a lista com a mensagem
+  e o e-mail da equipe leva o botão "Ver a lista com as fotos". A página da lista mostra foto, quantidade, acabamentos e
+  observação, com "Adicionar à minha lista". No painel: Relacionamento → Listas de desejos.
+
+### 28.1 Depois do deploy
+
+- As migrations rodam no deploy. Conferir no painel: Projetos → Peça em destaque; Páginas → Política de cookies e
+  Tire suas dúvidas (revisar o texto); Relacionamento → Listas de desejos.
+- Marcar ambientes nas peças (Produtos → Geral → Ambientes) para o filtro aparecer.

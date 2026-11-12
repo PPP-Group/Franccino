@@ -1,18 +1,19 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { MorphImage } from '@/components/media/MorphImage';
-import { htmlLang } from '@/i18n/config';
-import { Link } from '@/i18n/navigation';
+import { htmlLang, type Locale } from '@/i18n/config';
+import { getPathname, Link } from '@/i18n/navigation';
+import { createSharedList } from '@/lib/api/forms';
 import { whatsappUrl } from '@/lib/contact-links';
 import { useQuoteItems } from '@/lib/quote/hooks';
 import { quoteItemKey, totalQuantity } from '@/lib/quote/list';
-import { buildQuoteMessage, buildWhatsAppText, formatFinishes, toContactItems } from '@/lib/quote/message';
+import { formatFinishes, toContactItems } from '@/lib/quote/message';
 import { snapshotAsImage } from '@/lib/quote/snapshot';
 import { quoteActions } from '@/lib/quote/store';
 import type { QuoteItem } from '@/lib/quote/types';
@@ -117,13 +118,33 @@ function QuoteListSkeleton({ label }: { label: string }) {
   );
 }
 
+/**
+ * Envio da lista por link (retorno de 12/11/2026): em vez de uma linha por peça no WhatsApp, a lista é guardada na API
+ * e vai um link curto para ela, com as fotos. O link é criado no clique e reaproveitado enquanto a lista não muda.
+ */
+function useShareLink(items: QuoteItem[], locale: Locale) {
+  const cache = useRef<{ key: string; url: string } | null>(null);
+  return async (): Promise<string> => {
+    const key = JSON.stringify(toContactItems(items));
+    if (cache.current?.key === key) return cache.current.url;
+    const { code } = await createSharedList(toContactItems(items), locale);
+    const path = getPathname({ href: { pathname: '/shared-list/[code]', params: { code } }, locale });
+    const url = `${window.location.origin}${path}`;
+    cache.current = { key, url };
+    return url;
+  };
+}
+
 export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
   const t = useTranslations('quote');
   const common = useTranslations('common');
   const isClient = useIsClient();
   const items = useQuoteItems();
   const [sent, setSent] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const locale = useLocale() as Locale;
+  const shareLink = useShareLink(items, locale);
 
   if (!isClient) {
     return <QuoteListSkeleton label={common('loading')} />;
@@ -164,8 +185,38 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
     );
   }
 
-  const pending = t('pendingFinish');
-  const whatsappHref = whatsappUrl(whatsapp, buildWhatsAppText(items, t('whatsappIntro'), pending));
+  const pieceCount = totalQuantity(items);
+  const canWhatsapp = whatsappUrl(whatsapp, '') !== null;
+
+  async function sendWhatsapp() {
+    // A janela abre já no clique (o navegador bloqueia janela aberta depois de uma espera); o endereço chega em seguida.
+    const target = window.open('', '_blank');
+    setSharing(true);
+    try {
+      const url = await shareLink();
+      const href = whatsappUrl(whatsapp, t('whatsappShare', { count: pieceCount, url }));
+      if (href && target) target.location.href = href;
+      else if (href) window.location.href = href;
+    } catch {
+      target?.close();
+      showToast({ text: t('shareFailed') });
+    } finally {
+      setSharing(false);
+    }
+  }
+
+  async function copyLink() {
+    setSharing(true);
+    try {
+      const url = await shareLink();
+      await navigator.clipboard.writeText(url);
+      showToast({ text: t('linkCopied') });
+    } catch {
+      showToast({ text: t('shareFailed') });
+    } finally {
+      setSharing(false);
+    }
+  }
 
   return (
     <div className="wrap">
@@ -195,7 +246,9 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
           <ContactForm
             type="quote"
             items={toContactItems(items)}
-            composeMessage={(typed) => buildQuoteMessage(items, typed, t('messageHeading'), pending)}
+            // A lista vai como link no e-mail da equipe (a API guarda a lista com o pedido): a mensagem leva só as
+            // observações digitadas, ou o resumo quando não há nenhuma.
+            composeMessage={(typed) => typed.trim() || t('messageSummary', { count: pieceCount })}
             messageRequired={false}
             messageLabel={t('form.notes')}
             messagePlaceholder={t('form.notesPlaceholder')}
@@ -205,18 +258,29 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
               setSent(true);
             }}
           />
-          {whatsappHref ? (
-            <a
+          {canWhatsapp ? (
+            <button
+              type="button"
               className="btn btn--ghost btn--block"
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={sendWhatsapp}
+              disabled={sharing}
+              aria-busy={sharing}
             >
               <Icon name="chat" />
               <span>{t('form.whatsapp')}</span>
               <span className="visually-hidden">{common('opensInNewWindow')}</span>
-            </a>
+            </button>
           ) : null}
+          <button
+            type="button"
+            className="btn btn--ghost btn--block"
+            onClick={copyLink}
+            disabled={sharing}
+            aria-busy={sharing}
+          >
+            <Icon name="link" />
+            <span>{t('copyLink')}</span>
+          </button>
         </section>
       </div>
     </div>

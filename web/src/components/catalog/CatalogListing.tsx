@@ -6,20 +6,22 @@ import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
 import { Link, type AppHref } from '@/i18n/navigation';
 import {
+  getArea,
+  getCategories,
   getProductDetails,
   getProductFacets,
   getProducts,
   type ProductFacetsParams,
   type ProductListParams,
 } from '@/lib/api/catalog';
-import { getDesigners } from '@/lib/api/content';
+import { getCollections, getDesigners } from '@/lib/api/content';
 import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
-import { CatalogToolbar } from './CatalogToolbar';
+import { CatalogToolbar, type ToolbarFilter } from './CatalogToolbar';
 import { LoadMore } from './LoadMore';
 import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
@@ -53,13 +55,25 @@ const EMPTY_FACETS: Facets = { categories: [], designers: [], collections: [], l
 
 export async function CatalogListing(props: CatalogListingProps) {
   const { locale, params, view, hrefFor } = props;
-  const [t, common, designerCards] = await Promise.all([
+  const area = props.apiParams.area;
+  const [t, common, designerCards, categoryCards, collectionCards] = await Promise.all([
     getTranslations({ locale, namespace: 'catalog' }),
     getTranslations({ locale, namespace: 'common' }),
-    // Retratos para a lista do filtro de designer (o filtro só traz nome e contagem).
+    // Fotos para as listas dos filtros (os filtros só trazem nome e contagem): retrato do designer, capa da
+    // categoria e da coleção (retorno de 12/11/2026: os outros filtros no mesmo desenho do de designer).
     getDesigners(locale).catch(() => []),
+    // Na área, as categorias dela (com a contagem e uma foto de cada); no catálogo todo, as de todas as áreas.
+    props.categoryInPath
+      ? Promise.resolve([])
+      : area
+        ? getArea(locale, area)
+            .then((detail) => detail?.categories ?? [])
+            .catch(() => [])
+        : getCategories(locale).catch(() => []),
+    getCollections(locale).catch(() => []),
   ]);
   const portraits = new Map(designerCards.map((designer) => [designer.slug, designer.portrait]));
+  const collectionCovers = new Map(collectionCards.map((collection) => [collection.slug, collection.cover]));
 
   const query: ProductListParams = { ...props.apiParams, ...params, per_page: PER_PAGE };
   if (!query.designer) {
@@ -96,11 +110,59 @@ export async function CatalogListing(props: CatalogListingProps) {
   const hiddenQuery = listingQuery(props.categoryInPath ? { ...params, category: undefined } : params, view, {
     designer: undefined,
     room: undefined,
+    collection: undefined,
+    ...(props.categoryInPath ? {} : { category: undefined }),
   });
   // Ambientes (item 8): o nome vem das mensagens; uma chave sem tradução não aparece.
   const roomOptions = (facets.rooms ?? [])
     .filter((option) => t.has(`rooms.${option.key}`))
     .map((option) => ({ value: option.key, label: t(`rooms.${option.key}`), count: option.count }));
+  // Categorias da área (todas, mesmo com uma escolhida), em ordem alfabética, com a capa de cada uma.
+  const categoryOptions = categoryCards
+    .filter((category) => category.product_count > 0)
+    .map((category) => ({
+      value: category.slug,
+      label: category.name,
+      count: category.product_count,
+      image: category.cover,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label, locale));
+  const filters: ToolbarFilter[] = [
+    {
+      name: 'category',
+      label: t('filters.category'),
+      allLabel: t('filters.allCategories'),
+      options: categoryOptions,
+      active: params.category,
+    },
+    {
+      name: 'room',
+      label: t('filters.room'),
+      allLabel: t('filters.allRooms'),
+      options: roomOptions,
+      active: params.room,
+    },
+    {
+      name: 'collection',
+      label: t('filters.collection'),
+      allLabel: t('filters.allCollections'),
+      options: facets.collections.map((option) => {
+        const filter = toFilterOption(option);
+        return { ...filter, image: collectionCovers.get(filter.value) ?? null };
+      }),
+      active: params.collection,
+    },
+    {
+      name: 'designer',
+      label: t('filters.designer'),
+      allLabel: t('filters.allDesigners'),
+      options: facets.designers.map((option) => {
+        const filter = toFilterOption(option);
+        return { ...filter, image: portraits.get(filter.value) ?? null };
+      }),
+      active: params.designer,
+    },
+  ];
 
   const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
 
@@ -127,13 +189,7 @@ export async function CatalogListing(props: CatalogListingProps) {
           count={t('count', { count: page.meta.total })}
           view={view}
           hrefFor={hrefFor}
-          designerOptions={facets.designers.map((option) => {
-            const filter = toFilterOption(option);
-            return { ...filter, image: portraits.get(filter.value) ?? null };
-          })}
-          activeDesigner={params.designer}
-          roomOptions={roomOptions}
-          activeRoom={params.room}
+          filters={filters}
           formAction={props.formAction}
           hiddenQuery={hiddenQuery}
           pager={
@@ -163,7 +219,13 @@ export async function CatalogListing(props: CatalogListingProps) {
               <p className="lead">{t('emptyState.body')}</p>
               <Link
                 className="btn btn--ghost"
-                href={hrefFor({ category: undefined, designer: undefined, room: undefined, q: undefined })}
+                href={hrefFor({
+                  category: undefined,
+                  designer: undefined,
+                  room: undefined,
+                  collection: undefined,
+                  q: undefined,
+                })}
               >
                 {t('emptyState.clear')}
               </Link>

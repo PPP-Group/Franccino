@@ -24,12 +24,14 @@ describe('FeatureCarousel', () => {
     expect(html).toContain('feature-carousel--packshots');
   });
 
-  it('opens with the middle piece in front, named below, and only it reachable by Tab', () => {
+  it('opens with the first piece in the centre, named below, and only it reachable by Tab', () => {
     const html = renderWithIntl(<FeatureCarousel label="Lançamentos" products={products()} />);
-    expect(html).toMatch(/feature-carousel__item is-cutout is-active/);
-    expect(html).toContain('feature-carousel__name">Cadeira Aura');
+    expect(html).toMatch(/feature-carousel__item is-packshot is-active/);
+    expect(html).toContain('feature-carousel__name">Mesa Época');
     expect(html.match(/tabindex="0"/g)).toHaveLength(1);
-    expect(html).toContain('02 / 03');
+    expect(html).toContain('01 / 03');
+    // Dando a volta, a seta da esquerda já funciona na primeira peça.
+    expect(html).not.toMatch(/feature-carousel__button--previous"[^>]*disabled/);
   });
 
   it('keeps the agreed adjustments: no finishes, no "view piece" button and no 3D', () => {

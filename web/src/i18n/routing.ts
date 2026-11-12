@@ -36,6 +36,8 @@ export const pathnames = {
   '/site-map': { pt: '/mapa-do-site', en: '/site-map' },
   '/cookies': { pt: '/politica-de-cookies', en: '/cookie-policy' },
   '/quote-list': { pt: '/lista-de-orcamento', en: '/quote-list' },
+  // Lista de desejos compartilhada por link (retorno de 12/11/2026); o link vem do WhatsApp e do e-mail.
+  '/shared-list/[code]': { pt: '/lista/[code]', en: '/list/[code]' },
   '/room-planner': { pt: '/sala-para-montar', en: '/room-planner' },
   '/ideas': { pt: '/ideias', en: '/ideas' },
 } as const;

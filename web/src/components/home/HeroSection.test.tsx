@@ -53,7 +53,8 @@ describe('HeroSection', () => {
       />,
     );
     expect(html).toContain('class="hero hero--photo hero--full"');
-    expect(html).toMatch(/<h1 class="hero__title" id="hero-title">Móveis de design autoral<\/h1>/);
+    expect(html).toMatch(/<h1 class="hero__title" id="hero-title">Feito para permanecer<\/h1>/);
+    expect(html).toContain('<p class="hero__subtitle">Móveis de design autoral</p>');
     expect(html).toContain('hero__scroll');
     expect(html).not.toContain('class="btn');
     expect(html).toContain('class="hero__link" href="/pt/lancamentos" aria-label="Coleção Tempo"');
@@ -138,8 +139,8 @@ describe('HeroSection', () => {
     expect(html).toContain('hero--plain');
     expect(html).not.toContain('<img');
     expect(html).not.toContain('<source');
-    expect(html).toContain('Móveis de design autoral');
-    expect(html).not.toContain('class="lead"');
+    expect(html).toContain('Feito para permanecer');
+    expect(html).toContain('<p class="lead">Móveis de design autoral</p>');
     expect(html).toContain('href="/products"');
   });
 });

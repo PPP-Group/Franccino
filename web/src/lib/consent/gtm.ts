@@ -42,3 +42,17 @@ export function loadGtm(id: string, doc: Document = document, win: GtmWindow = w
   script.src = src;
   doc.head.appendChild(script);
 }
+
+/** Consent Mode com o que a pessoa liberou no aviso do próprio site, antes de carregar o Tag Manager. */
+export function applyConsent(
+  categories: { analytics: boolean; marketing: boolean },
+  win: GtmWindow = window,
+): void {
+  const state = (value: boolean) => (value ? 'granted' : 'denied');
+  gtag(win, 'consent', 'update', {
+    analytics_storage: state(categories.analytics),
+    ad_storage: state(categories.marketing),
+    ad_user_data: state(categories.marketing),
+    ad_personalization: state(categories.marketing),
+  });
+}

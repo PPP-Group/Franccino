@@ -26,6 +26,11 @@ return [
 
     // Days each personal-data log is kept (LGPD), then removed by the daily `model:prune`. Empty = kept. The periods
     // are a legal decision of the Franccino; these defaults only keep the tables from growing forever.
+    // Lista de desejos compartilhada por link: dias de validade do link.
+    'quote_lists' => [
+        'days' => env('QUOTE_LIST_DAYS', 90),
+    ],
+
     'retention' => [
         'activity_logs' => env('RETENTION_ACTIVITY_LOGS_DAYS', 365),
         'download_logs' => env('RETENTION_DOWNLOAD_LOGS_DAYS', 365),

@@ -70,5 +70,5 @@ it('counts products by room, in the order of the room list (revisão de 12/11/20
 
     $this->getJson('/api/v1/products/facets')
         ->assertOk()
-        ->assertJsonPath('data.rooms', [['key' => 'living', 'count' => 2], ['key' => 'dining', 'count' => 1]]);
+        ->assertJsonPath('data.rooms', [['key' => 'dining', 'count' => 1], ['key' => 'living', 'count' => 2]]);
 });

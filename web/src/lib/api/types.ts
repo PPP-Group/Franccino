@@ -204,6 +204,8 @@ export type ProjectCard = {
 export type ProjectDetail = ProjectCard & {
   architect: string | null;
   description: string | null;
+  /** Peça escolhida no painel para o lado do texto (retorno de 12/11/2026); só se publicada. */
+  featured_product?: ProductCard | null;
   gallery: Image[];
   products: ProductCard[];
   seo: Seo;
@@ -449,3 +451,16 @@ export type CacheTag =
   | 'pages'
   | 'settings'
   | 'redirects';
+
+/** `GET /quote-lists/{code}`: lista de desejos compartilhada por link (retorno de 12/11/2026). */
+export type SharedList = {
+  code: string;
+  created_at: string | null;
+  expires_at: string;
+  items: {
+    product: ProductCard;
+    quantity: number;
+    finishes: { id: number; name: string; code: string | null; swatch: Image | null }[];
+    note: string | null;
+  }[];
+};

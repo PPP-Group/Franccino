@@ -6,8 +6,12 @@ import {
   dragPosition,
   carouselPieces,
   fitsFeatureCarousel,
+  cutoutMorphBox,
   initialIndex,
   keyTarget,
+  loopOffset,
+  positionFor,
+  wrapIndex,
   nearestIndex,
   pieceWidthFactor,
   releaseIndex,
@@ -39,13 +43,48 @@ describe('clampIndex', () => {
 });
 
 describe('initialIndex', () => {
-  it('opens with neighbours on both sides, at most two on the left', () => {
-    expect(initialIndex(1)).toBe(0);
-    expect(initialIndex(2)).toBe(0);
-    expect(initialIndex(3)).toBe(1);
-    expect(initialIndex(4)).toBe(1);
-    expect(initialIndex(5)).toBe(2);
-    expect(initialIndex(12)).toBe(2);
+  it('opens on the first piece, in the exact centre (retorno de 12/11/2026)', () => {
+    expect(initialIndex()).toBe(0);
+  });
+});
+
+describe('loop', () => {
+  it('wraps any position to a piece', () => {
+    expect(wrapIndex(0, 6)).toBe(0);
+    expect(wrapIndex(7, 6)).toBe(1);
+    expect(wrapIndex(-1, 6)).toBe(5);
+  });
+
+  it('places the last pieces on the left of the first one', () => {
+    expect(loopOffset(5, 0, 6)).toBe(-1);
+    expect(loopOffset(4, 0, 6)).toBe(-2);
+    expect(loopOffset(1, 0, 6)).toBe(1);
+    expect(loopOffset(0, 7, 6)).toBe(-1);
+  });
+
+  it('keeps the plain distance with two pieces (no loop)', () => {
+    expect(loopOffset(1, 0, 2)).toBe(1);
+  });
+
+  it('goes to a piece by the shortest way', () => {
+    expect(positionFor(5, 0, 6)).toBe(-1);
+    expect(positionFor(2, 12, 6)).toBe(14);
+    expect(positionFor(1, 0, 2)).toBe(1);
+  });
+});
+
+describe('cutoutMorphBox', () => {
+  it('sizes the morph box as the cover, with the cut-out piece inside it', () => {
+    expect(cutoutMorphBox({ width: 1080, height: 1350 }, { width: 540, height: 600 })).toEqual({
+      scale: 2,
+      coverRatio: 1.25,
+      cutoutRatio: 600 / 540,
+    });
+  });
+
+  it('gives up when the sizes do not fit', () => {
+    expect(cutoutMorphBox({ width: 500, height: 500 }, { width: 600, height: 300 })).toBeNull();
+    expect(cutoutMorphBox(null, { width: 600, height: 300 })).toBeNull();
   });
 });
 
@@ -98,9 +137,10 @@ describe('dragPosition', () => {
     expect(dragPosition(2, 50, 100, 6)).toBe(1.5);
   });
 
-  it('resists past the ends', () => {
-    expect(dragPosition(0, 100, 100, 6)).toBeCloseTo(-0.3);
-    expect(dragPosition(5, -100, 100, 6)).toBeCloseTo(5.3);
+  it('resists past the ends only without the loop', () => {
+    expect(dragPosition(0, 100, 100, 2)).toBeCloseTo(-0.3);
+    expect(dragPosition(1, -100, 100, 2)).toBeCloseTo(1.3);
+    expect(dragPosition(0, 100, 100, 6)).toBe(-1);
   });
 
   it('stays at zero without pieces or width', () => {
@@ -140,9 +180,10 @@ describe('releaseIndex', () => {
     expect(releaseIndex(2, 2, -0.8, 6)).toBe(1);
   });
 
-  it('never leaves the list', () => {
-    expect(releaseIndex(5, 5, 2, 6)).toBe(5);
-    expect(releaseIndex(0, 0, -2, 6)).toBe(0);
+  it('never leaves the list without the loop, and goes on with it', () => {
+    expect(releaseIndex(1, 1, 2, 2)).toBe(1);
+    expect(releaseIndex(0, 0, -2, 2)).toBe(0);
+    expect(releaseIndex(5, 5, 2, 6)).toBe(6);
   });
 });
 
@@ -150,10 +191,11 @@ describe('keyTarget', () => {
   it('moves with the arrows and jumps with Home and End', () => {
     expect(keyTarget('ArrowRight', 1, 4)).toBe(2);
     expect(keyTarget('ArrowLeft', 1, 4)).toBe(0);
-    expect(keyTarget('ArrowLeft', 0, 4)).toBe(0);
-    expect(keyTarget('ArrowRight', 3, 4)).toBe(3);
-    expect(keyTarget('Home', 3, 4)).toBe(0);
-    expect(keyTarget('End', 0, 4)).toBe(3);
+    // Dando a volta: da primeira, a seta da esquerda vai para a última.
+    expect(keyTarget('ArrowLeft', 0, 4)).toBe(-1);
+    expect(keyTarget('Home', 3, 4)).toBe(4);
+    expect(keyTarget('End', 0, 4)).toBe(-1);
+    expect(keyTarget('ArrowRight', 1, 2)).toBe(1);
   });
 
   it('ignores other keys', () => {

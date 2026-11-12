@@ -151,6 +151,31 @@
   -webkit-user-drag: none;
 }
 
+/*
+  Caixa do movimento da peça sem fundo até a página da peça (retorno de 12/11/2026): do tamanho que a capa teria, com o
+  recorte no meio. As margens negativas devolvem ao quadro só o tamanho do recorte, então nada muda no palco; a caixa
+  maior é só o que anda no movimento, já no tamanho da foto de lá.
+*/
+.feature-carousel__morph {
+  --fc-iw: calc(var(--fc-item) * var(--fc-w, 1));
+  position: relative;
+  display: block;
+  flex: none;
+  width: calc(var(--fc-iw) * var(--fc-k));
+  height: calc(var(--fc-iw) * var(--fc-k) * var(--fc-cover-r));
+  margin-inline: calc(var(--fc-iw) * (1 - var(--fc-k)) / 2);
+  margin-block: calc(var(--fc-iw) * (var(--fc-cut-r) - var(--fc-k) * var(--fc-cover-r)) / 2);
+  pointer-events: none;
+}
+
+.feature-carousel__frame .feature-carousel__morph img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--fc-iw);
+  height: calc(var(--fc-iw) * var(--fc-cut-r));
+}
+
 /* A peça do centro aproxima devagar no hover, como as fotos clicáveis do site (sem moldura: a peça cresce no palco). */
 .feature-carousel__frame img {
   transform-origin: 50% 100%;

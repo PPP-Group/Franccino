@@ -254,6 +254,15 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
   background-color: var(--shimmer-base);
 }
 
+/*
+  Durante a foto que cresce (ida e volta), nenhuma foto mostra o tom de carregamento: o quadro que anda é só a foto, sem
+  o quadrado bege enquanto ela chega (retorno de 12/11/2026, retratos dos designers).
+*/
+html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
+  background: none;
+  animation: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html[data-img-fade] img[data-img]:not([data-loaded]) {
     background-image: linear-gradient(
@@ -363,6 +372,27 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
   display: none;
 }
 
+/*
+  O cabeçalho fica por cima de tudo, também durante a foto que cresce (retorno de 12/11/2026: na volta, com a página
+  rolada, a foto passava por cima dele). Com nome próprio ele vira uma camada do movimento, parada, acima das fotos.
+*/
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 50;
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
 /* Começa a andar no clique e pousa devagar (a curva "in-out" deixava a foto parada no primeiro terço). */
 ::view-transition-group(.morph-contain),
 ::view-transition-group(.morph-cover) {
@@ -427,29 +457,57 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 }
 
 /*
-  Peça sem fundo do carrossel (ida e volta da página da peça): no carrossel ela ocupa o quadro inteiro e é grande; na
-  página, a foto tem margem branca. Trocar uma pela outra no fim dava um "tranco" (a peça encolhia de repente,
-  retorno de 09/11/2026). As duas se misturam do começo ao fim do movimento, cada uma inteira no quadro que anda, e o
-  fim cai exatamente na foto da página, seja a origem maior ou menor que o destino.
+  Peça sem fundo do carrossel (ida e volta da página da peça). No carrossel a caixa que anda já tem o tamanho que a
+  capa teria, com o recorte no meio (FeatureCarousel, `.feature-carousel__morph`), e na página a foto ocupa a caixa
+  da proporção dela (product.css): as duas caixas são da mesma foto. A troca do recorte pela capa acontece logo no
+  começo, e o resto do movimento é só a foto de destino encaixando, sem fade no fim (retorno de 12/11/2026).
 */
 ::view-transition-group(.morph-cutout) {
   animation-duration: var(--t-slow);
   animation-timing-function: var(--ease-out);
 }
 
+/* `plus-lighter` (o padrão da troca): a soma das duas fotos fica inteira; com `normal` a peça clareava no meio da troca. */
 ::view-transition-old(.morph-cutout),
 ::view-transition-new(.morph-cutout) {
   block-size: 100%;
   object-fit: contain;
-  mix-blend-mode: normal;
+  mix-blend-mode: plus-lighter;
 }
 
 ::view-transition-old(.morph-cutout) {
-  animation: morph-leave var(--t-slow) var(--ease-out) both;
+  animation: morph-swap-out var(--t-slow) linear both;
 }
 
 ::view-transition-new(.morph-cutout) {
-  animation: morph-enter var(--t-slow) var(--ease-out) both;
+  animation: morph-swap-in var(--t-slow) linear both;
+}
+
+/* A capa da página tem fundo branco: sobre o fundo areia das seções ela também some, como as peças dos cards. */
+:root[data-morph-fit='cutout']::view-transition {
+  mix-blend-mode: multiply;
+}
+
+@keyframes morph-swap-out {
+  0% {
+    opacity: 1;
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-swap-in {
+  0% {
+    opacity: 0;
+  }
+
+  25%,
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes morph-leave {
@@ -709,6 +767,11 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 @media (prefers-reduced-motion: no-preference) {
   .site-header {
     transition: transform var(--t-mid) var(--ease-out);
+  }
+
+  /* A barra de filtros acompanha o cabeçalho no mesmo tempo (chrome.css, `--header-offset`). */
+  .toolbar--catalog {
+    transition: top var(--t-mid) var(--ease-out);
   }
 }
 

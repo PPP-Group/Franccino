@@ -45,6 +45,6 @@ class CategoryController extends Controller
             ->with('media')
             ->firstOrFail();
 
-        return response()->json(['data' => (new CategoryResource($category, detailed: true))->resolve()]);
+        return response()->json(['data' => CategoryResource::detail($category)->resolve()]);
     }
 }
