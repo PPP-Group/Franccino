@@ -53,15 +53,23 @@ export async function AreaPage({
   if (!detail) {
     notFound();
   }
-  const common = await getTranslations({ locale, namespace: 'common' });
+  const [common, nav] = await Promise.all([
+    getTranslations({ locale, namespace: 'common' }),
+    getTranslations({ locale, namespace: 'nav' }),
+  ]);
   const params = parseListingParams(searchParams);
   const view = parseCatalogView(searchParams.view);
   return (
     <CatalogListing
       locale={locale}
-      title={detail.brand_name}
-      intro={detail.description ? <p className="lead">{detail.description}</p> : null}
-      crumbs={[{ label: common('home'), href: '/' }, { label: detail.brand_name }]}
+      title={nav(area)}
+      intro={
+        <>
+          <p className="meta">{detail.brand_name}</p>
+          {detail.description ? <p className="lead">{detail.description}</p> : null}
+        </>
+      }
+      crumbs={[{ label: common('home'), href: '/' }, { label: nav(area) }]}
       apiParams={{ area }}
       params={params}
       view={view}
@@ -99,7 +107,10 @@ export async function AreaCategoryPage(props: {
   if (!detail || !category) {
     notFound();
   }
-  const common = await getTranslations({ locale, namespace: 'common' });
+  const [common, nav] = await Promise.all([
+    getTranslations({ locale, namespace: 'common' }),
+    getTranslations({ locale, namespace: 'nav' }),
+  ]);
   const params = { ...parseListingParams(searchParams), category: slug };
   const view = parseCatalogView(searchParams.view);
   return (
@@ -109,7 +120,7 @@ export async function AreaCategoryPage(props: {
       intro={category.description ? <p className="lead">{category.description}</p> : null}
       crumbs={[
         { label: common('home'), href: '/' },
-        { label: detail.brand_name, href: areaHref(area) },
+        { label: nav(area), href: areaHref(area) },
         { label: category.name },
       ]}
       apiParams={{ area }}

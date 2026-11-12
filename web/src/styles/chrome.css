@@ -281,6 +281,65 @@ body:has(.hero--full) #conteudo {
   color: var(--ink);
 }
 
+/*
+  Produtos (revisão da Franccino, 12/11/2026, item 5, exemplo 2): "Área interna | Área externa" em cima das categorias,
+  cada uma com "Ver tudo" embaixo. Clicar numa linha a deixa em negrito e mostra só as categorias dela; clicar de novo
+  volta para todas.
+*/
+.nav-panel__tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.nav-panel__tab {
+  display: grid;
+  justify-items: start;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--line);
+}
+
+.nav-panel__tab:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.nav-panel__tab > button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-muted);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+  line-height: var(--lh-h3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.nav-panel__tab > button:hover,
+.nav-panel__tab > button[aria-pressed='true'] {
+  color: var(--ink);
+}
+
+.nav-panel__tab > button[aria-pressed='true'] {
+  font-weight: 600;
+}
+
+.nav-panel__see-all {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nav-panel__see-all:hover,
+.nav-panel__see-all:focus-visible {
+  color: var(--ink);
+}
+
 .nav-panel__list {
   list-style: none;
   margin: 0;

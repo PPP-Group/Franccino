@@ -72,16 +72,17 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
   const designerRef = product.designer;
-  const [t, common, settings, designer] = await Promise.all([
+  const [t, common, nav, settings, designer] = await Promise.all([
     getTranslations({ locale, namespace: 'product' }),
     getTranslations({ locale, namespace: 'common' }),
+    getTranslations({ locale, namespace: 'nav' }),
     getSettings(locale),
     designerRef ? getDesigner(locale, designerRef.slug) : Promise.resolve(null),
   ]);
 
   const crumbs: BreadcrumbItem[] = [
     { label: common('home'), href: '/' },
-    { label: product.area.brand_name, href: areaPath(product.area.key) },
+    { label: nav(product.area.key), href: areaPath(product.area.key) },
     { label: product.category.name, href: categoryHref(product) },
     { label: product.name },
   ];

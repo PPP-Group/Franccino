@@ -13,8 +13,8 @@
     "scrollNext": "Avançar"
   },
   "nav": {
-    "indoor": "Casa",
-    "outdoor": "Giardini",
+    "indoor": "Área interna",
+    "outdoor": "Área externa",
     "products": "Produtos",
     "launches": "Lançamentos",
     "collections": "Coleções",
@@ -26,7 +26,9 @@
     "downloads": "Área do Profissional",
     "stores": "Lojas",
     "contact": "Contato",
-    "planner": "Sala para montar"
+    "planner": "Sala para montar",
+    "faq": "Tire suas dúvidas",
+    "partner": "Seja um parceiro"
   },
   "footer": {
     "backToTop": "Topo",
@@ -74,7 +76,8 @@
     "quoteListShort": "Lista de desejos",
     "areaAll": "Ver todos",
     "collectionsAll": "Ver todas",
-    "submenu": "Mostrar as opções de {area}"
+    "submenu": "Mostrar as opções de {area}",
+    "seeAllLine": "Ver tudo"
   },
   "quote": {
     "viewList": "Ver a lista de desejos",
@@ -328,7 +331,7 @@
       "table": "Tabela técnica"
     },
     "products": {
-      "title": "Todas as peças",
+      "title": "Produtos",
       "intro": "O catálogo completo das linhas Casa e Giardini."
     },
     "technical": {
@@ -358,6 +361,13 @@
       "body": "Planeje seu ambiente em escala, com as medidas reais das peças, ou converse com a equipe Franccino.",
       "planner": "Planejar um ambiente",
       "contact": "Fale com um consultor"
+    },
+    "loadMore": {
+      "button": "Ver mais",
+      "loading": "Carregando…",
+      "nextPage": "Ver as próximas peças",
+      "count": "{shown} de {total} peças",
+      "error": "Não foi possível carregar mais peças. Por favor, tente novamente."
     }
   },
   "stores": {
@@ -827,5 +837,15 @@
   "featurePiece": {
     "label": "Peça em destaque",
     "view": "Conheça a peça"
+  },
+  "faqPage": {
+    "title": "Tire suas dúvidas",
+    "description": "Respostas sobre as peças da Franccino e a assistência técnica.",
+    "pending": "As respostas desta página ainda não foram publicadas."
+  },
+  "partnerPage": {
+    "title": "Seja um parceiro",
+    "description": "Para quem deseja abrir uma loja Franccino ou revender as nossas peças.",
+    "formTitle": "Fale com a nossa equipe"
   }
 }

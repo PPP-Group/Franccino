@@ -95,6 +95,12 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/projects">{nav('projects')}</Link>
               </li>
               <li>
+                <Link href="/faq">{nav('faq')}</Link>
+              </li>
+              <li>
+                <Link href="/partner">{nav('partner')}</Link>
+              </li>
+              <li>
                 <Link href="/contact">{nav('contact')}</Link>
               </li>
             </ul>

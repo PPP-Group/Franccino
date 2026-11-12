@@ -27,6 +27,8 @@ const PAGE_ROUTES: Record<string, Href> = {
   finishes: { pathname: '/finishes' },
   downloads: { pathname: '/downloads' },
   contact: { pathname: '/contact' },
+  faq: { pathname: '/faq' },
+  partner: { pathname: '/partner' },
   privacy: { pathname: '/privacy' },
   terms: { pathname: '/terms' },
   cookies: { pathname: '/cookies' },

@@ -13,8 +13,8 @@
     "scrollNext": "Next"
   },
   "nav": {
-    "indoor": "Casa",
-    "outdoor": "Giardini",
+    "indoor": "Indoor",
+    "outdoor": "Outdoor",
     "products": "Products",
     "launches": "Novelties",
     "collections": "Collections",
@@ -26,7 +26,9 @@
     "downloads": "Professionals",
     "stores": "Stores",
     "contact": "Contact",
-    "planner": "Room planner"
+    "planner": "Room planner",
+    "faq": "FAQ",
+    "partner": "Become a partner"
   },
   "footer": {
     "backToTop": "Up",
@@ -74,7 +76,8 @@
     "quoteListShort": "Wishlist",
     "areaAll": "View all",
     "collectionsAll": "View all",
-    "submenu": "Show the {area} options"
+    "submenu": "Show the {area} options",
+    "seeAllLine": "View all"
   },
   "quote": {
     "viewList": "View wishlist",
@@ -328,7 +331,7 @@
       "table": "Technical table"
     },
     "products": {
-      "title": "All pieces",
+      "title": "Products",
       "intro": "The complete Casa and Giardini catalogue."
     },
     "technical": {
@@ -358,6 +361,13 @@
       "body": "Plan your room to scale with the real dimensions of each piece, or speak with the Franccino team.",
       "planner": "Plan a room",
       "contact": "Speak with a consultant"
+    },
+    "loadMore": {
+      "button": "View more",
+      "loading": "Loading…",
+      "nextPage": "See the next pieces",
+      "count": "{shown} of {total} pieces",
+      "error": "We could not load more pieces. Please try again."
     }
   },
   "stores": {
@@ -827,5 +837,15 @@
   "featurePiece": {
     "label": "Featured piece",
     "view": "Discover the piece"
+  },
+  "faqPage": {
+    "title": "Frequently asked questions",
+    "description": "Answers about Franccino pieces and technical assistance.",
+    "pending": "The answers on this page have not been published yet."
+  },
+  "partnerPage": {
+    "title": "Become a partner",
+    "description": "For those who wish to open a Franccino store or resell our pieces.",
+    "formTitle": "Talk to our team"
   }
 }

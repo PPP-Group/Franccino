@@ -4,8 +4,11 @@ import type { CollectionCard } from '@/lib/api/types';
 export type AreaMenuKey = 'indoor' | 'outdoor';
 export type AreaMenuCategory = { slug: string; name: string };
 export type AreaMenus = Record<AreaMenuKey, AreaMenuCategory[]>;
-/** Painéis do menu do topo: Casa, Giardini e Coleções. */
-export type NavMenuKey = AreaMenuKey | 'collections';
+/**
+ * Painéis do menu do topo: Produtos (as duas linhas juntas) e Coleções. Casa e Giardini continuam como listas para as
+ * abas "Área interna" e "Área externa" do painel de Produtos (revisão da Franccino, 12/11/2026, item 5).
+ */
+export type NavMenuKey = AreaMenuKey | 'products' | 'collections';
 export type NavMenus = Record<NavMenuKey, AreaMenuCategory[]>;
 
 /**
@@ -26,8 +29,13 @@ export function navMenus(
   outdoor: AreaDetail | null,
   collections: CollectionCard[],
 ): NavMenus {
+  const areas = areaMenus(indoor, outdoor);
   return {
-    ...areaMenus(indoor, outdoor),
+    ...areas,
+    // Produtos: todas as categorias das duas linhas, uma vez cada (a mesma categoria existe nas duas).
+    products: [
+      ...new Map([...areas.indoor, ...areas.outdoor].map((entry) => [entry.slug, entry])).values(),
+    ].sort(byName),
     collections: collections
       .filter((collection) => collection.product_count > 0)
       .map((collection) => ({ slug: collection.slug, name: collection.name }))

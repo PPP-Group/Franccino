@@ -321,6 +321,8 @@ export type PageContent = {
   intro: string | null;
   content: Block[];
   cover: Image | null;
+  /** Peça em destaque ao lado do título, escolhida no painel (só publicada). Ausente na API antiga. */
+  featured_product?: ProductCard | null;
   seo: Seo;
   /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
   locale_fallback: boolean;

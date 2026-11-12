@@ -22,6 +22,24 @@ it('only lists visible home_hero banners', function () {
     expect($response->json('data.banners'))->toHaveCount(1);
 });
 
+it('shows only the campaign banner during its period and the regular ones before and after', function () {
+    Banner::factory()->create(['title' => ['pt' => 'De sempre'], 'is_published' => true]);
+    Banner::factory()->create([
+        'title' => ['pt' => 'Campanha'],
+        'is_published' => true,
+        'starts_at' => now()->subHour(),
+        'ends_at' => now()->addDay(),
+    ]);
+
+    $titles = fn () => collect($this->getJson('/api/v1/home')->assertOk()->json('data.banners'))->pluck('title')->all();
+
+    expect($titles())->toBe(['Campanha']);
+
+    $this->travel(2)->days();
+
+    expect($titles())->toBe(['De sempre']);
+});
+
 it('only lists published featured products, up to 12', function () {
     $indoor = area('indoor');
 

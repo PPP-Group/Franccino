@@ -530,6 +530,13 @@
   font-size: var(--fs-h1);
 }
 
+/* O nome da linha (Franccino Casa, Franccino Giardini) embaixo de "Área interna" / "Área externa". */
+.line-panel__copy .line-panel__brand {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
 .line-panel__copy p {
   max-width: 44ch;
   color: var(--on-photo-muted);

@@ -20,6 +20,7 @@ import { toTechnicalRow } from '@/lib/catalog/technical';
 import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar } from './CatalogToolbar';
+import { LoadMore } from './LoadMore';
 import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
 import { TechTable } from './TechTable';
@@ -129,12 +130,16 @@ export async function CatalogListing(props: CatalogListingProps) {
           formAction={props.formAction}
           hiddenQuery={hiddenQuery}
           pager={
-            <Pagination
-              meta={page.meta}
-              hrefFor={(next) => hrefFor({ page: next })}
-              label={t('pagination.label')}
-              position="top"
-            />
+            // Na grade, o "Ver mais" embaixo substitui a paginação (revisão da Franccino, item 11); a tabela técnica
+            // continua com as páginas.
+            view === 'table' ? (
+              <Pagination
+                meta={page.meta}
+                hrefFor={(next) => hrefFor({ page: next })}
+                label={t('pagination.label')}
+                position="top"
+              />
+            ) : null
           }
         />
         {/*
@@ -162,11 +167,29 @@ export async function CatalogListing(props: CatalogListingProps) {
             <ProductGrid products={page.data} showNew priorityCount={3} />
           )}
         </section>
-        <Pagination
-          meta={page.meta}
-          hrefFor={(next) => hrefFor({ page: next })}
-          label={t('pagination.label')}
-        />
+        {view === 'table' ? (
+          <Pagination
+            meta={page.meta}
+            hrefFor={(next) => hrefFor({ page: next })}
+            label={t('pagination.label')}
+          />
+        ) : page.data.length > 0 ? (
+          <LoadMore
+            key={`more-${JSON.stringify(params)}-${page.meta.current_page}`}
+            query={{ ...props.apiParams, ...params, page: undefined, per_page: undefined }}
+            page={page.meta.current_page}
+            lastPage={page.meta.last_page}
+            total={page.meta.total}
+            shown={page.data.length}
+            perPage={page.meta.per_page}
+            pageHrefs={Object.fromEntries(
+              Array.from({ length: Math.min(page.meta.last_page, 60) }, (_, index) => [
+                index + 1,
+                hrefFor({ page: index + 1 }),
+              ]),
+            )}
+          />
+        ) : null}
       </div>
       {/* Continuidade: o fim da lista leva às peças que a pessoa já abriu (sem repetir as desta página). */}
       <RecentlyViewed excludeIds={page.data.map((product) => product.id)} />

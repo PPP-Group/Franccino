@@ -73,14 +73,15 @@ return [
     'banner.subtitle' => 'Frase menor, embaixo do título.',
     'banner.cta_label' => 'Texto do botão, ex.: Conheça as peças. Vazio, o botão não aparece.',
     'banner.cta_url' => 'Para onde o botão leva, ex.: /pt/produtos',
-    'banner.starts_at' => 'Opcional: o banner só aparece a partir desta data.',
-    'banner.ends_at' => 'Opcional: o banner some depois desta data.',
+    'banner.starts_at' => 'Para banner de campanha: a partir desta data ele entra no lugar dos banners de sempre. Vazio: banner de sempre.',
+    'banner.ends_at' => 'Para banner de campanha: depois desta data ele some e os banners de sempre voltam sozinhos.',
     'banner.image' => 'Foto horizontal de alta qualidade (ideal 2400 × 1200 px). O texto fica por cima, então prefira fotos com área mais calma.',
     'banner.image_mobile' => 'Opcional: versão vertical para celular (ideal 1080 × 1350 px). Vazio, o site usa a foto principal.',
     'banner.video' => 'Opcional: vídeo curto em loop, sem som (MP4, 10 a 20 segundos, até 20 MB). Toca no lugar da foto, que aparece enquanto ele carrega e para quem pediu menos movimento.',
 
     // Páginas do site
     'page.key' => 'Qual página do site é esta. Não muda.',
+    'page.featured_product_id' => 'Opcional. A peça que aparece ao lado do título desta página (Corporativo, Lançamentos). Sem escolha, o espaço fica sem peça.',
     'page.title' => 'Título que aparece no topo da página.',
     'page.intro' => 'Texto curto embaixo do título.',
     'page.content' => 'Monte a página com blocos: clique em "Adicionar" e escolha texto, imagem, vídeo, linha do tempo etc. Arraste para mudar a ordem.',

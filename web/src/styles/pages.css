@@ -1875,3 +1875,9 @@
     padding-left: var(--space-4);
   }
 }
+
+/* "Seja um parceiro": o formulário de parceria embaixo do texto da página (revisão da Franccino, 12/11/2026). */
+.partner-form {
+  max-width: 720px;
+  margin-top: var(--space-8);
+}

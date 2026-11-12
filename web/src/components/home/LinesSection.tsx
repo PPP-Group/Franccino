@@ -25,6 +25,7 @@ function panelSizes(cover: Image): string {
  */
 export function LinesSection({ areas }: { areas: Area[] }) {
   const t = useTranslations('home.lines');
+  const nav = useTranslations('nav');
   return (
     <section className="lines" aria-label={t('label')} data-reveal="stagger">
       {areas.map((area) => (
@@ -43,7 +44,9 @@ export function LinesSection({ areas }: { areas: Area[] }) {
             />
           ) : null}
           <div className="line-panel__copy" data-reveal="">
-            <h2 className="line-panel__title">{area.brand_name}</h2>
+            {/* "Área interna" e "Área externa" no título; o nome da linha embaixo (revisão da Franccino, item 3). */}
+            <h2 className="line-panel__title">{nav(area.key)}</h2>
+            <p className="line-panel__brand">{area.brand_name}</p>
             {area.description ? <p className="lead">{area.description}</p> : null}
             <span className="link-arrow">
               <span>{t('viewPieces')}</span>

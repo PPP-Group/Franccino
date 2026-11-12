@@ -333,16 +333,18 @@ e na página do projeto, e não na home.
 Conteúdo e SEO das páginas fixas do site. Cada página corresponde a uma rota do front, identificada por `key`.
 Chaves semeadas: `home`, `indoor`, `outdoor`, `products`, `launches`, `collections`, `designers`,
 `projects`, `corporate`, `factory`, `stores`, `finishes`, `downloads`, `contact`, `privacy`, `terms`,
-`cookies` (política de cookies, acrescentada em 2026-10-01; o `PageSeeder` cria a página que faltar).
+`cookies` (política de cookies, acrescentada em 2026-10-01; o `PageSeeder` cria a página que faltar), `faq` e `partner`
+(revisão de 2026-11-12; a migration `2026_11_12_110000` cria as duas no banco que já existe).
 
-| Coluna                     | Tipo          | Notas                    |
-| -------------------------- | ------------- | ------------------------ |
-| key                        | string, único |                          |
-| title                      | json tr       |                          |
-| intro                      | json tr, null |                          |
-| content                    | json          | lista de blocos (abaixo) |
-| is_published               | bool          |                          |
-| seo_title, seo_description | json tr       |                          |
+| Coluna                     | Tipo              | Notas                                                                                   |
+| -------------------------- | ----------------- | --------------------------------------------------------------------------------------- |
+| key                        | string, único     |                                                                                         |
+| featured_product_id        | FK products, null | peça em destaque ao lado do título (escolhida no painel; migration `2026_11_12_100000`) |
+| title                      | json tr           |                                                                                         |
+| intro                      | json tr, null     |                                                                                         |
+| content                    | json              | lista de blocos (abaixo)                                                                |
+| is_published               | bool              |                                                                                         |
+| seo_title, seo_description | json tr           |                                                                                         |
 
 Mídia: `cover` (1), `og_image` (1).
 

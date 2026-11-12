@@ -28,6 +28,8 @@ export const pathnames = {
   '/downloads': { pt: '/area-do-profissional', en: '/professionals' },
   '/stores': { pt: '/lojas', en: '/stores' },
   '/contact': { pt: '/contato', en: '/contact' },
+  '/faq': { pt: '/tire-suas-duvidas', en: '/faq' },
+  '/partner': { pt: '/seja-um-parceiro', en: '/become-a-partner' },
   '/search': { pt: '/busca', en: '/search' },
   '/privacy': { pt: '/privacidade', en: '/privacy' },
   '/terms': { pt: '/termos', en: '/terms' },
