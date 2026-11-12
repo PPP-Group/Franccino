@@ -49,14 +49,19 @@ export function formatDimension(
   if (diameter !== null) {
     mainParts.push(`${labels.diameter} ${formatCentimeters(diameter, locale)}`);
   }
+  // Medida flexível (revisão de 12/11/2026): "L 100–150".
+  const value = (min: number, max: number | null | undefined) =>
+    max !== null && max !== undefined && max > min
+      ? `${formatCentimeters(min, locale)}–${formatCentimeters(max, locale)}`
+      : formatCentimeters(min, locale);
   if (width !== null) {
-    mainParts.push(`${labels.width} ${formatCentimeters(width, locale)}`);
+    mainParts.push(`${labels.width} ${value(width, dimension.width_max)}`);
   }
   if (depth !== null) {
-    mainParts.push(`${labels.depth} ${formatCentimeters(depth, locale)}`);
+    mainParts.push(`${labels.depth} ${value(depth, dimension.depth_max)}`);
   }
   if (height !== null) {
-    mainParts.push(`${labels.height} ${formatCentimeters(height, locale)}`);
+    mainParts.push(`${labels.height} ${value(height, dimension.height_max)}`);
   }
 
   const segments: string[] = [];

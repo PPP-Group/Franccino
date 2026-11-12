@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\DownloadLead;
 use App\Models\DownloadLog;
 use App\Models\Product;
 use App\Models\ProductFile;
@@ -19,13 +20,14 @@ it('creates a temporary link and a download log for a published file of a publis
     ]);
     Storage::disk('downloads')->put($file->path, 'conteudo-do-arquivo');
 
-    $response = $this->postJson("/api/v1/downloads/{$file->id}/link")->assertCreated();
+    $response = $this->postJson("/api/v1/downloads/{$file->id}/link", ['lead_token' => downloadLeadToken()])->assertCreated();
 
     $response->assertJsonStructure(['data' => ['url', 'expires_at']]);
 
     $this->assertDatabaseHas('download_logs', [
         'product_file_id' => $file->id,
         'product_id' => $product->id,
+        'download_lead_id' => DownloadLead::sole()->id,
     ]);
     expect(DownloadLog::sole()->ip_hash)->toHaveLength(64);
 
@@ -64,9 +66,21 @@ it('limits requests per ip', function () {
     $file = ProductFile::factory()->for($product)->create(['path' => 'product-files/sample.pdf']);
     Storage::disk('downloads')->put($file->path, 'conteudo');
 
+    $token = downloadLeadToken();
     foreach (range(1, 30) as $i) {
-        $this->postJson("/api/v1/downloads/{$file->id}/link")->assertCreated();
+        $this->postJson("/api/v1/downloads/{$file->id}/link", ['lead_token' => $token])->assertCreated();
     }
 
-    $this->postJson("/api/v1/downloads/{$file->id}/link")->assertStatus(429);
+    $this->postJson("/api/v1/downloads/{$file->id}/link", ['lead_token' => $token])->assertStatus(429);
+});
+
+it('asks for the details before the link (no token or an unknown one)', function () {
+    useScratchDownloadsDisk();
+    $file = ProductFile::factory()->for(publishedProduct())->create(['path' => 'product-files/sample.pdf']);
+    Storage::disk('downloads')->put($file->path, 'conteudo');
+
+    $this->postJson("/api/v1/downloads/{$file->id}/link")->assertStatus(422)->assertJsonValidationErrors('lead_token');
+    $this->postJson("/api/v1/downloads/{$file->id}/link", ['lead_token' => 'nao-existe'])->assertStatus(422);
+
+    expect(DownloadLog::count())->toBe(0);
 });

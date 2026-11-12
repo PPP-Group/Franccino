@@ -3,7 +3,18 @@ import type { ProductListParams } from '@/lib/api/catalog';
 /** Quantas vezes o "Ver mais" soma peças na mesma página antes de virar o link da página seguinte. */
 export const MAX_LOADS = 3;
 
-const KEYS = ['area', 'category', 'designer', 'collection', 'line', 'finish', 'launch', 'q', 'sort'] as const;
+const KEYS = [
+  'area',
+  'category',
+  'designer',
+  'collection',
+  'line',
+  'finish',
+  'room',
+  'launch',
+  'q',
+  'sort',
+] as const;
 
 /**
  * Filtros aceitos pelo "Ver mais" (entrada do navegador): só os da listagem, como texto curto. A página e o tamanho

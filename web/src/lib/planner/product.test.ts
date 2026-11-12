@@ -14,6 +14,16 @@ describe('toPlannerProduct', () => {
       depth: 56,
       shape: 'rect',
       image: { src: 'https://cdn.test/aura-480.webp', alt: 'Cadeira Aura em fundo branco' },
+      topView: null,
+    });
+  });
+
+  it('keeps the photo for the library and the top view for the plan (item 29)', () => {
+    const cover = productDetail().cover!;
+    const withTopView = productDetail({ top_view: { ...cover, alt: 'Planta da Cadeira Aura' } });
+    expect(toPlannerProduct(withTopView, 'pt')).toMatchObject({
+      image: { alt: 'Cadeira Aura em fundo branco' },
+      topView: { src: 'https://cdn.test/aura-480.webp', alt: 'Planta da Cadeira Aura' },
     });
   });
 

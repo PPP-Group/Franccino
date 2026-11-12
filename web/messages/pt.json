@@ -268,7 +268,8 @@
         "height": "altura {value} cm",
         "diameter": "diâmetro {value} cm",
         "seatHeight": "altura do assento {value} cm"
-      }
+      },
+      "range": "{min} a {max}"
     },
     "stage": {
       "viewLabel": "Visualização",
@@ -289,7 +290,20 @@
       "piecesBy": "Peças de {name}"
     },
     "moreWays": "Outras formas de contato",
-    "addedToList": "Adicionada à lista"
+    "addedToList": "Adicionada à lista",
+    "library": {
+      "title": "Integre ao seu projeto",
+      "soon": "Blocos 2D e 3D, catálogos e fichas técnicas das peças ficam na Área do Profissional.",
+      "professionals": "Ver todos os arquivos na Área do Profissional",
+      "programs": {
+        "sketchup": "SketchUp",
+        "autocad": "AutoCAD",
+        "revit": "Revit"
+      }
+    },
+    "variants": {
+      "title": "Variações"
+    }
   },
   "catalog": {
     "filters": {
@@ -302,7 +316,9 @@
       "search": "Buscar",
       "apply": "Aplicar",
       "allDesigners": "Todos os designers",
-      "facetOption": "{name} ({count})"
+      "facetOption": "{name} ({count})",
+      "room": "Ambiente",
+      "allRooms": "Todos os ambientes"
     },
     "sort": {
       "featured": "Destaques",
@@ -368,6 +384,16 @@
       "nextPage": "Ver as próximas peças",
       "count": "{shown} de {total} peças",
       "error": "Não foi possível carregar mais peças. Por favor, tente novamente."
+    },
+    "rooms": {
+      "living": "Sala de estar",
+      "dining": "Sala de jantar",
+      "bedroom": "Quarto",
+      "office": "Escritório",
+      "balcony": "Varanda",
+      "gourmet": "Área gourmet",
+      "pool": "Piscina",
+      "garden": "Jardim"
     }
   },
   "stores": {
@@ -439,7 +465,26 @@
     "formatAndSize": "{format} · {size}",
     "failed": "Não foi possível gerar o link no momento. Por favor, tente novamente.",
     "rateLimited": "Foram solicitados vários downloads seguidos. Por favor, aguarde um minuto.",
-    "unavailable": "Arquivo indisponível no momento."
+    "unavailable": "Arquivo indisponível no momento.",
+    "lead": {
+      "title": "Antes de baixar",
+      "intro": "Informe seus dados uma vez para acessar os arquivos técnicos. Depois disso, os downloads saem direto.",
+      "profile": "Você é",
+      "professional": "Profissional (arquiteto, designer, especificador)",
+      "client": "Cliente final",
+      "fields": {
+        "first_name": "Nome",
+        "last_name": "Sobrenome",
+        "email": "E-mail",
+        "interest": "Interesse (opcional)",
+        "phone": "Telefone (opcional)"
+      },
+      "consent": "Aceito a <privacy>política de privacidade</privacy>.",
+      "submit": "Continuar e baixar",
+      "sending": "Enviando…",
+      "cancel": "Cancelar",
+      "failed": "Não foi possível concluir o cadastro. Por favor, tente novamente."
+    }
   },
   "planner": {
     "meta": {

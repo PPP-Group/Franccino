@@ -30,6 +30,10 @@ const PATHS = {
       <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
     </>
   ),
+  // Setas das medidas na página da peça (revisão da Franccino, 12/11/2026, item 20; Tabler Icons, MIT).
+  'measure-width': <path d="M7 8l-4 4l4 4M17 8l4 4l-4 4M3 12h18" />,
+  'measure-depth': <path d="M16 4h4v4M14 10l6 -6M8 20h-4v-4M4 20l6 -6" />,
+  'measure-height': <path d="M8 7l4 -4l4 4M8 17l4 4l4 -4M12 3v18" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,

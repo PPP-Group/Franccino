@@ -268,7 +268,8 @@
         "height": "height {value} cm",
         "diameter": "diameter {value} cm",
         "seatHeight": "seat height {value} cm"
-      }
+      },
+      "range": "{min} to {max}"
     },
     "stage": {
       "viewLabel": "View",
@@ -289,7 +290,20 @@
       "piecesBy": "Pieces by {name}"
     },
     "moreWays": "Other ways to get in touch",
-    "addedToList": "Added to the list"
+    "addedToList": "Added to the list",
+    "library": {
+      "title": "Add it to your project",
+      "soon": "2D and 3D blocks, catalogues and spec sheets are in the Professionals area.",
+      "professionals": "See all files in the Professionals area",
+      "programs": {
+        "sketchup": "SketchUp",
+        "autocad": "AutoCAD",
+        "revit": "Revit"
+      }
+    },
+    "variants": {
+      "title": "Variations"
+    }
   },
   "catalog": {
     "filters": {
@@ -302,7 +316,9 @@
       "search": "Search",
       "apply": "Apply",
       "allDesigners": "All designers",
-      "facetOption": "{name} ({count})"
+      "facetOption": "{name} ({count})",
+      "room": "Room",
+      "allRooms": "All rooms"
     },
     "sort": {
       "featured": "Featured",
@@ -368,6 +384,16 @@
       "nextPage": "See the next pieces",
       "count": "{shown} of {total} pieces",
       "error": "We could not load more pieces. Please try again."
+    },
+    "rooms": {
+      "living": "Living room",
+      "dining": "Dining room",
+      "bedroom": "Bedroom",
+      "office": "Office",
+      "balcony": "Balcony",
+      "gourmet": "Gourmet area",
+      "pool": "Pool",
+      "garden": "Garden"
     }
   },
   "stores": {
@@ -439,7 +465,26 @@
     "formatAndSize": "{format} · {size}",
     "failed": "We could not generate the link at this time. Please try again.",
     "rateLimited": "Several downloads were requested in a row. Please wait a minute.",
-    "unavailable": "File unavailable right now."
+    "unavailable": "File unavailable right now.",
+    "lead": {
+      "title": "Before you download",
+      "intro": "Share your details once to access the technical files. After that, downloads start right away.",
+      "profile": "You are",
+      "professional": "Professional (architect, designer, specifier)",
+      "client": "End customer",
+      "fields": {
+        "first_name": "First name",
+        "last_name": "Last name",
+        "email": "Email",
+        "interest": "Interest (optional)",
+        "phone": "Phone (optional)"
+      },
+      "consent": "I accept the <privacy>privacy policy</privacy>.",
+      "submit": "Continue and download",
+      "sending": "Sending…",
+      "cancel": "Cancel",
+      "failed": "We could not complete your registration. Please try again."
+    }
   },
   "planner": {
     "meta": {

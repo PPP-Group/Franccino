@@ -337,6 +337,19 @@
   border-bottom: 0;
 }
 
+/* Seta de cada medida antes do nome (↔ largura, ↗ profundidade, ↕ altura). */
+.dims__facts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dims__arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-muted);
+}
+
 .dims dt {
   color: var(--ink-muted);
 }
@@ -643,4 +656,77 @@
   place-items: center;
   font-size: var(--fs-label);
   background: var(--stone);
+}
+
+/* "Integre ao seu projeto": um botão por programa e o caminho para a Área do Profissional (item 19). */
+.tech-library {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.tech-library__programs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tech-library__button {
+  gap: var(--space-2);
+  min-width: 160px;
+}
+
+/* Variações da peça (item 13): miniatura e nome, em linha; a atual não aparece. */
+.variants {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.variants__title {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.variants__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.variants__item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.variants__item:hover,
+.variants__item:focus-visible {
+  border-color: var(--ink);
+}
+
+.variants__thumb {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.variants__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }

@@ -12,6 +12,18 @@ import type { ProductListParams, ProductSort } from './catalog';
 
 const SORTS: ProductSort[] = ['featured', 'name', 'newest'];
 
+/** Ambientes que a API aceita (`ProductRoom`); outro valor não vai para a API (seria `422`). */
+export const ROOMS = [
+  'living',
+  'dining',
+  'bedroom',
+  'office',
+  'balcony',
+  'gourmet',
+  'pool',
+  'garden',
+] as const;
+
 export type RawSearchParams = Record<string, string | string[] | undefined>;
 
 /**
@@ -47,6 +59,11 @@ export function parseListingParams(searchParams: RawSearchParams): ProductListPa
     result.finish = finish;
   }
 
+  const room = firstValue(searchParams.room);
+  if (room && (ROOMS as readonly string[]).includes(room)) {
+    result.room = room;
+  }
+
   const sort = firstValue(searchParams.sort);
   if (sort && (SORTS as string[]).includes(sort)) {
     result.sort = sort as ProductSort;
@@ -62,7 +79,7 @@ export function parseListingParams(searchParams: RawSearchParams): ProductListPa
 
 /** Serializes `params` back to a query string (`""` or `"?a=1&b=2"`), omitting empty values and the default page. */
 export function listingQueryString(params: ProductListParams): string {
-  const { category, designer, collection, line, finish, q, sort, page } = params;
+  const { category, designer, collection, line, finish, room, q, sort, page } = params;
   const searchParams = new URLSearchParams();
 
   if (category) searchParams.set('category', category);
@@ -70,6 +87,7 @@ export function listingQueryString(params: ProductListParams): string {
   if (collection) searchParams.set('collection', collection);
   if (line) searchParams.set('line', line);
   if (finish !== undefined) searchParams.set('finish', String(finish));
+  if (room) searchParams.set('room', room);
   if (q) searchParams.set('q', q);
   if (sort) searchParams.set('sort', sort);
   if (page !== undefined && page !== 1) searchParams.set('page', String(page));

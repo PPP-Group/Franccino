@@ -8,6 +8,7 @@ import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
+import { ProductVariants } from '@/components/products/ProductVariants';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { TrackView } from '@/components/recent/TrackView';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -15,6 +16,7 @@ import { AreaDot } from '@/components/ui/AreaDot';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
+import { programOf, TechnicalLibrary } from '@/components/downloads/TechnicalLibrary';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import type { Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
@@ -158,6 +160,8 @@ export default async function ProductPage({ params }: Props) {
               {contentLang ? <p className="meta">{t('fallbackNotice')}</p> : null}
             </div>
 
+            <ProductVariants variants={product.variants ?? []} />
+
             <ProductConfigurator
               product={{ ...card, finishes: product.finishes }}
               whatsapp={settings.quotes_whatsapp}
@@ -167,7 +171,12 @@ export default async function ProductPage({ params }: Props) {
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
 
-            <FileDownloads files={product.files} title={t('downloads.title')} />
+            <TechnicalLibrary files={product.files} />
+
+            <FileDownloads
+              files={product.files.filter((file) => programOf(file) === null)}
+              title={t('downloads.title')}
+            />
 
             <MediaLinks items={product.media_links} headingId="product-media" />
           </div>

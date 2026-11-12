@@ -95,7 +95,12 @@ export async function CatalogListing(props: CatalogListingProps) {
 
   const hiddenQuery = listingQuery(props.categoryInPath ? { ...params, category: undefined } : params, view, {
     designer: undefined,
+    room: undefined,
   });
+  // Ambientes (item 8): o nome vem das mensagens; uma chave sem tradução não aparece.
+  const roomOptions = (facets.rooms ?? [])
+    .filter((option) => t.has(`rooms.${option.key}`))
+    .map((option) => ({ value: option.key, label: t(`rooms.${option.key}`), count: option.count }));
 
   const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
 
@@ -127,6 +132,8 @@ export async function CatalogListing(props: CatalogListingProps) {
             return { ...filter, image: portraits.get(filter.value) ?? null };
           })}
           activeDesigner={params.designer}
+          roomOptions={roomOptions}
+          activeRoom={params.room}
           formAction={props.formAction}
           hiddenQuery={hiddenQuery}
           pager={
@@ -156,7 +163,7 @@ export async function CatalogListing(props: CatalogListingProps) {
               <p className="lead">{t('emptyState.body')}</p>
               <Link
                 className="btn btn--ghost"
-                href={hrefFor({ category: undefined, designer: undefined, q: undefined })}
+                href={hrefFor({ category: undefined, designer: undefined, room: undefined, q: undefined })}
               >
                 {t('emptyState.clear')}
               </Link>
