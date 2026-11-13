@@ -42,11 +42,13 @@ for slug, item in sorted(escolha.items()):
             G.export(f, bruto, textures=True)
         sc = trimesh.load(bruto, force='scene')
         sc.apply_scale(0.001)
+        vistos = set()  # o mesmo material serve a várias malhas: converter uma vez só
         for g in sc.geometry.values():
             mat = getattr(g.visual, 'material', None)
             bc = getattr(mat, 'baseColorFactor', None) if mat is not None else None
-            if bc is None:
+            if bc is None or id(mat) in vistos:
                 continue
+            vistos.add(id(mat))
             c = np.array(bc, dtype=float)
             if c.max() > 1:
                 c = c / 255
