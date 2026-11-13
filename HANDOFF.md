@@ -1288,7 +1288,9 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   enviados em 16/10, e o lote de 12/11 levou só 53. Os outros estão em `design/drive/2026-11-13-blocos.json`: 324
   arquivos. A peça vem da planilha de dados dos produtos ("_DADOS DOS PRODUTOS EXTRAIDOS DO SITE"), e o com e sem braço
   se separa pelo código do nome do arquivo (C-BR, S-BR). A pasta "POLTRONA MAJESTIC" tem os 16 módulos do Sofá Majestic.
-  Ficaram de fora 33 arquivos de peças que não estão no site e 3 da Melina Casa na pasta da Giardini.
+  Ficaram de fora 33 arquivos de peças que não estão no site e 3 da Melina Casa na pasta da Giardini. Enviados 323
+  (conferidos pela API: os títulos no ar batem com a lista); o SketchUp do Balanço Pina (258 MB) passa do limite de 200 MB
+  e foi pedido mais leve no PDF.
 - **Acabamentos:** não há mostruário em nenhum dos 5.667 arquivos do Drive "Site Franccino", nem no outro Drive
   compartilhado. Os textos das peças só dizem "conforme mostruário Franccino". O pedido entrou no PDF para a Franccino.
 - **3D:** o navegador não abre SketchUp nem AutoCAD. O SDK da Trimble não tem versão para Linux. A OpenSKP (MIT, lê
