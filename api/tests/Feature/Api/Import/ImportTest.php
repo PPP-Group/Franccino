@@ -309,3 +309,22 @@ it('removes only the listed photos of that record and collection', function () {
         'ids' => [$keep->id],
     ], $auth)->assertStatus(422);
 });
+
+it('takes the 3D model of a product as a GLB on the private disk', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $product = publishedProduct();
+    $auth = ['Authorization' => 'Bearer abc123'];
+    $glb = UploadedFile::fake()->createWithContent('aura.glb', "glTF\x02\x00\x00\x00".str_repeat("\x00", 64));
+
+    $this->post('/api/import/media', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'collection' => 'model_3d',
+        'file' => $glb,
+    ], $auth)->assertCreated()->assertJsonPath('data.collection', 'model_3d');
+
+    $media = $product->refresh()->getFirstMedia('model_3d');
+    expect($media)->not->toBeNull()
+        ->and($media->disk)->toBe('downloads');
+    Storage::disk('downloads')->assertExists($media->getPathRelativeToRoot());
+});
