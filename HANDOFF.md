@@ -1278,3 +1278,22 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   verificação de segurança da sessão bloqueou a remoção no preview. Roda com o ok do tech lead, numa máquina com o
   `CONTENT_IMPORT_TOKEN`, ou numa sessão com a permissão liberada.
 - Apagar o "Produto de Teste" publicado no preview (painel).
+
+### 30.2 13/11/2026 (tarde): remoções, Produto de Teste, blocos que faltavam, acabamentos e 3D
+
+- **Remoções aprovadas e feitas:** as 70 fotos de `design/drive/2026-11-13-remover.json` saíram do preview.
+- **Produto de Teste:** a migration `2026_11_13_110000_remove_test_product` o tira do ar no deploy. A exclusão é
+  reversível (soft delete) e só pega a peça com esse nome e esse endereço.
+- **Blocos que faltavam:** o Drive "Site Franccino" tem 410 blocos (250 SketchUp, 159 AutoCAD, 1 DXF), quase todos
+  enviados em 16/10, e o lote de 12/11 levou só 53. Os outros estão em `design/drive/2026-11-13-blocos.json`: 324
+  arquivos. A peça vem da planilha de dados dos produtos ("_DADOS DOS PRODUTOS EXTRAIDOS DO SITE"), e o com e sem braço
+  se separa pelo código do nome do arquivo (C-BR, S-BR). A pasta "POLTRONA MAJESTIC" tem os 16 módulos do Sofá Majestic.
+  Ficaram de fora 33 arquivos de peças que não estão no site e 3 da Melina Casa na pasta da Giardini.
+- **Acabamentos:** não há mostruário em nenhum dos 5.667 arquivos do Drive "Site Franccino", nem no outro Drive
+  compartilhado. Os textos das peças só dizem "conforme mostruário Franccino". O pedido entrou no PDF para a Franccino.
+- **3D:** o navegador não abre SketchUp nem AutoCAD. O SDK da Trimble não tem versão para Linux. A OpenSKP (MIT, lê
+  SketchUp e exporta glTF) é a saída; instalá-la nesta sessão foi bloqueado pela verificação de segurança e precisa do
+  ok do tech lead. O AutoCAD aqui é desenho 2D: não serve para o visualizador 3D.
+- **PDF para a Franccino** ("O que precisamos para terminar o site", 13/11): reúne o PDF da manhã e todas as
+  pendências com eles (acabamentos, medidas, fotos, blocos, peças novas, textos, dados dos filtros, Clara Arte, vídeos,
+  contas e decisões). Entregue ao Pedro Ivo; não está no repositório.

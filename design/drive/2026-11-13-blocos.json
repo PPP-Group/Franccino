@@ -813,7 +813,7 @@
       "key": "banqueta-fran",
       "type": "block_3d",
       "title": "Bloco 3D (SketchUp) – sem braço, estofada",
-      "title_en": "3D block (SketchUp) – without arms upholstered",
+      "title_en": "3D block (SketchUp) – without arms, upholstered",
       "size_mb": 6.39
     },
     {
@@ -824,7 +824,7 @@
       "key": "banqueta-fran",
       "type": "block_2d",
       "title": "Bloco 2D (AutoCAD) – sem braço, estofada",
-      "title_en": "2D block (AutoCAD) – without arms upholstered",
+      "title_en": "2D block (AutoCAD) – without arms, upholstered",
       "size_mb": 0.26
     },
     {
@@ -2474,7 +2474,7 @@
       "key": "sofa-antonio",
       "type": "block_3d",
       "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos",
-      "title_en": "3D block (SketchUp) – one, piece, 2 seats",
+      "title_en": "3D block (SketchUp) – single piece, 2 seats",
       "size_mb": 7.78
     },
     {
@@ -2507,7 +2507,7 @@
       "key": "sofa-antonio",
       "type": "block_3d",
       "title": "Bloco 3D (SketchUp) – inteiro, 3 assentos",
-      "title_en": "3D block (SketchUp) – one, piece, 3 seats",
+      "title_en": "3D block (SketchUp) – single piece, 3 seats",
       "size_mb": 5.45
     },
     {
@@ -2573,7 +2573,7 @@
       "key": "sofa-antonio",
       "type": "block_3d",
       "title": "Bloco 3D (SketchUp) – inteiro, 1 assento",
-      "title_en": "3D block (SketchUp) – one, piece, 1 seat",
+      "title_en": "3D block (SketchUp) – single piece, 1 seat",
       "size_mb": 5.39
     },
     {
@@ -2610,14 +2610,190 @@
       "size_mb": 5.35
     },
     {
+      "drive_id": "14uUU22fnvFB0l_5oPgdHLhv8UEFdyWzU",
+      "name": "SOFA MAJESTIC - S-BR C-ENC 2 ASS 1800X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – sem braço, com encosto, 2 assentos, 1800 × 900 mm",
+      "title_en": "3D block (SketchUp) – without arms, with backrest, 2 seats, 1800 × 900 mm",
+      "size_mb": 4.13
+    },
+    {
+      "drive_id": "1bmEUJ1tNAjZxKDihr6J-K3u6TR8xejqm",
+      "name": "SOFA MAJESTIC - C-BR C-ENC 1 ASS 980X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – com braço, com encosto, 1 assento, 980 × 900 mm",
+      "title_en": "3D block (SketchUp) – with arms, with backrest, 1 seat, 980 × 900 mm",
+      "size_mb": 6.81
+    },
+    {
+      "drive_id": "1Ky9I1Wta0MrzYVub5bE-mJZwi9xB9cY9",
+      "name": "SOFA MAJESTIC - S-BR C-ENC 1 ASS 900X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – sem braço, com encosto, 1 assento, 900 × 900 mm",
+      "title_en": "3D block (SketchUp) – without arms, with backrest, 1 seat, 900 × 900 mm",
+      "size_mb": 4.12
+    },
+    {
+      "drive_id": "1v9Zrno_mtScMDkkCt0nZQbuOZAgr_3Dq",
+      "name": "SOFA MAJESTIC - S-BR C-ENC 2 ASS 2200X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – sem braço, com encosto, 2 assentos, 2200 × 900 mm",
+      "title_en": "3D block (SketchUp) – without arms, with backrest, 2 seats, 2200 × 900 mm",
+      "size_mb": 4.18
+    },
+    {
+      "drive_id": "1PZLQv1jJYOuA0042TSd5n2gmEOzWAL2z",
+      "name": "SOFA MAJESTIC - PUFF 900X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – puff, 900 × 900 mm",
+      "title_en": "3D block (SketchUp) – pouf, 900 × 900 mm",
+      "size_mb": 2.52
+    },
+    {
+      "drive_id": "1_e1FbCrnP32t_rW8a6liIFyd6siK5dKa",
+      "name": "SOFA MAJESTIC - CANTO 900X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – canto, 900 × 900 mm",
+      "title_en": "3D block (SketchUp) – corner, 900 × 900 mm",
+      "size_mb": 4.1
+    },
+    {
+      "drive_id": "1QrWXNvm441PaGXERfejmEEWOyLedl9sS",
+      "name": "SOFA MAJESTIC - INTEIRO 2 ASS 1960X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos, 1960 × 900 mm",
+      "title_en": "3D block (SketchUp) – single piece, 2 seats, 1960 × 900 mm",
+      "size_mb": 8.59
+    },
+    {
+      "drive_id": "1ZTbEgpWDuVaSR1lI_EYWyxJ2TPotvCbK",
+      "name": "SOFA MAJESTIC - C-BR C-ENC 2 ASS 1880X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – com braço, com encosto, 2 assentos, 1880 × 900 mm",
+      "title_en": "3D block (SketchUp) – with arms, with backrest, 2 seats, 1880 × 900 mm",
+      "size_mb": 7.99
+    },
+    {
+      "drive_id": "1xn-X5hDnUfVop-nWA2kN-mFE1EIBSWkR",
+      "name": "SOFA MAJESTIC - CHAISE C 1BR C-ENC 980X1650.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – chaise com 1 braço, com encosto, 980 × 1650 mm",
+      "title_en": "3D block (SketchUp) – chaise with 1 arm, with backrest, 980 × 1650 mm",
+      "size_mb": 7.25
+    },
+    {
+      "drive_id": "1qPgg4nM6aW5AkHG-8PNBP2C16t05fPAO",
+      "name": "SOFA MAJESTIC - INTEIRO 2 ASS 2360X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos, 2360 × 900 mm",
+      "title_en": "3D block (SketchUp) – single piece, 2 seats, 2360 × 900 mm",
+      "size_mb": 8.56
+    },
+    {
+      "drive_id": "1djza7Sw4qSD8yxo991BzAWb0WLuEFLEF",
+      "name": "SOFA MAJESTIC - INTEIRO 2 ASS 2650X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos, 2650 × 900 mm",
+      "title_en": "3D block (SketchUp) – single piece, 2 seats, 2650 × 900 mm",
+      "size_mb": 8.56
+    },
+    {
+      "drive_id": "1BQZHnfP4N2R8wjcT6dEWPw6dKyapt_Kv",
+      "name": "SOFA MAJESTIC - C-BR C-ENC 2 ASS 2280X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – com braço, com encosto, 2 assentos, 2280 × 900 mm",
+      "title_en": "3D block (SketchUp) – with arms, with backrest, 2 seats, 2280 × 900 mm",
+      "size_mb": 7.97
+    },
+    {
+      "drive_id": "1PjUYbTycjLZKzV5vcEZ0sWbQNyF_a9gE",
+      "name": "SOFA MAJESTIC - CHAISE C 2BR C-ENC 1060X1650.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – chaise com 2 braços, com encosto, 1060 × 1650 mm",
+      "title_en": "3D block (SketchUp) – chaise with 2 arms, with backrest, 1060 × 1650 mm",
+      "size_mb": 7.19
+    },
+    {
+      "drive_id": "1Ot813rEwJfgAKZs9E12hEvXQqUVQCYf0",
+      "name": "SOFA MAJESTIC - C-BR C-ENC 3 ASS 2780X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – com braço, com encosto, 3 assentos, 2780 × 900 mm",
+      "title_en": "3D block (SketchUp) – with arms, with backrest, 3 seats, 2780 × 900 mm",
+      "size_mb": 7.97
+    },
+    {
+      "drive_id": "1jM4tNRG36L9OOFPndseRpkndx8VsUwLo",
+      "name": "SOFA MAJESTIC.dwg",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_2d",
+      "title": "Bloco 2D (AutoCAD)",
+      "title_en": "2D block (AutoCAD)",
+      "size_mb": 0.45
+    },
+    {
+      "drive_id": "18tVQ_FbE7s4Qfug3VB2jbqgeaXuhtQDz",
+      "name": "SOFA MAJESTIC - S-BR C-ENC 3 ASS 2700X900.skp",
+      "kind": "file",
+      "target": "product",
+      "key": "sofa-majestic",
+      "type": "block_3d",
+      "title": "Bloco 3D (SketchUp) – sem braço, com encosto, 3 assentos, 2700 × 900 mm",
+      "title_en": "3D block (SketchUp) – without arms, with backrest, 3 seats, 2700 × 900 mm",
+      "size_mb": 4.19
+    },
+    {
       "drive_id": "19cOOhXh6kq2iGK8xuuP8j1mUfA6O3aZy",
       "name": "MESA JANTAR JOEY - 2600X1100X745.skp",
       "kind": "file",
       "target": "product",
       "key": "mesa-joey",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 2600 × 1100 × 745 mm",
-      "title_en": "3D block (SketchUp) – 2600 × 1100 × 745 mm",
+      "title": "Bloco 3D (SketchUp) – 2600 ×, 1100 × 745 mm",
+      "title_en": "3D block (SketchUp) – 2600 ×, 1100 × 745 mm",
       "size_mb": 3.14
     },
     {
@@ -2649,8 +2825,8 @@
       "target": "product",
       "key": "mesa-joey",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 2200 × 1100 × 745 mm",
-      "title_en": "3D block (SketchUp) – 2200 × 1100 × 745 mm",
+      "title": "Bloco 3D (SketchUp) – 2200 ×, 1100 × 745 mm",
+      "title_en": "3D block (SketchUp) – 2200 ×, 1100 × 745 mm",
       "size_mb": 3.14
     },
     {
@@ -2660,8 +2836,8 @@
       "target": "product",
       "key": "mesa-joey",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 3000 × 1100 × 745 mm",
-      "title_en": "3D block (SketchUp) – 3000 × 1100 × 745 mm",
+      "title": "Bloco 3D (SketchUp) – 3000 ×, 1100 × 745 mm",
+      "title_en": "3D block (SketchUp) – 3000 ×, 1100 × 745 mm",
       "size_mb": 3.13
     },
     {
@@ -2693,8 +2869,8 @@
       "target": "product",
       "key": "mesa-joey",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 3000 × 1100 × 745 mm",
-      "title_en": "2D block (AutoCAD) – 3000 × 1100 × 745 mm",
+      "title": "Bloco 2D (AutoCAD) – 3000 ×, 1100 × 745 mm",
+      "title_en": "2D block (AutoCAD) – 3000 ×, 1100 × 745 mm",
       "size_mb": 0.24
     },
     {
@@ -2704,8 +2880,8 @@
       "target": "product",
       "key": "mesa-joey",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 2600 × 1100 × 745 mm",
-      "title_en": "2D block (AutoCAD) – 2600 × 1100 × 745 mm",
+      "title": "Bloco 2D (AutoCAD) – 2600 ×, 1100 × 745 mm",
+      "title_en": "2D block (AutoCAD) – 2600 ×, 1100 × 745 mm",
       "size_mb": 0.24
     },
     {
@@ -2715,8 +2891,8 @@
       "target": "product",
       "key": "mesa-joey",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 2200 × 1100 × 745 mm",
-      "title_en": "2D block (AutoCAD) – 2200 × 1100 × 745 mm",
+      "title": "Bloco 2D (AutoCAD) – 2200 ×, 1100 × 745 mm",
+      "title_en": "2D block (AutoCAD) – 2200 ×, 1100 × 745 mm",
       "size_mb": 0.24
     },
     {
@@ -2770,8 +2946,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 2100 × 460 × 640 mm, com porta",
-      "title_en": "3D block (SketchUp) – 2100 × 460 × 640 mm, with door",
+      "title": "Bloco 3D (SketchUp) – 2100 ×, 460 × 640 mm, com porta",
+      "title_en": "3D block (SketchUp) – 2100 ×, 460 × 640 mm, with door",
       "size_mb": 0.69
     },
     {
@@ -2781,8 +2957,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 2500 × 460 × 640 mm, com gaveta",
-      "title_en": "3D block (SketchUp) – 2500 × 460 × 640 mm, with drawer",
+      "title": "Bloco 3D (SketchUp) – 2500 ×, 460 × 640 mm, com gaveta",
+      "title_en": "3D block (SketchUp) – 2500 ×, 460 × 640 mm, with drawer",
       "size_mb": 0.7
     },
     {
@@ -2792,8 +2968,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 2500 × 460 × 640 mm, com gaveta",
-      "title_en": "2D block (AutoCAD) – 2500 × 460 × 640 mm, with drawer",
+      "title": "Bloco 2D (AutoCAD) – 2500 ×, 460 × 640 mm, com gaveta",
+      "title_en": "2D block (AutoCAD) – 2500 ×, 460 × 640 mm, with drawer",
       "size_mb": 0.25
     },
     {
@@ -2803,8 +2979,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – 2100 × 460 × 640 mm, com gaveta",
-      "title_en": "3D block (SketchUp) – 2100 × 460 × 640 mm, with drawer",
+      "title": "Bloco 3D (SketchUp) – 2100 ×, 460 × 640 mm, com gaveta",
+      "title_en": "3D block (SketchUp) – 2100 ×, 460 × 640 mm, with drawer",
       "size_mb": 0.7
     },
     {
@@ -2814,8 +2990,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 2100 × 460 × 640 mm, com porta",
-      "title_en": "2D block (AutoCAD) – 2100 × 460 × 640 mm, with door",
+      "title": "Bloco 2D (AutoCAD) – 2100 ×, 460 × 640 mm, com porta",
+      "title_en": "2D block (AutoCAD) – 2100 ×, 460 × 640 mm, with door",
       "size_mb": 0.25
     },
     {
@@ -2825,8 +3001,8 @@
       "target": "product",
       "key": "buffet-heritage",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – 2100 × 460 × 640 mm, com gaveta",
-      "title_en": "2D block (AutoCAD) – 2100 × 460 × 640 mm, with drawer",
+      "title": "Bloco 2D (AutoCAD) – 2100 ×, 460 × 640 mm, com gaveta",
+      "title_en": "2D block (AutoCAD) – 2100 ×, 460 × 640 mm, with drawer",
       "size_mb": 0.25
     },
     {
@@ -2858,8 +3034,8 @@
       "target": "product",
       "key": "mesa-de-centro-trem",
       "type": "block_2d",
-      "title": "Bloco 2D (AutoCAD) – tampo de pedra, 1600 × 1200 × 350 mm",
-      "title_en": "2D block (AutoCAD) – stone top, 1600 × 1200 × 350 mm",
+      "title": "Bloco 2D (AutoCAD) – tampo de pedra,, 1600 ×, 1200 × 350 mm",
+      "title_en": "2D block (AutoCAD) – stone top,, 1600 ×, 1200 × 350 mm",
       "size_mb": 0.25
     },
     {
@@ -2869,8 +3045,8 @@
       "target": "product",
       "key": "mesa-de-centro-trem",
       "type": "block_3d",
-      "title": "Bloco 3D (SketchUp) – tampo de pedra, 1600 × 1200 × 350 mm",
-      "title_en": "3D block (SketchUp) – stone top, 1600 × 1200 × 350 mm",
+      "title": "Bloco 3D (SketchUp) – tampo de pedra,, 1600 ×, 1200 × 350 mm",
+      "title_en": "3D block (SketchUp) – stone top,, 1600 ×, 1200 × 350 mm",
       "size_mb": 0.37
     },
     {
@@ -3200,7 +3376,7 @@
       "key": "sofa-beijamin",
       "type": "block_3d",
       "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos",
-      "title_en": "3D block (SketchUp) – one, piece, 2 seats",
+      "title_en": "3D block (SketchUp) – single piece, 2 seats",
       "size_mb": 27.57
     },
     {
