@@ -62,8 +62,8 @@ describe('POST /api/revalidate', () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ revalidated: true, tags: ['products', 'home'] });
     expect(revalidateTag).toHaveBeenCalledTimes(2);
-    expect(revalidateTag).toHaveBeenNthCalledWith(1, 'products', 'max');
-    expect(revalidateTag).toHaveBeenNthCalledWith(2, 'home', 'max');
+    expect(revalidateTag).toHaveBeenNthCalledWith(1, 'products', { expire: 0 });
+    expect(revalidateTag).toHaveBeenNthCalledWith(2, 'home', { expire: 0 });
   });
 
   it('rejects an unknown tag', async () => {

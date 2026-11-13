@@ -23,6 +23,7 @@ class DownloadController extends Controller
             'area' => ['sometimes', 'string'],
             'category' => ['sometimes', 'string'],
             'q' => ['sometimes', 'string'],
+            'format' => ['sometimes', 'string', 'max:10'],
             'page' => ['sometimes', 'integer', 'min:1'],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:48'],
         ]);
@@ -30,8 +31,11 @@ class DownloadController extends Controller
         $perPage = $validated['per_page'] ?? 24;
         $page = $validated['page'] ?? 1;
 
+        // Tipo de arquivo (retorno de 13/11/2026): só as peças que têm um arquivo naquele formato (SKP, DWG, GLB...).
+        $format = filled($validated['format'] ?? null) ? strtoupper($validated['format']) : null;
+
         $paginator = ProductQuery::make($validated)
-            ->whereHas('files', fn ($query) => $query->published())
+            ->whereHas('files', fn ($query) => $query->published()->when($format, fn ($query) => $query->whereRaw('upper(format) = ?', [$format])))
             ->with(['files' => fn ($query) => $query->published()->orderBy('sort_order')->orderBy('id')])
             ->paginate($perPage, ['*'], 'page', $page)
             ->appends($request->query());
@@ -49,8 +53,30 @@ class DownloadController extends Controller
                 'last_page' => $paginator->lastPage(),
                 'per_page' => $paginator->perPage(),
                 'total' => $paginator->total(),
+                'formats' => $this->formats(),
             ],
         ]);
+    }
+
+    /**
+     * Os formatos que existem nos arquivos publicados das peças publicadas, com quantas peças têm cada um (para o filtro
+     * "Tipo de arquivo" da Área do Profissional), do mais comum ao menos comum.
+     *
+     * @return list<array{format: string, count: int}>
+     */
+    private function formats(): array
+    {
+        return ProductFile::query()
+            ->published()
+            ->whereNotNull('product_id')
+            ->whereHas('product', fn ($query) => $query->published())
+            ->selectRaw('upper(format) as format, count(distinct product_id) as count')
+            ->groupByRaw('upper(format)')
+            ->orderByDesc('count')
+            ->orderBy('format')
+            ->get()
+            ->map(fn (ProductFile $file) => ['format' => (string) $file->format, 'count' => (int) $file->getAttribute('count')])
+            ->all();
     }
 
     /**

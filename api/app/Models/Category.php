@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Translatable\HasTranslations;
 
 class Category extends Model implements HasMedia
@@ -21,6 +22,9 @@ class Category extends Model implements HasMedia
 
     /** @var list<string> */
     public $translatable = ['name', 'singular_name', 'slug', 'description', 'seo_title', 'seo_description'];
+
+    /** Capa de reserva na lista da API (a da primeira peça, `CategorySampleCovers`); não é coluna do banco. */
+    public ?Media $sampleCover = null;
 
     /**
      * @return array<string, string>

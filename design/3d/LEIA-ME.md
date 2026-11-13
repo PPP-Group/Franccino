@@ -15,7 +15,7 @@ com bloco SketchUp no Drive "Site Franccino" é convertida para GLB e enviada co
   bege e a borracha preta da Chaise Coce).
 - A cor é convertida de sRGB para linear; sem isso, o cinza sai branco.
 - Face sem material fica branca, como o próprio SketchUp mostra. Vários blocos da Franccino não têm material nenhum
-  (ex.: Banco Dublin, Escrivaninha Pampulha, Mesa lateral Eros). Esses saem brancos porque o arquivo é assim. A cor
+  (ex.: Banco Dublin, Escrivaninha Pampulha, Mesa lateral Eros). Os arquivos com textura (ex.: Aparador Xove, Banqueta Apruma) saem com a textura, que pede o Pillow. Os sem material saem brancos porque o arquivo é assim. A cor
   real da peça só vem com os acabamentos aplicados no SketchUp ou com o mostruário.
 
 O patch corrige duas coisas no OpenSKP. No formato antigo do SketchUp, ele ignorava o material do componente. Na face
@@ -24,7 +24,7 @@ sem material, ele usava a cor da etiqueta (Layer0 rosa) no lugar do branco padr�
 ## Rodar
 
 ```bash
-python3 -m venv skpenv && skpenv/bin/pip install openskp==1.5.0 trimesh numpy
+python3 -m venv skpenv && skpenv/bin/pip install openskp==1.5.0 trimesh numpy pillow
 cd skpenv/lib/python3*/site-packages/openskp && patch -p0 < <repo>/design/3d/openskp-1.5.0-materiais.patch
 SAIDA=/tmp/glb skpenv/bin/python -I <repo>/design/3d/converter.py      # GOOGLE_DRIVE_TOKEN no ambiente
 SAIDA=/tmp/glb python3 -I <repo>/design/3d/enviar.py --simular          # CONTENT_IMPORT_TOKEN no ambiente

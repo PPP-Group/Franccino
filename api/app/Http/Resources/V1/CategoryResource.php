@@ -59,7 +59,7 @@ class CategoryResource extends JsonResource
 
         return [
             ...$ref,
-            'cover' => ImagePresenter::present($cover, $ref['name']),
+            'cover' => ImagePresenter::present($cover ?? $category->sampleCover, $ref['name']),
             'product_count' => $category->products_count ?? $category->products()->published()->count(),
         ];
     }
