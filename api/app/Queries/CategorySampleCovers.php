@@ -26,7 +26,7 @@ class CategorySampleCovers
 
         $locale = app(ContentLocale::class)->current();
 
-        return Product::published()
+        $products = Product::published()
             ->when($areaId, fn ($query) => $query->where('area_id', $areaId))
             ->whereIn('category_id', $categoryIds)
             ->whereHas('media', fn ($query) => $query->where('collection_name', 'cover'))
@@ -35,9 +35,17 @@ class CategorySampleCovers
             ->orderBy('sort_order')
             ->orderBy("name->{$locale}")
             ->orderBy('id')
-            ->get()
-            ->unique('category_id')
-            ->mapWithKeys(fn (Product $product) => [$product->category_id => $product->getFirstMedia('cover')])
-            ->filter();
+            ->get();
+
+        /** @var array<int, Media> $covers */
+        $covers = [];
+        foreach ($products as $product) {
+            $cover = $product->getFirstMedia('cover');
+            if ($cover !== null && ! isset($covers[$product->category_id])) {
+                $covers[$product->category_id] = $cover;
+            }
+        }
+
+        return collect($covers);
     }
 }
