@@ -49,6 +49,12 @@ const nextConfig: NextConfig = {
     return [
       { source: '/pt/downloads', destination: '/pt/area-do-profissional', permanent: true },
       { source: '/en/downloads', destination: '/en/professionals', permanent: true },
+      // Projetos virou só "Corporativo" (13/11/2026): os endereços antigos levam ao novo.
+      { source: '/pt/projetos', destination: '/pt/corporativo', permanent: true },
+      { source: '/pt/projetos/:slug', destination: '/pt/corporativo/:slug', permanent: true },
+      { source: '/en/projects', destination: '/en/corporate', permanent: true },
+      { source: '/en/projects/:slug', destination: '/en/corporate/:slug', permanent: true },
+      { source: '/en/contract', destination: '/en/corporate', permanent: true },
     ];
   },
 };

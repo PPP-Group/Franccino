@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.8). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.9). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1428,3 +1428,13 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   `design/pontos/LEIA-ME.md`.
 - **Depois do deploy:** `python3 -I design/pontos/enviar.py design/pontos/2026-11-13-pontos.json` (com o
   `CONTENT_IMPORT_TOKEN` no ambiente).
+
+### 30.9 13/11/2026 (noite): só "Corporativo", nunca "/projetos"
+
+- Pedido do tech lead: no site só existe `/pt/corporativo` (e `/en/corporate`). A listagem e as páginas dos projetos
+  passaram para `/pt/corporativo` e `/pt/corporativo/<projeto>` (`web/src/i18n/routing.ts`); a página duplicada
+  "Projetos corporativos" (`app/[locale]/corporate`) saiu; o conteúdo da página vem de Páginas → "Corporativo" no painel.
+- `/pt/projetos`, `/pt/projetos/<projeto>`, `/en/projects` e `/en/contract` redirecionam (308, `next.config.ts`).
+- Redirects do site antigo (`api/config/franccino.php`): `/projetos`, `/cases` e os projetos apontam para
+  `/pt/corporativo`. **Depois do deploy, rodar `php artisan franccino:redirects:generate` no VPS** para regravar os
+  destinos (até lá, os antigos passam pelo redirecionamento acima e chegam ao mesmo lugar).
