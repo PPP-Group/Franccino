@@ -8,6 +8,8 @@ export const PROGRAMS = [
   { key: 'sketchup', type: 'block_3d', formats: ['SKP'] },
   { key: 'autocad', type: 'block_2d', formats: ['DWG', 'DXF'] },
   { key: 'revit', type: 'block_3d', formats: ['RFA'] },
+  // GLB: o 3D em formato aberto (Blender, visualizadores e realidade aumentada), retorno de 13/11/2026.
+  { key: 'glb', type: 'block_3d', formats: ['GLB', 'GLTF'] },
 ] as const;
 
 /** Arquivo de bloco de um dos programas acima (os outros arquivos seguem na lista de downloads). */

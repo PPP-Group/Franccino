@@ -8,7 +8,7 @@ import { PageHead } from '@/components/layout/PageHead';
 import { Select } from '@/components/ui/Select';
 import type { Locale } from '@/i18n/config';
 import type { DownloadFile, Paginated, ProductCard } from '@/lib/api/types';
-import { getAreas, getDownloads, getProductDetails } from '@/lib/api/catalog';
+import { getAreas, getDownloads, getProductDetails, type DownloadFormat } from '@/lib/api/catalog';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { getPage } from '@/lib/api/content';
 import { isValidationError } from '@/lib/api/errors';
@@ -16,6 +16,16 @@ import { firstValue, parsePositiveInteger, type RawSearchParams } from '@/lib/ap
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type DownloadCard = ProductCard & { files: DownloadFile[] };
+
+/** Nome do programa de cada formato, no filtro "Tipo de arquivo" (o formato sem nome aparece só com a extensão). */
+const FORMAT_PROGRAMS: Record<string, string> = {
+  SKP: 'SketchUp',
+  DWG: 'AutoCAD',
+  DXF: 'AutoCAD',
+  RFA: 'Revit',
+  GLB: '3D',
+  PDF: 'PDF',
+};
 
 const EMPTY_DOWNLOADS: Paginated<DownloadCard> = {
   data: [],
@@ -56,17 +66,20 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
   const area = firstValue(rawSearchParams.area);
   const category = firstValue(rawSearchParams.category);
   const q = firstValue(rawSearchParams.q);
+  const format = firstValue(rawSearchParams.format);
   const currentPage = parsePositiveInteger(firstValue(rawSearchParams.page));
 
-  let downloads: Paginated<DownloadCard>;
+  let downloads: Paginated<DownloadCard> & { meta: { formats?: DownloadFormat[] } };
   try {
-    downloads = await getDownloads(locale, { area, category, q, page: currentPage });
+    downloads = await getDownloads(locale, { area, category, q, format, page: currentPage });
   } catch (error) {
     if (!isValidationError(error)) {
       throw error;
     }
     downloads = EMPTY_DOWNLOADS;
   }
+
+  const formats = downloads.meta.formats ?? [];
 
   // Mesmo layout da tabela técnica do catálogo (retorno de 13/11/2026): fotos no hover, medida, a foto que cresce até a
   // peça e o "+" da lista de desejos. A tabela usa o detalhe de cada peça da página.
@@ -87,6 +100,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
         ...(area ? { area } : {}),
         ...(category ? { category } : {}),
         ...(q ? { q } : {}),
+        ...(format ? { format } : {}),
         page: String(next),
       },
     }) as const;
@@ -114,6 +128,31 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
             ]}
           />
         </div>
+        {formats.length > 0 ? (
+          <div className="field">
+            <label id="downloads-format-label" htmlFor="downloads-format">
+              {t('filters.format')}
+            </label>
+            <Select
+              id="downloads-format"
+              labelId="downloads-format-label"
+              name="format"
+              defaultValue={format?.toUpperCase() ?? ''}
+              options={[
+                { value: '', label: t('filters.allFormats') },
+                ...formats.map((option) => ({
+                  value: option.format,
+                  label: t('filters.formatOption', {
+                    name: FORMAT_PROGRAMS[option.format]
+                      ? `${FORMAT_PROGRAMS[option.format]} (${option.format})`
+                      : option.format,
+                    count: option.count,
+                  }),
+                })),
+              ]}
+            />
+          </div>
+        ) : null}
         <div className="field">
           <label htmlFor="downloads-q">{t('filters.search')}</label>
           <input id="downloads-q" name="q" type="search" defaultValue={q} />
@@ -134,7 +173,7 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
           ) : null}
           {/* A chave remonta a tabela a cada página: as linhas novas entram com fade, não de uma vez. */}
           <div
-            key={`${area ?? ''}-${category ?? ''}-${q ?? ''}-${downloads.meta.current_page}`}
+            key={`${area ?? ''}-${category ?? ''}-${q ?? ''}-${format ?? ''}-${downloads.meta.current_page}`}
             className="catalog-results"
           >
             <TechTable rows={rows} />

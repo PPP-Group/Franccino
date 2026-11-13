@@ -303,7 +303,8 @@
       "programs": {
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
-        "revit": "Revit"
+        "revit": "Revit",
+        "glb": "GLB (3D)"
       },
       "professionalsPiece": "See this piece's files in the Professionals area"
     },
@@ -457,7 +458,10 @@
       "area": "Line",
       "allAreas": "All lines",
       "search": "Find a piece",
-      "submit": "Filter"
+      "submit": "Filter",
+      "format": "File type",
+      "allFormats": "All types",
+      "formatOption": "{name} · {count, plural, one {# piece} other {# pieces}}"
     },
     "linkLabel": "Download {title} ({format})",
     "formatAndSize": "{format} · {size}",
