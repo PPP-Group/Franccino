@@ -59,6 +59,7 @@ Route::prefix('import')->name('api.import.')->middleware(['no-store', 'import.to
     Route::post('media', [ImportController::class, 'media'])->name('media');
     Route::post('media/remove', [ImportController::class, 'removeMedia'])->name('media.remove');
     Route::post('files', [ImportController::class, 'files'])->name('files');
+    Route::post('finishes', [ImportController::class, 'finishes'])->name('finishes');
     Route::post('covers', [ImportController::class, 'covers'])->name('covers');
     Route::post('content', [ImportController::class, 'content'])->name('content');
     Route::post('translations', [ImportController::class, 'translations'])->name('translations');
