@@ -237,7 +237,7 @@ it('takes the page video of a project and photos for a named gallery of a page',
     $content = $page->refresh()->content;
     expect($content)->toHaveCount(2)
         ->and($content[0]['data']['images'])->toHaveCount(1)
-        ->and($content[1]['data']['caption'])->toBe(['pt' => 'Peças em produção', 'en' => 'Pieces being made'])
+        ->and($content[1]['data']['caption'])->toEqual(['pt' => 'Peças em produção', 'en' => 'Pieces being made'])
         ->and($content[1]['data']['images'])->toHaveCount(1);
 });
 
