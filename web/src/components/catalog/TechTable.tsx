@@ -11,6 +11,16 @@ import { morphTypes } from '@/lib/ui/morph';
 import { formatDimension } from '@/lib/format/dimensions';
 import { RowLinks } from './RowLinks';
 import { RowPeek } from './RowPeek';
+import type { DownloadFile } from '@/lib/api/types';
+
+/** Arquivos agrupados por formato, na ordem em que o primeiro de cada formato aparece. */
+function filesByFormat(files: DownloadFile[]): [string, DownloadFile[]][] {
+  const groups = new Map<string, DownloadFile[]>();
+  for (const file of files) {
+    groups.set(file.format, [...(groups.get(file.format) ?? []), file]);
+  }
+  return [...groups.entries()];
+}
 
 /**
  * Assinatura do DESIGN.md para arquitetos: densa, com rolagem horizontal própria. No desktop, passar o mouse numa linha
@@ -129,9 +139,28 @@ export function TechTable({ rows: unsorted }: { rows: TechnicalRow[] }) {
                   <td>
                     {files.length > 0 ? (
                       <div className="file-links">
-                        {files.map((file) => (
-                          <DownloadButton key={file.id} file={file} variant="link" />
-                        ))}
+                        {/*
+                          Um link por formato (revisão de 13/11/2026: o Sofá Noa mostrava "SKP" 15 vezes). Com várias
+                          versões no mesmo formato, o link leva à seção "Integre ao seu projeto" da peça, que dá o nome
+                          de cada versão.
+                        */}
+                        {filesByFormat(files).map(([format, group]) =>
+                          group.length === 1 ? (
+                            <DownloadButton key={group[0].id} file={group[0]} variant="link" />
+                          ) : (
+                            <Link
+                              key={format}
+                              className="file-links__many"
+                              href={{
+                                pathname: '/products/[slug]',
+                                params: { slug: product.slug },
+                                hash: 'library-title',
+                              }}
+                            >
+                              {t('filesMany', { format, count: group.length })}
+                            </Link>
+                          ),
+                        )}
                       </div>
                     ) : (
                       t('empty')

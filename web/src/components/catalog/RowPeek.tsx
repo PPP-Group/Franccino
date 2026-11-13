@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Image } from '@/lib/api/types';
 import { PREVIEW_COUNT } from '@/lib/catalog/technical';
-import { peekBox, peekPosition, PEEK_PHOTO } from '@/lib/catalog/row-peek';
+import { naturalBox, naturalPhoto, peekBox, peekPosition, PEEK_PHOTO } from '@/lib/catalog/row-peek';
 import { REDUCED_MOTION } from '@/lib/ui/use-reduced-motion';
 
 /** Só com mouse de verdade: no toque não há "passar por cima", e a prévia cobriria a tabela. */
@@ -36,6 +36,7 @@ export function RowPeek({
   container = 'tbody',
   className,
   beside = false,
+  natural = false,
 }: {
   items: RowPeekItem[];
   /** Onde ficam as linhas (`[data-row-id]`), entre os irmãos da prévia: o corpo da tabela ou a lista da busca. */
@@ -46,15 +47,26 @@ export function RowPeek({
    * lista, ou à esquerda sem espaço, na altura da opção sob o mouse.
    */
   beside?: boolean;
+  /** Uma foto só, na proporção dela (lista de opções dos filtros), em vez do quadro 4:3 das fotos da tabela. */
+  natural?: boolean;
 }) {
   const layerRef = useRef<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [shownId, setShownId] = useState<number | null>(null);
   // Quantas fotos cada linha abre (a caixa muda de largura com elas).
   const counts = useRef(new Map<number, number>());
+  const boxes = useRef(new Map<number, { width: number; height: number }>());
   useEffect(() => {
     counts.current = new Map(items.map((item) => [item.id, Math.min(item.images.length, PREVIEW_COUNT)]));
-  }, [items]);
+    boxes.current = new Map(
+      items.map((item) => [
+        item.id,
+        natural
+          ? naturalBox(item.images[0]?.width ?? null, item.images[0]?.height ?? null)
+          : peekBox(Math.min(item.images.length, PREVIEW_COUNT)),
+      ]),
+    );
+  }, [items, natural]);
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -93,7 +105,7 @@ export function RowPeek({
       const id = Number(row.dataset.rowId);
       setActiveId(id);
       setShownId(id);
-      const box = peekBox(counts.current.get(id) ?? 1);
+      const box = boxes.current.get(id) ?? peekBox(counts.current.get(id) ?? 1);
       const next = beside
         ? besidePosition(body.getBoundingClientRect(), event.clientY, box)
         : peekPosition(event.clientX, event.clientY, window.innerWidth, window.innerHeight, box);
@@ -129,8 +141,9 @@ export function RowPeek({
   }, [container, beside]);
 
   const shown = items.find((item) => item.id === shownId);
-  const photos = shown ? shown.images.slice(0, PREVIEW_COUNT) : [];
-  const box = peekBox(photos.length);
+  const photos = shown ? shown.images.slice(0, natural ? 1 : PREVIEW_COUNT) : [];
+  const photo = natural && photos[0] ? naturalPhoto(photos[0].width, photos[0].height) : null;
+  const box = photo ? naturalBox(photos[0].width, photos[0].height) : peekBox(photos.length);
   return (
     <div
       ref={layerRef}
@@ -152,10 +165,11 @@ export function RowPeek({
                   '--i': index,
                   '--peek-rotate': index % 2 ? '1.5deg' : '-1.5deg',
                   zIndex: photos.length - index,
+                  ...(photo ? { width: photo.width, height: photo.height } : {}),
                 } as CSSProperties
               }
             >
-              <ApiImage image={image} sizes={`${PEEK_PHOTO.width}px`} />
+              <ApiImage image={image} sizes={`${photo ? photo.width : PEEK_PHOTO.width}px`} />
             </div>
           ))}
         </div>

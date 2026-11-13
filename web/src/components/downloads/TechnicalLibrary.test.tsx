@@ -28,6 +28,7 @@ describe('TechnicalLibrary', () => {
   it('names each version when a program has more than one block', () => {
     const html = renderWithIntl(
       <TechnicalLibrary
+        productName="Sofá Noa"
         files={[
           file(1, 'block_2d', 'DWG', 'Bloco 2D'),
           file(2, 'block_3d', 'SKP', 'Bloco 3D – canto'),

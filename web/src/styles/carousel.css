@@ -131,7 +131,7 @@
 }
 
 .feature-carousel__frame--empty {
-  background: var(--portrait-ground);
+  background: var(--sand);
 }
 
 .feature-carousel__frame img {

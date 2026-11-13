@@ -30,7 +30,8 @@
   --hero-shade-clear: rgba(12, 11, 10, 0);
   --on-photo-muted: rgba(255, 255, 255, 0.86);
   --on-photo-rule: rgba(255, 255, 255, 0.4);
-  --portrait-ground: #e4e1da;
+  /* Atrás dos retratos dos designers: transparente, para a foto que cresce não encaixar num quadro bege (13/11/2026). */
+  --portrait-ground: transparent;
   /* Faixa de carregamento das fotos (motion.css). */
   --shimmer-base: #f2f0eb;
   --shimmer-light: #fbfaf8;

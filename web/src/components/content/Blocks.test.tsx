@@ -17,7 +17,7 @@ describe('Blocks', () => {
       />,
     );
     expect(html).toContain(
-      '<div class="faq"><details><summary>Entregam em todo o Brasil?</summary><p>Resposta.</p></details></div>',
+      '<details class="faq__item"><summary><span class="faq__num num" aria-hidden="true">01</span><span class="faq__question">Entregam em todo o Brasil?</span>',
     );
   });
 

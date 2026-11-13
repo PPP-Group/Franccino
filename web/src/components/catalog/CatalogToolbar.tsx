@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import type { AppHref } from '@/i18n/navigation';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
 import { Select } from '@/components/ui/Select';
-import { ViewToggle } from './ViewToggle';
+import { ViewHiddenInput, ViewToggle } from './ViewToggle';
 
 /** Um filtro da barra: uma lista de opções com foto flutuando ao lado no hover (como o de designer). */
 export type ToolbarFilter = {
@@ -14,6 +14,8 @@ export type ToolbarFilter = {
   allLabel: string;
   options: FilterOption[];
   active?: string;
+  /** Fotos das opções em preto e branco (designers). */
+  imageTone?: 'mono';
 };
 
 type CatalogToolbarProps = {
@@ -27,7 +29,7 @@ type CatalogToolbarProps = {
   formAction: string;
   /** Demais filtros da URL, preservados no envio do form. */
   hiddenQuery: Record<string, string>;
-  /** "Anterior" e "Próxima" ao lado da contagem (`Pagination position="top"`). */
+  /** "Anterior" e "Próxima" ao lado da contagem (`Pagination position="top"`), só na tabela técnica. */
   pager?: ReactNode;
 };
 
@@ -48,9 +50,12 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
       <div className="toolbar__end">
         {filters.length > 0 ? (
           <FilterForm className="filter-form" action={props.formAction}>
-            {Object.entries(props.hiddenQuery).map(([name, value]) => (
-              <input key={name} type="hidden" name={name} value={value} />
-            ))}
+            {Object.entries(props.hiddenQuery)
+              .filter(([name]) => name !== 'view')
+              .map(([name, value]) => (
+                <input key={name} type="hidden" name={name} value={value} />
+              ))}
+            <ViewHiddenInput />
             {filters.map((filter) => (
               <Fragment key={filter.name}>
                 <label
@@ -65,6 +70,7 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
                   labelId={`${filter.name}-filter-label`}
                   name={filter.name}
                   defaultValue={filter.active ?? ''}
+                  imageTone={filter.imageTone}
                   options={[
                     { value: '', label: filter.allLabel },
                     ...filter.options.map((option) => ({
@@ -84,7 +90,10 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
             </button>
           </FilterForm>
         ) : null}
-        <ViewToggle view={props.view} hrefFor={(next) => props.hrefFor({ view: next })} />
+        <ViewToggle
+          view={props.view}
+          hrefs={{ grid: props.hrefFor({ view: 'grid' }), table: props.hrefFor({ view: 'table' }) }}
+        />
       </div>
     </div>
   );

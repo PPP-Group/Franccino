@@ -25,6 +25,8 @@ export type SelectProps = {
   labelId?: string;
   'aria-invalid'?: boolean;
   'aria-describedby'?: string;
+  /** Foto da opção em preto e branco (retratos dos designers, como nas páginas deles). */
+  imageTone?: 'mono';
 };
 
 const TYPE_AHEAD_RESET_MS = 500;
@@ -61,6 +63,7 @@ export function Select({
   labelId,
   'aria-invalid': ariaInvalid,
   'aria-describedby': ariaDescribedBy,
+  imageTone,
 }: SelectProps) {
   const listId = useId();
   const initial = defaultValue ?? options[0]?.value ?? '';
@@ -297,8 +300,9 @@ export function Select({
         <RowPeek
           items={peeks}
           container=".select__list"
-          className="row-peek--top row-peek--portrait"
+          className={imageTone === 'mono' ? 'row-peek--top row-peek--mono' : 'row-peek--top'}
           beside
+          natural
         />
       ) : null}
     </div>

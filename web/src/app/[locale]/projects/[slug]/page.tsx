@@ -118,7 +118,7 @@ export default async function ProjectPage({ params }: Props) {
         {project.video ? (
           <PageVideo video={project.video} title={t('video', { name: project.title })} id="project-video" />
         ) : null}
-        <EditorialGallery images={project.gallery} label={t('gallery')} />
+        <EditorialGallery images={project.gallery} label={t('gallery')} collapse />
         {project.products.length > 0 ? (
           <section aria-labelledby="project-pieces" className="project-section" data-reveal>
             <div className="section-head">

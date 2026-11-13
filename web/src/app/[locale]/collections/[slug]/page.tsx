@@ -5,10 +5,13 @@ import { PiecesSection } from '@/components/catalog/PiecesSection';
 import { CardRail } from '@/components/content/CardRail';
 import { DesignerPortraits } from '@/components/content/DesignerPortraits';
 import { EditorialGallery } from '@/components/content/EditorialGallery';
+import { GalleryDialog } from '@/components/content/GalleryDialog';
 import { neighbours } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { PageCoverArt } from '@/components/layout/PageBanner';
+import { ApiImage } from '@/components/media/ApiImage';
 import { PageVideo } from '@/components/media/PageVideo';
+import { fixedBoxCoverSizes } from '@/lib/images/cover-sizes';
 import { morphName } from '@/lib/ui/morph';
 import { PageHead } from '@/components/layout/PageHead';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
@@ -44,10 +47,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+/** Miniaturas da galeria embaixo do texto da coleção. */
+const GALLERY_PREVIEWS = 3;
+
 /**
  * Página da coleção (rodada 3): capa parada no topo, título e texto à esquerda e os designers à direita com retrato
- * (as duas colunas começam na altura do título), galeria
- * editorial, as peças e, para continuar, "Outras coleções" numa faixa areia e "Peças que você viu".
+ * (as duas colunas começam na altura do título). Revisão de 13/11/2026: as peças vêm logo depois da introdução; a
+ * galeria fica em miniaturas embaixo do texto, com "Ver imagens" abrindo todas; o vídeo vem depois das peças. Para
+ * continuar, "Outras coleções" numa faixa areia e "Peças que você viu".
  */
 export default async function CollectionPage({ params }: Props) {
   const { locale: raw, slug } = await params;
@@ -87,7 +94,28 @@ export default async function CollectionPage({ params }: Props) {
           {collection.description ? (
             <RichText html={collection.description} className="prose collection-intro__text" />
           ) : null}
+          {collection.gallery.length > 0 ? (
+            <GalleryDialog
+              title={t('gallery')}
+              count={collection.gallery.length}
+              previews={collection.gallery.slice(0, GALLERY_PREVIEWS).map((image) => (
+                <ApiImage
+                  key={image.id}
+                  image={image}
+                  sizes={fixedBoxCoverSizes(image, 1, [{ width: '96px' }])}
+                />
+              ))}
+            >
+              <EditorialGallery images={collection.gallery} label={t('gallery')} />
+            </GalleryDialog>
+          ) : null}
         </PageHead>
+        <PiecesSection
+          id="collection-pieces"
+          title={t('piecesTitle')}
+          locale={locale}
+          products={collection.products}
+        />
         {collection.video ? (
           <PageVideo
             video={collection.video}
@@ -95,13 +123,6 @@ export default async function CollectionPage({ params }: Props) {
             id="collection-video"
           />
         ) : null}
-        <EditorialGallery images={collection.gallery} label={t('gallery')} />
-        <PiecesSection
-          id="collection-pieces"
-          title={t('piecesTitle')}
-          locale={locale}
-          products={collection.products}
-        />
       </div>
       {others.length > 0 ? (
         <section className="band band--sand" aria-labelledby="other-collections">

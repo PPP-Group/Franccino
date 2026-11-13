@@ -281,3 +281,31 @@ it('adds a film to a page as a video block, keeping the YouTube one', function (
         ->and($content[1]['data']['file'])->toStartWith('videos/')
         ->and($content[1]['data']['poster'])->toStartWith('pages/');
 });
+
+it('removes only the listed photos of that record and collection', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $product = publishedProduct();
+    $auth = ['Authorization' => 'Bearer abc123'];
+    $keep = $product->addMedia(UploadedFile::fake()->image('a.jpg'))->toMediaCollection('gallery');
+    $copy = $product->addMedia(UploadedFile::fake()->image('b.jpg'))->toMediaCollection('gallery');
+    $foreign = $product->addMedia(UploadedFile::fake()->image('c.jpg'))->toMediaCollection('cover');
+
+    $this->postJson('/api/import/media/remove', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'collection' => 'gallery',
+        'ids' => [$copy->id, $foreign->id],
+    ], $auth)->assertOk()
+        ->assertJsonPath('data.removed', [$copy->id])
+        ->assertJsonPath('data.not_found', [$foreign->id]);
+
+    expect($product->refresh()->getMedia('gallery')->pluck('id')->all())->toBe([$keep->id])
+        ->and($product->getMedia('cover'))->toHaveCount(1);
+
+    $this->postJson('/api/import/media/remove', [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'collection' => 'model_3d',
+        'ids' => [$keep->id],
+    ], $auth)->assertStatus(422);
+});

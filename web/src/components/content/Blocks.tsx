@@ -22,6 +22,7 @@ import type {
   VideoBlockData,
 } from '@/lib/api/types';
 import { RichText } from './RichText';
+import { ShowMore } from './ShowMore';
 import { Timeline } from './Timeline';
 
 /**
@@ -84,9 +85,17 @@ function FaqBlock({ data }: { data: FaqBlockData }) {
   return (
     <div className="faq">
       {data.items.map((item, index) => (
-        <details key={index}>
-          <summary>{item.question}</summary>
-          <p>{item.answer}</p>
+        <details key={index} className="faq__item">
+          <summary>
+            <span className="faq__num num" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <span className="faq__question">{item.question}</span>
+            <span className="faq__icon" aria-hidden="true" />
+          </summary>
+          <div className="faq__answer">
+            <p>{item.answer}</p>
+          </div>
         </details>
       ))}
     </div>
@@ -136,19 +145,28 @@ function GalleryBlock({ data }: { data: GalleryBlockData }) {
   if (data.images.length === 0) {
     return null;
   }
+  // Galeria longa (Fábrica): as primeiras fotos e "Ver mais" (revisão de 13/11/2026). Com número ímpar, a primeira vai
+  // na largura toda; as que ficam à vista fecham a última linha.
+  const shown = data.images.length % 2 === 1 ? GALLERY_SHOWN + 1 : GALLERY_SHOWN;
+  const hidden = data.images.length > shown + 1 ? data.images.length - shown : 0;
   return (
-    <figure className="block-gallery">
-      <ul>
-        {data.images.map((src, index) => (
-          <li key={index}>
-            <BlockImage src={src} alt="" />
-          </li>
-        ))}
-      </ul>
-      {data.caption ? <figcaption>{data.caption}</figcaption> : null}
-    </figure>
+    <ShowMore hidden={hidden}>
+      <figure className="block-gallery">
+        {data.caption ? <figcaption>{data.caption}</figcaption> : null}
+        <ul>
+          {data.images.map((src, index) => (
+            <li key={index} className={hidden > 0 && index >= shown ? 'is-extra' : undefined}>
+              <BlockImage src={src} alt="" />
+            </li>
+          ))}
+        </ul>
+      </figure>
+    </ShowMore>
   );
 }
+
+/** Fotos à vista numa galeria de bloco fechada (duas linhas de duas). */
+const GALLERY_SHOWN = 4;
 
 function VideoBlock({ data }: { data: VideoBlockData }) {
   const t = useTranslations('mediaLinks');

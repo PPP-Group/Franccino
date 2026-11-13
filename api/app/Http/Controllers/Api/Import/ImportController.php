@@ -111,6 +111,43 @@ class ImportController extends Controller
     }
 
     /**
+     * Removes photos from one record (e.g. the old-site copies of photos that came again from the Drive): only the
+     * given ids that belong to that record and collection; anything else is left alone and reported as not found.
+     */
+    public function removeMedia(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'target' => ['required', Rule::in(array_keys(self::TARGETS))],
+            'key' => ['required', 'string', 'max:200'],
+            'collection' => ['required', 'string'],
+            'ids' => ['required', 'array', 'min:1', 'max:100'],
+            'ids.*' => ['integer'],
+        ]);
+        $target = self::TARGETS[$data['target']];
+        abort_unless(in_array($data['collection'], $target['collections'], true), 422, 'Coleção não aceita para esse tipo.');
+
+        /** @var class-string<Model&HasMedia> $class */
+        $class = $target['model'];
+        $record = $target['key'] === 'position'
+            ? $this->bannerAt((int) $data['key'])
+            : $class::query()->where($target['key'], $data['key'])->firstOrFail();
+
+        $ids = array_map('intval', $data['ids']);
+        $removed = [];
+        foreach ($record->getMedia($data['collection']) as $media) {
+            if (in_array($media->id, $ids, true)) {
+                $media->delete();
+                $removed[] = $media->id;
+            }
+        }
+
+        return response()->json(['data' => [
+            'removed' => $removed,
+            'not_found' => array_values(array_diff($ids, $removed)),
+        ]]);
+    }
+
+    /**
      * A photo for a gallery block of a fixed page, saved on the media disk like a panel upload (`pages/`). Without
      * `caption`, the first gallery block; with it, the gallery block with that caption in Portuguese (e.g. "Peças em
      * produção"), created at the end when the page does not have it. The same file name twice is skipped, so a batch

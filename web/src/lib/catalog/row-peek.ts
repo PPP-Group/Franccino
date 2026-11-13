@@ -12,6 +12,29 @@ export const PEEK_PHOTO = { width: 168, height: 126, step: 180 } as const;
 /** Folga em volta das fotos, para a leve rotação de cada uma não ser cortada. */
 const PAD = 12;
 
+/**
+ * Foto única na proporção dela (lista de opções dos filtros, retorno de 13/11/2026): a capa de coleção deitada fica
+ * deitada, o retrato fica em pé, e todas com a mesma área (o mesmo peso visual), sem passar de `PEEK_NATURAL_MAX`.
+ */
+const PEEK_NATURAL_AREA = 126 * 158;
+const PEEK_NATURAL_MAX = 220;
+
+export function naturalPhoto(width: number | null, height: number | null): { width: number; height: number } {
+  const ratio = width && height ? width / height : 4 / 5;
+  let w = Math.sqrt(PEEK_NATURAL_AREA * ratio);
+  let h = w / ratio;
+  const scale = Math.min(1, PEEK_NATURAL_MAX / Math.max(w, h));
+  w *= scale;
+  h *= scale;
+  return { width: Math.round(w), height: Math.round(h) };
+}
+
+/** Caixa da prévia com uma foto na proporção dela. */
+export function naturalBox(width: number | null, height: number | null): { width: number; height: number } {
+  const photo = naturalPhoto(width, height);
+  return { width: photo.width + PAD * 2, height: photo.height + PAD * 2 };
+}
+
 /** Caixa da prévia aberta, para `count` fotos (de 1 a `PREVIEW_COUNT`). */
 export function peekBox(count: number): { width: number; height: number } {
   const photos = Math.max(1, count);

@@ -391,6 +391,7 @@ pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchid
 | Rota                            | Corpo                                                                                           | Resposta                                      |
 | ------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- |
 | `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`            |
+| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                      | 200 `{ data: { removed, not_found } }`        |
 | `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)     | 201 ou 200 `{ data: { id, replaced, size } }` |
 | `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila)    |
 | `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila)    |
@@ -409,6 +410,8 @@ Mais campos (2026-11-13): em `page`, `caption` (e `caption_en`) escolhe o bloco 
 foto da coleção e põe a nova no lugar dela, na mesma posição (a versão editada no lugar da original). `video` aceita MP4
 até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em `page`, `collection=video` grava um bloco Vídeo com o MP4, `title` (e `title_en`) e a capa opcional em
 `poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
+`media/remove` apaga as fotos `ids` daquele registro e daquela coleção (ex.: a cópia antiga de uma foto que voltou do
+Drive); um id de outro registro ou de outra coleção não é tocado e volta em `not_found`.
 
 `/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
 privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um

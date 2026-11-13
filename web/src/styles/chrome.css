@@ -776,21 +776,6 @@ body:has(.hero--full) #conteudo {
   color: var(--footer-muted);
 }
 
-.footer-link-button {
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
-.footer-link-button:hover,
-.footer-link-button:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
 .footer-legal {
   display: flex;
   flex-wrap: wrap;
@@ -811,8 +796,7 @@ body:has(.hero--full) #conteudo {
   }
 
   .footer-grid ul a,
-  .footer-legal a,
-  .footer-legal .footer-link-button {
+  .footer-legal a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;

@@ -1,0 +1,1530 @@
+{
+ "version": "2026-11-13-medidas",
+ "source": "Medidas do site antigo (franccino.com.br) das peças que o importador não leu: intervalos, várias opções e textos; em mm. Só preenche peça sem medida.",
+ "products": [
+  {
+   "slug": "mesa-lateral-epoca",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Mesa lateral",
+      "en": "Side table"
+     },
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Mesa de centro, tampo em pedra",
+      "en": "Coffee table, stone top"
+     },
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 450,
+     "diameter": 400,
+     "diameter_max": 1000,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Mesa de centro, tampo em MDF",
+      "en": "Coffee table, MDF top"
+     },
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 450,
+     "diameter": 400,
+     "diameter_max": 1300,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-rito",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 300,
+     "diameter_max": 450,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-trem",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 2000,
+     "depth": 1000,
+     "depth_max": 1200,
+     "height": 300,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "aparador-calabria",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 400,
+     "depth_max": 700,
+     "height": 650,
+     "height_max": 800,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "aparador-matriz",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Modelo I",
+      "en": "Model I"
+     },
+     "width": 1800,
+     "depth": 600,
+     "height": 780,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo II",
+      "en": "Model II"
+     },
+     "width": 2200,
+     "depth": 600,
+     "height": 780,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo III",
+      "en": "Model III"
+     },
+     "width": 2600,
+     "depth": 600,
+     "height": 780,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "aparador-neri",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 400,
+     "depth_max": 700,
+     "height": 650,
+     "height_max": 800,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "aparador-xove",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 2200,
+     "depth": 400,
+     "depth_max": 700,
+     "height": 650,
+     "height_max": 800,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-adhara",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1200,
+     "width_max": 1500,
+     "depth": 670,
+     "height": 720,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-barcelona-cem-encosto",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1200,
+     "width_max": 2000,
+     "depth": 590,
+     "height": 840,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-barcelona-sem-encosto",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 450,
+     "height": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-calabria",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 450,
+     "height": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-treviso",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 450,
+     "height": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banqueta-apruma",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Modelo I",
+      "en": "Model I"
+     },
+     "width": 600,
+     "depth": 575,
+     "height": 850,
+     "diameter": null,
+     "seat_height": 600
+    },
+    {
+     "label": {
+      "pt": "Modelo II",
+      "en": "Model II"
+     },
+     "width": 600,
+     "depth": 575,
+     "height": 900,
+     "diameter": null,
+     "seat_height": 650
+    },
+    {
+     "label": {
+      "pt": "Modelo III",
+      "en": "Model III"
+     },
+     "width": 600,
+     "depth": 575,
+     "height": 950,
+     "diameter": null,
+     "seat_height": 700
+    },
+    {
+     "label": {
+      "pt": "Modelo IV",
+      "en": "Model IV"
+     },
+     "width": 600,
+     "depth": 575,
+     "height": 1000,
+     "diameter": null,
+     "seat_height": 750
+    },
+    {
+     "label": {
+      "pt": "Modelo V",
+      "en": "Model V"
+     },
+     "width": 600,
+     "depth": 575,
+     "height": 1050,
+     "diameter": null,
+     "seat_height": 800
+    }
+   ]
+  },
+  {
+   "slug": "banqueta-vest",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 415,
+     "depth": 470,
+     "height": 900,
+     "diameter": null,
+     "seat_height": 600
+    }
+   ]
+  },
+  {
+   "slug": "cadeira-rio",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 550,
+     "depth": 540,
+     "height": 800,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "cama-link",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Colchão 88 × 188",
+      "en": "88 × 188 mattress"
+     },
+     "width": 1010,
+     "depth": null,
+     "height": 1100,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Colchão 138 × 188",
+      "en": "138 × 188 mattress"
+     },
+     "width": 1510,
+     "depth": null,
+     "height": 1100,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Colchão 158 × 198",
+      "en": "158 × 198 mattress"
+     },
+     "width": 1710,
+     "depth": null,
+     "height": 1100,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Colchão 178 × 198",
+      "en": "178 × 198 mattress"
+     },
+     "width": 1910,
+     "depth": null,
+     "height": 1100,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Colchão 193 × 203",
+      "en": "193 × 203 mattress"
+     },
+     "width": 2060,
+     "depth": null,
+     "height": 1100,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "cama-nick",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Modelo I, colchão 88 × 188",
+      "en": "Model I, 88 × 188 mattress"
+     },
+     "width": 1030,
+     "depth": 2140,
+     "height": 1000,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo II, colchão 138 × 188",
+      "en": "Model II, 138 × 188 mattress"
+     },
+     "width": 1530,
+     "depth": 2140,
+     "height": 1000,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo III, colchão 158 × 198",
+      "en": "Model III, 158 × 198 mattress"
+     },
+     "width": 1730,
+     "depth": 2240,
+     "height": 1000,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "chaise-coce",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Individual",
+      "en": "Single"
+     },
+     "width": 900,
+     "depth": 2100,
+     "height": 350,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Dupla",
+      "en": "Double"
+     },
+     "width": 1600,
+     "depth": 2100,
+     "height": 350,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "escrivaninha-bruma",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1500,
+     "width_max": 2000,
+     "depth": 620,
+     "height": 1140,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-bistro-treviso",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 900,
+     "height_max": 1100,
+     "diameter": 600,
+     "diameter_max": 1000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-alex",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 450,
+     "height_max": 600,
+     "diameter": 400,
+     "diameter_max": 600,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-arizona",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-faro",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 350,
+     "height_max": 550,
+     "diameter": 300,
+     "diameter_max": 600,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "a-mesa-lateral-geo",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 500,
+     "height_max": 660,
+     "diameter": 500,
+     "diameter_max": 700,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-havana",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 750,
+     "diameter_max": 1000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-lira",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 430,
+     "height_max": 500,
+     "diameter": 500,
+     "diameter_max": 600,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-neri",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1000,
+     "depth": 400,
+     "depth_max": 1000,
+     "height": 400,
+     "height_max": 650,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-petra",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 600,
+     "width_max": 900,
+     "depth": 400,
+     "depth_max": 500,
+     "height": 400,
+     "height_max": 600,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-porto",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1000,
+     "depth": 400,
+     "depth_max": 1000,
+     "height": 400,
+     "height_max": 650,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-saarinen",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-treviso",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-lateral-avila",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-anne",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 1800,
+     "depth": 800,
+     "depth_max": 1400,
+     "height": 300,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-barcelona",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 600,
+     "width_max": 1500,
+     "depth": 600,
+     "depth_max": 1300,
+     "height": 300,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-havana",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 450,
+     "diameter": 400,
+     "diameter_max": 1300,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-irene",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "diameter": 900,
+     "diameter_max": 1100,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-noa-quadrada",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1500,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": 250,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-palermo",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1500,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": 300,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-rio",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1500,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-so",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1500,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": 250,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-tokio",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1500,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": 250,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-treviso",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 450,
+     "diameter": 400,
+     "diameter_max": 1300,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-tucuma",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 750,
+     "width_max": 2000,
+     "depth": 750,
+     "depth_max": 1500,
+     "height": 300,
+     "height_max": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-asterix",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 1200,
+     "diameter_max": 2200,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-calabria",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3800,
+     "depth": 800,
+     "depth_max": 1400,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-gana",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 800,
+     "depth_max": 1200,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-lazio",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 1400,
+     "diameter_max": 2000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-malaga-outdoor",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 3000,
+     "depth": 800,
+     "depth_max": 1400,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-monaco",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 1200,
+     "diameter_max": 2200,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-nice",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1800,
+     "width_max": 2700,
+     "depth": 1100,
+     "depth_max": 1200,
+     "height": 745,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-orbit",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 1400,
+     "diameter_max": 2000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-parma",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 1400,
+     "diameter_max": 2000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-treviso",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 750,
+     "diameter": 700,
+     "diameter_max": 1400,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "poltrona-tatu",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1100,
+     "depth": 970,
+     "height": 1020,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "puff-gana",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 400,
+     "width_max": 1300,
+     "depth": 400,
+     "depth_max": 1300,
+     "height": 425,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "puff-panama",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 600,
+     "diameter": 400,
+     "diameter_max": 1000,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "puff-totti",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 300,
+     "height_max": 600,
+     "diameter": 300,
+     "diameter_max": 600,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "puff-tris",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1000,
+     "width_max": 1300,
+     "depth": 1000,
+     "depth_max": 1300,
+     "height": 450,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-armani",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Modelo I",
+      "en": "Model I"
+     },
+     "width": 2000,
+     "width_max": 2090,
+     "depth": 1100,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo III",
+      "en": "Model III"
+     },
+     "width": 2100,
+     "width_max": 2390,
+     "depth": 1100,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo IV",
+      "en": "Model IV"
+     },
+     "width": 2400,
+     "width_max": 2690,
+     "depth": 1100,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo V",
+      "en": "Model V"
+     },
+     "width": 2700,
+     "width_max": 2990,
+     "depth": 1100,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo VI",
+      "en": "Model VI"
+     },
+     "width": 3000,
+     "width_max": 3300,
+     "depth": 1100,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-beijamin",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Sofá",
+      "en": "Sofa"
+     },
+     "width": 2600,
+     "depth": 1030,
+     "height": 700,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Chaise",
+      "en": "Chaise"
+     },
+     "width": 1500,
+     "depth": 1820,
+     "height": 700,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-chantang",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 1000,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-cuba",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 800,
+     "height": 620,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-frizzo",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 760,
+     "height": 610,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-lago",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Modelo I",
+      "en": "Model I"
+     },
+     "width": 1800,
+     "width_max": 2090,
+     "depth": 930,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo II",
+      "en": "Model II"
+     },
+     "width": 2100,
+     "width_max": 2390,
+     "depth": 930,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo III",
+      "en": "Model III"
+     },
+     "width": 2400,
+     "width_max": 2690,
+     "depth": 930,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo IV",
+      "en": "Model IV"
+     },
+     "width": 2700,
+     "width_max": 2990,
+     "depth": 930,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Modelo V",
+      "en": "Model V"
+     },
+     "width": 3000,
+     "width_max": 3300,
+     "depth": 930,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-nu",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 900,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-pinot-living",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1600,
+     "width_max": 3040,
+     "depth": 810,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-shangai",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 850,
+     "height": 650,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-so",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 800,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-tagli",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 950,
+     "height": 900,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-tokio",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 1000,
+     "height": 670,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-zurique",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 850,
+     "height": 900,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-royale",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1800,
+     "width_max": 2600,
+     "depth": 1000,
+     "height": 800,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-joey",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "Redonda",
+      "en": "Round"
+     },
+     "width": null,
+     "depth": null,
+     "height": 745,
+     "diameter": 1200,
+     "diameter_max": 1800,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "Retangular",
+      "en": "Rectangular"
+     },
+     "width": 2200,
+     "width_max": 3000,
+     "depth": 1100,
+     "height": 745,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "buffet-heritage",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 2100,
+     "width_max": 2500,
+     "depth": 460,
+     "height": 640,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-centro-arp",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": null,
+     "height": 400,
+     "height_max": 650,
+     "diameter": 400,
+     "diameter_max": 750,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "buffet-bloco",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "150 cm",
+      "en": "150 cm"
+     },
+     "width": 1500,
+     "depth": 500,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "200 cm",
+      "en": "200 cm"
+     },
+     "width": 2000,
+     "depth": 500,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "250 cm",
+      "en": "250 cm"
+     },
+     "width": 2500,
+     "depth": 500,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-arp",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1800,
+     "width_max": 3000,
+     "depth": 800,
+     "depth_max": 1200,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "almofada-zoe",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 250,
+     "width_max": 750,
+     "depth": 250,
+     "depth_max": 750,
+     "height": null,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "banco-arp",
+   "dimensions": [
+    {
+     "label": {
+      "pt": "120 cm",
+      "en": "120 cm"
+     },
+     "width": 1200,
+     "depth": 670,
+     "height": 720,
+     "diameter": null,
+     "seat_height": null
+    },
+    {
+     "label": {
+      "pt": "150 cm",
+      "en": "150 cm"
+     },
+     "width": 1500,
+     "depth": 670,
+     "height": 720,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "mesa-de-jantar-noa",
+   "dimensions": [
+    {
+     "label": null,
+     "width": 1500,
+     "width_max": 3000,
+     "depth": 1000,
+     "depth_max": 1400,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  },
+  {
+   "slug": "sofa-sol",
+   "dimensions": [
+    {
+     "label": null,
+     "width": null,
+     "depth": 800,
+     "height": 750,
+     "diameter": null,
+     "seat_height": null
+    }
+   ]
+  }
+ ]
+}
