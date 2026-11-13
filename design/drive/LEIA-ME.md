@@ -57,3 +57,20 @@ redonda ou para a quadrada conforme o nome do arquivo (RED ou QUAD).
 
 O limite de um arquivo técnico é 200 MB (`franccino.uploads.downloads_max_kb`): o maior bloco, Poltrona Noa, tem
 188 MB.
+
+## Fotos a tirar (13/11/2026)
+
+`2026-11-13-remover.json` lista 70 fotos em 25 registros do preview: versões irmãs que este lote pôs no produto errado
+(a planilha ligava a pasta de uma peça a um produto só; todas já existem, iguais, no produto certo), as fotos repetidas
+dentro da mesma peça e as 3 cópias antigas do começo da galeria do Clara Arte. Com `CONTENT_IMPORT_TOKEN` no ambiente:
+
+```bash
+python3 -I -c "
+import json, os, urllib.request
+for j in json.load(open('design/drive/2026-11-13-remover.json'))['items']:
+    r = urllib.request.Request('https://api-preview-franccino.valenteai.cloud/api/import/media/remove', data=json.dumps(j).encode(), method='POST', headers={'Authorization': 'Bearer ' + os.environ['CONTENT_IMPORT_TOKEN'], 'Content-Type': 'application/json', 'Accept': 'application/json'})
+    print(j['key'], json.load(urllib.request.urlopen(r))['data'])
+"
+```
+
+A rota só apaga as fotos daquele registro e daquela coleção; um id que não é dele volta em `not_found`.
