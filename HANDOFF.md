@@ -1366,9 +1366,11 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
     trama natural, alumínio), ligados a essas 5 peças, pela rota nova `POST /api/import/finishes` (PR #99). Saem quando
     o mostruário real chegar (mesmo código, `EX-…`, ou apagando no painel).
 - **GLB pesados:** a quantização (`KHR_mesh_quantization`, lida pelo visualizador sem decodificador extra) trouxe a
-  Cadeira Melina sem braço e a Banqueta Dara para menos de 20 MB: no ar, 128 peças com 3D. Cadeira Noa, Poltrona Caeté,
-  Poltrona Irani, Sofá Adhara, Sofá Snodo e Sofá Sol continuam acima: pedem a malha simplificada (cada face tem os
-  próprios vértices, e o `simplify` do gltf-transform não reduz assim).
+  Cadeira Melina sem braço e a Banqueta Dara para menos de 20 MB. `design/3d/simplificar.py` (solda os vértices e
+  reduz a malha a cerca de 400 mil faces, mantendo as repetições) levou mais 4: Cadeira Noa, Poltrona Caeté, Poltrona
+  Irani e Sofá Adhara, todas conferidas contra o original. Com os 3 sofás refeitos, **135 peças têm 3D**. Ficaram de
+  fora: Sofá Snodo (o arquivo traz uma figura humana de escala, já pedido à Franccino) e Sofá Sol (a malha do arquivo
+  quebra na simplificação; pede o arquivo mais leve ou ajuste no SketchUp).
 - **GitHub:** PRs #96 a #98 mergeados (filtros, GLB para baixar, Next.js 16.4.5 com correções de segurança e pacotes da
   API). O #47 (ESLint 10) fica de fora: os plugins do Next.js ainda não suportam; o Dependabot foi mandado ignorar
   essa versão major.

@@ -55,3 +55,10 @@ Franccino.
 # european_walnut_veneer_04, fine_grained_wood, rough_linen, brown_leather
 TEX_LIB=/tmp/tex skpenv/bin/python -I design/3d/acabamento.py peca.glb peca-acabada.glb design/3d/acabamentos/peca.json
 ```
+
+## GLB pesados (acima de 20 MB)
+
+1. Quantização: `gltf-transform quantize entrada.glb saida.glb` (o visualizador lê sem decodificador extra).
+2. Se ainda passar: `skpenv/bin/python -I design/3d/simplificar.py entrada.glb saida.glb 400000` (solda os vértices
+   e reduz a malha mantendo as repetições; numa parte com textura que perde a coordenada, usa a cor média dela) e a
+   quantização de novo. Sempre conferir o render contra o original: no Sofá Sol a malha quebra.
