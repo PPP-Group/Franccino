@@ -1,0 +1,116 @@
+{
+  "groups": [
+    {
+      "name": {
+        "pt": "Madeiras",
+        "en": "Woods"
+      },
+      "finishes": [
+        {
+          "code": "EX-MAD-01",
+          "name": {
+            "pt": "Madeira clara (exemplo)",
+            "en": "Light wood (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["chaise-coce", "cadeira-aura"]
+        },
+        {
+          "code": "EX-MAD-02",
+          "name": {
+            "pt": "Madeira escura (exemplo)",
+            "en": "Dark wood (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["cadeira-arreda", "cadeira-brisa-com-braco"]
+        }
+      ]
+    },
+    {
+      "name": {
+        "pt": "Tecidos",
+        "en": "Fabrics"
+      },
+      "finishes": [
+        {
+          "code": "EX-TEC-01",
+          "name": {
+            "pt": "Linho cru (exemplo)",
+            "en": "Natural linen (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["chaise-coce", "cadeira-aura", "banco-adhara"]
+        }
+      ]
+    },
+    {
+      "name": {
+        "pt": "Couros",
+        "en": "Leathers"
+      },
+      "finishes": [
+        {
+          "code": "EX-COU-01",
+          "name": {
+            "pt": "Couro caramelo (exemplo)",
+            "en": "Caramel leather (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["cadeira-arreda"]
+        }
+      ]
+    },
+    {
+      "name": {
+        "pt": "Cordas e fibras",
+        "en": "Ropes and fibers"
+      },
+      "finishes": [
+        {
+          "code": "EX-FIB-01",
+          "name": {
+            "pt": "Trama natural (exemplo)",
+            "en": "Natural weave (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["cadeira-brisa-com-braco", "banco-adhara"]
+        }
+      ]
+    },
+    {
+      "name": {
+        "pt": "Metais",
+        "en": "Metals"
+      },
+      "finishes": [
+        {
+          "code": "EX-MET-01",
+          "name": {
+            "pt": "Alumínio (exemplo)",
+            "en": "Aluminium (sample)"
+          },
+          "description": {
+            "pt": "Acabamento de exemplo, para testar o site e o 3D. Será trocado pelo acabamento real do mostruário Franccino.",
+            "en": "Sample finish, to test the website and the 3D viewer. It will be replaced by the real finish from the Franccino swatch book."
+          },
+          "products": ["chaise-coce", "cadeira-arreda"]
+        }
+      ]
+    }
+  ]
+}
