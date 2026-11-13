@@ -55,8 +55,13 @@ export type DownloadsParams = {
   area?: string;
   category?: string;
   q?: string;
+  /** Tipo de arquivo (`skp`, `dwg`, `glb`...): só as peças com arquivo nesse formato. */
+  format?: string;
   page?: number;
 };
+
+/** `meta.formats` de `GET /downloads`: os formatos que existem e quantas peças têm cada um. */
+export type DownloadFormat = { format: string; count: number };
 
 export async function getAreas(locale: Locale): Promise<Area[]> {
   // `Area.product_count` is derived from products, so this also revalidates
@@ -155,7 +160,7 @@ export async function getFinishes(locale: Locale): Promise<FinishGroup[]> {
 export async function getDownloads(
   locale: Locale,
   params: DownloadsParams = {},
-): Promise<Paginated<ProductCard & { files: DownloadFile[] }>> {
+): Promise<Paginated<ProductCard & { files: DownloadFile[] }> & { meta: { formats?: DownloadFormat[] } }> {
   // No dedicated "downloads" cache tag in the contract; downloads are a
   // filtered view of products (each card embedding its area/category/
   // designer), so they revalidate with those tags. A `q` filter bypasses the
