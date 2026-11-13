@@ -5,6 +5,7 @@ use App\Models\Banner;
 use App\Models\Designer;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\Project;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
@@ -194,4 +195,59 @@ it('adds a designer portrait and a photo to the gallery of a page', function () 
         ->and($content[1]['data']['images'])->toHaveCount(1)
         ->and($content[1]['data']['images'][0])->toStartWith('pages/')->toEndWith('-fabrica-metal-01.jpg');
     Storage::disk('media')->assertExists($content[1]['data']['images'][0]);
+});
+
+it('takes the page video of a project and photos for a named gallery of a page', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $project = Project::factory()->create(['slug' => ['pt' => 'clara-arte']]);
+    $page = Page::factory()->create(['key' => 'factory', 'content' => [['type' => 'gallery', 'data' => ['images' => ['pages/a-x.jpg'], 'caption' => []]]]]);
+    $auth = ['Authorization' => 'Bearer abc123'];
+
+    $this->post('/api/import/media', [
+        'target' => 'project',
+        'key' => 'clara-arte',
+        'collection' => 'video',
+        'file' => UploadedFile::fake()->create('clara.mp4', 2048, 'video/mp4'),
+    ], $auth)->assertCreated();
+    $this->post('/api/import/media', [
+        'target' => 'project',
+        'key' => 'clara-arte',
+        'collection' => 'video',
+        'file' => UploadedFile::fake()->image('nao-e-video.jpg'),
+    ], $auth)->assertStatus(422);
+    expect($project->refresh()->getMedia('video'))->toHaveCount(1);
+
+    $this->post('/api/import/media', [
+        'target' => 'page',
+        'key' => 'factory',
+        'collection' => 'gallery',
+        'caption' => 'Peças em produção',
+        'caption_en' => 'Pieces being made',
+        'file' => UploadedFile::fake()->image('sopro.jpg', 1600, 1200),
+    ], $auth)->assertCreated();
+
+    $content = $page->refresh()->content;
+    expect($content)->toHaveCount(2)
+        ->and($content[0]['data']['images'])->toHaveCount(1)
+        ->and($content[1]['data']['caption'])->toBe(['pt' => 'Peças em produção', 'en' => 'Pieces being made'])
+        ->and($content[1]['data']['images'])->toHaveCount(1);
+});
+
+it('swaps a gallery photo for another version in the same place', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $product = publishedProduct();
+    $send = fn (string $name, array $extra = []) => $this->post('/api/import/media', $extra + [
+        'target' => 'product',
+        'key' => 'cadeira-aura',
+        'collection' => 'gallery',
+        'source' => "drive:{$name}",
+        'file' => UploadedFile::fake()->image("{$name}.jpg", 800, 600),
+    ], ['Authorization' => 'Bearer abc123']);
+
+    $send('original')->assertCreated();
+    $send('outra')->assertCreated();
+    $send('editada', ['replaces' => 'drive:original'])->assertCreated();
+
+    expect($product->refresh()->getMedia('gallery')->map(fn ($media) => $media->getCustomProperty('legacy_url'))->all())
+        ->toBe(['drive:editada', 'drive:outra']);
 });

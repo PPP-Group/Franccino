@@ -36,9 +36,9 @@ class ImportController extends Controller
     /** Collections each kind of record accepts, and how the record is found. */
     private const TARGETS = [
         'product' => ['model' => Product::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'cutout']],
-        'project' => ['model' => Project::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery']],
+        'project' => ['model' => Project::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
         'designer' => ['model' => Designer::class, 'key' => 'slug', 'collections' => ['portrait']],
-        'collection' => ['model' => Collection::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery']],
+        'collection' => ['model' => Collection::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
         'launch' => ['model' => Launch::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery']],
         'store' => ['model' => Store::class, 'key' => 'id', 'collections' => ['image']],
         'client' => ['model' => Client::class, 'key' => 'id', 'collections' => ['logo']],
@@ -64,12 +64,17 @@ class ImportController extends Controller
             return $this->pageGallery($request);
         }
 
+        // `video` takes the page film (MP4, up to the page video limit); every other collection takes a photo.
+        $file = $request->input('collection') === 'video'
+            ? ['required', 'file', 'mimetypes:video/mp4', 'max:'.config('franccino.uploads.video_max_kb')]
+            : ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'];
         $data = $request->validate([
             'target' => ['required', Rule::in(array_keys(self::TARGETS))],
             'key' => ['required', 'string', 'max:200'],
             'collection' => ['required', 'string'],
-            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
+            'file' => $file,
             'source' => ['nullable', 'string', 'max:500'],
+            'replaces' => ['nullable', 'string', 'max:500'],
         ]);
         $target = self::TARGETS[$data['target']];
         abort_unless(in_array($data['collection'], $target['collections'], true), 422, 'Coleção não aceita para esse tipo.');
@@ -93,27 +98,45 @@ class ImportController extends Controller
             ->withCustomProperties(array_filter(['legacy_url' => $data['source'] ?? null]))
             ->toMediaCollection($data['collection']);
 
+        // `replaces`: the photo sent before from that source leaves the collection and the new one takes its place in
+        // the order (e.g. the edited version of a project photo instead of the original).
+        $old = filled($data['replaces'] ?? null) ? $record->getMedia($data['collection'])
+            ->first(fn ($item) => $item->id !== $media->id && $item->getCustomProperty('legacy_url') === $data['replaces']) : null;
+        if ($old !== null) {
+            $media->forceFill(['order_column' => $old->order_column])->save();
+            $old->delete();
+        }
+
         return response()->json(['data' => ['id' => $media->id, 'collection' => $data['collection']]], 201);
     }
 
     /**
-     * A photo for the gallery block of a fixed page (the first one; a page without it gets one at the end), saved on
-     * the media disk like a panel upload (`pages/`). The same file name twice is skipped, so a batch can run again.
+     * A photo for a gallery block of a fixed page, saved on the media disk like a panel upload (`pages/`). Without
+     * `caption`, the first gallery block; with it, the gallery block with that caption in Portuguese (e.g. "Peças em
+     * produção"), created at the end when the page does not have it. The same file name twice is skipped, so a batch
+     * can run again.
      */
     private function pageGallery(Request $request): JsonResponse
     {
         $data = $request->validate([
             'key' => ['required', 'string', 'max:60'],
             'collection' => ['required', Rule::in(['gallery'])],
+            'caption' => ['nullable', 'string', 'max:120'],
+            'caption_en' => ['nullable', 'string', 'max:120'],
             'file' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
         ]);
+        $caption = $data['caption'] ?? null;
         $page = Page::query()->where('key', $data['key'])->firstOrFail();
         $name = Str::slug(pathinfo($data['file']->getClientOriginalName(), PATHINFO_FILENAME)).'.'.Str::lower($data['file']->getClientOriginalExtension());
 
         $content = array_values((array) ($page->content ?? []));
-        $index = collect($content)->search(fn ($block) => ($block['type'] ?? null) === 'gallery');
+        $index = collect($content)->search(fn ($block) => ($block['type'] ?? null) === 'gallery'
+            && ($caption === null || (($block['data']['caption']['pt'] ?? null) === $caption)));
         if ($index === false) {
-            $content[] = ['type' => 'gallery', 'data' => ['images' => [], 'caption' => []]];
+            $content[] = ['type' => 'gallery', 'data' => [
+                'images' => [],
+                'caption' => array_filter(['pt' => $caption, 'en' => $data['caption_en'] ?? null]),
+            ]];
             $index = array_key_last($content);
         }
         $images = array_values((array) ($content[$index]['data']['images'] ?? []));

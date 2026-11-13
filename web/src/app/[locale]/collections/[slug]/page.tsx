@@ -8,6 +8,7 @@ import { EditorialGallery } from '@/components/content/EditorialGallery';
 import { neighbours } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { PageCoverArt } from '@/components/layout/PageBanner';
+import { PageVideo } from '@/components/media/PageVideo';
 import { morphName } from '@/lib/ui/morph';
 import { PageHead } from '@/components/layout/PageHead';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
@@ -87,6 +88,13 @@ export default async function CollectionPage({ params }: Props) {
             <RichText html={collection.description} className="prose collection-intro__text" />
           ) : null}
         </PageHead>
+        {collection.video ? (
+          <PageVideo
+            video={collection.video}
+            title={t('video', { name: collection.name })}
+            id="collection-video"
+          />
+        ) : null}
         <EditorialGallery images={collection.gallery} label={t('gallery')} />
         <PiecesSection
           id="collection-pieces"

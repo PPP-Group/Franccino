@@ -125,3 +125,4 @@ redirects-relatorio.csv
 
 # Estado local do envio da auditoria do Drive (design/drive/importar.py)
 design/drive/.importados.json
+__pycache__/

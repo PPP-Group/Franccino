@@ -2,6 +2,8 @@
 
 use App\Models\Product;
 use App\Models\Project;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 it('lists published projects paginated with the contract shape', function () {
     Project::factory()->create(['type' => 'residential']);
@@ -43,7 +45,22 @@ it('shows a project by its localized slug with architect, description, gallery, 
         ->assertJsonPath('data.architect', 'Estúdio X')
         ->assertJsonPath('data.description', '<p>Text</p>')
         ->assertJsonPath('data.slugs', ['pt' => 'casa-inhotim', 'en' => 'inhotim-house'])
+        ->assertJsonPath('data.video', null)
         ->assertJsonCount(1, 'data.products');
+});
+
+it('shows the page video of a project with its cover', function () {
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $project = Project::factory()->create(['slug' => ['pt' => 'clara-arte', 'en' => 'clara-arte']]);
+    $project->addMedia(UploadedFile::fake()->create('clara.mp4', 100, 'video/mp4'))->toMediaCollection('video');
+    $project->addMedia(UploadedFile::fake()->image('capa.jpg', 1080, 1920))->toMediaCollection('video_poster');
+
+    $video = $this->getJson('/api/v1/projects/clara-arte')->assertOk()->json('data.video');
+
+    expect($video['url'])->toEndWith('clara.mp4')
+        ->and($video['poster']['width'])->toBe(1080)
+        ->and($video['poster']['height'])->toBe(1920);
 });
 
 it('returns 404 for an unpublished project', function () {

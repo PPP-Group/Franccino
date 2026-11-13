@@ -41,6 +41,16 @@ class Client
         });
     }
 
+    /**
+     * One item of a REST collection (e.g. `produtos/7104`).
+     *
+     * @return array<string, mixed>
+     */
+    public function item(string $endpoint, int $id): array
+    {
+        return (array) $this->get($this->url('wp-json/wp/v2/'.ltrim($endpoint, '/').'/'.$id))->json();
+    }
+
     public function html(string $url): string
     {
         return $this->get($url)->body();
