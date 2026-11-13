@@ -1,0 +1,44 @@
+--- scene.py.orig	2026-11-13 14:45:34.977134223 +0000
++++ scene.py	2026-11-13 14:45:35.004560829 +0000
+@@ -350,7 +350,7 @@
+     active_definitions: set = set()
+ 
+     def get_layer_color(name: str) -> Tuple[int, int, int]:
+-        return layer_colors.get(name, (136, 136, 136))
++        return (255, 255, 255)  # patch: face sem material = branco padrao do SketchUp
+ 
+     def get_material_index(
+         color: Tuple[int, int, int],
+@@ -604,6 +604,10 @@
+ 
+             l_name = parent_layer
+             inst_color = inherited_color
++            _lm = inst.get('material_id')  # patch: material do componente (formato antigo)
++            if _lm:
++                _mn = material_id_to_name.get(_lm); _mm = materials.get(_mn) or materials_by_folder.get(_mn)
++                if _mm: inst_color = (_mm['color']['r'], _mm['color']['g'], _mm['color']['b'])
+             # Legacy (pre-2021 MFC) instances carry a precomputed
+             # "properties" dict (see legacy._extract_legacy_dynamic_
+             # properties) - VFF instances don't set this key at all, so
+--- instanced_scene.py.orig	2026-11-13 14:45:34.948680662 +0000
++++ instanced_scene.py	2026-11-13 14:45:34.971545699 +0000
+@@ -297,7 +297,7 @@
+     active_definitions: set = set()
+ 
+     def get_layer_color(name: str) -> Tuple[int, int, int]:
+-        return layer_colors.get(name, (136, 136, 136))
++        return (255, 255, 255)  # patch: face sem material = branco padrao do SketchUp
+ 
+     # Textures deduplicated by bytes, exactly as the baked path does.
+     textures: List[SceneTexture] = []
+@@ -609,6 +609,10 @@
+ 
+             l_name = parent_layer
+             inst_color = inherited_color
++            _lm = inst.get('material_id')  # patch: material do componente (formato antigo)
++            if _lm:
++                _mn = material_id_to_name.get(_lm); _mm = materials.get(_mn) or materials_by_folder.get(_mn)
++                if _mm: inst_color = (_mm['color']['r'], _mm['color']['g'], _mm['color']['b'])
+             properties: Dict[str, str] = dict(inst.get("properties") or {})
+             attribute_dicts: Dict[str, Dict[str, str]] = {}
+             name_override: Optional[str] = None
