@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, com o complemento 30.3). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.6). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1376,3 +1376,22 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   essa versão major.
 - **Revalidação do site:** a mudança do painel ou da importação aparece na primeira visita (`revalidateTag` com
   `{ expire: 0 }`).
+
+### 30.6 13/11/2026 (noite): Linear revisado e planilha para a Franccino
+
+- **Linear** (visível para o cliente, texto neutro):
+  - **novos, já feitos:** PPP-134 (3D a partir dos blocos SketchUp, 135 peças), PPP-135 (conteúdo do Drive no site) e
+    PPP-136 (retorno de 13/11, 16 pontos);
+  - **PPP-133** virou "Pendências da Franccino para terminar o site": a lista inteira do PDF de 13/11, em 10 grupos
+    (acabamentos, medidas, fotos, blocos, peças, filtros, textos, projetos e vídeos, contas, decisões). Ela bloqueia
+    PPP-23, 44, 83, 84, 87, 127 e 130;
+  - **fechados:** PPP-62 (relatório entregue: o PDF de 13/11) e PPP-127 (a parte do código; as fotos em alta ficam no
+    PPP-133);
+  - **importador de planilha:** PPP-28 decidido (sem importador no painel; planilhas entram pela importação em massa da
+    equipe) e PPP-63 cancelado. O tech lead pode reabrir;
+  - **PPP-56** virou "Enviar à Franccino a planilha para preencher os dados que faltam";
+  - comentários de estado em PPP-23, 43, 77 (3D pronto para o teste em celular), 83, 84 e 130.
+- **Planilha para a Franccino** ("Franccino - dados que faltam no catalogo (13-11).xlsx"), entregue ao Pedro Ivo, não está
+  no repositório. Abas: como preencher, peças novas (36), peças do site antigo (11), medidas (19 peças; nas 6 com bloco,
+  a medida do bloco para confirmar), descrições (21), ambientes e variações (as 399 peças) e acabamentos. Volta
+  preenchida e entra pela importação em massa (`new_products` do `content:apply`, `/api/import/finishes` e o painel).
