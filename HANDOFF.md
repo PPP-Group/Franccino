@@ -1355,9 +1355,9 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   - cerca de 2/3 dos blocos da Franccino não têm material (são brancos no próprio SketchUp);
   - onde há cor, é a do modelador, não a do acabamento real (ex.: Cadeira Arp rosa na foto e marrom no arquivo).
 - **Erro da conversão corrigido:** Sofá Noa, Antônio e Majestic estavam com o pufe (o arquivo escolhido era o módulo).
-  O 3D deles saiu do ar, e `design/3d/escolha.json` passou a apontar o sofá inteiro (INTEIRO 2 ASS). **Falta:**
-  converter os três com um token novo do Drive. O "Modelo 3D (GLB)" para baixar dessas três peças ainda é o do pufe:
-  enviar o novo por `/api/import/files` com o mesmo nome de arquivo (`<slug>.glb`) troca o antigo.
+  `design/3d/escolha.json` passou a apontar o sofá inteiro (INTEIRO 2 ASS). Convertidos de novo com um token novo do
+  Drive (o Noa quantizado, 16 MB) e enviados: o 3D e o "Modelo 3D (GLB)" para baixar (mesmo nome de arquivo, trocou o
+  do pufe). A cópia do token foi apagada; com isso, 131 peças têm 3D.
 - **Acabamentos genéricos (teste pedido pelo tech lead):** `design/3d/acabamento.py` aplica madeira, couro e trama de
   tecido da Poly Haven (CC0), mais alumínio e borracha, pelas cores do arquivo (mapas em `design/3d/acabamentos/`).
   - O acabamento vai na malha original, e as repetições (a trama da palhinha) ficam; sem isso, o arquivo passava de 150 MB.
@@ -1366,9 +1366,11 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
     trama natural, alumínio), ligados a essas 5 peças, pela rota nova `POST /api/import/finishes` (PR #99). Saem quando
     o mostruário real chegar (mesmo código, `EX-…`, ou apagando no painel).
 - **GLB pesados:** a quantização (`KHR_mesh_quantization`, lida pelo visualizador sem decodificador extra) trouxe a
-  Cadeira Melina sem braço e a Banqueta Dara para menos de 20 MB: no ar, 128 peças com 3D. Cadeira Noa, Poltrona Caeté,
-  Poltrona Irani, Sofá Adhara, Sofá Snodo e Sofá Sol continuam acima: pedem a malha simplificada (cada face tem os
-  próprios vértices, e o `simplify` do gltf-transform não reduz assim).
+  Cadeira Melina sem braço e a Banqueta Dara para menos de 20 MB. `design/3d/simplificar.py` (solda os vértices e
+  reduz a malha a cerca de 400 mil faces, mantendo as repetições) levou mais 4: Cadeira Noa, Poltrona Caeté, Poltrona
+  Irani e Sofá Adhara, todas conferidas contra o original. Com os 3 sofás refeitos, **135 peças têm 3D**. Ficaram de
+  fora: Sofá Snodo (o arquivo traz uma figura humana de escala, já pedido à Franccino) e Sofá Sol (a malha do arquivo
+  quebra na simplificação; pede o arquivo mais leve ou ajuste no SketchUp).
 - **GitHub:** PRs #96 a #98 mergeados (filtros, GLB para baixar, Next.js 16.4.5 com correções de segurança e pacotes da
   API). O #47 (ESLint 10) fica de fora: os plugins do Next.js ainda não suportam; o Dependabot foi mandado ignorar
   essa versão major.
