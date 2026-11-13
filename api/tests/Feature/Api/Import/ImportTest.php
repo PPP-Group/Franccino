@@ -183,6 +183,14 @@ it('adds a designer portrait and a photo to the gallery of a page', function () 
     ], $auth)->assertCreated();
     expect($designer->refresh()->getMedia('portrait'))->toHaveCount(1);
 
+    $this->post('/api/import/media', [
+        'target' => 'designer',
+        'key' => 'andrea-zanocchi',
+        'collection' => 'signature',
+        'file' => UploadedFile::fake()->image('assinatura.png', 600, 160),
+    ], $auth)->assertCreated();
+    expect($designer->refresh()->getMedia('signature'))->toHaveCount(1);
+
     $photo = fn () => UploadedFile::fake()->image('Fábrica Metal 01.jpg', 1600, 1200);
     $this->post('/api/import/media', ['target' => 'page', 'key' => 'factory', 'collection' => 'gallery', 'file' => $photo()], $auth)
         ->assertCreated();

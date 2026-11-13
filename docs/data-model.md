@@ -101,7 +101,7 @@ linha Pinot, linha Bloco). Sem página própria no site; usadas em "outras peça
 | legacy_wp_id, legacy_url   |               |                                                                                                  |
 | search_text                | text, null    | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
-Mídia: `portrait` (1).
+Mídia: `portrait` (1) e `signature` (1, assinatura ou logo em PNG sem fundo, 2026-11-13).
 
 ### collections
 

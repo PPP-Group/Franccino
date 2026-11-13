@@ -21,6 +21,7 @@ return [
     'products' => 'Escolha as peças. Digite parte do nome para buscar.',
     'cover' => 'Foto principal. Use JPG ou PNG com pelo menos 1600 px de largura e até 10 MB. O site corta e diminui sozinho.',
     'gallery' => 'Mais fotos. Arraste para mudar a ordem; a primeira aparece antes.',
+    'signature' => 'Logo ou assinatura do designer, em PNG sem fundo (ou SVG). Aparece ao lado do nome, na página dele.',
     'video' => 'Vídeo da página em MP4 (H.264, 1080p), até 150 MB. Só carrega quando o visitante clica para assistir.',
     'video_poster' => 'Imagem que aparece antes do play. Use um quadro do próprio vídeo, no mesmo formato (deitado ou em pé).',
     'url' => 'Endereço completo, começando com https://',

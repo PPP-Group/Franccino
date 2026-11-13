@@ -37,7 +37,7 @@ class ImportController extends Controller
     private const TARGETS = [
         'product' => ['model' => Product::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'cutout']],
         'project' => ['model' => Project::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
-        'designer' => ['model' => Designer::class, 'key' => 'slug', 'collections' => ['portrait']],
+        'designer' => ['model' => Designer::class, 'key' => 'slug', 'collections' => ['portrait', 'signature']],
         'collection' => ['model' => Collection::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
         'launch' => ['model' => Launch::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery']],
         'store' => ['model' => Store::class, 'key' => 'id', 'collections' => ['image']],

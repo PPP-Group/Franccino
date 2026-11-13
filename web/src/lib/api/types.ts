@@ -158,6 +158,8 @@ export type DesignerCard = DesignerRef & {
 
 export type DesignerDetail = DesignerCard & {
   bio: string | null;
+  /** Assinatura (logo) do designer, enviada no painel; `null` sem ela. */
+  signature?: Image | null;
   website_url: string | null;
   instagram_url: string | null;
   products: ProductCard[];
