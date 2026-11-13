@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, com o complemento 30.3). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1299,3 +1299,22 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
 - **PDF para a Franccino** ("O que precisamos para terminar o site", 13/11): reúne o PDF da manhã e todas as
   pendências com eles (acabamentos, medidas, fotos, blocos, peças novas, textos, dados dos filtros, Clara Arte, vídeos,
   contas e decisões). Entregue ao Pedro Ivo; não está no repositório.
+
+### 30.3 13/11/2026 (noite): 3D a partir dos blocos SketchUp, página do projeto e sala
+
+- **3D:** o OpenSKP foi instalado com o ok do tech lead. A importação aceita o GLB da peça (`collection=model_3d`, PR
+  [#94](https://github.com/PPP-Group/Franccino/pull/94)). O processo está em `design/3d/LEIA-ME.md`.
+  - A 1ª conversão (119 de 154 peças) saiu toda branca e não foi enviada. O conversor clareava as cores para um tom
+    neutro, e o OpenSKP perdia o material dos componentes.
+  - O conversor novo mantém a cor de cada material do arquivo, com a cor em linear, e o patch do OpenSKP lê o material
+    do componente.
+  - Conferido em 11 peças contra a miniatura que o próprio SketchUp grava no arquivo: Chaise Coce bege com alumínio e
+    rodas pretas, Sofá Antonio cinza com base escura, Sofá Majestic com pés pretos.
+  - Vários blocos da Franccino não têm material nenhum (Banco Dublin, Escrivaninha Pampulha, Mesa lateral Eros, Mesa de
+    jantar Noa): no SketchUp eles também aparecem brancos. Nenhum dos arquivos conferidos tem textura.
+  - **Falta:** rodar a conversão nova, que precisa de um token novo do Drive (o anterior expirou), e enviar os GLB.
+- **Página do projeto:** o resumo aparecia em destaque mesmo quando o texto já o trazia no meio. No Clara Arte, ele é o
+  3º parágrafo. Agora o resumo some sempre que o texto já o traz (`distinctLead`).
+- **Sala para montar:** o código atual acha o Sofá Noa na busca ("Medidas a confirmar"), conferido num `next dev` contra
+  a API do preview. Se o preview não mostra, a aba aberta está com a versão anterior do site: recarregar a página depois
+  do deploy.
