@@ -8,7 +8,7 @@ import { ProjectRow } from '@/components/content/ProjectRow';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { FeaturePiece } from '@/components/products/FeaturePiece';
 import type { Locale } from '@/i18n/config';
-import { getClients, getPage, getProjects } from '@/lib/api/content';
+import { getClients, getImagePointsFor, getPage, getProjects } from '@/lib/api/content';
 import { firstValue, parsePositiveInteger } from '@/lib/api/listing-params';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -58,10 +58,16 @@ export default async function ProjectsPage({ params, searchParams }: Props) {
   ]);
   // Peça em destaque escolhida no painel (Páginas); sem escolha, nenhuma (revisão da Franccino, 12/11/2026).
   const feature = content?.featured_product?.cover ? content.featured_product : null;
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [
+    content?.cover,
+    ...list.data.map((project) => project.cover),
+  ]);
   return (
     <main className="page-end">
       <PageBanner
         image={content?.cover ?? null}
+        points={content?.cover ? points[content.cover.id] : null}
         title={t('title')}
         lead={content?.intro}
         aside={feature ? <FeaturePiece product={feature} compact /> : null}
@@ -75,6 +81,7 @@ export default async function ProjectsPage({ params, searchParams }: Props) {
               <ProjectRow
                 key={project.id}
                 project={project}
+                points={project.cover ? points[project.cover.id] : null}
                 meta={[
                   ...(project.location ? [project.location] : []),
                   ...(project.year ? [String(project.year)] : []),

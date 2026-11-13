@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
 import { ScenePoints } from '@/components/home/SceneViewer';
 import { MorphImage } from '@/components/media/MorphImage';
+import { asScene } from '@/lib/scenes/image-points';
 import { Link } from '@/i18n/navigation';
-import type { ProjectCard } from '@/lib/api/types';
+import type { ImagePoints, ProjectCard } from '@/lib/api/types';
 import { morphName, morphTypes } from '@/lib/ui/morph';
 
 /** Proporção da foto na faixa (`.project-row__media`, 3:2 em pages.css): os pontos acompanham o recorte. */
@@ -13,6 +14,8 @@ type ProjectRowProps = {
   /** Fatos curtos do projeto (tipo, local, ano), já traduzidos. */
   meta?: string[];
   priority?: boolean;
+  /** Pontos clicáveis sobre a capa, quando o projeto não tem ambiente (retorno de 13/11/2026). */
+  points?: ImagePoints | null;
 };
 
 /**
@@ -21,14 +24,16 @@ type ProjectRowProps = {
  * da foto (`.hover-zoom`), sem sublinhado no título. Ao entrar na tela, a foto abre como cortina e o texto sobe (ideia
  * 04); a primeira faixa (`priority`) já abre à vista.
  */
-export function ProjectRow({ project, meta = [], priority = false }: ProjectRowProps) {
+export function ProjectRow({ project, meta = [], priority = false, points = null }: ProjectRowProps) {
   const common = useTranslations('common');
   const href = { pathname: '/projects/[slug]', params: { slug: project.slug } } as const;
   // A foto cresce até a capa da página do projeto (ideia 10), por qualquer um dos três links.
   const morph = morphName('project', project.slug);
   // Com um ambiente ligado ao projeto, a faixa mostra a foto dele, com os pontos por cima.
-  const scene = project.scene && project.scene.hotspots.length > 0 ? project.scene : null;
-  const image = scene ? scene.image : project.cover;
+  const projectScene = project.scene && project.scene.hotspots.length > 0 ? project.scene : null;
+  const image = projectScene ? projectScene.image : project.cover;
+  const scene =
+    projectScene ?? (points && image && points.hotspots.length > 0 ? asScene(points, image) : null);
   const morphLink = image ? { transitionTypes: morphTypes(morph), 'data-morph-link': morph } : {};
   return (
     <article className="project-row">

@@ -778,7 +778,11 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
 /* ---------- retrato do designer que ganha cor no hover (revisão de 12/11/2026) ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  .tile--portrait .tile__media img {
+  .tile--portrait .tile__media img,
+  .designer__photo img,
+  .designer-portraits__photo img,
+  .card-rail--portrait .card-rail__media img,
+  .designer-strip img {
     transition:
       filter var(--t-slow) var(--ease-out),
       transform var(--t-slow) var(--ease-out);

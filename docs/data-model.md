@@ -339,8 +339,12 @@ Ambientes com pontos clicáveis (2026-10-30, banco de ideias, ideia 7): a foto d
 ponto em cada peça que leva à página dela. Aparecem na home; ligados a um projeto (2026-11-07), aparecem no Corporativo
 e na página do projeto, e não na home.
 
-`scenes`: `project_id` (FK projects, nullable, null on delete; migration `2026_11_07_100000`), `title` (json tr),
-`is_published`, `sort_order`. Mídia: `image` (1).
+`scenes`: `project_id` (FK projects, nullable, null on delete; migration `2026_11_07_100000`), `photo_media_id` (FK
+media, nullable, único, cascade on delete; migration `2026_11_13_120000`), `title` (json tr), `is_published`,
+`sort_order`. Mídia: `image` (1).
+
+Com `photo_media_id` (2026-11-13), os pontos ficam sobre uma foto que já está no site (banner, capa, galeria): o
+ambiente não tem foto própria, não aparece na home e sai em `GET /image-points`.
 
 | Coluna (`scene_hotspots`) | Tipo         | Notas                                                  |
 | ------------------------- | ------------ | ------------------------------------------------------ |

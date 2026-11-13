@@ -348,6 +348,12 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
                           </Link>
                         </div>
                       ))}
+                      {/* Acabamentos ao lado das áreas (retorno de 13/11/2026: a página só se achava pelo endereço). */}
+                      <div className="nav-panel__tab">
+                        <Link className="nav-panel__tab-link" href="/finishes" onClick={() => setOpen(false)}>
+                          {nav('finishes')}
+                        </Link>
+                      </div>
                     </div>
                   ) : (
                     <Link

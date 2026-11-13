@@ -7,7 +7,7 @@ import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import { getPage } from '@/lib/api/content';
+import { getImagePointsFor, getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { morphName } from '@/lib/ui/morph';
 
@@ -45,11 +45,14 @@ export default async function FactoryPage({ params }: Props) {
     { href: '/projects', label: t('nextProjects') },
     { href: '/collections', label: t('nextCollections') },
   ] as const;
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [page?.cover]);
   return (
     <main className="factory-page">
       {/* Abre com a foto da fachada (capa da página no painel), como pedido nos ajustes de 06/10/2026. */}
       <PageBanner
         image={page?.cover ?? null}
+        points={page?.cover ? points[page.cover.id] : null}
         title={page?.title ?? t('title')}
         lead={page?.intro}
         morph={morphName('page', 'factory')}

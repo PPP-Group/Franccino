@@ -14,11 +14,12 @@ import {
   type ProductFacetsParams,
   type ProductListParams,
 } from '@/lib/api/catalog';
-import { getCollections, getDesigners } from '@/lib/api/content';
+import { getCollections, getDesigners, getImagePointsFor } from '@/lib/api/content';
 import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
+import { buildFacetMatrix } from '@/lib/catalog/facets';
 import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar, type ToolbarFilter } from './CatalogToolbar';
@@ -164,13 +165,27 @@ export async function CatalogListing(props: CatalogListingProps) {
     },
   ];
 
+  // As chaves de cada peça por filtro: a contagem de cada opção cruza os outros filtros, ao vivo (retorno de 13/11/2026).
+  const matrix = facets.products
+    ? buildFacetMatrix(
+        facets.products,
+        filters.map((filter) => filter.name),
+      )
+    : null;
+
   const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
+  // Pontos clicáveis sobre a foto do topo (retorno de 13/11/2026).
+  const bannerPoints = banner?.image
+    ? (await getImagePointsFor(locale, [banner.image]))[banner.image.id]
+    : null;
 
   return (
     <main>
       {/* A chave segue a vista do endereço: a navegação de volta (ou um link com outra vista) recomeça dela. */}
       <CatalogViewProvider key={view} initial={view}>
-        {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
+        {banner?.image ? (
+          <PageBanner image={banner.image} title={props.title} morph={banner.morph} points={bannerPoints} />
+        ) : null}
         <div className="wrap catalog" data-page-anchor="">
           <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
           {banner ? (
@@ -192,6 +207,7 @@ export async function CatalogListing(props: CatalogListingProps) {
             view={view}
             hrefFor={hrefFor}
             filters={filters}
+            matrix={matrix}
             formAction={props.formAction}
             hiddenQuery={hiddenQuery}
             pager={

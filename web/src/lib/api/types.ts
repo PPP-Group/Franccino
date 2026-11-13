@@ -393,6 +393,23 @@ export type Facets = {
   finish_groups: FacetOption[];
   /** Ambientes com peça (item 8), na ordem da API; o site traduz a chave. Ausente em respostas antigas. */
   rooms?: { key: string; count: number }[];
+  /** As chaves de cada peça do recorte em cada filtro (2026-11-13): o site cruza os filtros. Ausente em respostas antigas. */
+  products?: FacetProduct[];
+};
+
+/** Pontos clicáveis sobre uma foto que já está no site (`GET /image-points`, 2026-11-13), pelo `id` da `Image`. */
+export type ImagePoints = {
+  id: number;
+  media_id: number;
+  title: string;
+  hotspots: Scene['hotspots'];
+};
+
+export type FacetProduct = {
+  category: string | null;
+  designer: string | null;
+  collections: string[];
+  rooms: string[];
 };
 
 export type SearchResult = {

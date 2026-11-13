@@ -57,6 +57,9 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/collections">{nav('collections')}</Link>
               </li>
               <li>
+                <Link href="/finishes">{nav('finishes')}</Link>
+              </li>
+              <li>
                 <Link href="/room-planner">{nav('planner')}</Link>
               </li>
             </ul>

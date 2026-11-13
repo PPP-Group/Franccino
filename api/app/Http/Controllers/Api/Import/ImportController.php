@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -290,6 +291,80 @@ class ImportController extends Controller
         }
 
         return response()->json(['data' => ['finishes' => $finishes, 'linked' => $links, 'not_found' => array_values(array_unique($missing))]]);
+    }
+
+    /**
+     * `POST /api/import/image-points` (retorno de 13/11/2026): os pontos clicáveis de cada foto, trocando os que ela
+     * tinha. A foto vai pela mídia (`media_id`, o `id` da `Image` na API: banner, capa, galeria) ou por um ambiente
+     * que já existe (`scene_id`, ex.: o do projeto). A peça vai pelo slug em pt. Sem nenhum ponto, a foto fica sem
+     * pontos (o ambiente da mídia sai).
+     */
+    public function imagePoints(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'items' => ['required', 'array', 'min:1', 'max:300'],
+            'items.*.media_id' => ['required_without:items.*.scene_id', 'nullable', 'integer', 'exists:media,id'],
+            'items.*.scene_id' => ['required_without:items.*.media_id', 'nullable', 'integer', 'exists:scenes,id'],
+            'items.*.title' => ['nullable', 'string', 'max:160'],
+            'items.*.points' => ['present', 'array', 'max:40'],
+            'items.*.points.*.x' => ['required', 'numeric', 'between:0,100'],
+            'items.*.points.*.y' => ['required', 'numeric', 'between:0,100'],
+            'items.*.points.*.product' => ['required', 'string', 'max:200'],
+        ]);
+
+        $saved = 0;
+        $points = 0;
+        $removed = 0;
+        $missing = [];
+        foreach ($data['items'] as $item) {
+            DB::transaction(function () use ($item, &$saved, &$points, &$removed, &$missing) {
+                $scene = filled($item['scene_id'] ?? null)
+                    ? Scene::query()->findOrFail($item['scene_id'])
+                    : Scene::query()->firstOrNew(['photo_media_id' => $item['media_id']]);
+
+                $rows = [];
+                foreach ($item['points'] as $order => $point) {
+                    $product = Product::query()->where('slug->pt', $point['product'])->first();
+                    if ($product === null) {
+                        $missing[] = $point['product'];
+
+                        continue;
+                    }
+                    $rows[] = ['product_id' => $product->id, 'x' => $point['x'], 'y' => $point['y'], 'sort_order' => $order];
+                }
+
+                if ($rows === [] && $scene->photo_media_id !== null) {
+                    if ($scene->exists) {
+                        $scene->delete();
+                        $removed++;
+                    }
+
+                    return;
+                }
+
+                if (filled($item['title'] ?? null)) {
+                    $scene->setTranslation('title', 'pt', $item['title']);
+                } elseif (! $scene->exists) {
+                    $scene->setTranslation('title', 'pt', 'Foto '.$item['media_id']);
+                }
+                if (! $scene->exists) {
+                    $scene->is_published = true;
+                    $scene->sort_order = 0;
+                }
+                $scene->save();
+                $scene->hotspots()->delete();
+                $scene->hotspots()->createMany($rows);
+                $saved++;
+                $points += count($rows);
+            });
+        }
+
+        return response()->json(['data' => [
+            'scenes' => $saved,
+            'points' => $points,
+            'removed' => $removed,
+            'not_found' => array_values(array_unique($missing)),
+        ]]);
     }
 
     public function files(Request $request): JsonResponse

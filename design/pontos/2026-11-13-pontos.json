@@ -1,0 +1,1117 @@
+{
+  "version": "2026-11-13",
+  "note": "Pontos clicáveis por foto (media_id = Image.id na API do preview). Enviar com design/pontos/enviar.py.",
+  "items": [
+    {
+      "scene_id": 2,
+      "where": "ambiente do projeto Fazenda Boa Vista",
+      "points": [
+        {
+          "product": "chaise-madri",
+          "x": 40.0,
+          "y": 55.0
+        },
+        {
+          "product": "poltrona-frizzo",
+          "x": 11.0,
+          "y": 45.0
+        },
+        {
+          "product": "sofa-frizzo",
+          "x": 20.0,
+          "y": 39.0
+        },
+        {
+          "product": "mesa-de-centro-frizzo",
+          "x": 75.0,
+          "y": 42.0
+        }
+      ],
+      "not_found": [
+        "Sofá modular azul-petróleo (fundo)",
+        "Poltrona de madeira de braço reto com almofadas bege (fundo)",
+        "Ombrelone verde-escuro de mastro central"
+      ]
+    },
+    {
+      "media_id": 2170,
+      "where": "banner 1 da home",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 50.0,
+          "y": 70.0
+        }
+      ],
+      "not_found": [
+        "Ombrelone central de mastro de madeira, lona bege",
+        "Luminária de piso marrom",
+        "Mesa lateral de tronco de madeira"
+      ]
+    },
+    {
+      "media_id": 2168,
+      "where": "banner 2 da home",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Poltrona de madeira com assento de fibra (Kûara)",
+        "Sofá longo com almofadas azuis e verdes (Kûara)",
+        "Mesinha lateral quadrada de fibra"
+      ]
+    },
+    {
+      "media_id": 2169,
+      "where": "banner 3 da home",
+      "points": [
+        {
+          "product": "chaise-madri",
+          "x": 40.0,
+          "y": 55.0
+        },
+        {
+          "product": "poltrona-frizzo",
+          "x": 11.0,
+          "y": 45.0
+        },
+        {
+          "product": "sofa-frizzo",
+          "x": 20.0,
+          "y": 39.0
+        },
+        {
+          "product": "mesa-de-centro-frizzo",
+          "x": 75.0,
+          "y": 42.0
+        }
+      ],
+      "not_found": [
+        "Sofá modular azul-petróleo (fundo)",
+        "Poltrona de madeira de braço reto com almofadas bege (fundo)",
+        "Ombrelone verde-escuro de mastro central"
+      ]
+    },
+    {
+      "media_id": 69,
+      "where": "capa da coleção Coleção ARP",
+      "points": [
+        {
+          "product": "banco-arp",
+          "x": 47.0,
+          "y": 55.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 70,
+      "where": "capa da coleção Coleção Avito",
+      "points": [
+        {
+          "product": "sofa-noa",
+          "x": 35.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": ["Mesa de centro escura de pés em bloco (capa da Coleção Avito)"]
+    },
+    {
+      "media_id": 72,
+      "where": "capa da coleção Coleção Caminhos",
+      "points": [
+        {
+          "product": "cadeira-melina-sem-braco",
+          "x": 25.0,
+          "y": 60.0
+        },
+        {
+          "product": "cadeira-melina-com-braco",
+          "x": 50.0,
+          "y": 60.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 75,
+      "where": "capa da coleção Coleção Elo",
+      "points": [
+        {
+          "product": "sofa-iraja",
+          "x": 50.0,
+          "y": 55.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 73,
+      "where": "capa da coleção Coleção Encontro",
+      "points": [
+        {
+          "product": "mesa-de-jantar-duna",
+          "x": 45.0,
+          "y": 40.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 71,
+      "where": "capa da coleção Coleção Gerais",
+      "points": [],
+      "not_found": ["Poltrona estofada laranja com laterais de corda (capa da Coleção Gerais)"]
+    },
+    {
+      "media_id": 74,
+      "where": "capa da coleção Coleção Horizonte",
+      "points": [
+        {
+          "product": "sofa-mares",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 76,
+      "where": "capa da coleção Coleção Origem",
+      "points": [],
+      "not_found": ["Poltrona de madeira com encosto redondo de couro (capa da Coleção Origem)"]
+    },
+    {
+      "media_id": 77,
+      "where": "capa da coleção Coleção Outset",
+      "points": [],
+      "not_found": [
+        "Sofá de ripas curvas de madeira com almofadas brancas e pés escuros (capa da Coleção Outset)"
+      ]
+    },
+    {
+      "media_id": 67,
+      "where": "capa da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "sofa-majestic",
+          "x": 50.0,
+          "y": 55.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 68,
+      "where": "capa da coleção Coleção Traço",
+      "points": [],
+      "not_found": ["Poltronas arredondadas marrons e mesinha de pé cônico (capa da Coleção Traço)"]
+    },
+    {
+      "media_id": 1723,
+      "where": "capa do lançamento Lançamentos 2026",
+      "points": [
+        {
+          "product": "sofa-majestic",
+          "x": 50.0,
+          "y": 55.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 1720,
+      "where": "capa do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 20.0,
+          "y": 73.0
+        }
+      ],
+      "not_found": ["Cadeiras e mesas de madeira do deck (pequenas demais na foto para identificar)"]
+    },
+    {
+      "media_id": 1721,
+      "where": "capa do projeto Fazenda Boa Vista – JHSF",
+      "points": [
+        {
+          "product": "chaise-madri",
+          "x": 40.0,
+          "y": 55.0
+        },
+        {
+          "product": "poltrona-frizzo",
+          "x": 11.0,
+          "y": 45.0
+        },
+        {
+          "product": "sofa-frizzo",
+          "x": 20.0,
+          "y": 39.0
+        },
+        {
+          "product": "mesa-de-centro-frizzo",
+          "x": 75.0,
+          "y": 42.0
+        }
+      ],
+      "not_found": [
+        "Sofá modular azul-petróleo (fundo)",
+        "Poltrona de madeira de braço reto com almofadas bege (fundo)",
+        "Ombrelone verde-escuro de mastro central"
+      ]
+    },
+    {
+      "media_id": 1722,
+      "where": "capa do projeto Kûara Hotel",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Mesinha lateral baixa de fibra"
+      ]
+    },
+    {
+      "media_id": 2171,
+      "where": "galeria 1 da coleção Coleção Elo",
+      "points": [],
+      "not_found": ["Mesa de centro retangular escura (galeria da Coleção Elo)"]
+    },
+    {
+      "media_id": 2173,
+      "where": "galeria 1 da coleção Coleção Origem",
+      "points": [
+        {
+          "product": "penteadeira-lenyr",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2178,
+      "where": "galeria 1 da coleção Coleção Outset",
+      "points": [],
+      "not_found": ["Mesa de cabeceira de madeira com nicho e gaveta (galeria da Coleção Outset)"]
+    },
+    {
+      "media_id": 2179,
+      "where": "galeria 1 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "sofa-antonio",
+          "x": 47.0,
+          "y": 42.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2271,
+      "where": "galeria 1 do projeto Clara Arte Resort – Inhotim",
+      "points": [],
+      "not_found": ["Foto aérea da piscina: peças pequenas demais para identificar"]
+    },
+    {
+      "media_id": 2044,
+      "where": "galeria 1 do projeto Fazenda Boa Vista – JHSF",
+      "points": [
+        {
+          "product": "chaise-madri",
+          "x": 82.0,
+          "y": 64.0
+        },
+        {
+          "product": "mesa-de-centro-frizzo",
+          "x": 73.0,
+          "y": 57.0
+        }
+      ],
+      "not_found": [
+        "Sofá modular azul-petróleo",
+        "Poltrona de madeira de braço reto com almofadas bege",
+        "Ombrelone verde-escuro de mastro central",
+        "Mesas e cadeiras do restaurante (fundo, pequenas demais)"
+      ]
+    },
+    {
+      "media_id": 2045,
+      "where": "galeria 1 do projeto Kûara Hotel",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Mesinha lateral baixa de fibra"
+      ]
+    },
+    {
+      "media_id": 2346,
+      "where": "galeria 10 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banqueta-apruma",
+          "x": 25.0,
+          "y": 58.0
+        }
+      ],
+      "not_found": ["Mesa de bilhar", "Luminária de mesa (abajur vermelho)"]
+    },
+    {
+      "media_id": 2349,
+      "where": "galeria 11 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banqueta-apruma",
+          "x": 20.0,
+          "y": 63.0
+        }
+      ],
+      "not_found": ["Mesa de bilhar", "Luminária de mesa (abajur vermelho)"]
+    },
+    {
+      "media_id": 2350,
+      "where": "galeria 12 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banqueta-apruma",
+          "x": 30.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": ["Mesa de bilhar", "Luminária de mesa (abajur vermelho)"]
+    },
+    {
+      "media_id": 2283,
+      "where": "galeria 13 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banqueta-apruma",
+          "x": 35.0,
+          "y": 80.0
+        }
+      ],
+      "not_found": ["Luminária de mesa (abajur vermelho)"]
+    },
+    {
+      "media_id": 2284,
+      "where": "galeria 14 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 66.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo de madeira"]
+    },
+    {
+      "media_id": 2285,
+      "where": "galeria 15 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 70.0,
+          "y": 68.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2286,
+      "where": "galeria 16 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 26.0,
+          "y": 48.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar de base cônica", "Aparador de ripas de madeira ao fundo"]
+    },
+    {
+      "media_id": 2287,
+      "where": "galeria 17 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 72.0,
+          "y": 58.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar", "Aparador de ripas de madeira ao fundo"]
+    },
+    {
+      "media_id": 2288,
+      "where": "galeria 18 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "cadeira-melina-com-braco",
+          "x": 25.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": ["Mesa bistrô de tampo de pedra verde"]
+    },
+    {
+      "media_id": 2289,
+      "where": "galeria 19 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "cadeira-melina-com-braco",
+          "x": 60.0,
+          "y": 82.0
+        }
+      ],
+      "not_found": ["Mesa redonda de tampo de madeira com base de concreto"]
+    },
+    {
+      "media_id": 2172,
+      "where": "galeria 2 da coleção Coleção Elo",
+      "points": [
+        {
+          "product": "poltrona-elo",
+          "x": 55.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2174,
+      "where": "galeria 2 da coleção Coleção Origem",
+      "points": [
+        {
+          "product": "penteadeira-lenyr",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2180,
+      "where": "galeria 2 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "cadeira-aura",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2272,
+      "where": "galeria 2 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 50.0,
+          "y": 70.0
+        }
+      ],
+      "not_found": [
+        "Ombrelone central de mastro de madeira, lona bege",
+        "Luminária de piso marrom",
+        "Mesa lateral de tronco de madeira"
+      ]
+    },
+    {
+      "media_id": 2314,
+      "where": "galeria 2 do projeto Fazenda Boa Vista – JHSF",
+      "points": [
+        {
+          "product": "chaise-madri",
+          "x": 82.0,
+          "y": 64.0
+        },
+        {
+          "product": "mesa-de-centro-frizzo",
+          "x": 73.0,
+          "y": 57.0
+        }
+      ],
+      "not_found": [
+        "Sofá modular azul-petróleo",
+        "Poltrona de madeira de braço reto com almofadas bege",
+        "Ombrelone verde-escuro de mastro central",
+        "Mesas e cadeiras do restaurante (fundo, pequenas demais)"
+      ]
+    },
+    {
+      "media_id": 2046,
+      "where": "galeria 2 do projeto Kûara Hotel",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Poltrona de madeira com assento de fibra (Kûara)",
+        "Sofá longo com almofadas azuis e verdes (Kûara)",
+        "Mesinha lateral quadrada de fibra"
+      ]
+    },
+    {
+      "media_id": 2290,
+      "where": "galeria 20 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "cadeira-melina-com-braco",
+          "x": 58.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": ["Mesa redonda de tampo de madeira com base de concreto"]
+    },
+    {
+      "media_id": 2291,
+      "where": "galeria 21 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 45.0,
+          "y": 70.0
+        }
+      ],
+      "not_found": [
+        "Ombrelone central de mastro de madeira, lona bege (fechado)",
+        "Mesa lateral de tronco de madeira"
+      ]
+    },
+    {
+      "media_id": 2292,
+      "where": "galeria 22 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 80.0,
+          "y": 88.0
+        }
+      ],
+      "not_found": [
+        "Ombrelone central de mastro de madeira, lona bege (fechado)",
+        "Luminária de piso marrom",
+        "Mesa lateral de tronco de madeira"
+      ]
+    },
+    {
+      "media_id": 2293,
+      "where": "galeria 23 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 40.0,
+          "y": 85.0
+        }
+      ],
+      "not_found": [
+        "Ombrelone central de mastro de madeira, lona bege (fechado)",
+        "Mesa lateral de tronco de madeira",
+        "Cadeiras de ripas de madeira ao fundo"
+      ]
+    },
+    {
+      "media_id": 2294,
+      "where": "galeria 24 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 30.0,
+          "y": 82.0
+        }
+      ],
+      "not_found": ["Ombrelone central de mastro de madeira, lona bege", "Mesa lateral de tronco de madeira"]
+    },
+    {
+      "media_id": 2295,
+      "where": "galeria 25 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 75.0,
+          "y": 62.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2296,
+      "where": "galeria 26 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-cabeceira-xove",
+          "x": 24.0,
+          "y": 70.0
+        },
+        {
+          "product": "banco-paco",
+          "x": 50.0,
+          "y": 92.0
+        }
+      ],
+      "not_found": ["Cama (cabeceira de marcenaria)", "Abajur de mesa"]
+    },
+    {
+      "media_id": 2297,
+      "where": "galeria 27 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banco-paco",
+          "x": 82.0,
+          "y": 84.0
+        }
+      ],
+      "not_found": ["Cama", "Poltrona estofada cinza (cortada na foto)"]
+    },
+    {
+      "media_id": 2298,
+      "where": "galeria 28 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-cabeceira-xove",
+          "x": 29.0,
+          "y": 62.0
+        }
+      ],
+      "not_found": ["Cama", "Abajur de mesa"]
+    },
+    {
+      "media_id": 2299,
+      "where": "galeria 29 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-cabeceira-xove",
+          "x": 33.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": ["Cama", "Abajur de mesa"]
+    },
+    {
+      "media_id": 2175,
+      "where": "galeria 3 da coleção Coleção Origem",
+      "points": [
+        {
+          "product": "sofa-alfaia",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2181,
+      "where": "galeria 3 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "mesa-lateral-epoca",
+          "x": 50.0,
+          "y": 40.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2273,
+      "where": "galeria 3 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 45.0,
+          "y": 72.0
+        }
+      ],
+      "not_found": [
+        "Cadeiras e mesas de jantar de madeira ao fundo (área externa)",
+        "Luminária de piso marrom",
+        "Mesa lateral de tronco de madeira"
+      ]
+    },
+    {
+      "media_id": 2315,
+      "where": "galeria 3 do projeto Kûara Hotel",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Poltrona de madeira com assento de fibra (Kûara)",
+        "Sofá longo com almofadas azuis e verdes (Kûara)",
+        "Mesinha lateral quadrada de fibra"
+      ]
+    },
+    {
+      "media_id": 2300,
+      "where": "galeria 30 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "escrivaninha-bruma",
+          "x": 45.0,
+          "y": 60.0
+        }
+      ],
+      "not_found": ["Abajur de mesa"]
+    },
+    {
+      "media_id": 2301,
+      "where": "galeria 31 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "escrivaninha-bruma",
+          "x": 45.0,
+          "y": 50.0
+        }
+      ],
+      "not_found": ["Abajur de mesa", "Poltrona de tecido (cortada na foto)"]
+    },
+    {
+      "media_id": 2302,
+      "where": "galeria 32 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 33.0,
+          "y": 52.0
+        }
+      ],
+      "not_found": ["Cama", "Abajur de mesa", "Puff ou banco estampado na varanda"]
+    },
+    {
+      "media_id": 2303,
+      "where": "galeria 33 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "chaise-coce",
+          "x": 27.0,
+          "y": 68.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2304,
+      "where": "galeria 34 do projeto Clara Arte Resort – Inhotim",
+      "points": [],
+      "not_found": ["Marcenaria sob medida (armários e painéis)"]
+    },
+    {
+      "media_id": 2305,
+      "where": "galeria 35 do projeto Clara Arte Resort – Inhotim",
+      "points": [],
+      "not_found": ["Marcenaria sob medida (armários e copa)"]
+    },
+    {
+      "media_id": 2306,
+      "where": "galeria 36 do projeto Clara Arte Resort – Inhotim",
+      "points": [],
+      "not_found": [
+        "Puffs de tricô vermelho",
+        "Poltrona de madeira com assento de couro (cortada na foto)",
+        "Camas embutidas na marcenaria"
+      ]
+    },
+    {
+      "media_id": 2307,
+      "where": "galeria 37 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "aparador-xove",
+          "x": 60.0,
+          "y": 60.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2308,
+      "where": "galeria 38 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 60.0,
+          "y": 30.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2309,
+      "where": "galeria 39 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 50.0,
+          "y": 35.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2176,
+      "where": "galeria 4 da coleção Coleção Origem",
+      "points": [
+        {
+          "product": "sofa-sambura",
+          "x": 45.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2182,
+      "where": "galeria 4 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "cadeira-melina",
+          "x": 48.0,
+          "y": 48.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2274,
+      "where": "galeria 4 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 62.0,
+          "y": 65.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo de madeira"]
+    },
+    {
+      "media_id": 2316,
+      "where": "galeria 4 do projeto Kûara Hotel",
+      "points": [],
+      "not_found": [
+        "Espreguiçadeira de fibra trançada marrom, sem braços (Kûara)",
+        "Mesinha lateral baixa de fibra"
+      ]
+    },
+    {
+      "media_id": 2310,
+      "where": "galeria 40 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 50.0,
+          "y": 40.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2311,
+      "where": "galeria 41 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 45.0,
+          "y": 20.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2312,
+      "where": "galeria 42 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 40.0,
+          "y": 35.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2313,
+      "where": "galeria 43 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 50.0,
+          "y": 50.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2177,
+      "where": "galeria 5 da coleção Coleção Origem",
+      "points": [
+        {
+          "product": "sofa-tasca",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2183,
+      "where": "galeria 5 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "poltrona-orvalho",
+          "x": 45.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2275,
+      "where": "galeria 5 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 70.0,
+          "y": 64.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo de madeira"]
+    },
+    {
+      "media_id": 2184,
+      "where": "galeria 6 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "mesa-lateral-rito",
+          "x": 50.0,
+          "y": 48.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2276,
+      "where": "galeria 6 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "poltrona-apruma",
+          "x": 30.0,
+          "y": 88.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo de madeira"]
+    },
+    {
+      "media_id": 2185,
+      "where": "galeria 7 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "poltrona-so-corda",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2277,
+      "where": "galeria 7 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 60.0,
+          "y": 74.0
+        },
+        {
+          "product": "poltrona-apruma",
+          "x": 80.0,
+          "y": 25.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo branco"]
+    },
+    {
+      "media_id": 2186,
+      "where": "galeria 8 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "cadeira-toe",
+          "x": 45.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2278,
+      "where": "galeria 8 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 50.0,
+          "y": 78.0
+        },
+        {
+          "product": "poltrona-apruma",
+          "x": 64.0,
+          "y": 46.0
+        }
+      ],
+      "not_found": ["Mesa redonda de jantar com tampo branco"]
+    },
+    {
+      "media_id": 2187,
+      "where": "galeria 9 da coleção Coleção TEMPO",
+      "points": [
+        {
+          "product": "mesa-de-centro-trem",
+          "x": 50.0,
+          "y": 45.0
+        }
+      ],
+      "not_found": []
+    },
+    {
+      "media_id": 2279,
+      "where": "galeria 9 do projeto Clara Arte Resort – Inhotim",
+      "points": [
+        {
+          "product": "banqueta-apruma",
+          "x": 25.0,
+          "y": 63.0
+        }
+      ],
+      "not_found": ["Mesa de bilhar", "Luminária de mesa (abajur vermelho)"]
+    },
+    {
+      "media_id": 1719,
+      "where": "página factory",
+      "points": [],
+      "not_found": [
+        "Sofá cinza em L (capa da Fábrica)",
+        "Mesa de centro de madeira maciça (capa da Fábrica)",
+        "Mesa lateral de madeira com nicho (capa da Fábrica)"
+      ]
+    },
+    {
+      "media_id": 1717,
+      "where": "área indoor",
+      "points": [],
+      "not_found": [
+        "Sofá em L com laterais de ripas de madeira e tecido rosado (capa da Casa)",
+        "Mesa de centro com tampo de pedra verde (capa da Casa)",
+        "Mesa de centro de ripas de madeira (capa da Casa)"
+      ]
+    },
+    {
+      "media_id": 1718,
+      "where": "área outdoor",
+      "points": [
+        {
+          "product": "poltrona-arp",
+          "x": 20.0,
+          "y": 50.0
+        },
+        {
+          "product": "mesa-de-centro-arp",
+          "x": 51.0,
+          "y": 63.0
+        }
+      ],
+      "not_found": []
+    }
+  ]
+}

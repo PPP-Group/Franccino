@@ -11,7 +11,7 @@ import { FeaturePiece } from '@/components/products/FeaturePiece';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
-import { getLaunch, getLaunches, getPage } from '@/lib/api/content';
+import { getImagePointsFor, getLaunch, getLaunches, getPage } from '@/lib/api/content';
 import type { LaunchDetail, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { parseCatalogView } from '@/lib/catalog/view';
@@ -83,11 +83,14 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
     )
   ).map(toTechnicalRow);
 
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [banner]);
   return (
     <main>
       {/* À direita do título, uma peça dos lançamentos (retorno do tech lead de 06/11/2026: nada de metade vazia). */}
       <PageBanner
         image={banner}
+        points={banner ? points[banner.id] : null}
         title={page?.title ?? t('title')}
         lead={page?.intro ?? t('intro')}
         aside={feature ? <FeaturePiece product={feature} compact /> : null}

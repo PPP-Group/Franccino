@@ -1,8 +1,9 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { PageHead } from '@/components/layout/PageHead';
 import { MorphImage } from '@/components/media/MorphImage';
+import { PhotoPoints } from '@/components/media/PhotoPoints';
 import type { BreadcrumbItem } from '@/components/ui/Breadcrumbs';
-import type { Image } from '@/lib/api/types';
+import type { Image, ImagePoints } from '@/lib/api/types';
 import { aspectRatio, isWideArt } from '@/lib/images/cover';
 import { pageBannerSizes } from '@/lib/images/cover-sizes';
 
@@ -19,6 +20,8 @@ type PageBannerProps = {
   aside?: ReactNode;
   /** Nome do movimento (`morphName`): a foto do card que abriu a página cresce até o banner (ideia 10). */
   morph?: string;
+  /** Pontos clicáveis sobre a foto (retorno de 13/11/2026). */
+  points?: ImagePoints | null;
 };
 
 /**
@@ -27,7 +30,15 @@ type PageBannerProps = {
  * (`.page-banner-art` em `styles/pages.css`); a proporção vai em `--art-ratio` para a caixa ter a altura certa antes da
  * imagem chegar.
  */
-export function PageCoverArt({ image, morph }: { image: Image; morph?: string }) {
+export function PageCoverArt({
+  image,
+  morph,
+  points = null,
+}: {
+  image: Image;
+  morph?: string;
+  points?: ImagePoints | null;
+}) {
   const ratio = aspectRatio(image);
   const style = ratio
     ? ({ '--art-ratio': String(Math.round(ratio * 1000) / 1000) } as CSSProperties)
@@ -36,6 +47,7 @@ export function PageCoverArt({ image, morph }: { image: Image; morph?: string })
     <div className={ratio ? 'page-banner-art page-banner-art--fixed' : 'page-banner-art'} style={style}>
       {/* A capa recebe a foto do bloco que abriu a página (ideia 10, `MorphImage`). */}
       <MorphImage name={morph ?? `cover-${image.id}`} image={image} sizes="100vw" priority hero />
+      <PhotoPoints points={points} image={image} />
     </div>
   );
 }
@@ -51,7 +63,15 @@ export function PageCoverArt({ image, morph }: { image: Image; morph?: string })
  * Rodada 3: a foto fica parada no topo e a página sobe por cima dela, como no banner da home (só sem movimento
  * reduzido).
  */
-export function PageBanner({ image, title, lead = null, trail = [], aside = null, morph }: PageBannerProps) {
+export function PageBanner({
+  image,
+  title,
+  lead = null,
+  trail = [],
+  aside = null,
+  morph,
+  points = null,
+}: PageBannerProps) {
   if (!image) {
     return (
       <div className="wrap">
@@ -62,7 +82,7 @@ export function PageBanner({ image, title, lead = null, trail = [], aside = null
   if (isWideArt(image)) {
     return (
       <>
-        <PageCoverArt image={image} morph={morph} />
+        <PageCoverArt image={image} morph={morph} points={points} />
         <div className="wrap">
           <PageHead title={title} lead={lead} trail={trail} aside={aside} />
         </div>
@@ -79,6 +99,7 @@ export function PageBanner({ image, title, lead = null, trail = [], aside = null
         className="page-banner__img"
         hero
       />
+      <PhotoPoints points={points} image={image} />
       <div className="wrap page-banner__copy">
         <h1 className="page-banner__title">{title}</h1>
         {lead ? <p className="page-banner__lead">{lead}</p> : null}

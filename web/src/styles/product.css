@@ -691,6 +691,11 @@
   min-width: 160px;
 }
 
+/* Cada versão é um item da fileira; as que passam das primeiras ficam escondidas até "Ver todas" (ShowMore). */
+.tech-library__item {
+  display: contents;
+}
+
 /* Programa com várias versões do bloco: o nome do programa em cima, um botão por versão. */
 .tech-library__group {
   display: grid;

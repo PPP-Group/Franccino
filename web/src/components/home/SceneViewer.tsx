@@ -119,17 +119,19 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
                 href={{ pathname: '/products/[slug]', params: { slug: hotspot.product.slug } }}
                 transitionTypes={
                   hotspot.product.cover
-                    ? morphTypes(morphName('piece', `scene-${hotspot.product.slug}`))
+                    ? morphTypes(morphName('piece', `scene-${scene.id}-${hotspot.product.slug}`))
                     : undefined
                 }
                 data-morph-link={
-                  hotspot.product.cover ? morphName('piece', `scene-${hotspot.product.slug}`) : undefined
+                  hotspot.product.cover
+                    ? morphName('piece', `scene-${scene.id}-${hotspot.product.slug}`)
+                    : undefined
                 }
               >
                 {hotspot.product.cover ? (
                   <span className="scene__card-media hover-zoom">
                     <MorphImage
-                      name={morphName('piece', `scene-${hotspot.product.slug}`)}
+                      name={morphName('piece', `scene-${scene.id}-${hotspot.product.slug}`)}
                       image={hotspot.product.cover}
                       sizes="160px"
                       fit="contain"

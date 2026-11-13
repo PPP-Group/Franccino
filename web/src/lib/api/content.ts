@@ -5,6 +5,7 @@
  */
 
 import type { Locale } from '@/i18n/config';
+import { pickPoints, type PointsIndex } from '@/lib/scenes/image-points';
 import { EMPTY_SETTINGS } from '@/lib/settings';
 import { apiGet, apiGetOrNull } from './client';
 import { emptyPage, EMPTY_HOME } from './empty';
@@ -25,6 +26,8 @@ import type {
   ProjectCard,
   ProjectDetail,
   RedirectRule,
+  Image,
+  ImagePoints,
   Scene,
   Settings,
   SharedList,
@@ -189,6 +192,24 @@ export async function getScenes(locale: Locale): Promise<Scene[]> {
     fallback: { data: [] },
   });
   return data;
+}
+
+/** Pontos clicáveis sobre as fotos do site (banners, capas, galerias), pela mídia de cada foto (2026-11-13). */
+export async function getImagePoints(locale: Locale): Promise<ImagePoints[]> {
+  const { data } = await apiGet<Item<ImagePoints[]>>('/image-points', {
+    locale,
+    tags: ['scenes', 'products'],
+    fallback: { data: [] },
+  });
+  return data;
+}
+
+/** Os pontos só das fotos da lista (a página pede os das fotos que ela mostra). */
+export async function getImagePointsFor(
+  locale: Locale,
+  images: readonly (Image | null | undefined)[],
+): Promise<PointsIndex> {
+  return pickPoints(await getImagePoints(locale), images);
 }
 
 export async function getStores(locale: Locale, params: StoreListParams = {}): Promise<StoreList> {
