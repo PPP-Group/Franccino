@@ -1195,3 +1195,39 @@ Franccino pergunta todo dia). Branch `claude/banner-cover-images-vcdpmb`.
 2. Gerar o token do Drive no OAuth Playground (`drive.readonly`, passo a passo em `design/drive/LEIA-ME.md`) e pôr
    `GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOKEN` nas configurações do ambiente da sessão. Abrir uma sessão nova e pedir
    para rodar `design/drive/importar.py`: primeiro `--so files` (os blocos), depois `--so media`.
+
+### 29.2 13/11/2026: o envio feito e o que ficou para a Franccino
+
+Com os tokens no ambiente da sessão (`GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOKEN`), o lote foi enviado ao preview:
+
+- **Blocos:** os 53 blocos 3D e 2D (12 peças das linhas ARP, Adhara e Noa).
+- **Fotos do lote:** as 202. As 56 da Fábrica em HEIC passaram pelo Pillow com `pillow-heif` (o ImageMagick da sessão não lê o
+  HEIC do iPhone); `importar.py` usa o Pillow quando ele está instalado.
+- **Decisões do tech lead (13/11):**
+  - as imagens com cara de IA sobem;
+  - no Clara Arte, só as versões editadas (`replaces` troca a foto e mantém a posição);
+  - os 48 trechos brutos de vídeo ficam de fora.
+- **PRs #86 e #87:**
+  - vídeo em projeto e coleção (`video` e `video_poster`);
+  - filme como bloco Vídeo de página;
+  - galeria com legenda na página;
+  - assinatura (logo) do designer;
+  - `new_products` no `content:apply`, com a lista `2026-11-13-drive.json`: 11 peças do site antigo, publicadas com
+    área e categoria deduzidas, e o texto do Clara Arte.
+- **Também no preview:**
+  - os filmes do Clara Arte (60 MB) e do Manifesto TEMPO (46 MB);
+  - o filme novo da marcenaria (86 MB), que não é o do YouTube; os dois ficam na Fábrica;
+  - na Fábrica, as galerias "Peças em produção" (12 fotos) e "Lojas e ambientes" (11) e a foto dos sócios;
+  - 6 RAW da Mesa Polux;
+  - 4 imagens de IA da Mesa Joey e da Poltrona Pinot;
+  - a Pitá sem braço cinza (das 23 "outro ângulo", 22 já estavam no site, na versão certa da peça);
+  - as 12 assinaturas dos designers, recortadas das faixas do site antigo.
+- **Correção de 13/11:** o upload de MP4 em projeto e coleção dava 500. A conversão `lqip` (síncrona) tentava tirar um
+  quadro do vídeo. `HasImageConversions` não gera tamanhos para vídeo.
+- **PDF para a Franccino**, entregue ao Pedro Ivo (não está no repositório):
+  - 36 peças novas, a cadastrar com os dados deles;
+  - o que falta nas 11 peças do site antigo;
+  - 7 fotos de peça sem dono nas pastas dos designers;
+  - os catálogos do Clara Arte;
+  - os pedidos de lojas do texto do Clara Arte;
+  - o filme novo no YouTube.
