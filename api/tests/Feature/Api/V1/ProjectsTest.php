@@ -58,6 +58,12 @@ it('shows the page video of a project with its cover', function () {
 
     $video = $this->getJson('/api/v1/projects/clara-arte')->assertOk()->json('data.video');
 
+    // No image sizes for a video: the server cannot grab frames, and the small preview ran during the upload (500).
+    $media = $project->getFirstMedia('video');
+    $project->mediaConversions = [];
+    $project->registerMediaConversions($media);
+    expect($project->mediaConversions)->toBe([]);
+
     expect($video['url'])->toEndWith('clara.mp4')
         ->and($video['poster']['width'])->toBe(1080)
         ->and($video['poster']['height'])->toBe(1920);
