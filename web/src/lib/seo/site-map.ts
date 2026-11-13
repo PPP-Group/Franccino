@@ -14,7 +14,6 @@ export const SITE_MAP_PAGES = [
   { key: 'collections', namespace: 'nav', href: '/collections' },
   { key: 'designers', namespace: 'nav', href: '/designers' },
   { key: 'projects', namespace: 'nav', href: '/projects' },
-  { key: 'corporate', namespace: 'nav', href: '/corporate' },
   { key: 'factory', namespace: 'nav', href: '/factory' },
   { key: 'finishes', namespace: 'nav', href: '/finishes' },
   { key: 'stores', namespace: 'nav', href: '/stores' },
