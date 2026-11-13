@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.6). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.8). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1413,3 +1413,18 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
 - **Mapa das páginas:** todas as páginas públicas têm link no menu, no rodapé ou nos ícones do cabeçalho, menos
   "Projetos corporativos" (`/pt/corporativo`): ela só aparece no mapa do site e repete o "Corporativo" do menu
   (`/pt/projetos`). Fica para o tech lead decidir: redirecionar uma para a outra ou dar um link.
+
+### 30.8 13/11/2026 (noite): retratos coloridos no hover e pontos clicáveis em todas as fotos
+
+- **Retratos dos designers:** ganham cor no hover também na home, nos designers da coleção, em "Outros designers" e na
+  faixa do designer na peça; na página do designer, o retrato já vem colorido.
+- **Pontos em qualquer foto do site:** `scenes.photo_media_id` (migration `2026_11_13_120000`) liga um ambiente a uma
+  foto que já está no site; `GET /image-points` manda os pontos pela mídia; `POST /api/import/image-points` grava. O site
+  desenha os pontos no banner da home, no banner das páginas (área, projeto, Corporativo, Lançamentos, Fábrica), na capa
+  das coleções, nas galerias de projeto e coleção e na faixa do Corporativo (`PhotoPoints`, que acompanha o recorte e a
+  foto parada). As fotos dos blocos de página (galeria da Fábrica) não têm mídia própria e ficaram de fora.
+- **Mapeamento:** 88 fotos revisadas, 70 com pontos, 86 pontos (`design/pontos/`). O ambiente de teste da Fazenda Boa
+  Vista passou a ter as peças reais. A lista do que aparece nas fotos e não está no catálogo, para a Franccino, está no
+  `design/pontos/LEIA-ME.md`.
+- **Depois do deploy:** `python3 -I design/pontos/enviar.py design/pontos/2026-11-13-pontos.json` (com o
+  `CONTENT_IMPORT_TOKEN` no ambiente).
