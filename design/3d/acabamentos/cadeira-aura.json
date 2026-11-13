@@ -1,0 +1,6 @@
+[
+  { "cor": [67, 48, 28], "material": "madeira_clara" },
+  { "cor": [30, 10, 3], "material": "madeira_escura" },
+  { "cor": [103, 103, 103], "material": "linho", "tinta": [226, 220, 208] },
+  { "cor": [3, 3, 3], "material": "borracha" }
+]

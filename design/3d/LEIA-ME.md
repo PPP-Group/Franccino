@@ -41,3 +41,17 @@ renovado, abra uma sessão nova.
 Limites: GLB de até 20 MB (`franccino.uploads.model_3d_max_kb`) e SketchUp de até 150 MB. Alguns arquivos no formato
 antigo não abrem no OpenSKP ("implausible definition count", ex.: Banco ARP); esses pedem o arquivo salvo numa versão
 mais nova do SketchUp.
+
+## Teste de acabamentos genéricos (13/11/2026)
+
+Enquanto o mostruário não chega, `acabamento.py` troca as cores lisas de um GLB por materiais genéricos realistas:
+madeira, couro e trama de tecido da Poly Haven (licença CC0, uso comercial livre), alumínio e borracha. O mapa de cada
+peça (`acabamentos/<slug>.json`) diz qual cor do GLB vira qual material. Os tecidos usam só a trama, tingida com a cor
+do arquivo. Aplicado na Chaise Coce e na Cadeira Arreda, no preview, como teste: não é o acabamento real da
+Franccino.
+
+```bash
+# texturas em TEX_LIB: <nome>_diff.jpg, <nome>_nor.jpg e <nome>_rough.jpg (1k), de api.polyhaven.com/files/<nome>
+# european_walnut_veneer_04, fine_grained_wood, rough_linen, brown_leather
+TEX_LIB=/tmp/tex skpenv/bin/python -I design/3d/acabamento.py peca.glb peca-acabada.glb design/3d/acabamentos/peca.json
+```

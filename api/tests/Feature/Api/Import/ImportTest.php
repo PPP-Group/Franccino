@@ -3,6 +3,7 @@
 use App\Enums\ProductFileType;
 use App\Models\Banner;
 use App\Models\Designer;
+use App\Models\Finish;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\Project;
@@ -327,4 +328,34 @@ it('takes the 3D model of a product as a GLB on the private disk', function () {
     expect($media)->not->toBeNull()
         ->and($media->disk)->toBe('downloads');
     Storage::disk('downloads')->assertExists($media->getPathRelativeToRoot());
+});
+
+it('creates finish groups and finishes by code, links them to pieces and takes the swatch photo', function () {
+    config(['franccino.import.token' => 'abc123']);
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $auth = ['Authorization' => 'Bearer abc123'];
+    $chair = publishedProduct();
+    $payload = ['groups' => [[
+        'name' => ['pt' => 'Madeiras (exemplo)', 'en' => 'Woods (sample)'],
+        'finishes' => [['code' => 'EX-MAD-01', 'name' => ['pt' => 'Nogueira clara (exemplo)'], 'products' => ['cadeira-aura', 'nao-existe']]],
+    ]]];
+
+    $this->postJson('/api/import/finishes', $payload, $auth)->assertOk()
+        ->assertJsonPath('data.finishes', 1)
+        ->assertJsonPath('data.linked', 1)
+        ->assertJsonPath('data.not_found', ['nao-existe']);
+    // De novo: atualiza, sem duplicar o acabamento nem a ligação.
+    $this->postJson('/api/import/finishes', $payload, $auth)->assertOk()->assertJsonPath('data.linked', 0);
+
+    $finish = Finish::query()->where('code', 'EX-MAD-01')->sole();
+    expect($finish->is_published)->toBeTrue()
+        ->and($finish->group->getTranslation('name', 'pt'))->toBe('Madeiras (exemplo)')
+        ->and($chair->finishes()->pluck('finishes.id')->all())->toBe([$finish->id]);
+
+    $this->post('/api/import/media', [
+        'target' => 'finish', 'key' => 'EX-MAD-01', 'collection' => 'swatch',
+        'file' => UploadedFile::fake()->image('amostra.jpg', 600, 600),
+    ], $auth)->assertCreated();
+    expect($finish->fresh()->getFirstMedia('swatch'))->not->toBeNull();
 });
