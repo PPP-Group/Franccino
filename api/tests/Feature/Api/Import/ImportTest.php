@@ -215,7 +215,7 @@ it('takes the page video of a project and photos for a named gallery of a page',
         'target' => 'project',
         'key' => 'clara-arte',
         'collection' => 'video',
-        'file' => UploadedFile::fake()->createWithContent('clara.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 2048)),
+        'file' => UploadedFile::fake()->createWithContent('clara.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 2048))->mimeType('video/mp4'),
     ], $auth)->assertCreated();
     $this->post('/api/import/media', [
         'target' => 'project',
@@ -268,7 +268,7 @@ it('adds a film to a page as a video block, keeping the YouTube one', function (
         'key' => 'factory',
         'collection' => 'video',
         'title' => 'Marcenaria',
-        'file' => UploadedFile::fake()->createWithContent('fabrica.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 2048)),
+        'file' => UploadedFile::fake()->createWithContent('fabrica.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 2048))->mimeType('video/mp4'),
         'poster' => UploadedFile::fake()->image('capa.jpg', 1920, 1080),
     ], ['Authorization' => 'Bearer abc123']);
 
