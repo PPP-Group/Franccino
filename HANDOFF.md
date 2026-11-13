@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (29, de 12/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1231,3 +1231,47 @@ Com os tokens no ambiente da sessão (`GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOK
   - os catálogos do Clara Arte;
   - os pedidos de lojas do texto do Clara Arte;
   - o filme novo no YouTube.
+
+## 30. 13/11/2026: retorno do tech lead sobre o preview (16 pontos)
+
+PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [#91](https://github.com/PPP-Group/Franccino/pull/91)
+(para a `main`). Branch `claude/banner-cover-images-vcdpmb`.
+
+- **Grade e tabela técnica:** a troca é no navegador, sem ir ao servidor (antes, às vezes recarregava, mais com filtro).
+  A página já vem com as duas vistas; o endereço muda por `history.replaceState` (`ViewToggle`, `CatalogViewProvider`,
+  `ByView`). Vale no catálogo e nos lançamentos.
+- **Galerias:** no projeto e na Fábrica, as primeiras fotos e "Ver mais"; aberta, o "Ver menos" fica preso ao pé da tela
+  (`ShowMore`). Na coleção, as peças vêm logo depois da introdução; embaixo do texto, 3 miniaturas e "Ver imagens", que
+  abre a galeria inteira numa janela (`GalleryDialog`); o vídeo vai para depois das peças.
+- **FAQ** no desenho do site (perguntas numeradas, "Ainda com dúvidas?" ao lado). **Cookies:** um link só no rodapé; as
+  preferências ficam dentro da página Política de cookies (migration `2026_11_13_100000` troca a frase do texto).
+- **Área do Profissional:** o layout da tabela técnica (fotos no hover, foto que cresce, "+"); na peça, o link leva à
+  Área do Profissional já filtrada por ela; várias versões no mesmo formato viram um link só ("SKP (15 versões)").
+- **Filtros:** a foto do hover na proporção dela (coleção deitada, retrato em pé). **Retrato do designer:** sem o fundo
+  bege no destino da animação.
+- **Medidas:** 81 peças com a medida do site antigo (`api/database/data/wordpress/2026-11-13-medidas.json`, aplicada no
+  deploy; só preenche peça sem medida) e o campo "Diâmetro até" no painel. Continuam sem medida 19 peças que nem o site
+  antigo tem (ex.: Sofá Noa, Sofá Antônio, Sofá Majestic, Sofá Pinot Square, Mesa de centro Noa redonda).
+- **Sala para montar:** a peça sem medida aparece na busca, com "Medidas a confirmar", em vez de sumir (o Sofá Noa "não
+  existia" por isso). Nenhuma peça tem vista de cima cadastrada ainda; o caminho no código está pronto.
+- **Importação:** `POST /api/import/media/remove` tira fotos de um registro (`docs/api.md`). O limite da biblioteca de
+  mídia subiu para 200 MB: era ele que dava 500 no envio dos filmes do Clara Arte e do Manifesto TEMPO.
+- **Fotos em produto errado (do lote do Drive de 13/11):** a planilha ligava a pasta de uma peça a um produto só, e fotos
+  de versões irmãs entraram no produto errado ("com braço" no "sem braço", Noa quadrada na redonda, Samburá individual no
+  duplo, Barcelona sem encosto no com encosto e outras). Todas já existiam, iguais, no produto certo: saem do errado.
+  Junto, as fotos repetidas dentro do mesmo produto e as 3 cópias antigas do começo da galeria do Clara Arte. São 70
+  fotos em 25 registros (lista em `remover.json` na área temporária da sessão), removidas pela rota nova depois do deploy.
+- **Capas:** revisadas as 338 peças com mais de uma foto. Só duas fugiam da regra: Mesa de cabeceira Xove (capa de
+  perfil) e Sofá Dara Indoor (diagonal virada para a direita). Lista `api/database/data/covers/2026-11-13-diagonal-esquerda-5.json`.
+- **Respostas de dados (sem mudança de código):**
+  - arquivos com a mesma extensão numa peça são versões diferentes (tamanhos e configurações), não duplicados;
+  - Estante Bloco e Sofá Pinot Square não têm foto no site antigo nem no Drive: despublicar ou pedir as fotos;
+  - Acabamentos vazio: não há lista de acabamentos no Drive "Site Franccino" nem no site antigo (PPP-23);
+  - o 3D da página da peça precisa de GLB. Os blocos SketchUp e AutoCAD não abrem no navegador, e converter formato
+    está fora do escopo. Só a Cadeira Marcela tem GLB, e o "Produto de Teste" publicado no preview deve ser apagado.
+
+### 30.1 Depois do deploy
+
+1. Rodar as remoções (`remover.json`) e enviar os filmes do Clara Arte e do Manifesto TEMPO.
+2. Conferir no preview: Clara Arte (sem as cópias e com o filme), Coleção TEMPO, Área do Profissional, FAQ e
+   Política de cookies.
