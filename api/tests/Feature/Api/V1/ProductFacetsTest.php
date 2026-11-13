@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Collection;
+use App\Models\Designer;
 use App\Models\Product;
 
 it('counts categories within an area, ignoring products from other areas', function () {
@@ -41,7 +43,7 @@ it('returns the expected facet groups', function () {
 
     $this->getJson('/api/v1/products/facets')
         ->assertOk()
-        ->assertJsonStructure(['data' => ['categories', 'designers', 'collections', 'lines', 'finish_groups', 'rooms']]);
+        ->assertJsonStructure(['data' => ['categories', 'designers', 'collections', 'lines', 'finish_groups', 'rooms', 'products']]);
 });
 
 it('rejects an invalid area filter', function () {
@@ -71,4 +73,22 @@ it('counts products by room, in the order of the room list (revisão de 12/11/20
     $this->getJson('/api/v1/products/facets')
         ->assertOk()
         ->assertJsonPath('data.rooms', [['key' => 'dining', 'count' => 1], ['key' => 'living', 'count' => 2]]);
+});
+
+it('lists the filter keys of each matching product, so the site can cross the filters', function () {
+    $indoor = area('indoor');
+    $outdoor = area('outdoor');
+    $sideboards = Category::factory()->create(['slug' => ['pt' => 'aparadores', 'en' => 'sideboards']]);
+    $designer = Designer::factory()->create(['slug' => 'ana']);
+    $tempo = Collection::factory()->create(['slug' => ['pt' => 'tempo', 'en' => 'tempo']]);
+
+    $piece = Product::factory()->for($indoor)->for($sideboards)->for($designer)->create(['rooms' => ['living']]);
+    $piece->collections()->attach($tempo);
+    Product::factory()->for($outdoor)->for($sideboards)->create();
+
+    $products = $this->getJson('/api/v1/products/facets?area=indoor')->assertOk()->json('data.products');
+
+    expect($products)->toBe([
+        ['category' => 'aparadores', 'designer' => 'ana', 'collections' => ['tempo'], 'rooms' => ['living']],
+    ]);
 });

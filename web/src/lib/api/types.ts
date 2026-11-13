@@ -393,6 +393,15 @@ export type Facets = {
   finish_groups: FacetOption[];
   /** Ambientes com peça (item 8), na ordem da API; o site traduz a chave. Ausente em respostas antigas. */
   rooms?: { key: string; count: number }[];
+  /** As chaves de cada peça do recorte em cada filtro (2026-11-13): o site cruza os filtros. Ausente em respostas antigas. */
+  products?: FacetProduct[];
+};
+
+export type FacetProduct = {
+  category: string | null;
+  designer: string | null;
+  collections: string[];
+  rooms: string[];
 };
 
 export type SearchResult = {

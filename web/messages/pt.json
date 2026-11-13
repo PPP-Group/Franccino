@@ -231,7 +231,9 @@
       "groupLabel": "Acabamentos de {group}",
       "swatchLabel": "{name}, código {code}",
       "code": "Código {code}",
-      "choose": "Escolha um acabamento de {group}."
+      "choose": "Escolha um acabamento de {group}.",
+      "seeAll": "Ver todos os acabamentos",
+      "swatchBook": "As cores e os materiais seguem o mostruário Franccino."
     },
     "buyLabel": "Orçamento",
     "pendingHint": "Acabamento a definir: {groups}. Selecione agora ou defina posteriormente com nossa equipe.",
@@ -306,7 +308,8 @@
         "revit": "Revit",
         "glb": "GLB (3D)"
       },
-      "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional"
+      "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional",
+      "allVersions": "Ver todas as {count} versões"
     },
     "variants": {
       "title": "Variações"

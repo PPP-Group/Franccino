@@ -231,7 +231,9 @@
       "groupLabel": "{group} finishes",
       "swatchLabel": "{name}, code {code}",
       "code": "Code {code}",
-      "choose": "Choose a {group} finish."
+      "choose": "Choose a {group} finish.",
+      "seeAll": "See all finishes",
+      "swatchBook": "Colours and materials follow the Franccino swatch book."
     },
     "buyLabel": "Quote",
     "pendingHint": "Finish to be defined: {groups}. Select it now or define it later with our team.",
@@ -306,7 +308,8 @@
         "revit": "Revit",
         "glb": "GLB (3D)"
       },
-      "professionalsPiece": "See this piece's files in the Professionals area"
+      "professionalsPiece": "See this piece's files in the Professionals area",
+      "allVersions": "See all {count} versions"
     },
     "variants": {
       "title": "Variations"

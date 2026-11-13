@@ -1395,3 +1395,21 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   no repositório. Abas: como preencher, peças novas (36), peças do site antigo (11), medidas (19 peças; nas 6 com bloco,
   a medida do bloco para confirmar), descrições (21), ambientes e variações (as 399 peças) e acabamentos. Volta
   preenchida e entra pela importação em massa (`new_products` do `content:apply`, `/api/import/finishes` e o painel).
+
+### 30.7 13/11/2026 (noite): filtros ligados, arquivos da peça e acesso aos Acabamentos
+
+- **Filtros ligados entre si:** a contagem de cada opção leva em conta os outros filtros escolhidos, na hora, antes do
+  "Aplicar" (com "Aparadores e buffets", as coleções sem aparador mostram 0 e ficam apagadas). A API manda em
+  `GET /products/facets` as chaves de cada peça (`products`, `docs/api.md`) e o site cruza no navegador
+  (`lib/catalog/facets.ts`, `FacetFilters`).
+- **"Limpar filtros":** as listas voltam para "Todas" (antes a lista guardava o filtro antigo, porque o componente
+  não remontava).
+- **Arquivos da peça:** programa com mais de 4 versões mostra as 4 primeiras e "Ver todas as N versões" (o Sofá Noa tem
+  16 SketchUp).
+- **Acabamentos:** a página só se achava pelo endereço. Agora está no menu Produtos (ao lado de Área interna e Área
+  externa), no rodapé e na página de cada peça (bloco "Acabamentos", com a nota da peça ou "As cores e os materiais
+  seguem o mostruário Franccino" e "Ver todos os acabamentos"; nas peças com acabamento cadastrado, o link vem embaixo
+  das amostras).
+- **Mapa das páginas:** todas as páginas públicas têm link no menu, no rodapé ou nos ícones do cabeçalho, menos
+  "Projetos corporativos" (`/pt/corporativo`): ela só aparece no mapa do site e repete o "Corporativo" do menu
+  (`/pt/projetos`). Fica para o tech lead decidir: redirecionar uma para a outra ou dar um link.

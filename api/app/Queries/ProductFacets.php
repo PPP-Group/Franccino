@@ -24,12 +24,16 @@ use Illuminate\Support\Str;
  * each category / designer / collection / line / finish group. Aggregated in
  * PHP over the (typically small) matching product set rather than raw SQL,
  * to stay portable between MySQL and the SQLite test database.
+ *
+ * `products` lists, per matching product, the keys it has in each filter (category, designer, collections, rooms):
+ * the site counts each filter option against the other selected filters in the browser, so choosing a category
+ * already shows how many pieces of each collection are left, before applying (retorno de 13/11/2026).
  */
 final class ProductFacets
 {
     /**
      * @param  array<string, mixed>  $filters
-     * @return array{categories: list<array>, designers: list<array>, collections: list<array>, lines: list<array>, finish_groups: list<array>, rooms: list<array{key: string, count: int}>}
+     * @return array{categories: list<array>, designers: list<array>, collections: list<array>, lines: list<array>, finish_groups: list<array>, rooms: list<array{key: string, count: int}>, products: list<array{category: string|null, designer: string|null, collections: list<string>, rooms: list<string>}>}
      */
     public static function for(array $filters): array
     {
@@ -79,6 +83,19 @@ final class ProductFacets
                 ],
             ),
             'rooms' => self::rooms($products),
+            'products' => $products
+                ->map(fn (Product $product) => [
+                    'category' => $product->category ? Localized::value($product->category, 'slug') : null,
+                    'designer' => $product->designer?->slug,
+                    'collections' => $product->collections
+                        ->map(fn (CollectionModel $collection) => Localized::value($collection, 'slug'))
+                        ->filter()
+                        ->values()
+                        ->all(),
+                    'rooms' => array_values(array_unique($product->rooms ?? [])),
+                ])
+                ->values()
+                ->all(),
         ];
     }
 

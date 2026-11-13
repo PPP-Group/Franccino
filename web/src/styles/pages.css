@@ -2069,6 +2069,15 @@
   color: var(--paper);
 }
 
+/* Lista curta (os arquivos da peça): o botão logo abaixo, à esquerda, sem ficar preso ao pé da tela. */
+.show-more--inline .show-more__bar,
+.show-more--inline.is-open .show-more__bar {
+  position: static;
+  justify-content: flex-start;
+  margin-top: var(--space-3);
+  pointer-events: auto;
+}
+
 /* O nome da galeria (ex.: "Peças em produção") em cima das fotos. */
 .block-gallery > figcaption:first-child {
   margin: 0 0 var(--space-4);

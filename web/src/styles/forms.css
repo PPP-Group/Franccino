@@ -340,6 +340,11 @@ input[type='radio']:disabled {
   background: var(--sand);
 }
 
+/* Sem peça com os outros filtros escolhidos (contagem 0): continua escolhível, mas apagada. */
+.select__option.is-muted {
+  color: var(--ink-muted);
+}
+
 .select__option[aria-selected='true'] {
   font-weight: 500;
 }

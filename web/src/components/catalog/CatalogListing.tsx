@@ -19,6 +19,7 @@ import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
+import { buildFacetMatrix } from '@/lib/catalog/facets';
 import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar, type ToolbarFilter } from './CatalogToolbar';
@@ -164,6 +165,14 @@ export async function CatalogListing(props: CatalogListingProps) {
     },
   ];
 
+  // As chaves de cada peça por filtro: a contagem de cada opção cruza os outros filtros, ao vivo (retorno de 13/11/2026).
+  const matrix = facets.products
+    ? buildFacetMatrix(
+        facets.products,
+        filters.map((filter) => filter.name),
+      )
+    : null;
+
   const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
 
   return (
@@ -192,6 +201,7 @@ export async function CatalogListing(props: CatalogListingProps) {
             view={view}
             hrefFor={hrefFor}
             filters={filters}
+            matrix={matrix}
             formAction={props.formAction}
             hiddenQuery={hiddenQuery}
             pager={

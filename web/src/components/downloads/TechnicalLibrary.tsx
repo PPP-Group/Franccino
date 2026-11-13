@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { ShowMore } from '@/components/content/ShowMore';
 import { DownloadButton } from '@/components/products/DownloadButton';
 import { Link } from '@/i18n/navigation';
 import type { DownloadFile } from '@/lib/api/types';
@@ -29,6 +30,9 @@ export function versionLabel(title: string): string {
 }
 
 type ProgramKey = (typeof PROGRAMS)[number]['key'];
+
+/** Versões à vista por programa; as outras aparecem em "Ver todas" (retorno de 13/11/2026: o Sofá Noa tem 15 SketchUp). */
+export const VISIBLE_VERSIONS = 4;
 
 /** Os blocos por programa, na ordem de `PROGRAMS` e, dentro de cada um, na ordem do painel. */
 export function blocksByProgram(files: DownloadFile[]): { program: ProgramKey; files: DownloadFile[] }[] {
@@ -72,16 +76,24 @@ export function TechnicalLibrary({ files, productName }: { files: DownloadFile[]
           {several.map(({ program, files: versions }) => (
             <div key={program} className="tech-library__group">
               <h3 className="tech-library__program">{t(`programs.${program}`)}</h3>
-              <div className="tech-library__programs">
-                {versions.map((file) => (
-                  <DownloadButton
-                    key={file.id}
-                    file={file}
-                    variant="program"
-                    label={versionLabel(file.title)}
-                  />
-                ))}
-              </div>
+              <ShowMore
+                inline
+                hidden={versions.length - VISIBLE_VERSIONS}
+                moreLabel={t('allVersions', { count: versions.length })}
+              >
+                <div className="tech-library__programs">
+                  {versions.map((file, index) => (
+                    <span
+                      key={file.id}
+                      className={
+                        index < VISIBLE_VERSIONS ? 'tech-library__item' : 'tech-library__item is-extra'
+                      }
+                    >
+                      <DownloadButton file={file} variant="program" label={versionLabel(file.title)} />
+                    </span>
+                  ))}
+                </div>
+              </ShowMore>
             </div>
           ))}
         </>
