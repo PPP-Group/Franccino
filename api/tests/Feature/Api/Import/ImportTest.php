@@ -305,7 +305,7 @@ it('removes only the listed photos of that record and collection', function () {
     $this->postJson('/api/import/media/remove', [
         'target' => 'product',
         'key' => 'cadeira-aura',
-        'collection' => 'model_3d',
+        'collection' => 'portrait',
         'ids' => [$keep->id],
     ], $auth)->assertStatus(422);
 });
