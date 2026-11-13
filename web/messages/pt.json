@@ -628,7 +628,8 @@
     "othersTitle": "Outras coleções",
     "fillLaunch": "Conheça os lançamentos",
     "fillAllTitle": "Todas as peças",
-    "fillAllCta": "Conheça as peças"
+    "fillAllCta": "Conheça as peças",
+    "video": "Vídeo da coleção {name}"
   },
   "designers": {
     "downloads": "Catálogos e apresentações",
@@ -662,7 +663,8 @@
     "type": "Tipo",
     "othersTitle": "Outros projetos",
     "sceneTitle": "Peças no ambiente",
-    "sceneLead": "Selecione os pontos para conhecer cada peça."
+    "sceneLead": "Selecione os pontos para conhecer cada peça.",
+    "video": "Vídeo do projeto {name}"
   },
   "corporate": {
     "title": "Corporativo",

@@ -24,6 +24,9 @@ export type Image = {
   blur_data_url: string | null;
 };
 
+/** Vídeo da página de projeto ou coleção (MP4 do próprio site, tocado só no clique); a capa dá o formato do quadro. */
+export type PageVideo = { url: string; poster: Image | null };
+
 export type Seo = { title: string | null; description: string | null; image: Image | null };
 
 export type AreaRef = { key: 'indoor' | 'outdoor'; name: string; brand_name: string };
@@ -138,6 +141,7 @@ export type CollectionCard = CollectionRef & {
 export type CollectionDetail = CollectionCard & {
   description: string | null;
   gallery: Image[];
+  video?: PageVideo | null;
   designers: DesignerRef[];
   products: ProductCard[];
   seo: Seo;
@@ -154,6 +158,8 @@ export type DesignerCard = DesignerRef & {
 
 export type DesignerDetail = DesignerCard & {
   bio: string | null;
+  /** Assinatura (logo) do designer, enviada no painel; `null` sem ela. */
+  signature?: Image | null;
   website_url: string | null;
   instagram_url: string | null;
   products: ProductCard[];
@@ -207,6 +213,7 @@ export type ProjectDetail = ProjectCard & {
   /** Peça escolhida no painel para o lado do texto (retorno de 12/11/2026); só se publicada. */
   featured_product?: ProductCard | null;
   gallery: Image[];
+  video?: PageVideo | null;
   products: ProductCard[];
   seo: Seo;
   slugs: Record<Locale, string | null>;

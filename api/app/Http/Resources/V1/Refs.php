@@ -10,6 +10,7 @@ use App\Models\Line;
 use App\Support\ImagePresenter;
 use App\Support\Localized;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -18,6 +19,22 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 final class Refs
 {
+    /**
+     * The page video of a project or collection: the MP4 served by the site's storage and its optional cover
+     * (`Image`, whose width and height give the frame its shape: a vertical film keeps 9:16).
+     *
+     * @return array{url: string, poster: array<string, mixed>|null}|null
+     */
+    public static function video(HasMedia $model, string $alt): ?array
+    {
+        $video = $model->getFirstMedia('video');
+
+        return $video === null ? null : [
+            'url' => $video->getUrl(),
+            'poster' => ImagePresenter::present($model->getFirstMedia('video_poster'), $alt),
+        ];
+    }
+
     /** @return array{key: string, name: string, brand_name: string} */
     public static function area(Area $area): array
     {

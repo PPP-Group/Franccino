@@ -1610,6 +1610,25 @@
   margin-top: var(--section-y);
 }
 
+/* Vídeo do projeto ou da coleção: largo como as fotos da galeria; em pé (9:16), estreito e no centro, sem passar da
+   altura da tela. O quadro segue a proporção da capa (--video-ratio). */
+.page-video {
+  margin-top: var(--section-y);
+}
+
+.page-video .block-video {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.page-video .video__frame {
+  aspect-ratio: var(--video-ratio, 16 / 9);
+}
+
+.page-video--portrait .block-video {
+  width: min(100%, calc(80svh * var(--video-ratio, 0.5625)));
+}
+
 @media (max-width: 56.25rem) {
   .project-story {
     grid-template-columns: minmax(0, 1fr);
@@ -1886,4 +1905,19 @@
 .partner-form {
   max-width: 720px;
   margin-top: var(--space-8);
+}
+
+/* Assinatura (logo) do designer ao lado do nome: pequena, em tons de cinza como as logos dos clientes. */
+.designer__meta {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-2);
+}
+
+.designer__signature {
+  width: auto;
+  max-width: 200px;
+  max-height: 56px;
+  object-fit: contain;
+  filter: grayscale(1);
 }

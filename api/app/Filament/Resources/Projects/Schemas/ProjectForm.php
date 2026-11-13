@@ -81,6 +81,15 @@ class ProjectForm
                     ->image()
                     ->multiple()
                     ->reorderable(),
+                SpatieMediaLibraryFileUpload::make('video')
+                    ->label(__('Video file (MP4)'))
+                    ->collection('video')
+                    ->acceptedFileTypes(['video/mp4'])
+                    ->maxSize(config('franccino.uploads.video_max_kb')),
+                SpatieMediaLibraryFileUpload::make('video_poster')
+                    ->label(__('Video cover'))
+                    ->collection('video_poster')
+                    ->image(),
             ]);
     }
 }
