@@ -63,42 +63,42 @@ def main():
     entrada, saida, mapa_p = sys.argv[1:4]
     mapa = json.load(open(mapa_p))
     cena = trimesh.load(entrada, force='scene')
-    malhas = cena.dump(concatenate=False)  # em metros, com as transformações aplicadas
-    nova = trimesh.Scene()
-    cache = {}
-    for m in malhas:
-        cor = np.array(m.visual.material.baseColorFactor[:3], dtype=float) if hasattr(m.visual, 'material') else None
-        regra = None
-        if cor is not None:
-            for r in mapa:
-                if np.abs(cor - np.array(r['cor'])).max() <= 3:
-                    regra = r
-                    break
+    # A escala do mundo (metros) sobre a malha local: a trama da palhinha é uma malha repetida centenas de vezes, então
+    # o acabamento vai na malha original e as repetições ficam (o arquivo não cresce).
+    escala = {}
+    for no in cena.graph.nodes_geometry:
+        matriz, nome_geo = cena.graph[no]
+        escala.setdefault(nome_geo, float(np.cbrt(abs(np.linalg.det(matriz[:3, :3])))) or 1.0)
+    cache, materiais = {}, {}
+    for nome_geo, m in list(cena.geometry.items()):
+        material = getattr(m.visual, 'material', None)
+        fator = getattr(material, 'baseColorFactor', None)
+        if fator is None:
+            continue
+        cor = np.array(fator[:3], dtype=float)
+        regra = next((r for r in mapa if np.abs(cor - np.array(r['cor'])).max() <= 3), None)
         if regra is None:
-            nova.add_geometry(m)
             continue
         tipo = regra['material']
-        # A tinta vem em sRGB (a cor do SketchUp); o glTF espera a cor linear.
         tinta = [linear(c / 255) for c in regra.get('tinta', [255, 255, 255])] + [1]
-        if tipo == 'aluminio':
-            m.visual.material = PBRMaterial(baseColorFactor=[0.80, 0.80, 0.82, 1], metallicFactor=1.0, roughnessFactor=0.35)
-            nova.add_geometry(m)
-            continue
-        if tipo == 'borracha':
-            m.visual.material = PBRMaterial(baseColorFactor=[0.03, 0.03, 0.03, 1], metallicFactor=0.0, roughnessFactor=0.9)
-            nova.add_geometry(m)
+        if tipo in ('aluminio', 'borracha'):
+            base = [0.80, 0.80, 0.82, 1] if tipo == 'aluminio' else [0.03, 0.03, 0.03, 1]
+            m.visual.material = PBRMaterial(baseColorFactor=base, metallicFactor=1.0 if tipo == 'aluminio' else 0.0,
+                                            roughnessFactor=0.35 if tipo == 'aluminio' else 0.9)
             continue
         nome, metros = TEX[tipo]
         chave = (nome, tipo in TINGIR)
         if chave not in cache:
             cache[chave] = textura(nome, tipo in TINGIR)
         diff, nor, mr = cache[chave]
-        malha, uv = uv_caixa(m, metros)
-        mat = PBRMaterial(baseColorTexture=diff, normalTexture=nor, metallicRoughnessTexture=mr,
-                          baseColorFactor=tinta, metallicFactor=0.0, roughnessFactor=1.0)
-        malha.visual = TextureVisuals(uv=uv, material=mat)
-        nova.add_geometry(malha)
-    nova.export(saida, file_type='glb')
+        chave_mat = (tipo, tuple(tinta))
+        if chave_mat not in materiais:
+            materiais[chave_mat] = PBRMaterial(baseColorTexture=diff, normalTexture=nor, metallicRoughnessTexture=mr,
+                                               baseColorFactor=tinta, metallicFactor=0.0, roughnessFactor=1.0)
+        malha, uv = uv_caixa(m, metros / escala.get(nome_geo, 1.0))
+        malha.visual = TextureVisuals(uv=uv, material=materiais[chave_mat])
+        cena.geometry[nome_geo] = malha
+    cena.export(saida, file_type='glb')
     print(saida, round(Path(saida).stat().st_size / 1e6, 2), 'MB')
 
 

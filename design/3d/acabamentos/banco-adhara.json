@@ -1,0 +1,6 @@
+[
+  { "cor": [175, 149, 109], "material": "linho", "tinta": [236, 228, 210] },
+  { "cor": [114, 95, 76], "material": "tela", "tinta": [205, 190, 160] },
+  { "cor": [125, 91, 59], "material": "tela", "tinta": [200, 180, 145] },
+  { "cor": [3, 3, 3], "material": "borracha" }
+]

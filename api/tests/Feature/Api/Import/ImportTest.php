@@ -331,6 +331,7 @@ it('takes the 3D model of a product as a GLB on the private disk', function () {
 });
 
 it('creates finish groups and finishes by code, links them to pieces and takes the swatch photo', function () {
+    config(['franccino.import.token' => 'abc123']);
     Storage::fake('media');
     config(['media-library.queue_conversions_by_default' => false]);
     $auth = ['Authorization' => 'Bearer abc123'];
