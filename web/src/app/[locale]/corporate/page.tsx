@@ -6,7 +6,7 @@ import { ProjectRow } from '@/components/content/ProjectRow';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { FeaturePiece } from '@/components/products/FeaturePiece';
 import type { Locale } from '@/i18n/config';
-import { getClients, getPage, getProjects } from '@/lib/api/content';
+import { getClients, getImagePointsFor, getPage, getProjects } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -38,10 +38,16 @@ export default async function CorporatePage({ params }: Props) {
   ]);
   // Peça em destaque escolhida no painel (Páginas); sem escolha, nenhuma (revisão da Franccino, 12/11/2026).
   const feature = page?.featured_product?.cover ? page.featured_product : null;
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [
+    page?.cover,
+    ...projects.data.map((project) => project.cover),
+  ]);
   return (
     <main className="page-end">
       <PageBanner
         image={page?.cover ?? null}
+        points={page?.cover ? points[page.cover.id] : null}
         title={page?.title ?? t('title')}
         lead={page?.intro}
         aside={feature ? <FeaturePiece product={feature} compact /> : null}
@@ -58,6 +64,7 @@ export default async function CorporatePage({ params }: Props) {
                 <ProjectRow
                   key={project.id}
                   project={project}
+                  points={project.cover ? points[project.cover.id] : null}
                   meta={[
                     ...(project.client_name ? [project.client_name] : []),
                     ...(project.location ? [project.location] : []),

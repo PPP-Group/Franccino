@@ -14,7 +14,7 @@ import {
   type ProductFacetsParams,
   type ProductListParams,
 } from '@/lib/api/catalog';
-import { getCollections, getDesigners } from '@/lib/api/content';
+import { getCollections, getDesigners, getImagePointsFor } from '@/lib/api/content';
 import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
@@ -174,12 +174,18 @@ export async function CatalogListing(props: CatalogListingProps) {
     : null;
 
   const banner = props.banner?.image && !isWideArt(props.banner.image) ? props.banner : null;
+  // Pontos clicáveis sobre a foto do topo (retorno de 13/11/2026).
+  const bannerPoints = banner?.image
+    ? (await getImagePointsFor(locale, [banner.image]))[banner.image.id]
+    : null;
 
   return (
     <main>
       {/* A chave segue a vista do endereço: a navegação de volta (ou um link com outra vista) recomeça dela. */}
       <CatalogViewProvider key={view} initial={view}>
-        {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
+        {banner?.image ? (
+          <PageBanner image={banner.image} title={props.title} morph={banner.morph} points={bannerPoints} />
+        ) : null}
         <div className="wrap catalog" data-page-anchor="">
           <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
           {banner ? (

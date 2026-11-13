@@ -39,19 +39,22 @@ class SceneForm
                     ->searchable()
                     ->preload()
                     ->nullable(),
+                // Points on a photo already on the site (banner, cover, gallery): no photo of its own to upload.
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label(__('Image'))
                     ->collection('image')
                     ->image()
-                    ->required(),
+                    ->required(fn (?Scene $record): bool => $record?->photo_media_id === null)
+                    ->visible(fn (?Scene $record): bool => $record?->photo_media_id === null),
                 // Click on the photo and choose the piece right there: needs the saved photo, so edit page only.
                 ViewField::make('point_picker')
                     ->view('filament.scenes.point-picker')
                     ->viewData(fn (?Scene $record): array => [
-                        'imageUrl' => $record?->getFirstMediaUrl('image'),
+                        'imageUrl' => $record?->photo?->getFullUrl() ?: $record?->getFirstMediaUrl('image'),
                         'products' => self::pickerProducts(),
                     ])
-                    ->visible(fn (?Scene $record): bool => (bool) $record?->hasMedia('image'))
+                    ->visible(fn (?Scene $record): bool => $record !== null
+                        && ($record->photo_media_id !== null || $record->hasMedia('image')))
                     ->dehydrated(false)
                     ->columnSpanFull(),
                 Repeater::make('hotspots')

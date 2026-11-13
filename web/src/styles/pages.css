@@ -73,11 +73,26 @@
   filter: grayscale(1) contrast(1.02);
 }
 
+/*
+  O mesmo em todo retrato de designer (retorno de 13/11/2026): home, designers da coleção, "Outros designers" e a faixa
+  do designer na peça. Na página do designer, o retrato já vem colorido.
+*/
 @media (hover: hover) {
   .tile--portrait:hover .tile__media img,
-  .tile--portrait:focus-visible .tile__media img {
+  .tile--portrait:focus-visible .tile__media img,
+  .designer:hover .designer__photo img,
+  .designer:focus-visible .designer__photo img,
+  .designer-portraits__item:hover .designer-portraits__photo img,
+  .designer-portraits__item:focus-visible .designer-portraits__photo img,
+  .card-rail--portrait .card-rail__card:hover .card-rail__media img,
+  .card-rail--portrait .card-rail__card:focus-visible .card-rail__media img,
+  .designer-strip:hover img {
     filter: none;
   }
+}
+
+.detail-hero--portrait .designer__photo img {
+  filter: none;
 }
 
 .tile:focus-visible {
@@ -918,6 +933,10 @@
   background: var(--hero-ground);
 }
 
+.page-banner-art {
+  position: relative;
+}
+
 .page-banner-art img {
   width: 100%;
   height: auto;
@@ -955,6 +974,19 @@
     left: 0;
     height: var(--art-h);
     max-height: none;
+  }
+
+  /* Os pontos da foto ficam presos à tela junto com ela (retorno de 13/11/2026). */
+  .page-banner .photo-points,
+  .page-banner-art--fixed .photo-points {
+    position: fixed;
+    top: var(--header-offset, var(--header));
+    bottom: auto;
+    height: var(--page-banner-h);
+  }
+
+  .page-banner-art--fixed .photo-points {
+    height: var(--art-h);
   }
 }
 
@@ -1656,6 +1688,7 @@
 }
 
 .editorial-gallery__item {
+  position: relative;
   margin: 0;
   overflow: hidden;
   background: var(--portrait-ground);

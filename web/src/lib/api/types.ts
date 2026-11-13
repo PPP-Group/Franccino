@@ -397,6 +397,14 @@ export type Facets = {
   products?: FacetProduct[];
 };
 
+/** Pontos clicáveis sobre uma foto que já está no site (`GET /image-points`, 2026-11-13), pelo `id` da `Image`. */
+export type ImagePoints = {
+  id: number;
+  media_id: number;
+  title: string;
+  hotspots: Scene['hotspots'];
+};
+
 export type FacetProduct = {
   category: string | null;
   designer: string | null;

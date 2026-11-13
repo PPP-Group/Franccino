@@ -14,7 +14,7 @@ import { SceneViewer } from '@/components/home/SceneViewer';
 import { ProductRail } from '@/components/products/ProductRail';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { getAllProjectSlugs, getProject, getProjects } from '@/lib/api/content';
+import { getAllProjectSlugs, getImagePointsFor, getProject, getProjects } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -80,10 +80,13 @@ export default async function ProjectPage({ params }: Props) {
     { key: 'architect', value: project.architect },
   ].filter((fact): fact is { key: string; value: string } => Boolean(fact.value));
   const others = neighbours(list.data, (item) => item.id === project.id, OTHER_PROJECTS);
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [project.cover, ...project.gallery]);
   return (
     <main className="page-end">
       <PageBanner
         image={project.cover}
+        points={project.cover ? points[project.cover.id] : null}
         morph={morphName('project', project.slug)}
         title={project.title}
         trail={[{ label: t('title'), href: '/projects' }]}
@@ -118,7 +121,7 @@ export default async function ProjectPage({ params }: Props) {
         {project.video ? (
           <PageVideo video={project.video} title={t('video', { name: project.title })} id="project-video" />
         ) : null}
-        <EditorialGallery images={project.gallery} label={t('gallery')} collapse />
+        <EditorialGallery images={project.gallery} label={t('gallery')} collapse points={points} />
         {project.products.length > 0 ? (
           <section aria-labelledby="project-pieces" className="project-section" data-reveal>
             <div className="section-head">

@@ -11,12 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Translatable\HasTranslations;
 
 /**
  * Ambiente com pontos clicáveis (banco de ideias, ideia 7): a foto de um ambiente montado com peças da Franccino e,
  * por cima, um ponto em cada peça que leva à página dela. Ligado a um projeto, aparece no Corporativo e na página do
- * projeto (no lugar da home).
+ * projeto (no lugar da home). Com `photo_media_id`, os pontos ficam sobre uma foto que já está no site (banner, capa,
+ * galeria; retorno de 13/11/2026), e o ambiente não tem foto própria nem aparece na home.
  */
 class Scene extends Model implements HasMedia
 {
@@ -47,6 +49,16 @@ class Scene extends Model implements HasMedia
     public function hotspots(): HasMany
     {
         return $this->hasMany(SceneHotspot::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    /**
+     * A foto do site sobre a qual ficam os pontos (banner, capa, galeria), quando o ambiente não tem foto própria.
+     *
+     * @return BelongsTo<Media, $this>
+     */
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'photo_media_id');
     }
 
     /** @return BelongsTo<Project, $this> */

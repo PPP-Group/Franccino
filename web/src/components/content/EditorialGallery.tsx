@@ -1,4 +1,6 @@
 import { ApiImage } from '@/components/media/ApiImage';
+import { PhotoPoints } from '@/components/media/PhotoPoints';
+import type { PointsIndex } from '@/lib/scenes/image-points';
 import type { Image } from '@/lib/api/types';
 import { fixedBoxCoverSizes, type CoverSlot } from '@/lib/images/cover-sizes';
 import { editorialRhythm } from './layout';
@@ -30,10 +32,13 @@ export function EditorialGallery({
   images,
   label,
   collapse = false,
+  points = {},
 }: {
   images: Image[];
   label: string;
   collapse?: boolean;
+  /** Pontos clicáveis sobre as fotos, pela mídia de cada uma (retorno de 13/11/2026). */
+  points?: PointsIndex;
 }) {
   if (images.length === 0) {
     return null;
@@ -58,6 +63,7 @@ export function EditorialGallery({
               return (
                 <figure key={picture.id} className="editorial-gallery__item" data-gallery-index={index}>
                   <ApiImage image={picture} sizes={fixedBoxCoverSizes(picture, box.ratio, box.slots)} />
+                  <PhotoPoints points={points[picture.id]} image={picture} />
                 </figure>
               );
             })}

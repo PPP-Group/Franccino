@@ -150,6 +150,7 @@ type ProductDetail = ProductCard & {
 | `GET /finishes`           |                                                                                                                  | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                                                                                                                              |
 | `GET /banners`            | `placement` (default `home_hero`)                                                                                | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                                                                                                                                   |
 | `GET /scenes`             |                                                                                                                  | `Scene[]` (ver abaixo): ambientes publicados com foto e sem projeto, cada ponto com o `ProductCard` da peça                                                                                                                                                                   |
+| `GET /image-points`       |                                                                                                                  | `ImagePoints[]` (ver abaixo): pontos clicáveis sobre fotos que já estão no site (banners, capas, galerias), pela mídia da foto                                                                                                                                                |
 | `GET /pages/{key}`        |                                                                                                                  | `{ key, title, intro, content: Block[], cover, featured_product: ProductCard \| null, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo; `featured_product` é a peça escolhida no painel, só se publicada)                                                    |
 | `GET /settings`           |                                                                                                                  | configurações públicas (ver shape completo abaixo)                                                                                                                                                                                                                            |
 | `GET /downloads`          | `area?` `category?` `q?` `format?` `page` `per_page`                                                             | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado; `format`, ex. `skp`, `dwg`, `glb`, deixa só as peças com arquivo nesse formato); `meta.formats`: `{ format, count }[]` (formatos existentes e quantas peças têm cada um)               |
@@ -230,6 +231,22 @@ type Scene = {
   id: number;
   title: string;
   image: Image;
+  hotspots: { x: number; y: number; product: ProductCard }[];
+};
+```
+
+### `ImagePoints` (`GET /image-points`, 2026-11-13)
+
+Pontos clicáveis sobre uma foto que já está no site: banner da home, capa de página, coleção ou projeto, foto de
+galeria. `media_id` é o `id` da `Image` dessa foto nas outras respostas: o site procura a foto por ele e desenha os
+pontos por cima, onde ela aparecer. `x` e `y` como em `Scene`, em porcentagem da foto inteira (o site acompanha o
+recorte quando a foto aparece cortada). Só saem os publicados e só os pontos de peças publicadas.
+
+```ts
+type ImagePoints = {
+  id: number;
+  media_id: number;
+  title: string;
   hotspots: { x: number; y: number; product: ProductCard }[];
 };
 ```
@@ -393,15 +410,16 @@ Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fot
 pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
 `Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
 
-| Rota                            | Corpo                                                                                                             | Resposta                                        |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`                         | 201 `{ data: { id, collection } }`              |
-| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                                        | 200 `{ data: { removed, not_found } }`          |
-| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)                       | 201 ou 200 `{ data: { id, replaced, size } }`   |
-| `POST /api/import/finishes`     | JSON: `groups[]` com `name{pt,en}` e `finishes[]` (`code`, `name{pt,en}`, `description?`, `products?` = slugs pt) | 200 `{ data: { finishes, linked, not_found } }` |
-| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                                              | 202 `{ data: { queued, version } }` (fila)      |
-| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)                            | 202 `{ data: { queued, version } }` (fila)      |
-| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução)                   | 202 `{ data: { queued, version } }` (fila)      |
+| Rota                            | Corpo                                                                                                             | Resposta                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`                         | 201 `{ data: { id, collection } }`                     |
+| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                                        | 200 `{ data: { removed, not_found } }`                 |
+| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)                       | 201 ou 200 `{ data: { id, replaced, size } }`          |
+| `POST /api/import/finishes`     | JSON: `groups[]` com `name{pt,en}` e `finishes[]` (`code`, `name{pt,en}`, `description?`, `products?` = slugs pt) | 200 `{ data: { finishes, linked, not_found } }`        |
+| `POST /api/import/image-points` | JSON: `items[]` com `media_id` ou `scene_id`, `title?`, `points[]` (`x`, `y`, `product` = slug pt)                | 200 `{ data: { scenes, points, removed, not_found } }` |
+| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                                              | 202 `{ data: { queued, version } }` (fila)             |
+| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)                            | 202 `{ data: { queued, version } }` (fila)             |
+| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução)                   | 202 `{ data: { queued, version } }` (fila)             |
 
 `target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`, `video`, `video_poster`; `key`
 = slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
@@ -424,6 +442,10 @@ Drive); um id de outro registro ou de outra coleção não é tocado e volta em 
 `/api/import/finishes` (2026-11-13) cria ou atualiza os grupos (pelo nome em português) e os acabamentos (pelo `code`),
 publicados, e liga cada acabamento às peças de `products` sem tirar as ligações que já existem. A foto da amostra vai
 por `/api/import/media` com `target=finish`, `key` = código e `collection=swatch`.
+
+`/api/import/image-points` (2026-11-13) troca os pontos de cada foto pelos da lista: `media_id` aponta uma foto do
+site (o `id` da `Image`) e `scene_id`, um ambiente que já existe (ex.: o de um projeto). Lista de pontos vazia tira os
+pontos da foto. Peça não encontrada volta em `not_found` e o resto do item entra.
 
 `/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
 privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um

@@ -16,7 +16,7 @@ import { morphName } from '@/lib/ui/morph';
 import { PageHead } from '@/components/layout/PageHead';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
-import { getCollection, getCollections, getDesigners } from '@/lib/api/content';
+import { getCollection, getCollections, getDesigners, getImagePointsFor } from '@/lib/api/content';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -70,10 +70,16 @@ export default async function CollectionPage({ params }: Props) {
     collection.designers.length > 0 ? getDesigners(locale) : Promise.resolve([]),
   ]);
   const others = neighbours(collections, (item) => item.id === collection.id, OTHER_COLLECTIONS);
+  // Pontos clicáveis sobre as fotos da página (retorno de 13/11/2026).
+  const points = await getImagePointsFor(locale, [collection.cover, ...collection.gallery]);
   return (
     <main className="page-end">
       {collection.cover ? (
-        <PageCoverArt image={collection.cover} morph={morphName('collection', collection.slug)} />
+        <PageCoverArt
+          image={collection.cover}
+          morph={morphName('collection', collection.slug)}
+          points={points[collection.cover.id]}
+        />
       ) : null}
       <div className="wrap">
         {/* Título, frase e texto numa coluna; os designers à direita, alinhados pelo alto ao título (06/11/2026). */}
@@ -106,7 +112,7 @@ export default async function CollectionPage({ params }: Props) {
                 />
               ))}
             >
-              <EditorialGallery images={collection.gallery} label={t('gallery')} />
+              <EditorialGallery images={collection.gallery} label={t('gallery')} points={points} />
             </GalleryDialog>
           ) : null}
         </PageHead>

@@ -29,6 +29,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('finishes', [V1\FinishController::class, 'index'])->name('finishes.index');
         Route::get('banners', [V1\BannerController::class, 'index'])->name('banners.index');
         Route::get('scenes', [V1\SceneController::class, 'index'])->name('scenes.index');
+        Route::get('image-points', [V1\ImagePointController::class, 'index'])->name('image-points.index');
         Route::get('pages/{key}', [V1\PageController::class, 'show'])->name('pages.show');
         Route::get('settings', V1\SettingsController::class)->name('settings');
         Route::get('downloads', [V1\DownloadController::class, 'index'])->name('downloads.index');
@@ -60,6 +61,7 @@ Route::prefix('import')->name('api.import.')->middleware(['no-store', 'import.to
     Route::post('media/remove', [ImportController::class, 'removeMedia'])->name('media.remove');
     Route::post('files', [ImportController::class, 'files'])->name('files');
     Route::post('finishes', [ImportController::class, 'finishes'])->name('finishes');
+    Route::post('image-points', [ImportController::class, 'imagePoints'])->name('image-points');
     Route::post('covers', [ImportController::class, 'covers'])->name('covers');
     Route::post('content', [ImportController::class, 'content'])->name('content');
     Route::post('translations', [ImportController::class, 'translations'])->name('translations');
