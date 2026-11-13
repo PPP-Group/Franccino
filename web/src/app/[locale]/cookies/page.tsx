@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Blocks } from '@/components/content/Blocks';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
+import { ConsentPreferences } from '@/components/consent/ConsentPreferences';
 import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
@@ -40,6 +41,7 @@ export default async function CookiesPage({ params }: Props) {
       ) : (
         <EmptyNotice text={t('pending')} />
       )}
+      <ConsentPreferences />
     </main>
   );
 }

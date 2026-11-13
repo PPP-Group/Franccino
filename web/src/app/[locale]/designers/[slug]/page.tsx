@@ -8,6 +8,7 @@ import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageHead } from '@/components/layout/PageHead';
+import { ApiImage } from '@/components/media/ApiImage';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Icon } from '@/components/ui/Icon';
@@ -71,7 +72,21 @@ export default async function DesignerPage({ params }: Props) {
           title={designer.name}
           lead={distinctLead(designer.short_bio, designer.bio)}
           trail={[{ label: t('title'), href: '/designers' }]}
-          meta={designer.location ? <p className="meta">{designer.location}</p> : null}
+          meta={
+            designer.signature || designer.location ? (
+              <div className="designer__meta">
+                {designer.signature ? (
+                  <ApiImage
+                    image={designer.signature}
+                    sizes="200px"
+                    className="designer__signature"
+                    fade={false}
+                  />
+                ) : null}
+                {designer.location ? <p className="meta">{designer.location}</p> : null}
+              </div>
+            ) : null
+          }
         />
         <div className="detail-hero detail-hero--portrait">
           <div className="detail-hero__media designer__photo">

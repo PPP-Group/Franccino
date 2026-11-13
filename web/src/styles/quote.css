@@ -210,3 +210,49 @@
 .quote-more > .recent {
   background: transparent;
 }
+
+/* Lista de desejos compartilhada por link (/pt/lista/{código}): foto, nome, quantidade, acabamentos e observação. */
+.shared-list {
+  display: grid;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shared-list__item {
+  display: grid;
+  grid-template-columns: minmax(96px, 200px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.shared-list__media {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.shared-list__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.shared-list__copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.shared-list__name {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+
+.shared-list__name a {
+  color: inherit;
+  text-decoration: none;
+}

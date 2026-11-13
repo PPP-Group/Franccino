@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Blocks } from '@/components/content/Blocks';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { PageHead } from '@/components/layout/PageHead';
+import { withoutLeadingTitle } from '@/lib/content/legal';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -34,9 +35,9 @@ export default async function TermsPage({ params }: Props) {
   ]);
   return (
     <main className="wrap">
-      <PageHead title={page?.title ?? t('terms')} lead={page?.intro} />
+      <PageHead title={t('terms')} lead={page?.intro} />
       {page && page.content.length > 0 ? (
-        <Blocks blocks={page.content} />
+        <Blocks blocks={withoutLeadingTitle(page.content)} />
       ) : (
         <EmptyNotice text={t('pending')} />
       )}

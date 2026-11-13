@@ -35,6 +35,6 @@ describe('TechTable', () => {
     expect(html).toContain('L 52 × P 56 × A 80 cm');
     expect(html).toContain('DWG');
     expect(html).toContain('aria-label="Baixar Bloco 2D (DWG)"');
-    expect(html).toContain('aria-label="Adicionar Mesa Joey à lista de orçamento"');
+    expect(html).toContain('aria-label="Adicionar Mesa Joey à lista de desejos"');
   });
 });

@@ -83,62 +83,6 @@
 }
 
 /* ======================================================================================================== */
-/* Ideia 04 — paralaxe suave                                                                                */
-/* ======================================================================================================== */
-
-/*
-  Três camadas, cada uma numa velocidade (só `translate`, sem mexer no layout): o texto anda um pouco mais rápido que
-  a página (camada `front`), o quadro anda com a página, e a foto de dentro anda mais devagar (camada `back`).
-  Retorno do tech lead de 06/11/2026 ("não achei a paralaxe"): o movimento ficou visível, ainda calmo, de ponta a ponta
-  da passagem do bloco pela tela, 80 px na foto e 28 px no texto, em sentidos opostos (a foto desliza mais de 100 px
-  em relação ao texto); metade no celular. Na home: Casa e Giardini, a peça em destaque, o mosaico de projetos e o texto
-  da faixa da Fábrica (a foto dela já fica parada como uma janela).
-
-  - `data-parallax` no bloco: é ele que mede a rolagem (view-timeline com nome, que vale para os descendentes). Por
-    isso a camada pode ficar dentro de um quadro com overflow escondido (`.hover-zoom`), que sozinho viraria a
-    referência de um `view()` e pararia o movimento.
-  - `data-parallax-layer="back"` na foto (ou no quadro dela): ganha sobra (`--parallax-scale`) para nunca mostrar a
-    borda; quadros baixos (mosaico) pedem mais sobra.
-  - `data-parallax-layer="front"` no texto.
-  O componente `Parallax` (na página) escreve a posição de cada bloco em `--parallax-shift` e marca
-  `data-parallax-on` no <html>.
-*/
-/*
-  Retorno de 09/11/2026 ("nunca consegui ver nada de paralaxe"): o movimento por `animation-timeline` dependia do
-  navegador (no Safari sem suporte nada andava) e era pequeno demais para se notar. Agora o `Parallax` (script) escreve
-  em cada bloco visível `--parallax-shift`, de -1 (entrando por baixo) a 1 (saindo por cima), em todos os navegadores.
-  A foto anda 14% da própria altura em cada sentido, mais devagar que a página (a escala de 1.3 dá a sobra para a borda
-  nunca aparecer), e o texto anda 80 px no sentido oposto: a foto e o texto se separam mais de 300 px na passagem.
-  Fotos com texto na própria arte (capas das coleções) não entram: a escala cortaria o texto.
-*/
-[data-parallax] {
-  --parallax-back: 14%;
-  --parallax-front: 80px;
-  --parallax-scale: 1.3;
-}
-
-@media (max-width: 56.25rem) {
-  [data-parallax] {
-    --parallax-back: 8%;
-    --parallax-front: 32px;
-    --parallax-scale: 1.18;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  [data-parallax-on] [data-parallax-layer='back'] {
-    scale: var(--parallax-scale);
-    translate: 0 calc(var(--parallax-shift, 0) * var(--parallax-back));
-    will-change: translate;
-  }
-
-  [data-parallax-on] [data-parallax-layer='front'] {
-    translate: 0 calc(var(--parallax-shift, 0) * -1 * var(--parallax-front));
-    will-change: translate;
-  }
-}
-
-/* ======================================================================================================== */
 /* Ideia 12 — microinterações. Cada bloco se desliga sozinho: apague o bloco inteiro.                        */
 /* ======================================================================================================== */
 
@@ -310,6 +254,15 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
   background-color: var(--shimmer-base);
 }
 
+/*
+  Durante a foto que cresce (ida e volta), nenhuma foto mostra o tom de carregamento: o quadro que anda é só a foto, sem
+  o quadrado bege enquanto ela chega (retorno de 12/11/2026, retratos dos designers).
+*/
+html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
+  background: none;
+  animation: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html[data-img-fade] img[data-img]:not([data-loaded]) {
     background-image: linear-gradient(
@@ -322,14 +275,9 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
     animation: shimmer 1.6s ease-in-out infinite;
   }
 
-  /* As fotos que já têm movimento próprio (paralaxe, aproximação do banner) não trocam de animação: só saem do tom. */
+  /* As fotos que já têm movimento próprio (aproximação do banner) não trocam de animação: só saem do tom. */
   html[data-img-fade]
-    img[data-img][data-loaded='late']:not(
-      [data-parallax-layer],
-      .hero__img,
-      .is-arriving,
-      [data-reveal^='curtain'] *
-    ) {
+    img[data-img][data-loaded='late']:not(.hero__img, .is-arriving, [data-reveal^='curtain'] *) {
     animation: img-arrive var(--t-slow) var(--ease-out) both;
   }
 
@@ -362,7 +310,11 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 /* A tabela da página nova entra com um fade curto; a grade já entra peça por peça (data-reveal="stagger"). */
 @media (prefers-reduced-motion: no-preference) {
   .catalog-results > :not(.grid-plates, .empty) {
-    animation: results-in var(--t-slow) var(--ease-out) both;
+    /*
+      `backwards`, não `both`: um `transform` que fica no contêiner depois do fim vira a referência do `position: fixed`
+      das fotos que flutuam na linha (RowPeek), e elas saíam longe do ponteiro (retorno de 09/11/2026).
+    */
+    animation: results-in var(--t-slow) var(--ease-out) backwards;
   }
 }
 
@@ -418,6 +370,27 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 
 ::view-transition-old(root) {
   display: none;
+}
+
+/*
+  O cabeçalho fica por cima de tudo, também durante a foto que cresce (retorno de 12/11/2026: na volta, com a página
+  rolada, a foto passava por cima dele). Com nome próprio ele vira uma camada do movimento, parada, acima das fotos.
+*/
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 50;
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
 }
 
 /* Começa a andar no clique e pousa devagar (a curva "in-out" deixava a foto parada no primeiro terço). */
@@ -484,29 +457,57 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
 }
 
 /*
-  Peça sem fundo do carrossel (ida e volta da página da peça): no carrossel ela ocupa o quadro inteiro e é grande; na
-  página, a foto tem margem branca. Trocar uma pela outra no fim dava um "tranco" (a peça encolhia de repente,
-  retorno de 09/11/2026). As duas se misturam do começo ao fim do movimento, cada uma inteira no quadro que anda, e o
-  fim cai exatamente na foto da página, seja a origem maior ou menor que o destino.
+  Peça sem fundo do carrossel (ida e volta da página da peça). No carrossel a caixa que anda já tem o tamanho que a
+  capa teria, com o recorte no meio (FeatureCarousel, `.feature-carousel__morph`), e na página a foto ocupa a caixa
+  da proporção dela (product.css): as duas caixas são da mesma foto. A troca do recorte pela capa acontece logo no
+  começo, e o resto do movimento é só a foto de destino encaixando, sem fade no fim (retorno de 12/11/2026).
 */
 ::view-transition-group(.morph-cutout) {
   animation-duration: var(--t-slow);
   animation-timing-function: var(--ease-out);
 }
 
+/* `plus-lighter` (o padrão da troca): a soma das duas fotos fica inteira; com `normal` a peça clareava no meio da troca. */
 ::view-transition-old(.morph-cutout),
 ::view-transition-new(.morph-cutout) {
   block-size: 100%;
   object-fit: contain;
-  mix-blend-mode: normal;
+  mix-blend-mode: plus-lighter;
 }
 
 ::view-transition-old(.morph-cutout) {
-  animation: morph-leave var(--t-slow) var(--ease-out) both;
+  animation: morph-swap-out var(--t-slow) linear both;
 }
 
 ::view-transition-new(.morph-cutout) {
-  animation: morph-enter var(--t-slow) var(--ease-out) both;
+  animation: morph-swap-in var(--t-slow) linear both;
+}
+
+/* A capa da página tem fundo branco: sobre o fundo areia das seções ela também some, como as peças dos cards. */
+:root[data-morph-fit='cutout']::view-transition {
+  mix-blend-mode: multiply;
+}
+
+@keyframes morph-swap-out {
+  0% {
+    opacity: 1;
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-swap-in {
+  0% {
+    opacity: 0;
+  }
+
+  25%,
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes morph-leave {
@@ -758,5 +759,55 @@ html[data-img-fade] img[data-img]:not([data-loaded]) {
     transition:
       background-color var(--t-fast) var(--ease-out),
       border-color var(--t-fast) var(--ease-out);
+  }
+}
+
+/* ---------- cabeçalho que some ao rolar para baixo e volta ao subir (revisão de 12/11/2026) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header {
+    transition: transform var(--t-mid) var(--ease-out);
+  }
+
+  /* A barra de filtros acompanha o cabeçalho no mesmo tempo (chrome.css, `--header-offset`). */
+  .toolbar--catalog {
+    transition: top var(--t-mid) var(--ease-out);
+  }
+}
+
+/* ---------- retrato do designer que ganha cor no hover (revisão de 12/11/2026) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile--portrait .tile__media img {
+    transition:
+      filter var(--t-slow) var(--ease-out),
+      transform var(--t-slow) var(--ease-out);
+  }
+}
+
+/* ---------- Tire suas dúvidas: a resposta abre deslizando e o "+" vira "−" (13/11/2026) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .faq {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--t-mid) var(--ease-out),
+      content-visibility var(--t-mid) allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+
+  .faq__icon,
+  .faq__icon::before,
+  .faq__icon::after {
+    transition:
+      transform var(--t-base) var(--ease-out),
+      background-color var(--t-base) var(--ease-out);
   }
 }

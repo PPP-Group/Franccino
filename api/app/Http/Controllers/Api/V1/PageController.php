@@ -13,7 +13,12 @@ class PageController extends Controller
     {
         $page = Page::published()
             ->where('key', $key)
-            ->with('media')
+            ->with([
+                'media',
+                'featuredProduct' => fn ($query) => $query->published(),
+                'featuredProduct.area', 'featuredProduct.category', 'featuredProduct.designer', 'featuredProduct.media',
+                'featuredProduct.launches' => fn ($query) => $query->published(),
+            ])
             ->firstOrFail();
 
         return response()->json(['data' => (new PageResource($page))->resolve()]);

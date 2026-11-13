@@ -61,8 +61,18 @@ export function refreshPlanProducts(plan: Plan, fresh: PlannerProduct[]): Plan {
   const products = { ...plan.products };
   for (const item of fresh) {
     const saved = products[String(item.id)];
-    if (saved && (saved.image?.src !== item.image?.src || saved.name !== item.name)) {
-      products[String(item.id)] = { ...saved, image: item.image, name: item.name };
+    if (
+      saved &&
+      (saved.image?.src !== item.image?.src ||
+        saved.topView?.src !== item.topView?.src ||
+        saved.name !== item.name)
+    ) {
+      products[String(item.id)] = {
+        ...saved,
+        image: item.image,
+        topView: item.topView ?? null,
+        name: item.name,
+      };
       changed = true;
     }
   }
@@ -107,6 +117,7 @@ const productSchema = z.object({
   depth: z.number().positive(),
   shape: z.enum(['rect', 'round']),
   image: z.object({ src: z.string(), alt: z.string() }).nullable(),
+  topView: z.object({ src: z.string(), alt: z.string() }).nullable().optional(),
 });
 
 const planSchema = z.object({

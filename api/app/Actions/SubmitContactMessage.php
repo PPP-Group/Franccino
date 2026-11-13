@@ -2,8 +2,10 @@
 
 namespace App\Actions;
 
+use App\Http\Controllers\Api\V1\QuoteListController;
 use App\Mail\ContactMessageReceived;
 use App\Models\ContactMessage;
+use App\Models\QuoteList;
 use App\Settings\GeneralSettings;
 use App\Support\IpHasher;
 use Illuminate\Http\Request;
@@ -37,6 +39,12 @@ class SubmitContactMessage
             'ip_hash' => IpHasher::hash($request->ip()),
             'user_agent' => $this->truncate($request->userAgent()),
         ]);
+
+        // Pedido de orçamento com a lista de desejos: a lista vira um link com fotos para a equipe de vendas e aparece no
+        // painel (retorno de 12/11/2026).
+        if (filled($data['items'] ?? null)) {
+            QuoteList::share(QuoteListController::cleanItems($data['items']), $data['locale'], $message->id);
+        }
 
         $recipients = app(GeneralSettings::class)->contact_recipients;
 

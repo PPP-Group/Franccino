@@ -37,6 +37,8 @@ class Designer extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('portrait')->singleFile();
+        // Assinatura (logo) do designer, em PNG ou SVG sem fundo, ao lado do nome na página dele.
+        $this->addMediaCollection('signature')->singleFile();
     }
 
     /** @return HasMany<Product, $this> */

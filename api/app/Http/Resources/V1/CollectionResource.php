@@ -32,6 +32,7 @@ class CollectionResource extends CollectionCardResource
         return array_merge(parent::toArray($request), [
             'description' => RichText::sanitize(Localized::value($collection, 'description')),
             'gallery' => ImagePresenter::presentMany($collection->getMedia('gallery'), $name),
+            'video' => Refs::video($collection, $name),
             'designers' => $products
                 ->map(fn (Product $product) => $product->designer)
                 ->filter(fn (?Designer $designer) => $designer instanceof Designer && $designer->is_published)

@@ -47,6 +47,12 @@ const publicSchema = z.object({
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: optionalString(),
   /** Google Tag Manager (opcional): sem ele não há o que consentir e o aviso de cookies não aparece. */
   NEXT_PUBLIC_GTM_ID: optionalString(),
+  /**
+   * Quem mostra o aviso de cookies (revisão da Franccino, 12/11/2026): `site` (o aviso do próprio site, padrão) ou
+   * `adopt` (o banner da AdOpt, instalado pelo modelo dela dentro do Tag Manager; o site carrega o Tag Manager em
+   * toda página com o consentimento negado por padrão, e a AdOpt libera conforme a escolha).
+   */
+  NEXT_PUBLIC_CONSENT_PROVIDER: z.preprocess(emptyToUndefined, z.enum(['site', 'adopt']).default('site')),
 });
 
 /** Read once by `next.config.ts` for the CSP: a wrong value fails the build instead of shipping a broken policy. */
@@ -89,6 +95,7 @@ export function getPublicEnv(): PublicEnv {
       NEXT_PUBLIC_SITE_LOCALES: process.env.NEXT_PUBLIC_SITE_LOCALES,
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
       NEXT_PUBLIC_GTM_ID: process.env.NEXT_PUBLIC_GTM_ID,
+      NEXT_PUBLIC_CONSENT_PROVIDER: process.env.NEXT_PUBLIC_CONSENT_PROVIDER,
     });
   }
   return cachedPublicEnv;

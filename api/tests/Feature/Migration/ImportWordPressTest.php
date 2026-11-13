@@ -5,6 +5,7 @@ use App\Models\Designer;
 use App\Models\Line;
 use App\Models\Page;
 use App\Models\Product;
+use App\Support\WordPress\WordPressImporter;
 use Database\Seeders\AreaSeeder;
 use Database\Seeders\PageSeeder;
 use Illuminate\Http\UploadedFile;
@@ -166,4 +167,40 @@ it('picks a cover that fits a card instead of a wide banner', function () {
     $this->artisan('franccino:wordpress:import', ['--only' => ['products']])->assertSuccessful();
 
     expect(Product::sole()->getFirstMedia('cover')?->getCustomProperty('legacy_url'))->toBe('https://wp.test/wp-content/uploads/aura-2.jpg');
+});
+
+it('imports one product the full import skipped, with the area and category given, published', function () {
+    $jpeg = UploadedFile::fake()->image('x.jpg', 400, 300)->getContent();
+    Http::fake([
+        'wp.test/wp-json/wp/v2/produtos/7104' => Http::response([
+            'id' => 7104,
+            'slug' => 'sofa-tokio',
+            'link' => 'https://wp.test/produto/sofa-tokio/',
+            'title' => ['rendered' => 'Sofá Tokio'],
+            'areas' => [],
+            'categorias-produtos' => [],
+            'linhas' => [],
+        ]),
+        'wp.test/produto/sofa-tokio/' => Http::response(<<<'HTML'
+            <div class="jet-engine-gallery-slider__item"><a href="https://wp.test/wp-content/uploads/tokio-1.jpg" class="x"></a></div>
+            <div class="jet-listing-dynamic-field__content">Medida padrão:</div>
+            <div class="jet-listing-dynamic-field__content">200L x 90P x 70A (cm)</div>
+            HTML),
+        'wp.test/wp-content/uploads/*' => Http::response($jpeg, 200, ['Content-Type' => 'image/jpeg']),
+    ]);
+    Category::factory()->create(['slug' => ['pt' => 'sofas', 'en' => 'sofas']]);
+
+    $importer = app(WordPressImporter::class);
+    $importer->importOne(7104, 'outdoor', 'sofas');
+    $missing = $importer->importOne(7104, 'outdoor', 'nao-existe');
+
+    $product = Product::sole();
+    expect($product->getTranslation('name', 'pt'))->toBe('Sofá Tokio')
+        ->and($product->is_published)->toBeTrue()
+        ->and($product->legacy_wp_id)->toBe(7104)
+        ->and($product->area->key->value)->toBe('outdoor')
+        ->and($product->category->getTranslation('slug', 'pt'))->toBe('sofas')
+        ->and($product->dimensions[0]['width'])->toBe(2000)
+        ->and($product->getMedia('gallery'))->toHaveCount(1)
+        ->and($missing->gaps()['products']['Sofá Tokio'][0])->toContain('nao-existe');
 });

@@ -23,7 +23,21 @@ const PATHS = {
       <path d="M4 5h.01M4 12h.01M4 19h.01" />
     </>
   ),
+  // Sacola de compras (Tabler Icons, shopping-bag, MIT): o ícone da lista de desejos (revisão da Franccino, 12/11/2026).
+  bag: (
+    <>
+      <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
+      <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+    </>
+  ),
+  // Setas das medidas na página da peça (revisão da Franccino, 12/11/2026, item 20; Tabler Icons, MIT).
+  'measure-width': <path d="M7 8l-4 4l4 4M17 8l4 4l-4 4M3 12h18" />,
+  'measure-depth': <path d="M16 4h4v4M14 10l6 -6M8 20h-4v-4M4 20l6 -6" />,
+  'measure-height': <path d="M8 7l4 -4l4 4M8 17l4 4l4 -4M12 3v18" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  link: (
+    <path d="M9 15l6 -6M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
+  ),
   close: <path d="M6 6l12 12M18 6 6 18" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   plus: <path d="M12 5v14M5 12h14" />,

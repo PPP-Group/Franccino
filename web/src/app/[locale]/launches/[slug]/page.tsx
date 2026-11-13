@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
-import { ViewToggle } from '@/components/catalog/ViewToggle';
+import { ByView, CatalogViewProvider, ViewToggle } from '@/components/catalog/ViewToggle';
 import { firstWithCover } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
@@ -65,15 +65,13 @@ export default async function LaunchPage({ params, searchParams }: Props) {
   const feature = launch.description
     ? firstWithCover([launch.products.slice(FIRST_ROW), launch.products])
     : null;
-  const rows =
-    view === 'table'
-      ? (
-          await getProductDetails(
-            locale,
-            launch.products.map((product) => product.slug),
-          )
-        ).map(toTechnicalRow)
-      : [];
+  // As duas vistas vêm prontas: a troca Grade/Tabela técnica é no navegador (`ViewToggle`).
+  const rows = (
+    await getProductDetails(
+      locale,
+      launch.products.map((product) => product.slug),
+    )
+  ).map(toTechnicalRow);
 
   return (
     <main>
@@ -102,21 +100,22 @@ export default async function LaunchPage({ params, searchParams }: Props) {
         {!feature && launch.description ? (
           <RichText html={launch.description} className="prose catalog-description" />
         ) : null}
-        <div className="toolbar">
-          <p className="meta num">{t('count', { count: launch.products.length })}</p>
-          <ViewToggle
-            view={view}
-            hrefFor={(next) => ({ ...launchHref(slug), query: next === 'table' ? { view: 'table' } : {} })}
-          />
-        </div>
-        <section className="catalog-results" aria-label={t('resultsLabel')}>
-          {view === 'table' ? (
-            <TechTable rows={rows} />
-          ) : (
-            // Toda peça aqui é lançamento: sem o rótulo no card (lei de Tesler).
-            <ProductGrid products={launch.products} priorityCount={3} />
-          )}
-        </section>
+        <CatalogViewProvider key={view} initial={view}>
+          <div className="toolbar">
+            <p className="meta num">{t('count', { count: launch.products.length })}</p>
+            <ViewToggle
+              view={view}
+              hrefs={{ grid: launchHref(slug), table: { ...launchHref(slug), query: { view: 'table' } } }}
+            />
+          </div>
+          <section className="catalog-results" aria-label={t('resultsLabel')}>
+            <ByView
+              // Toda peça aqui é lançamento: sem o rótulo no card (lei de Tesler).
+              grid={<ProductGrid products={launch.products} priorityCount={3} />}
+              table={<TechTable rows={rows} />}
+            />
+          </section>
+        </CatalogViewProvider>
         {/* Arquivos e vídeos depois das peças, como na página Lançamentos. */}
         <FileDownloads
           files={launch.files}

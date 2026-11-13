@@ -342,7 +342,7 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
           )}
         </ul>
         <button type="button" className="btn btn--block" onClick={sendToQuote}>
-          <Icon name="list" />
+          <Icon name="bag" />
           <span>{t('sendToList')}</span>
         </button>
         <p className="meta">{t('sendHint')}</p>

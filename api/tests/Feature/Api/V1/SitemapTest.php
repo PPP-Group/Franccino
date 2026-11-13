@@ -55,8 +55,9 @@ it('uses the page key for page entries, with null slugs', function () {
 
     $response = $this->getJson('/api/v1/sitemap')->assertOk();
 
-    $entry = collect($response->json('data'))->firstWhere('type', 'page');
-    expect($entry['key'])->toBe('factory');
+    // A migration de 12/11/2026 já cria as páginas faq e partner: procura a página do teste pela chave.
+    $entry = collect($response->json('data'))->where('type', 'page')->firstWhere('key', 'factory');
+    expect($entry)->not->toBeNull();
     expect($entry['slugs'])->toBe(['pt' => null, 'en' => null]);
 });
 

@@ -45,6 +45,9 @@ class ProductDetailResource extends ProductCardResource
             'finishes_note' => Localized::value($product, 'finishes_note'),
             'finishes' => $this->finishes($product),
             'gallery' => ImagePresenter::presentMany($this->galleryWithoutCover($product), $name),
+            'top_view' => ImagePresenter::present($product->getFirstMedia('top_view'), $name),
+            'rooms' => array_values(array_unique($product->rooms ?? [])),
+            'variants' => $this->variants($product),
             'model_3d' => $this->model3d($product),
             'files' => DownloadFileResource::collection($product->files)->resolve(),
             'media_links' => MediaLinkResource::collection($product->mediaLinks)->resolve(),
@@ -53,6 +56,35 @@ class ProductDetailResource extends ProductCardResource
             'seo' => Refs::seo($product, $product->getFirstMedia('cover'), $name),
             'locale_fallback' => Localized::missing($product, ['name', 'description']),
         ]);
+    }
+
+    /**
+     * Variações publicadas (item 13), nos dois sentidos da ligação, sem repetir e sem a própria peça.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function variants(Product $product): array
+    {
+        if (! $product->relationLoaded('variants') || ! $product->relationLoaded('variantOf')) {
+            return [];
+        }
+
+        return $product->variants
+            ->concat($product->variantOf)
+            ->unique('id')
+            ->reject(fn (Product $variant) => $variant->id === $product->id)
+            ->map(function (Product $variant): array {
+                $name = Localized::value($variant, 'name');
+
+                return [
+                    'id' => $variant->id,
+                    'slug' => Localized::value($variant, 'slug'),
+                    'name' => $name,
+                    'image' => ImagePresenter::present($variant->getFirstMedia('cover'), $name),
+                ];
+            })
+            ->values()
+            ->all();
     }
 
     /** @return array<string, string|null> */
@@ -70,10 +102,14 @@ class ProductDetailResource extends ProductCardResource
             ->map(fn (array $dimension) => [
                 'label' => Localized::array($dimension['label'] ?? null),
                 'width' => $dimension['width'] ?? null,
+                'width_max' => $dimension['width_max'] ?? null,
                 'depth' => $dimension['depth'] ?? null,
+                'depth_max' => $dimension['depth_max'] ?? null,
                 'height' => $dimension['height'] ?? null,
+                'height_max' => $dimension['height_max'] ?? null,
                 'seat_height' => $dimension['seat_height'] ?? null,
                 'diameter' => $dimension['diameter'] ?? null,
+                'diameter_max' => $dimension['diameter_max'] ?? null,
             ])
             ->values()
             ->all();

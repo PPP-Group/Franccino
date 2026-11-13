@@ -25,7 +25,15 @@
 
 {{ \App\Support\MarkdownText::escape($contactMessage->message) }}
 
-@if(count($items) > 0)
+@if($listUrl)
+## {{ __('Wishlist') }}
+
+{{ trans_choice(':count piece|:count pieces', collect($items)->sum('quantity'), ['count' => collect($items)->sum('quantity')]) }}
+
+@component('mail::button', ['url' => $listUrl])
+{{ __('View the list with photos') }}
+@endcomponent
+@elseif(count($items) > 0)
 ## {{ __('Items') }}
 
 @foreach($items as $item)

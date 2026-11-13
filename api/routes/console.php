@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\RevalidateFrontend;
+use App\Models\Banner;
 use Filament\Actions\Exports\Models\Export;
 use Illuminate\Support\Facades\Schedule;
 
@@ -25,3 +27,15 @@ Schedule::call(function () {
 // Backup do preview (SQLite): banco todo dia, banco e arquivos aos domingos.
 Schedule::command('franccino:backup')->dailyAt('02:40')->onOneServer()->withoutOverlapping();
 Schedule::command('franccino:backup --with-files')->weeklyOn(0, '02:50')->onOneServer()->withoutOverlapping();
+
+// Banner de campanha: quando um período começa ou acaba, o site troca o banner da home sozinho (revisão de 12/11/2026).
+// Roda de 5 em 5 minutos e só avisa o site quando algum início ou fim caiu nesse intervalo.
+Schedule::call(function () {
+    $since = now()->subMinutes(5);
+    $changed = Banner::query()
+        ->where(fn ($query) => $query->whereBetween('starts_at', [$since, now()])->orWhereBetween('ends_at', [$since, now()]))
+        ->exists();
+    if ($changed) {
+        RevalidateFrontend::dispatch(['banners', 'home']);
+    }
+})->name('banner-de-campanha')->everyFiveMinutes()->onOneServer();

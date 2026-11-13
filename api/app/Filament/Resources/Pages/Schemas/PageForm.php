@@ -6,6 +6,7 @@ use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Support\Locales;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -35,6 +36,11 @@ class PageForm
                                     Textarea::make("intro.{$locale}")
                                         ->label(__('Introduction')),
                                 ]),
+                                Select::make('featured_product_id')
+                                    ->label(__('Featured piece'))
+                                    ->relationship('featuredProduct', 'name')
+                                    ->searchable()
+                                    ->preload(),
                                 Builder::make('content')
                                     ->label(__('Content'))
                                     ->blocks(PageBlocks::all())

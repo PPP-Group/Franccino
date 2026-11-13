@@ -17,20 +17,11 @@ type ApiImageProps = {
   sizes: string;
   priority?: boolean;
   className?: string;
-  /** Camada da paralaxe (motion.css, ideia 04): a foto anda mais devagar que o quadro em volta. */
-  parallax?: boolean;
   /** `false`: sem o placeholder e sem o fade (a foto de chegada do movimento de abrir a peça já está pronta). */
   fade?: boolean;
 };
 
-export function ApiImage({
-  image,
-  sizes,
-  priority = false,
-  className,
-  parallax = false,
-  fade = true,
-}: ApiImageProps) {
+export function ApiImage({ image, sizes, priority = false, className, fade = true }: ApiImageProps) {
   if (!image) {
     return null;
   }
@@ -59,7 +50,6 @@ export function ApiImage({
       decoding="async"
       className={className}
       style={hasStyle ? style : undefined}
-      data-parallax-layer={parallax ? 'back' : undefined}
       data-img={fade ? '' : undefined}
       // O BootScript marca `data-loaded` quando a foto chega, às vezes antes de o React hidratar a página.
       suppressHydrationWarning

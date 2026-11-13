@@ -35,12 +35,15 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('search', V1\SearchController::class)->name('search');
         Route::get('sitemap', V1\SitemapController::class)->name('sitemap');
         Route::get('redirects', [V1\RedirectController::class, 'index'])->name('redirects.index');
+        Route::get('quote-lists/{code}', [V1\QuoteListController::class, 'show'])->name('quote-lists.show');
     });
 
     Route::middleware('throttle:api-forms')->group(function () {
         Route::post('contact', V1\ContactController::class)->name('contact');
         Route::post('newsletter', V1\NewsletterController::class)->name('newsletter');
         Route::post('consents', V1\ConsentController::class)->name('consents');
+        Route::post('download-leads', V1\DownloadLeadController::class)->name('download-leads');
+        Route::post('quote-lists', [V1\QuoteListController::class, 'store'])->name('quote-lists.store');
     });
 
     Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])
@@ -54,6 +57,8 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
 // Bulk import for the team (docs/api.md, "Importação em massa"): off unless CONTENT_IMPORT_TOKEN is set.
 Route::prefix('import')->name('api.import.')->middleware(['no-store', 'import.token', 'throttle:api-import'])->group(function () {
     Route::post('media', [ImportController::class, 'media'])->name('media');
+    Route::post('media/remove', [ImportController::class, 'removeMedia'])->name('media.remove');
+    Route::post('files', [ImportController::class, 'files'])->name('files');
     Route::post('covers', [ImportController::class, 'covers'])->name('covers');
     Route::post('content', [ImportController::class, 'content'])->name('content');
     Route::post('translations', [ImportController::class, 'translations'])->name('translations');
