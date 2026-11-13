@@ -53,7 +53,7 @@ it('shows the page video of a project with its cover', function () {
     Storage::fake('media');
     config(['media-library.queue_conversions_by_default' => false]);
     $project = Project::factory()->create(['slug' => ['pt' => 'clara-arte', 'en' => 'clara-arte']]);
-    $project->addMedia(UploadedFile::fake()->create('clara.mp4', 100, 'video/mp4'))->toMediaCollection('video');
+    $project->addMedia(UploadedFile::fake()->createWithContent('clara.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom".str_repeat("\x00", 2048)))->toMediaCollection('video');
     $project->addMedia(UploadedFile::fake()->image('capa.jpg', 1080, 1920))->toMediaCollection('video_poster');
 
     $video = $this->getJson('/api/v1/projects/clara-arte')->assertOk()->json('data.video');
