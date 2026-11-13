@@ -101,7 +101,7 @@ linha Pinot, linha Bloco). Sem página própria no site; usadas em "outras peça
 | legacy_wp_id, legacy_url   |               |                                                                                                  |
 | search_text                | text, null    | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
-Mídia: `portrait` (1).
+Mídia: `portrait` (1) e `signature` (1, assinatura ou logo em PNG sem fundo, 2026-11-13).
 
 ### collections
 
@@ -117,7 +117,7 @@ Mídia: `portrait` (1).
 | legacy_wp_id, legacy_url              |                |                                                                                                  |
 | search_text                           | text, null     | nomes sem acento e em minúsculas, para a busca; mantido pelo model (`HasSearchText`, 2026-10-21) |
 
-Mídia: `cover` (1), `gallery` (n). Pivot `collection_product` (`collection_id`, `product_id`, `sort_order`).
+Mídia: `cover` (1), `gallery` (n), `video` (1, MP4, o filme da coleção, 2026-11-13) e `video_poster` (1, capa do vídeo). Pivot `collection_product` (`collection_id`, `product_id`, `sort_order`).
 
 ### products
 
@@ -288,7 +288,7 @@ Projetos residenciais e cases corporativos (no WP eram `projetos` e `cases`).
 | seo_title, seo_description            | json tr           |                              |
 | legacy_wp_id, legacy_url              |                   |                              |
 
-Mídia: `cover` (1), `gallery` (n). Pivot `product_project`.
+Mídia: `cover` (1), `gallery` (n), `video` (1, MP4, o filme do projeto, 2026-11-13) e `video_poster` (1, capa do vídeo). Pivot `product_project`.
 
 ### clients
 

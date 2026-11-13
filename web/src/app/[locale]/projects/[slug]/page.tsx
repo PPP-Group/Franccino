@@ -7,6 +7,7 @@ import { firstWithCover, neighbours } from '@/components/content/layout';
 import { distinctLead } from '@/components/content/lead';
 import { RichText } from '@/components/content/RichText';
 import { PageBanner } from '@/components/layout/PageBanner';
+import { PageVideo } from '@/components/media/PageVideo';
 import { morphName } from '@/lib/ui/morph';
 import { FeaturePiece } from '@/components/products/FeaturePiece';
 import { SceneViewer } from '@/components/home/SceneViewer';
@@ -113,6 +114,9 @@ export default async function ProjectPage({ params }: Props) {
             </div>
             <SceneViewer scene={project.scene} />
           </section>
+        ) : null}
+        {project.video ? (
+          <PageVideo video={project.video} title={t('video', { name: project.title })} id="project-video" />
         ) : null}
         <EditorialGallery images={project.gallery} label={t('gallery')} />
         {project.products.length > 0 ? (

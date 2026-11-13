@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Project;
 use App\Models\Scene;
 use App\Models\Store;
+use App\Support\WordPress\WordPressImporter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -118,4 +119,37 @@ it('creates the stores the database does not have and adds photos to an existing
     expect($images)->toHaveCount(2)
         ->and($images[0])->toBe('pages/abc-ja-tem.webp')
         ->and($images[1])->toEndWith('-nova.webp');
+});
+
+it('replaces a project text only when the list asks for it', function () {
+    $clara = Project::factory()->create(['slug' => ['pt' => 'clara-arte'], 'description' => ['pt' => '<p>Texto antigo</p>']]);
+    $boaVista = Project::factory()->create(['slug' => ['pt' => 'boa-vista'], 'description' => ['pt' => '<p>Fica</p>']]);
+
+    File::put($this->list, json_encode([
+        'version' => 'teste',
+        'projects' => [
+            ['slug' => 'clara-arte', 'description' => '<p>Texto novo</p>', 'replace_description' => true],
+            ['slug' => 'boa-vista', 'description' => '<p>Não entra</p>'],
+        ],
+    ]));
+
+    $this->artisan('franccino:content:apply', ['file' => $this->list])->assertSuccessful();
+
+    expect($clara->refresh()->getTranslation('description', 'pt'))->toBe('<p>Texto novo</p>')
+        ->and($boaVista->refresh()->getTranslation('description', 'pt'))->toBe('<p>Fica</p>');
+});
+
+it('creates an old-site product listed in new_products only once', function () {
+    Product::factory()->create(['legacy_wp_id' => 7104]);
+    $importer = Mockery::mock(WordPressImporter::class);
+    $importer->shouldNotReceive('importOne');
+    app()->instance(WordPressImporter::class, $importer);
+
+    File::put($this->list, json_encode([
+        'version' => 'teste',
+        'new_products' => [['wp_id' => 7104, 'area' => 'outdoor', 'category' => 'sofas']],
+    ]));
+
+    $this->artisan('franccino:content:apply', ['file' => $this->list])->assertSuccessful();
+    expect(Product::query()->count())->toBe(1);
 });

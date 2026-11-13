@@ -50,6 +50,10 @@ type Image = {
 
 type Seo = { title: string | null; description: string | null; image: Image | null };
 
+// Vídeo da página de projeto ou coleção (2026-11-13): MP4 do próprio storage, tocado só no clique. `poster` é a capa
+// (opcional); a largura e a altura dela dão o formato do quadro (um filme em pé fica em pé).
+type PageVideo = { url: string; poster: Image | null };
+
 type AreaRef = { key: 'indoor' | 'outdoor'; name: string; brand_name: string };
 type CategoryRef = { id: number; slug: string; name: string; singular_name: string };
 type DesignerRef = { id: number; slug: string; name: string };
@@ -134,13 +138,13 @@ type ProductDetail = ProductCard & {
 | `GET /products/facets`    | `area?` `category?` `q?`                                                                                         | `{ categories, designers, collections, lines, finish_groups, rooms }`, cada opção `{ slug \| id, name, count }`; `rooms`: `{ key, count }[]`                                                                                                                                  |
 | `GET /products/{slug}`    |                                                                                                                  | `ProductDetail`                                                                                                                                                                                                                                                               |
 | `GET /collections`        |                                                                                                                  | `CollectionCard[]` (`CollectionRef` + `summary`, `cover`, `product_count`)                                                                                                                                                                                                    |
-| `GET /collections/{slug}` |                                                                                                                  | `CollectionCard` + `description`, `gallery`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs`                                                                                                                                                            |
+| `GET /collections/{slug}` |                                                                                                                  | `CollectionCard` + `description`, `gallery`, `video: PageVideo \| null`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs`                                                                                                                                |
 | `GET /designers`          |                                                                                                                  | `DesignerCard[]` (`DesignerRef` + `short_bio`, `portrait`, `location`)                                                                                                                                                                                                        |
-| `GET /designers/{slug}`   |                                                                                                                  | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`                                                                                                 |
+| `GET /designers/{slug}`   |                                                                                                                  | `DesignerCard` + `bio`, `signature: Image \| null` (assinatura ou logo, 2026-11-13), `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`                                    |
 | `GET /launches`           |                                                                                                                  | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                                                                                                                                            |
 | `GET /launches/{slug}`    |                                                                                                                  | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`, `slugs`                                                                                                                                       |
 | `GET /projects`           | `type?`                                                                                                          | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`, `scene`)                                                                                                                                                      |
-| `GET /projects/{slug}`    |                                                                                                                  | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `featured_product: ProductCard \| null` (escolhida no painel, só se publicada), `seo`, `slugs`                                                                                              |
+| `GET /projects/{slug}`    |                                                                                                                  | `ProjectCard` + `architect`, `description`, `gallery`, `video: PageVideo \| null`, `products: ProductCard[]`, `featured_product: ProductCard \| null` (escolhida no painel, só se publicada), `seo`, `slugs`                                                                  |
 | `GET /clients`            |                                                                                                                  | `{ id, name, url, logo }[]`                                                                                                                                                                                                                                                   |
 | `GET /stores`             | `state?` `type?`                                                                                                 | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                                                                                                                            |
 | `GET /finishes`           |                                                                                                                  | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                                                                                                                              |
@@ -392,13 +396,19 @@ pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchid
 | `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila)    |
 | `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila)    |
 
-`target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`; `key`
+`target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`, `video`, `video_poster`; `key`
 = slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
-`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel), `designer` (`portrait`; `key` =
-slug), `collection` e `launch` (`cover`, `gallery`; `key` = slug pt) e `page` (`gallery`; `key` = chave da página, ex.:
+`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel), `designer` (`portrait`, `signature`; `key` =
+slug), `collection` (`cover`, `gallery`, `video`, `video_poster`) e `launch` (`cover`, `gallery`), com `key` = slug pt, e `page` (`gallery`; `key` = chave da página, ex.:
 `factory`: a foto entra no primeiro bloco Galeria da página, criado no fim se não houver; o mesmo nome de arquivo de
 novo é ignorado, 200 com `skipped: true`). Coleção de um arquivo só substitui a foto atual; `gallery` acrescenta.
 Com `source`, a mesma origem de novo na mesma coleção não acrescenta outra foto (200, `skipped: true`). Coleção fora da lista: 422; registro não encontrado: 404.
+
+Mais campos (2026-11-13): em `page`, `caption` (e `caption_en`) escolhe o bloco Galeria com essa legenda em português
+(ex.: "Peças em produção", na Fábrica), criado no fim se não houver. `replaces` (uma `source` enviada antes) tira essa
+foto da coleção e põe a nova no lugar dela, na mesma posição (a versão editada no lugar da original). `video` aceita MP4
+até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em `page`, `collection=video` grava um bloco Vídeo com o MP4, `title` (e `title_en`) e a capa opcional em
+`poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
 
 `/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
 privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um

@@ -48,13 +48,35 @@ def baixar(item: dict, pasta: Path) -> Path:
 
 
 def preparar(item: dict, arquivo: Path) -> Path:
-    """HEIC vira JPG; foto maior que `resize` px no lado maior é reduzida (qualidade 85, sem metadados de GPS)."""
+    """HEIC e RAW viram JPG; foto maior que `resize` px no lado maior é reduzida (qualidade 85, sem metadados).
+
+    Com `pillow-heif` e `rawpy` no Python que roda o script, o HEIC do iPhone e o RAW da Sony saem por eles (o
+    ImageMagick de muitas máquinas não lê o HEIC do iPhone); sem eles, pelo ImageMagick (`convert`).
+    """
     if item['kind'] != 'media' or not (item.get('convert') or item.get('resize')):
         return arquivo
     saida = arquivo.with_suffix('.jpg')
     if saida == arquivo:
         saida = arquivo.with_name(arquivo.stem + '-web.jpg')
     lado = item.get('resize', 4000)
+    try:
+        from PIL import Image, ImageOps  # noqa: PLC0415 - opcional, só na máquina de quem roda
+        import pillow_heif  # noqa: PLC0415
+
+        pillow_heif.register_heif_opener()
+        if arquivo.suffix.lower() == '.arw':
+            import rawpy  # noqa: PLC0415
+
+            with rawpy.imread(str(arquivo)) as raw:
+                imagem = Image.fromarray(raw.postprocess(use_camera_wb=True))
+        else:
+            imagem = ImageOps.exif_transpose(Image.open(arquivo))
+        imagem = imagem.convert('RGB')
+        imagem.thumbnail((lado, lado), Image.Resampling.LANCZOS)
+        imagem.save(saida, 'JPEG', quality=85, optimize=True, progressive=True)
+        return saida
+    except ImportError:
+        pass
     subprocess.run(
         ['convert', str(arquivo), '-auto-orient', '-resize', f'{lado}x{lado}>', '-strip', '-quality', '85', str(saida)],
         check=True,
@@ -72,6 +94,10 @@ def enviar(item: dict, arquivo: Path) -> dict:
         rota = '/api/import/media'
         campos = {'target': item['target'], 'key': item['key'], 'collection': item['collection'],
                   'source': f"drive:{item['drive_id']}"}
+        # Galeria com nome numa página (ex.: "Peças em produção", na Fábrica).
+        for campo in ('caption', 'caption_en'):
+            if item.get(campo):
+                campos[campo] = item[campo]
     form: list[str] = []
     for nome, valor in campos.items():
         form += ['--form-string', f'{nome}={valor}']

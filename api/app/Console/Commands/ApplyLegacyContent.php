@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Scene;
 use App\Models\Store;
 use App\Support\WordPress\Client;
+use App\Support\WordPress\WordPressImporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +37,7 @@ class ApplyLegacyContent extends Command
 
     private bool $dryRun = false;
 
-    public function handle(Client $client): int
+    public function handle(Client $client, WordPressImporter $importer): int
     {
         $file = (string) $this->argument('file');
         if (! File::exists($file)) {
@@ -57,6 +58,7 @@ class ApplyLegacyContent extends Command
             return self::SUCCESS;
         }
 
+        $this->newProducts($list['new_products'] ?? [], $importer);
         $this->products($list['products'] ?? []);
         $this->newStores($list['new_stores'] ?? [], $client);
         $this->stores($list['stores'] ?? [], $client);
@@ -82,6 +84,28 @@ class ApplyLegacyContent extends Command
     public static function marker(string $version): string
     {
         return storage_path(".content-{$version}");
+    }
+
+    /**
+     * Products of the old site that the first import skipped for lack of area or category there: created published,
+     * with the area and category given in the list and everything else read from the old page (texts, measures,
+     * designer, photos). A product already in the database (same old-site id) is left alone.
+     *
+     * @param  list<array{wp_id: int, area: string, category: string}>  $items
+     */
+    private function newProducts(array $items, WordPressImporter $importer): void
+    {
+        foreach ($items as $item) {
+            $exists = Product::withTrashed()->where('legacy_wp_id', $item['wp_id'])->exists();
+            if (! $exists && ! $this->dryRun) {
+                foreach ($importer->importOne((int) $item['wp_id'], $item['area'], $item['category'])->gaps() as $records) {
+                    foreach ($records as $record => $gaps) {
+                        $this->warn($record.': '.implode('; ', $gaps));
+                    }
+                }
+            }
+            $this->count('Peças novas do site antigo', ! $exists);
+        }
     }
 
     /** @param list<array{wp_id?: int, slug: string, tagline?: ?string, description?: ?string}> $items */
@@ -143,13 +167,26 @@ class ApplyLegacyContent extends Command
         }
     }
 
-    /** @param list<array{slug: string, gallery: list<string>}> $items */
+    /**
+     * Gallery photos of the old site and, with `description` (HTML, Portuguese), the project text. The text only
+     * replaces the current one with `replace_description: true` (the presentation text the Franccino sent).
+     *
+     * @param  list<array{slug: string, gallery?: list<string>, description?: string, replace_description?: bool}>  $items
+     */
     private function projects(array $items, Client $client): void
     {
         foreach ($items as $item) {
             $project = Project::query()->where('slug->pt', $item['slug'])->first();
+            if (isset($item['description'])) {
+                $write = $project !== null && (($item['replace_description'] ?? false)
+                    || blank(strip_tags((string) $project->getTranslation('description', 'pt', false))));
+                if ($write && ! $this->dryRun) {
+                    $project->setTranslation('description', 'pt', $item['description'])->save();
+                }
+                $this->count('Textos dos projetos', $write);
+            }
             $existing = $project?->getMedia('gallery')->map(fn ($media) => $media->getCustomProperty('legacy_url'))->filter()->all() ?? [];
-            foreach ($item['gallery'] as $url) {
+            foreach ($item['gallery'] ?? [] as $url) {
                 $this->count('Fotos dos projetos', $project !== null && ! in_array($url, $existing, true)
                     && $this->attach($project, 'gallery', $url, $client));
             }

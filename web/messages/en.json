@@ -628,7 +628,8 @@
     "othersTitle": "Other collections",
     "fillLaunch": "Discover the novelties",
     "fillAllTitle": "All pieces",
-    "fillAllCta": "Discover the pieces"
+    "fillAllCta": "Discover the pieces",
+    "video": "{name} collection film"
   },
   "designers": {
     "downloads": "Catalogs and presentations",
@@ -662,7 +663,8 @@
     "type": "Type",
     "othersTitle": "Other projects",
     "sceneTitle": "Pieces in the space",
-    "sceneLead": "Select the points to discover each piece."
+    "sceneLead": "Select the points to discover each piece.",
+    "video": "{name} project film"
   },
   "corporate": {
     "title": "Contract",
