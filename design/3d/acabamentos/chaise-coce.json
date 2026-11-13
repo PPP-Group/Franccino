@@ -1,0 +1,7 @@
+[
+  { "cor": [55, 55, 55], "material": "aluminio" },
+  { "cor": [63, 62, 61], "material": "tela", "tinta": [136, 135, 134] },
+  { "cor": [134, 115, 90], "material": "linho", "tinta": [192, 179, 160] },
+  { "cor": [0, 0, 0], "material": "borracha" },
+  { "cor": [96, 55, 25], "material": "madeira_clara" }
+]
