@@ -21,7 +21,6 @@ const PAGE_ROUTES: Record<string, Href> = {
   collections: { pathname: '/collections' },
   designers: { pathname: '/designers' },
   projects: { pathname: '/projects' },
-  corporate: { pathname: '/corporate' },
   factory: { pathname: '/factory' },
   stores: { pathname: '/stores' },
   finishes: { pathname: '/finishes' },

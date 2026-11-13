@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const [t, page] = await Promise.all([
     getTranslations({ locale, namespace: 'projects' }),
-    getPage(locale as Locale, 'projects'),
+    getPage(locale as Locale, 'corporate'),
   ]);
   return buildMetadata({
     locale: locale as Locale,
@@ -53,7 +53,7 @@ export default async function ProjectsPage({ params, searchParams }: Props) {
     getTranslations({ locale, namespace: 'projects' }),
     getTranslations({ locale, namespace: 'common' }),
     getProjects(locale, { type: PROJECT_TYPE, page, per_page: PER_PAGE }),
-    getPage(locale, 'projects'),
+    getPage(locale, 'corporate'),
     getClients(locale),
   ]);
   // Peça em destaque escolhida no painel (Páginas); sem escolha, nenhuma (revisão da Franccino, 12/11/2026).

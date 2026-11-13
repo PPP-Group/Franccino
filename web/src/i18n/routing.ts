@@ -20,9 +20,10 @@ export const pathnames = {
   '/collections/[slug]': { pt: '/colecoes/[slug]', en: '/collections/[slug]' },
   '/designers': '/designers',
   '/designers/[slug]': '/designers/[slug]',
-  '/projects': { pt: '/projetos', en: '/projects' },
-  '/projects/[slug]': { pt: '/projetos/[slug]', en: '/projects/[slug]' },
-  '/corporate': { pt: '/corporativo', en: '/contract' },
+  // A área de projetos é o "Corporativo" (pedido do tech lead, 13/11/2026: no site só existe /corporativo, nunca
+  // /projetos). Os endereços antigos redirecionam em next.config.ts.
+  '/projects': { pt: '/corporativo', en: '/corporate' },
+  '/projects/[slug]': { pt: '/corporativo/[slug]', en: '/corporate/[slug]' },
   '/factory': { pt: '/fabrica', en: '/factory' },
   '/finishes': { pt: '/acabamentos', en: '/finishes' },
   '/downloads': { pt: '/area-do-profissional', en: '/professionals' },
