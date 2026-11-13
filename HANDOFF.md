@@ -1270,8 +1270,11 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   - o 3D da página da peça precisa de GLB. Os blocos SketchUp e AutoCAD não abrem no navegador, e converter formato
     está fora do escopo. Só a Cadeira Marcela tem GLB, e o "Produto de Teste" publicado no preview deve ser apagado.
 
-### 30.1 Depois do deploy
+### 30.1 Depois do deploy (13/11, conferido)
 
-1. Rodar as remoções (`remover.json`) e enviar os filmes do Clara Arte e do Manifesto TEMPO.
-2. Conferir no preview: Clara Arte (sem as cópias e com o filme), Coleção TEMPO, Área do Profissional, FAQ e
-   Política de cookies.
+- No ar: os filmes do Clara Arte e do Manifesto TEMPO, as capas novas da Xove e do Sofá Dara Indoor e as medidas das 81
+  peças (conferido pela API do preview).
+- **Falta tirar as 70 fotos** (`design/drive/2026-11-13-remover.json`, comando em `design/drive/LEIA-ME.md`): a
+  verificação de segurança da sessão bloqueou a remoção no preview. Roda com o ok do tech lead, numa máquina com o
+  `CONTENT_IMPORT_TOKEN`, ou numa sessão com a permissão liberada.
+- Apagar o "Produto de Teste" publicado no preview (painel).
