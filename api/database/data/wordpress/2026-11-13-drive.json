@@ -1,0 +1,79 @@
+{
+  "version": "2026-11-13-drive",
+  "source": "Auditoria do Drive (12/11/2026): peças que o site antigo tinha sem área ou categoria, com a área e a categoria deduzidas da linha e do tipo da peça (a Franccino confirma), e o texto de apresentação do Clara Arte Resort (TEXTOS DE APRESENTAÇÃO.docx)",
+  "new_products": [
+    {
+      "wp_id": 7104,
+      "name": "Sofá Tokio",
+      "area": "outdoor",
+      "category": "sofas"
+    },
+    {
+      "wp_id": 7118,
+      "name": "Tenda Tokio",
+      "area": "outdoor",
+      "category": "tenda"
+    },
+    {
+      "wp_id": 7114,
+      "name": "Tenda Porto",
+      "area": "outdoor",
+      "category": "tenda"
+    },
+    {
+      "wp_id": 7029,
+      "name": "Poltrona Tagli",
+      "area": "outdoor",
+      "category": "poltronas"
+    },
+    {
+      "wp_id": 7037,
+      "name": "Poltrona Tatu",
+      "area": "indoor",
+      "category": "poltronas"
+    },
+    {
+      "wp_id": 7507,
+      "name": "Revisteiro Marine",
+      "area": "indoor",
+      "category": "revisteiros"
+    },
+    {
+      "wp_id": 6970,
+      "name": "Ombrelone Sunless",
+      "area": "outdoor",
+      "category": "ombrelones"
+    },
+    {
+      "wp_id": 6884,
+      "name": "Mesa Bistrô Treviso",
+      "area": "outdoor",
+      "category": "mesa-bistro"
+    },
+    {
+      "wp_id": 5009,
+      "name": "Mesa de cabeceira Alfa",
+      "area": "indoor",
+      "category": "mesas-de-cabeceira"
+    },
+    {
+      "wp_id": 7570,
+      "name": "Mesa de cabeceira Belo",
+      "area": "indoor",
+      "category": "mesas-de-cabeceira"
+    },
+    {
+      "wp_id": 6544,
+      "name": "Mesa de cabeceira Xovê",
+      "area": "indoor",
+      "category": "mesas-de-cabeceira"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "clara-arte-resort-inhotim",
+      "description": "<p>O Clara Arte Resort nasce da união entre hospitalidade, arte contemporânea e natureza, integrando-se de forma sensível a um dos mais importantes museus a céu aberto do mundo: Inhotim. Concebido como uma extensão dessa experiência artística singular, o resort dialoga com a paisagem, a arquitetura e a cultura local, oferecendo aos visitantes uma vivência que vai além da hospedagem e se transforma em contemplação, silêncio e descoberta.</p><p>Com reconhecimento internacional, o Clara Arte Resort reforça a importância global de Inhotim e posiciona Minas Gerais como um polo de referência entre arte, turismo e bem-estar. Mais do que um destino, é um espaço onde o tempo desacelera e a arte se prolonga, acolhendo viajantes do mundo inteiro em uma experiência sofisticada, profunda e memorável.</p><p>Desenvolvida em meio a natureza e ao contemporâneo, a tradicionalidade, o simples e o jeitinho mineiro de levar a vida. Aquela áurea de calma interiorana e também de sossego. Sem deixar de lado as particularidades de pertencer a essa terra. Sob as sombras que encobrem seu território brilha a cultura, ganhando vida pela arte contemporânea e cercado pelo Jardim Botânico reluz o Museu Inhotim.</p><p>O Museu Inhotim permite respiro, tranquilidade, encantamento e também descanso. Assim escolhemos a Coleção Gerais neste projeto, proporcionando conforto e requinte para o belo. Em meio a rotina e a agitação, encontrar paz e aconchego.</p><p>Minas é expressão, é o encurtamento das palavras, é a união de outras e o surgimento de novas formas.</p>",
+      "replace_description": true
+    }
+  ]
+}

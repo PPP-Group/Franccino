@@ -1,16 +1,19 @@
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
+import { BrandIcon } from '@/components/ui/BrandIcon';
 import type { Settings } from '@/lib/api/types';
+import { telHref, whatsappUrl } from '@/lib/contact-links';
 
 type ChannelRow = { key: string; label: string; value: ReactNode };
-import { telHref, whatsappUrl } from '@/lib/contact-links';
 
 /** Canais de `GET /settings`; cada linha só aparece se o painel preencheu (D7). */
 export function ContactChannels({ settings }: { settings: Settings }) {
   const t = useTranslations('contactPage.channels');
   const common = useTranslations('common');
-  const external = (href: string, text: string) => (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+  // WhatsApp com o símbolo oficial ao lado do texto (nunca o balão desenhado à mão).
+  const whatsapp = (href: string, text: string) => (
+    <a className="channel-link" href={href} target="_blank" rel="noopener noreferrer">
+      <BrandIcon name="whatsapp" size={18} />
       {text}
       <span className="visually-hidden">{common('opensInNewWindow')}</span>
     </a>
@@ -32,9 +35,9 @@ export function ContactChannels({ settings }: { settings: Settings }) {
           value: <a href={`mailto:${settings.contact_email}`}>{settings.contact_email}</a>,
         }
       : null,
-    quotes ? { key: 'quotes', label: t('quotes'), value: external(quotes, t('openWhatsapp')) } : null,
+    quotes ? { key: 'quotes', label: t('quotes'), value: whatsapp(quotes, t('openWhatsapp')) } : null,
     assistance
-      ? { key: 'assistance', label: t('assistance'), value: external(assistance, t('openWhatsapp')) }
+      ? { key: 'assistance', label: t('assistance'), value: whatsapp(assistance, t('openWhatsapp')) }
       : null,
     settings.assistance_phone
       ? {

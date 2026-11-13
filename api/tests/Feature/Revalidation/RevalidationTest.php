@@ -21,7 +21,7 @@ it('dispatches a single job with unique tags', function () {
     app(FrontendRevalidator::class)->flush();
 
     Bus::assertDispatchedTimes(RevalidateFrontend::class, 1);
-    Bus::assertDispatched(RevalidateFrontend::class, fn ($job) => collect($job->tags)->sort()->values()->all() === ['areas', 'categories', 'home', 'products']);
+    Bus::assertDispatched(RevalidateFrontend::class, fn ($job) => collect($job->tags)->sort()->values()->all() === ['areas', 'categories', 'home', 'products', 'scenes']);
 });
 
 it('posts the tags with the secret', function () {
@@ -58,7 +58,7 @@ it('revalidates the owner model tags when its media changes', function () {
     $product->addMedia(UploadedFile::fake()->image('cover.jpg', 40, 30))->toMediaCollection('cover');
     app(FrontendRevalidator::class)->flush();
 
-    Bus::assertDispatched(RevalidateFrontend::class, fn ($job) => collect($job->tags)->sort()->values()->all() === ['home', 'products']);
+    Bus::assertDispatched(RevalidateFrontend::class, fn ($job) => collect($job->tags)->sort()->values()->all() === ['home', 'products', 'scenes']);
 });
 
 it('does not revalidate when the media library only records a finished resized photo', function () {

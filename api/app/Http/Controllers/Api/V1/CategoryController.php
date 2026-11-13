@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\CategoryResource;
 use App\Models\Area;
 use App\Models\Category;
+use App\Queries\CategorySampleCovers;
 use App\Support\ContentLocale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,10 @@ class CategoryController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        // Categoria sem capa no painel: a capa da primeira peça dela (na área pedida), para o filtro do catálogo.
+        $samples = CategorySampleCovers::for($categories->pluck('id'), $areaId);
+        $categories->each(fn (Category $category) => $category->sampleCover = $samples->get($category->id));
+
         return CategoryResource::collection($categories);
     }
 
@@ -45,6 +50,6 @@ class CategoryController extends Controller
             ->with('media')
             ->firstOrFail();
 
-        return response()->json(['data' => (new CategoryResource($category, detailed: true))->resolve()]);
+        return response()->json(['data' => CategoryResource::detail($category)->resolve()]);
     }
 }

@@ -3,6 +3,7 @@ import {
   CONSENT_STORAGE_KEY,
   COOKIE_POLICY_VERSION,
   getConsent,
+  getConsentCategories,
   parseStoredConsent,
   resetConsentStoreForTests,
   setConsent,
@@ -44,8 +45,15 @@ describe('consent store', () => {
       choice: 'denied',
       visitorId: 'id-1',
       version: COOKIE_POLICY_VERSION,
+      categories: { analytics: false, marketing: false },
     });
     expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the chosen categories and grants when any of them is on', () => {
+    setConsent('denied', () => 'id-1', { analytics: true, marketing: false });
+    expect(getConsent()).toBe('granted');
+    expect(getConsentCategories()).toEqual({ analytics: true, marketing: false });
   });
 
   it('treats invalid text and an older policy version as no choice', () => {

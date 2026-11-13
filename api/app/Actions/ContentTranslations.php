@@ -16,6 +16,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
+use App\Models\Scene;
 use App\Models\Store;
 use App\Support\Locales;
 use App\Support\RichText;
@@ -47,6 +48,7 @@ final class ContentTranslations
         'product' => Product::class,
         'product_file' => ProductFile::class,
         'project' => Project::class,
+        'scene' => Scene::class,
         'store' => Store::class,
     ];
 

@@ -50,6 +50,10 @@ type Image = {
 
 type Seo = { title: string | null; description: string | null; image: Image | null };
 
+// Vídeo da página de projeto ou coleção (2026-11-13): MP4 do próprio storage, tocado só no clique. `poster` é a capa
+// (opcional); a largura e a altura dela dão o formato do quadro (um filme em pé fica em pé).
+type PageVideo = { url: string; poster: Image | null };
+
 type AreaRef = { key: 'indoor' | 'outdoor'; name: string; brand_name: string };
 type CategoryRef = { id: number; slug: string; name: string; singular_name: string };
 type DesignerRef = { id: number; slug: string; name: string };
@@ -62,8 +66,11 @@ type MediaLink = { id: number; kind: 'video' | 'link'; title: string; url: strin
 type Dimension = {
   label: string | null;
   width: number | null; // mm
+  width_max: number | null; // medida flexível: largura de `width` a `width_max` (null = medida única)
   depth: number | null;
+  depth_max: number | null;
   height: number | null;
+  height_max: number | null;
   seat_height: number | null;
   diameter: number | null;
 };
@@ -84,6 +91,7 @@ type ProductCard = {
   category: CategoryRef;
   designer: DesignerRef | null;
   cover: Image | null;
+  cutout: Image | null; // foto sem fundo (PNG/WebP transparente) do carrossel de lançamentos e coleções; null sem ela
   is_new: boolean;
 };
 
@@ -101,9 +109,12 @@ type ProductDetail = ProductCard & {
     group: string;
     items: { id: number; name: string; code: string | null; swatch: Image | null }[];
   }[];
-  gallery: Image[];
+  gallery: Image[]; // sem a capa: um arquivo igual ao da capa (mesmos bytes e tipo) não entra (07/11/2026)
   // null se não houver GLB ou 3D desligado. O GLB fica em disco privado (contrato 13.2): o endereço vem de
   // POST /products/{slug}/model-3d/link, pedido quando o visitante abre o 3D.
+  top_view: Image | null; // vista de cima (planta) para a sala para montar; sem ela, a sala usa a capa (12/11/2026)
+  rooms: string[]; // ambientes da peça: balcony (varanda e jardim), dining, living, bedroom, office (12/11/2026)
+  variants: { id: number; slug: string; name: string; image: Image | null }[]; // outras versões publicadas da peça
   model_3d: { size: number | null } | null;
   files: DownloadFile[];
   media_links: MediaLink[]; // vídeos (YouTube/Vimeo) e links externos, na ordem do painel
@@ -116,34 +127,35 @@ type ProductDetail = ProductCard & {
 
 ## Leitura
 
-| Método e rota             | Parâmetros                                                                                               | Resposta `data`                                                                                                                                                               |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /home`               |                                                                                                          | `{ banners: Banner[], featured_products: ProductCard[], featured_collections: CollectionCard[], current_launch: LaunchCard \| null, designers: DesignerCard[] }`              |
-| `GET /areas`              |                                                                                                          | `Area[]` (`AreaRef` + `description`, `cover`, `product_count`, `seo`)                                                                                                         |
-| `GET /areas/{key}`        |                                                                                                          | `Area` + `categories: (CategoryRef & { product_count, cover })[]` (só categorias com produto na área)                                                                         |
-| `GET /categories`         | `area?`                                                                                                  | `(CategoryRef & { cover, product_count })[]`                                                                                                                                  |
-| `GET /categories/{slug}`  |                                                                                                          | `CategoryRef` + `description`, `cover`, `seo`, `slugs`                                                                                                                        |
-| `GET /products`           | `area?` `category?` `designer?` `collection?` `line?` `finish?` `launch?` `q?` `sort?` `page` `per_page` | paginado `ProductCard[]`                                                                                                                                                      |
-| `GET /products/facets`    | `area?` `category?` `q?`                                                                                 | `{ categories, designers, collections, lines, finish_groups }`, cada opção `{ slug \| id, name, count }`                                                                      |
-| `GET /products/{slug}`    |                                                                                                          | `ProductDetail`                                                                                                                                                               |
-| `GET /collections`        |                                                                                                          | `CollectionCard[]` (`CollectionRef` + `summary`, `cover`, `product_count`)                                                                                                    |
-| `GET /collections/{slug}` |                                                                                                          | `CollectionCard` + `description`, `gallery`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs`                                                            |
-| `GET /designers`          |                                                                                                          | `DesignerCard[]` (`DesignerRef` + `short_bio`, `portrait`, `location`)                                                                                                        |
-| `GET /designers/{slug}`   |                                                                                                          | `DesignerCard` + `bio`, `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo` |
-| `GET /launches`           |                                                                                                          | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                                            |
-| `GET /launches/{slug}`    |                                                                                                          | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`, `slugs`                                       |
-| `GET /projects`           | `type?`                                                                                                  | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`)                                                               |
-| `GET /projects/{slug}`    |                                                                                                          | `ProjectCard` + `architect`, `description`, `gallery`, `products: ProductCard[]`, `seo`, `slugs`                                                                              |
-| `GET /clients`            |                                                                                                          | `{ id, name, url, logo }[]`                                                                                                                                                   |
-| `GET /stores`             | `state?` `type?`                                                                                         | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                            |
-| `GET /finishes`           |                                                                                                          | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                              |
-| `GET /banners`            | `placement` (default `home_hero`)                                                                        | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                                   |
-| `GET /pages/{key}`        |                                                                                                          | `{ key, title, intro, content: Block[], cover, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo)                                                             |
-| `GET /settings`           |                                                                                                          | configurações públicas (ver shape completo abaixo)                                                                                                                            |
-| `GET /downloads`          | `area?` `category?` `q?` `page` `per_page`                                                               | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado)                                                                                        |
-| `GET /search`             | `q` (mín. 2 caracteres)                                                                                  | `{ products: ProductCard[], designers: DesignerCard[], collections: CollectionCard[] }` (até 12, 6, 6)                                                                        |
-| `GET /sitemap`            |                                                                                                          | `{ type, key?, slugs: Record<Locale, string \| null>, updated_at }[]` de tudo que é público (para `sitemap.xml`)                                                              |
-| `GET /redirects`          |                                                                                                          | `{ from, to, status }[]` ativos                                                                                                                                               |
+| Método e rota             | Parâmetros                                                                                                       | Resposta `data`                                                                                                                                                                                                                                                               |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /home`               |                                                                                                                  | `{ banners: Banner[], featured_products: ProductCard[], featured_collections: CollectionCard[], current_launch: LaunchCard \| null, designers: DesignerCard[] }` (`banners`: com algum banner de campanha no período, com `starts_at`/`ends_at`, só ele; senão, os de sempre) |
+| `GET /areas`              |                                                                                                                  | `Area[]` (`AreaRef` + `description`, `cover`, `product_count`, `seo`)                                                                                                                                                                                                         |
+| `GET /areas/{key}`        |                                                                                                                  | `Area` + `categories: (CategoryRef & { product_count, cover })[]` (só categorias com produto na área; sem capa no painel, `cover` é a capa de uma peça da categoria na área)                                                                                                  |
+| `GET /categories`         | `area?`                                                                                                          | `(CategoryRef & { cover, product_count })[]` (sem capa no painel, `cover` é a capa da primeira peça da categoria na ordem da listagem, na área pedida)                                                                                                                        |
+| `GET /categories/{slug}`  |                                                                                                                  | `CategoryRef` + `description`, `cover`, `seo`, `slugs`                                                                                                                                                                                                                        |
+| `GET /products`           | `area?` `category?` `designer?` `collection?` `line?` `finish?` `room?` `launch?` `q?` `sort?` `page` `per_page` | paginado `ProductCard[]`                                                                                                                                                                                                                                                      |
+| `GET /products/facets`    | `area?` `category?` `q?`                                                                                         | `{ categories, designers, collections, lines, finish_groups, rooms }`, cada opção `{ slug \| id, name, count }`; `rooms`: `{ key, count }[]`                                                                                                                                  |
+| `GET /products/{slug}`    |                                                                                                                  | `ProductDetail`                                                                                                                                                                                                                                                               |
+| `GET /collections`        |                                                                                                                  | `CollectionCard[]` (`CollectionRef` + `summary`, `cover`, `product_count`)                                                                                                                                                                                                    |
+| `GET /collections/{slug}` |                                                                                                                  | `CollectionCard` + `description`, `gallery`, `video: PageVideo \| null`, `designers: DesignerRef[]`, `products: ProductCard[]`, `seo`, `slugs`                                                                                                                                |
+| `GET /designers`          |                                                                                                                  | `DesignerCard[]` (`DesignerRef` + `short_bio`, `portrait`, `location`)                                                                                                                                                                                                        |
+| `GET /designers/{slug}`   |                                                                                                                  | `DesignerCard` + `bio`, `signature: Image \| null` (assinatura ou logo, 2026-11-13), `website_url`, `instagram_url`, `products: ProductCard[]`, `collections: CollectionRef[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`                                    |
+| `GET /launches`           |                                                                                                                  | `LaunchCard[]` (`id`, `slug`, `title`, `year`, `summary`, `cover`)                                                                                                                                                                                                            |
+| `GET /launches/{slug}`    |                                                                                                                  | `LaunchCard` + `description`, `gallery`, `products: ProductCard[]`, `media_links: MediaLink[]`, `files: DownloadFile[]`, `seo`, `slugs`                                                                                                                                       |
+| `GET /projects`           | `type?`                                                                                                          | paginado `ProjectCard[]` (`id`, `slug`, `type`, `title`, `client_name`, `location`, `year`, `summary`, `cover`, `scene`)                                                                                                                                                      |
+| `GET /projects/{slug}`    |                                                                                                                  | `ProjectCard` + `architect`, `description`, `gallery`, `video: PageVideo \| null`, `products: ProductCard[]`, `featured_product: ProductCard \| null` (escolhida no painel, só se publicada), `seo`, `slugs`                                                                  |
+| `GET /clients`            |                                                                                                                  | `{ id, name, url, logo }[]`                                                                                                                                                                                                                                                   |
+| `GET /stores`             | `state?` `type?`                                                                                                 | `Store[]` + `meta.states: string[]` (UFs com loja)                                                                                                                                                                                                                            |
+| `GET /finishes`           |                                                                                                                  | `{ id, name, items: { id, name, code, description, swatch }[] }[]` (por grupo; só grupos com pelo menos um acabamento publicado)                                                                                                                                              |
+| `GET /banners`            | `placement` (default `home_hero`)                                                                                | `Banner[]` (ver shape com nulabilidade abaixo) dentro da janela de exibição                                                                                                                                                                                                   |
+| `GET /scenes`             |                                                                                                                  | `Scene[]` (ver abaixo): ambientes publicados com foto e sem projeto, cada ponto com o `ProductCard` da peça                                                                                                                                                                   |
+| `GET /pages/{key}`        |                                                                                                                  | `{ key, title, intro, content: Block[], cover, featured_product: ProductCard \| null, seo }` (blocos com textos já no idioma pedido, ver `Block` abaixo; `featured_product` é a peça escolhida no painel, só se publicada)                                                    |
+| `GET /settings`           |                                                                                                                  | configurações públicas (ver shape completo abaixo)                                                                                                                                                                                                                            |
+| `GET /downloads`          | `area?` `category?` `q?` `format?` `page` `per_page`                                                             | paginado `ProductCard & { files: DownloadFile[] }` (só produtos com arquivo publicado; `format`, ex. `skp`, `dwg`, `glb`, deixa só as peças com arquivo nesse formato); `meta.formats`: `{ format, count }[]` (formatos existentes e quantas peças têm cada um)               |
+| `GET /search`             | `q` (mín. 2 caracteres)                                                                                          | `{ products: ProductCard[], designers: DesignerCard[], collections: CollectionCard[] }` (até 12, 6, 6)                                                                                                                                                                        |
+| `GET /sitemap`            |                                                                                                                  | `{ type, key?, slugs: Record<Locale, string \| null>, updated_at }[]` de tudo que é público (para `sitemap.xml`)                                                                                                                                                              |
+| `GET /redirects`          |                                                                                                                  | `{ from, to, status }[]` ativos                                                                                                                                                                                                                                               |
 
 `locale_fallback: boolean` vem no detalhe de produto (nome e descrição), coleção (nome, resumo e descrição), designer
 (bio curta e bio), lançamento e projeto (título, resumo e descrição) e página (título e introdução): `true` quando um
@@ -151,7 +163,7 @@ desses textos existe em `pt` e não no idioma pedido. Em `pt` é sempre `false`.
 
 `sort` em `/products`: `featured` (default: destaque, `sort_order`, nome), `name`, `newest`.
 Filtros por `category`, `collection` e `launch` usam o slug no idioma pedido; `designer` e `line` usam o slug
-único; `finish` usa o id; `area` usa a key.
+único; `finish` usa o id; `area` usa a key; `room` usa a chave do ambiente (lista acima; outro valor é `422`).
 
 Slug por idioma (`/products/{slug}`, `/collections/{slug}`, `/categories/{slug}`, `/launches/{slug}`, `/projects/{slug}` e
 os filtros acima): o registro é achado pelo slug do idioma pedido e, se ele não tiver slug nesse idioma, pelo slug em
@@ -183,7 +195,8 @@ Nos demais tipos (`product`, `collection`, `designer`, `launch`, `project`) `key
 (`docs/data-model.md`), então todos podem vir `null` — a API nunca inventa conteúdo para
 preencher um banner incompleto. `image` e `image_mobile` vêm como estão cadastrados (`image_mobile`
 é opcional; `image` normalmente é obrigatória no cadastro, mas também pode ser `null` se o banner
-ainda não tiver a imagem de desktop).
+ainda não tiver a imagem de desktop). `video` é a URL absoluta de um MP4 curto, sem som, que o site toca em loop
+no lugar da foto (a foto vira o pôster e é o que aparece para quem pediu menos movimento); `null` sem vídeo.
 
 ```ts
 type Banner = {
@@ -193,6 +206,26 @@ type Banner = {
   cta_url: string | null;
   image: Image | null;
   image_mobile: Image | null;
+  video: string | null;
+};
+```
+
+### `Scene` (`GET /scenes`)
+
+Ambiente com pontos clicáveis. `x` e `y` são a posição do ponto na foto, em porcentagem (0–100; `x` a partir da
+esquerda, `y` a partir do topo), para valer em qualquer tamanho de tela. Só saem ambientes publicados com foto, e só os
+pontos de peças publicadas, na ordem do painel.
+
+`ProjectCard.scene` (`GET /projects` e `GET /projects/{slug}`, 2026-11-07): o ambiente publicado com foto ligado ao
+projeto no painel (o primeiro pela ordem), ou `null`. Nos outros lugares em que um `ProjectCard` aparece, vem `null`.
+Ambientes com projeto não saem em `GET /scenes`.
+
+```ts
+type Scene = {
+  id: number;
+  title: string;
+  image: Image;
+  hotspots: { x: number; y: number; product: ProductCard }[];
 };
 ```
 
@@ -316,9 +349,28 @@ navegador (sem dado pessoal); o IP fica só como hash, como no `download_logs`. 
 (histórico). `201 { "data": { "recorded": true } }`. Sem Turnstile (o aviso não pode depender de desafio).
 Limite: o mesmo dos formulários (5 por minuto por IP).
 
+### `POST /download-leads`
+
+`{ "profile": "professional" | "client", "first_name", "last_name", "email", "interest"?, "phone"?, "locale",
+"consent": true }`. Cadastro antes de baixar arquivos técnicos (revisão da Franccino, 2026-11-12, item 22).
+`201 { "data": { "token": "<48 caracteres>" } }`: o site guarda o token no navegador e o manda em cada pedido de link; o
+banco guarda só o hash (`download_leads.token_hash`). `422` com os campos inválidos. Limite: o mesmo dos formulários.
+
+### `POST /quote-lists` e `GET /quote-lists/{code}`
+
+Lista de desejos compartilhada por link (retorno de 2026-11-12). `POST` recebe `{ "locale", "items": [{ product_id,
+quantity, finish_ids?, note? }] }` (as mesmas regras dos `items` do contato: até 50 peças publicadas) e responde
+`201 { "data": { "code": "<8 letras e números>", "expires_at": "..." } }`; o site manda o link
+(`/pt/lista/{code}` ou `/en/list/{code}`) no WhatsApp. O pedido de orçamento com `items` (`POST /contact`) também guarda a
+lista, ligada à mensagem, e o e-mail para a equipe leva o link. A lista vale `QUOTE_LIST_DAYS` dias (padrão 90) e sai do
+banco 30 dias depois de vencer. `GET` (leitura, sem cache) devolve `{ code, created_at, expires_at, items: [{ product:
+ProductCard, quantity, finishes: { id, name, code, swatch }[], note }] }`, só com as peças ainda publicadas; vencida ou
+inexistente, `404`.
+
 ### `POST /downloads/{file}/link`
 
-Sem corpo. Gera URL temporária (10 minutos) para o arquivo e grava `download_logs`.
+`{ "lead_token": "<token de POST /download-leads>" }`. Sem token válido: `422` (`errors.lead_token`), e o site abre o
+cadastro. Gera URL temporária (10 minutos) para o arquivo e grava `download_logs` com quem baixou (`download_lead_id`).
 `201 { "data": { "url": "...", "expires_at": "..." } }`. Vale para arquivos de peça, designer ou lançamento.
 Arquivo inexistente, não publicado, ou cujo dono (peça, designer ou lançamento) não está publicado: `404`.
 Limite: 30 por minuto por IP.
@@ -329,6 +381,46 @@ Sem corpo; `slug` no idioma de `?locale=`. Gera URL temporária (10 minutos) par
 privado `downloads`. `201 { "data": { "url": "...", "expires_at": "..." } }`. Peça não publicada, com o 3D desligado ou
 sem modelo: `404`. Limite: o mesmo dos downloads (30 por minuto por IP). A página do produto é estática: o site pede o
 link no navegador, quando o visitante abre o 3D, e nunca grava a URL no HTML.
+
+## Importação em massa (`/api/import/*`)
+
+Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fotos e listas sem o painel e sem passar
+pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
+`Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
+
+| Rota                            | Corpo                                                                                           | Resposta                                      |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`            |
+| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                      | 200 `{ data: { removed, not_found } }`        |
+| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)     | 201 ou 200 `{ data: { id, replaced, size } }` |
+| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila)    |
+| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila)    |
+| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila)    |
+
+`target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`, `video`, `video_poster`; `key`
+= slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
+`image_mobile`; `key` = posição no carrossel da home, 1 a n, na ordem do painel), `designer` (`portrait`, `signature`; `key` =
+slug), `collection` (`cover`, `gallery`, `video`, `video_poster`) e `launch` (`cover`, `gallery`), com `key` = slug pt, e `page` (`gallery`; `key` = chave da página, ex.:
+`factory`: a foto entra no primeiro bloco Galeria da página, criado no fim se não houver; o mesmo nome de arquivo de
+novo é ignorado, 200 com `skipped: true`). Coleção de um arquivo só substitui a foto atual; `gallery` acrescenta.
+Com `source`, a mesma origem de novo na mesma coleção não acrescenta outra foto (200, `skipped: true`). Coleção fora da lista: 422; registro não encontrado: 404.
+
+Mais campos (2026-11-13): em `page`, `caption` (e `caption_en`) escolhe o bloco Galeria com essa legenda em português
+(ex.: "Peças em produção", na Fábrica), criado no fim se não houver. `replaces` (uma `source` enviada antes) tira essa
+foto da coleção e põe a nova no lugar dela, na mesma posição (a versão editada no lugar da original). `video` aceita MP4
+até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em `page`, `collection=video` grava um bloco Vídeo com o MP4, `title` (e `title_en`) e a capa opcional em
+`poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
+Em `product`, `collection=model_3d` grava o GLB do visualizador 3D (disco privado, até
+`franccino.uploads.model_3d_max_kb`), no lugar do anterior.
+`media/remove` apaga as fotos `ids` daquele registro e daquela coleção (ex.: a cópia antiga de uma foto que voltou do
+Drive); um id de outro registro ou de outra coleção não é tocado e volta em `not_found`.
+
+`/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
+privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um
+dos tipos de arquivo (`block_3d`, `block_2d`, `technical_sheet`, `manual`, `catalog`, `presentation`, `other`),
+`title` em português e `title_en` opcional, publicado salvo `published=0`. Extensões e tamanho de
+`franccino.uploads.downloads_*` (SketchUp, AutoCAD, Revit, PDF...). O mesmo nome de arquivo no mesmo dono troca o
+arquivo (200, `replaced: true`): o lote pode rodar de novo quando a Franccino atualizar um bloco.
 
 ## Limites e cabeçalhos
 
@@ -345,5 +437,5 @@ link no navegador, quando o visitante abre o 3D, e nunca grava a URL no HTML.
 Ao salvar ou excluir conteúdo no painel, o back-end enfileira um POST para
 `{FRONTEND_REVALIDATE_URL}` com cabeçalho `x-revalidate-secret` e corpo `{ "tags": ["products", "home"] }`.
 Tags são por tipo de recurso: `home`, `areas`, `categories`, `products`, `lines`, `designers`,
-`collections`, `launches`, `projects`, `clients`, `stores`, `finishes`, `banners`, `pages`, `settings`,
+`collections`, `launches`, `projects`, `clients`, `stores`, `finishes`, `banners`, `scenes`, `pages`, `settings`,
 `redirects`. Sem URL configurada, nada é enviado.

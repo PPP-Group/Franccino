@@ -1,9 +1,13 @@
 import { useTranslations } from 'next-intl';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Link } from '@/i18n/navigation';
 import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { socialLinks } from '@/lib/settings';
+import { BackToTop } from './BackToTop';
+import { Logo } from './Logo';
+import { VortexMark } from './VortexMark';
 
 export function SiteFooter({ settings }: { settings: Settings }) {
   const t = useTranslations('footer');
@@ -19,8 +23,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
       <div className="wrap">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link className="wordmark" href="/">
-              {t('wordmark')}
+            <Link className="wordmark" href="/" aria-label={t('wordmark')}>
+              <Logo />
             </Link>
             {settings.factory_address ? (
               <p className="footer-muted">{t('factory', { address: settings.factory_address })}</p>
@@ -65,7 +69,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             <ul>
               {quotes ? (
                 <li>
-                  <a href={quotes} target="_blank" rel="noopener noreferrer">
+                  <a className="footer-icon-link" href={quotes} target="_blank" rel="noopener noreferrer">
+                    <BrandIcon name="whatsapp" size={18} />
                     {t('quotesWhatsapp')}
                     <span className="visually-hidden">{common('opensInNewWindow')}</span>
                   </a>
@@ -73,7 +78,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
               ) : null}
               {assistance ? (
                 <li>
-                  <a href={assistance} target="_blank" rel="noopener noreferrer">
+                  <a className="footer-icon-link" href={assistance} target="_blank" rel="noopener noreferrer">
+                    <BrandIcon name="whatsapp" size={18} />
                     {t('assistanceWhatsapp')}
                     <span className="visually-hidden">{common('opensInNewWindow')}</span>
                   </a>
@@ -86,7 +92,13 @@ export function SiteFooter({ settings }: { settings: Settings }) {
                 <Link href="/downloads">{nav('downloads')}</Link>
               </li>
               <li>
-                <Link href="/corporate">{nav('corporate')}</Link>
+                <Link href="/projects">{nav('projects')}</Link>
+              </li>
+              <li>
+                <Link href="/faq">{nav('faq')}</Link>
+              </li>
+              <li>
+                <Link href="/partner">{nav('partner')}</Link>
               </li>
               <li>
                 <Link href="/contact">{nav('contact')}</Link>
@@ -103,7 +115,18 @@ export function SiteFooter({ settings }: { settings: Settings }) {
         </div>
 
         <div className="footer-base">
-          <span>{t('copyright', { year, company: settings.company_name })}</span>
+          <span className="footer-base__credits">
+            <span>{t('copyright', { year, company: settings.company_name })}</span>
+            <a
+              className="footer-vortex"
+              href="https://vortexsystems.tech/"
+              rel="noopener"
+              target="_blank"
+              aria-label={t('vortex')}
+            >
+              <VortexMark />
+            </a>
+          </span>
           <ul className="footer-legal" aria-label={t('legal')}>
             <li>
               <Link href="/privacy">{t('privacy')}</Link>
@@ -124,13 +147,17 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             ))}
             {socialLinks(settings).map((link) => (
               <li key={link.platform}>
-                <a href={link.url} rel="noopener noreferrer" target="_blank">
+                <a className="footer-icon-link" href={link.url} rel="noopener noreferrer" target="_blank">
+                  {link.platform === 'instagram' || link.platform === 'facebook' ? (
+                    <BrandIcon name={link.platform} size={18} />
+                  ) : null}
                   {t(`social.${link.platform}`)}
                   <span className="visually-hidden">{common('opensInNewWindow')}</span>
                 </a>
               </li>
             ))}
           </ul>
+          <BackToTop />
         </div>
       </div>
     </footer>

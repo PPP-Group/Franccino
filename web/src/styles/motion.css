@@ -1,0 +1,813 @@
+/*
+  Movimento do site. Tudo num arquivo só para poder tirar ou ajustar de uma vez: apagar o @import em globals.css
+  desliga tudo. Cada bloco abaixo tem um título e se desliga sozinho (apagar o bloco); a lista está em
+  web/DESIGN.md, "Movimento: o que dá para desligar".
+
+  Banco de ideias (PDF de retorno da Franccino):
+  - ideia 04, aprovada: paralaxe suave (três camadas em velocidades diferentes) e revelação ao rolar (a foto abre como
+    uma cortina, o título sobe 20 px enquanto aparece);
+  - ideia 10, aprovada: a foto do card cresce até a página que ele abre e encolhe de volta (ViewTransition do React);
+  - ideia 12, aprovada com ajustes ("validar quais serão utilizados"): as microinterações 12a a 12f, cada uma no seu
+    bloco, para a Franccino escolher quais ficam. A 12c (cursor "Arraste" no carrossel) vive em carousel.css.
+
+  Quem pediu menos movimento não vê nenhuma delas. Tempos e curvas pelos tokens (--t-*, --ease-*). As exceções são
+  laços contínuos, que não são transição: a faixa de carregamento (1,4 s) e o pulso dos pontos dos ambientes
+  (home.css).
+*/
+
+/* ======================================================================================================== */
+/* Ideia 04 — revelação ao rolar                                                                            */
+/* ======================================================================================================== */
+
+/*
+  RevealObserver marca `.is-revealed` quando o bloco entra na tela, uma vez só (transição, nunca presa à rolagem). Só
+  com JavaScript ativo ([data-reveal-ready]) os blocos começam escondidos.
+
+  - `data-reveal`: o bloco (título de seção, texto) sobe 20 px enquanto aparece.
+  - `data-reveal="stagger"`: os filhos fazem o mesmo, em sequência.
+  - `data-reveal="curtain"`: o que está dentro (os filhos diretos: a foto, o link da foto) abre como uma cortina, da
+    esquerda para a direita (clip-path). O recorte fica nos filhos, nunca no próprio bloco: um bloco recortado por
+    inteiro não conta como visível para o IntersectionObserver, e nunca abriria. Só nas coleções (retorno da
+    Franccino, 06/11/2026: o movimento em tudo cansava).
+  - `data-reveal="curtain-stagger"`: o mesmo, com os filhos em sequência (mosaicos e grades de fotos).
+  Texto marcado com `data-reveal` dentro de uma cortina sobe um pouco depois dela.
+*/
+[data-reveal] {
+  --reveal-rise: calc(var(--space-4) + var(--space-1));
+  --reveal-step: 70ms;
+}
+
+/*
+  A cortina recorta 6 px além da caixa, para não cortar o contorno de foco dos links. Os dois estados são inset()
+  (sem `none` no fim): só assim o navegador anima a passagem.
+*/
+[data-reveal^='curtain'] {
+  --reveal-step: 140ms;
+  --curtain-bleed: calc(-1 * (var(--space-1) + var(--space-1) / 2));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger'], [data-reveal^='curtain']),
+  [data-reveal-ready] [data-reveal='stagger'] > * {
+    transition:
+      opacity var(--t-slow) var(--ease-out),
+      transform var(--t-slow) var(--ease-out);
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step));
+  }
+
+  [data-reveal-ready] [data-reveal]:not([data-reveal='stagger'], [data-reveal^='curtain']):not(.is-revealed),
+  [data-reveal-ready] [data-reveal='stagger']:not(.is-revealed) > * {
+    opacity: 0;
+    transform: translateY(var(--reveal-rise));
+  }
+
+  [data-reveal-ready] [data-reveal^='curtain'] > * {
+    clip-path: inset(var(--curtain-bleed));
+    transition: clip-path calc(var(--t-slow) + var(--t-press)) var(--ease-in-out);
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step));
+  }
+
+  [data-reveal-ready] [data-reveal^='curtain']:not(.is-revealed) > * {
+    clip-path: inset(var(--curtain-bleed) 100% var(--curtain-bleed) var(--curtain-bleed));
+  }
+
+  /* Duas por linha (blocos das coleções): o da direita abre logo depois do da esquerda. */
+  .collection-grid > :nth-child(even) {
+    --reveal-index: 1;
+  }
+
+  /* O texto sobre a foto (projetos, linhas) sobe quando a cortina já passou por ele. */
+  [data-reveal-ready] [data-reveal^='curtain'] [data-reveal] {
+    transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step) + var(--t-mid));
+  }
+}
+
+/* ======================================================================================================== */
+/* Ideia 12 — microinterações. Cada bloco se desliga sozinho: apague o bloco inteiro.                        */
+/* ======================================================================================================== */
+
+/* ---------- 12a. Botão e link com seta: a seta anda 4 px para a direita no hover ---------- */
+
+.btn > .icon:last-child:not(:first-child),
+.link-arrow .icon,
+.hero__cta .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn:hover:not(:disabled) > .icon:last-child:not(:first-child),
+  .link-arrow:hover .icon,
+  a:hover .link-arrow .icon,
+  a:hover .hero__cta .icon {
+    transform: translateX(var(--space-1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link-arrow:focus-visible .icon,
+  a:focus-visible .link-arrow .icon {
+    transform: translateX(var(--space-1));
+  }
+}
+
+/* ---------- 12b. Link: sublinhado que cresce da esquerda ---------- */
+
+/*
+  Links de texto do cabeçalho, dos painéis e do rodapé (o fio está em chrome.css) e `.link-grow` (components.css): o
+  fio cresce da esquerda em vez de aparecer de uma vez. No link com seta, que já tem o fio à vista, o fio recolhe para a direita e volta a crescer da
+  esquerda.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .nav > a::after,
+  .nav-area__trigger::after,
+  .nav-panel__all::after,
+  .nav-panel__list a::after,
+  .tools > a .label-optional::after,
+  .lang a::after,
+  .site-footer a:not(.wordmark)::after,
+  .link-grow::after {
+    transition: transform var(--t-base) var(--ease-out);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .link-arrow:hover::before,
+  a:hover .link-arrow::before {
+    animation: underline-redraw calc(2 * var(--t-mid)) var(--ease-in-out);
+  }
+}
+
+@keyframes underline-redraw {
+  0% {
+    transform-origin: right;
+    transform: scaleX(1);
+  }
+  50% {
+    transform-origin: right;
+    transform: scaleX(0);
+  }
+  50.1% {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  100% {
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 12c. Cursor "Arraste" no carrossel: em carousel.css ---------- */
+
+/* ---------- 12d. Peça adicionada à lista: o visto entra e o ícone da lista no cabeçalho pulsa uma vez ---------- */
+
+/*
+  O botão troca o ícone pelo visto e o texto por "Adicionada à lista" por um instante (QuickAddButton e
+  ProductConfigurator); o visto entra pela escala. No cabeçalho, QuoteListLink marca `data-pulse` no ícone e no
+  contador quando a quantidade sobe (nunca ao abrir a página nem ao tirar peças).
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .is-added > .add-icon {
+    animation: add-check var(--t-mid) var(--ease-out);
+  }
+
+  .list-icon[data-pulse],
+  .list-count[data-pulse] {
+    animation: list-pulse calc(2 * var(--t-mid)) var(--ease-out);
+  }
+
+  .list-count[data-pulse] {
+    animation-delay: var(--t-press);
+  }
+
+  /* A foto está voando até a lista (flyToQuote): o ícone e o contador pulsam quando ela chega. */
+  [data-quote-incoming] .list-icon[data-pulse],
+  [data-quote-incoming] .list-count[data-pulse] {
+    animation-delay: 700ms;
+  }
+}
+
+/* O quadradinho da foto a caminho da lista (lib/ui/fly-to-quote.ts): peça em fundo branco, inteira. */
+.quote-fly {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  background: var(--paper) center / contain no-repeat;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@keyframes add-check {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes list-pulse {
+  35% {
+    transform: scale(1.28);
+  }
+}
+
+/* ---------- 12e. Números que contam até o valor (CountUp): o movimento é do componente, sem CSS ---------- */
+
+/* ---------- 12f. Carregamento: esqueleto suave no lugar de "Carregando…" ---------- */
+
+/*
+  Só nos esqueletos (`.skeleton`, components.css): a lista de orçamento antes de ler o navegador e o 3D da peça
+  enquanto o modelo carrega. As fotos de peças e coleções não têm mais a faixa que corria da esquerda para a direita
+  enquanto carregavam (retorno da Franccino, 06/11/2026: "em tudo está ficando ruim"): ficam na cor de fundo até a foto
+  chegar. O único movimento da esquerda para a direita que ficou é a cortina das coleções (`data-reveal="curtain"`).
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    background-image: linear-gradient(
+      100deg,
+      var(--shimmer-base) 30%,
+      var(--shimmer-light) 50%,
+      var(--shimmer-base) 70%
+    );
+    background-size: 300% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* ---------- 12g. Fotos: placeholder enquanto carregam e fade quando chegam ---------- */
+
+/*
+  Retorno de 07/11/2026: a prévia borrada (`blur_data_url`) deixava a peça embaçada até a foto chegar. Agora a caixa da
+  foto mostra um tom claro e liso (com o brilho do esqueleto correndo devagar) e a foto entra com um fade quando chega.
+  O BootScript marca `data-loaded` em cada foto (`late` quando chega da rede, `instant` quando já estava no cache: essa
+  aparece sem animar, inclusive a foto de chegada do movimento de abrir a peça). Sem JavaScript, nada muda.
+*/
+html[data-img-fade] img[data-img]:not([data-loaded]) {
+  background-color: var(--shimmer-base);
+}
+
+/*
+  Durante a foto que cresce (ida e volta), nenhuma foto mostra o tom de carregamento: o quadro que anda é só a foto, sem
+  o quadrado bege enquanto ela chega (retorno de 12/11/2026, retratos dos designers).
+*/
+html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
+  background: none;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-img-fade] img[data-img]:not([data-loaded]) {
+    background-image: linear-gradient(
+      100deg,
+      var(--shimmer-base) 30%,
+      var(--shimmer-light) 50%,
+      var(--shimmer-base) 70%
+    );
+    background-size: 300% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* As fotos que já têm movimento próprio (aproximação do banner) não trocam de animação: só saem do tom. */
+  html[data-img-fade]
+    img[data-img][data-loaded='late']:not(.hero__img, .is-arriving, [data-reveal^='curtain'] *) {
+    animation: img-arrive var(--t-slow) var(--ease-out) both;
+  }
+
+  /*
+    Foto grande do topo (banner de página, palco da peça) aberta pelo menu ou por um link sem a foto que cresce: sobe um
+    pouco e encaixa, com fade, em vez de aparecer de uma vez (retorno de 09/11/2026). Vem depois do tom de carregamento
+    (mesma força), para valer sobre ele.
+  */
+  html[data-img-fade] img[data-img].is-arriving,
+  img[data-img].is-arriving {
+    animation: banner-arrive 650ms var(--ease-out) both;
+  }
+}
+
+@keyframes banner-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(1.03);
+  }
+}
+
+@keyframes img-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- troca de página da lista (retorno de 09/11/2026) ---------- */
+
+/* A tabela da página nova entra com um fade curto; a grade já entra peça por peça (data-reveal="stagger"). */
+@media (prefers-reduced-motion: no-preference) {
+  .catalog-results > :not(.grid-plates, .empty) {
+    /*
+      `backwards`, não `both`: um `transform` que fica no contêiner depois do fim vira a referência do `position: fixed`
+      das fotos que flutuam na linha (RowPeek), e elas saíam longe do ponteiro (retorno de 09/11/2026).
+    */
+    animation: results-in var(--t-slow) var(--ease-out) backwards;
+  }
+}
+
+@keyframes results-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* ---------- faixa de clientes em loop (Corporativo e Projetos) ---------- */
+
+/* Uma volta por logo a cada ~4 s; para no hover, para a pessoa ver a cor da logo e clicar. */
+@media (prefers-reduced-motion: no-preference) {
+  .clients__track {
+    animation: clients-loop calc(var(--clients-count, 8) * 4s) linear infinite;
+  }
+
+  .clients__marquee:hover .clients__track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes clients-loop {
+  to {
+    translate: -50% 0;
+  }
+}
+
+/* ---------- abrir a peça e voltar dela (ideia 10) ---------- */
+
+/*
+  A foto do card cresce até a foto grande da página que ele abre (peça, coleção, projeto) e encolhe de volta até o
+  card na volta (navegador, caminho, logo). Regras em `lib/ui/morph.ts`; a foto é `MorphImage` e o controle da
+  navegação, `PageTransition` (retorno de 06/11/2026). Fora desse movimento, a troca de página é imediata: entre
+  listagens nada se mexe.
+
+  - A página troca de uma vez por baixo da foto (`root` sem animação): só a foto se mexe, nada pisca.
+  - A foto de saída fica inteira durante o movimento e a de chegada aparece por cima na segunda metade (sem a mistura
+    de luz padrão, que clareava o meio): mesmo que a foto de chegada ainda não tenha chegado, nunca há quadro em
+    branco, e o fim cai exatamente sobre a foto da página.
+  - `morph-contain`: peça inteira em fundo branco (cards, palco da peça). `morph-cover`: foto recortada (capas,
+    banners). Mais lento que uma transição de interface (retorno de 06/11/2026: "está abrindo muito rápido").
+*/
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  display: none;
+}
+
+/*
+  O cabeçalho fica por cima de tudo, também durante a foto que cresce (retorno de 12/11/2026: na volta, com a página
+  rolada, a foto passava por cima dele). Com nome próprio ele vira uma camada do movimento, parada, acima das fotos.
+*/
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 50;
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Começa a andar no clique e pousa devagar (a curva "in-out" deixava a foto parada no primeiro terço). */
+::view-transition-group(.morph-contain),
+::view-transition-group(.morph-cover) {
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(.morph-contain),
+::view-transition-old(.morph-cover) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(.morph-contain),
+::view-transition-new(.morph-cover) {
+  animation: morph-arrive var(--t-slow) linear both;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(.morph-contain),
+::view-transition-new(.morph-contain) {
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/*
+  A peça é fotografada em fundo branco: o branco da foto não cobre os cards vizinhos enquanto ela passa por eles. O
+  React tira o nome do <html> (a página por baixo é a de verdade), então a mistura vai na camada inteira, só quando o
+  par é de peça (`data-morph-fit`, posto pelo controle da navegação).
+*/
+:root[data-morph-fit='contain']::view-transition {
+  mix-blend-mode: multiply;
+}
+
+::view-transition-old(.morph-cover),
+::view-transition-new(.morph-cover) {
+  block-size: 100%;
+  object-fit: cover;
+  overflow: clip;
+}
+
+/*
+  O `cover` amplia a foto além do quadro e o navegador não recorta essa sobra na camada do movimento: a foto do projeto
+  passava do tamanho do banner (cobria a tela) e depois "pulava" para o lugar (retorno de 07/11/2026). O par recorta no
+  quadro, que anda do card até o banner.
+*/
+::view-transition-image-pair(.morph-cover) {
+  overflow: clip;
+}
+
+/*
+  Foto recortada: o banner e a faixa mostram recortes diferentes da mesma foto, e a troca de um pelo outro no meio do
+  movimento parecia uma imagem dupla na volta do projeto (retorno de 07/11/2026). Só a foto de destino aparece, do
+  começo ao fim, crescendo ou encolhendo com o quadro; ela já está pronta (MorphImage usa a versão baixada).
+*/
+::view-transition-old(.morph-cover) {
+  opacity: 0;
+}
+
+::view-transition-new(.morph-cover) {
+  animation: none;
+}
+
+/*
+  Peça sem fundo do carrossel (ida e volta da página da peça). No carrossel a caixa que anda já tem o tamanho que a
+  capa teria, com o recorte no meio (FeatureCarousel, `.feature-carousel__morph`), e na página a foto ocupa a caixa
+  da proporção dela (product.css): as duas caixas são da mesma foto. A troca do recorte pela capa acontece logo no
+  começo, e o resto do movimento é só a foto de destino encaixando, sem fade no fim (retorno de 12/11/2026).
+*/
+::view-transition-group(.morph-cutout) {
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+/* `plus-lighter` (o padrão da troca): a soma das duas fotos fica inteira; com `normal` a peça clareava no meio da troca. */
+::view-transition-old(.morph-cutout),
+::view-transition-new(.morph-cutout) {
+  block-size: 100%;
+  object-fit: contain;
+  mix-blend-mode: plus-lighter;
+}
+
+::view-transition-old(.morph-cutout) {
+  animation: morph-swap-out var(--t-slow) linear both;
+}
+
+::view-transition-new(.morph-cutout) {
+  animation: morph-swap-in var(--t-slow) linear both;
+}
+
+/* A capa da página tem fundo branco: sobre o fundo areia das seções ela também some, como as peças dos cards. */
+:root[data-morph-fit='cutout']::view-transition {
+  mix-blend-mode: multiply;
+}
+
+@keyframes morph-swap-out {
+  0% {
+    opacity: 1;
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-swap-in {
+  0% {
+    opacity: 0;
+  }
+
+  25%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes morph-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-arrive {
+  0%,
+  30% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+  }
+}
+
+/*
+  Na volta, a página reaparece como estava: os blocos que aparecem ao rolar (ideia 04) já vêm à vista, sem animar
+  (`data-reveal-instant`, posto por dois quadros pelo controle da navegação).
+*/
+[data-reveal-instant] [data-reveal],
+[data-reveal-instant] [data-reveal] > * {
+  transition: none !important;
+}
+
+/* Na volta, o bloco que o RevealObserver ainda não marcou já aparece pronto (sem subir, sem cortina). */
+[data-reveal-instant] [data-reveal]:not(.is-revealed),
+[data-reveal-instant] [data-reveal]:not(.is-revealed) > * {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ---------- tela de abertura (SplashScreen + BootScript) ---------- */
+
+/*
+  Só na primeira página da sessão (o BootScript marca `data-splash="off"` nas outras). O nome aparece devagar, um fio
+  cresce embaixo dele e o branco some quando a página carregou (`data-splash="out"`, depois de 600 ms no mínimo).
+  Sem JavaScript, ou se a página demorar, o próprio CSS tira a tela aos 1,8 s. Depois de sumir, não pega clique.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-splash='off']) .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: block;
+    animation: splash-away var(--t-slow) var(--ease-in-out) 1.1s both;
+  }
+
+  html[data-splash='out'] .splash {
+    pointer-events: none;
+  }
+
+  .splash__panel {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-4);
+    background: var(--paper);
+    color: var(--ink);
+    transition: opacity var(--t-slow) var(--ease-in-out);
+  }
+
+  html[data-splash='out'] .splash__panel {
+    opacity: 0;
+  }
+
+  .splash__wordmark {
+    height: 28px;
+    animation: splash-in var(--t-slow) var(--ease-out) both;
+  }
+
+  .splash__line {
+    width: var(--space-8);
+    height: 1px;
+    background: var(--ink);
+    transform-origin: left;
+    animation: splash-line 1.1s var(--ease-in-out) var(--t-fast) both;
+  }
+}
+
+@keyframes splash-away {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+@keyframes splash-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- painéis do cabeçalho (menus e busca) ---------- */
+
+/*
+  Casa, Giardini e Coleções (desktop) e a faixa da busca: abrem com fade e descem 8 px; fecham ao contrário
+  (`allow-discrete` deixa animar o `hidden`). Navegador sem suporte abre e fecha na hora.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  @media (min-width: 1181px) {
+    .nav-panel {
+      transition:
+        opacity var(--t-base) var(--ease-out),
+        transform var(--t-base) var(--ease-out),
+        display var(--t-base) allow-discrete;
+    }
+
+    .nav-panel[hidden] {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    @starting-style {
+      .nav-panel:not([hidden]) {
+        opacity: 0;
+        transform: translateY(calc(-1 * var(--space-2)));
+      }
+    }
+
+    /* Trocar de Casa para Giardini: o painel de antes sai na hora, sem dois painéis por cima um do outro. */
+    .nav:has(.nav-area.is-open) .nav-panel[hidden] {
+      transition: none;
+    }
+  }
+
+  .header-search__panel {
+    transition:
+      opacity var(--t-base) var(--ease-out),
+      transform var(--t-base) var(--ease-out),
+      display var(--t-base) allow-discrete;
+  }
+
+  .header-search__panel[hidden] {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2)));
+  }
+
+  @starting-style {
+    .header-search__panel:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+  }
+
+  /* Sugestões entram em sequência (até a oitava), a cada resultado novo. */
+  .header-search__list li {
+    animation: suggestion-in var(--t-base) var(--ease-out) both;
+    animation-delay: calc(min(var(--i, 0), 8) * 40ms);
+  }
+}
+
+@keyframes suggestion-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-1));
+  }
+}
+
+/* ======================================================================================================== */
+/* Lista de opções e campos (components/ui/Select.tsx, forms.css)                                           */
+/* ======================================================================================================== */
+
+/*
+  A lista abre descendo 4 px e crescendo de 98% a 100%, com o fade (180 ms), e fecha do mesmo jeito ao contrário;
+  a seta do botão gira junto. A opção sob o mouse ou o teclado ganha o fundo areia sem piscar, a borda dos campos
+  escurece devagar e o visto da caixa de marcar entra crescendo. Quem pediu menos movimento vê tudo na hora (o bloco
+  só vale com `prefers-reduced-motion: no-preference`). Navegador sem `@starting-style` abre e fecha na hora.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .select__list {
+    transition:
+      opacity var(--t-fast) var(--ease-out),
+      transform var(--t-fast) var(--ease-out),
+      display var(--t-fast) allow-discrete;
+  }
+
+  .select__list[hidden] {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-1))) scale(0.98);
+  }
+
+  @starting-style {
+    .select__list:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-1))) scale(0.98);
+    }
+  }
+
+  .select[data-placement='top'] .select__list[hidden] {
+    transform: translateY(var(--space-1)) scale(0.98);
+  }
+
+  @starting-style {
+    .select[data-placement='top'] .select__list:not([hidden]) {
+      transform: translateY(var(--space-1)) scale(0.98);
+    }
+  }
+
+  .select__chevron {
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+
+  .select__option {
+    transition: background-color var(--t-press) var(--ease-out);
+  }
+
+  .select__button,
+  .field input,
+  .field textarea,
+  .search-form input {
+    transition: border-color var(--t-fast) var(--ease-out);
+  }
+
+  input[type='checkbox']::before,
+  input[type='radio']::before {
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    transition:
+      background-color var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out);
+  }
+}
+
+/* ---------- cabeçalho que some ao rolar para baixo e volta ao subir (revisão de 12/11/2026) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header {
+    transition: transform var(--t-mid) var(--ease-out);
+  }
+
+  /* A barra de filtros acompanha o cabeçalho no mesmo tempo (chrome.css, `--header-offset`). */
+  .toolbar--catalog {
+    transition: top var(--t-mid) var(--ease-out);
+  }
+}
+
+/* ---------- retrato do designer que ganha cor no hover (revisão de 12/11/2026) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile--portrait .tile__media img {
+    transition:
+      filter var(--t-slow) var(--ease-out),
+      transform var(--t-slow) var(--ease-out);
+  }
+}
+
+/* ---------- Tire suas dúvidas: a resposta abre deslizando e o "+" vira "−" (13/11/2026) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .faq {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--t-mid) var(--ease-out),
+      content-visibility var(--t-mid) allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+
+  .faq__icon,
+  .faq__icon::before,
+  .faq__icon::after {
+    transition:
+      transform var(--t-base) var(--ease-out),
+      background-color var(--t-base) var(--ease-out);
+  }
+}

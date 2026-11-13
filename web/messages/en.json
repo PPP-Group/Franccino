@@ -1,6 +1,6 @@
 {
   "common": {
-    "nothingYet": "Nothing has been published here yet.",
+    "nothingYet": "There is no content published in this section yet.",
     "skipToContent": "Skip to content",
     "loading": "Loading…",
     "close": "Close",
@@ -13,34 +13,38 @@
     "scrollNext": "Next"
   },
   "nav": {
-    "indoor": "Casa",
-    "outdoor": "Giardini",
+    "indoor": "Indoor",
+    "outdoor": "Outdoor",
     "products": "Products",
     "launches": "Novelties",
     "collections": "Collections",
     "designers": "Designers",
-    "projects": "Projects",
+    "projects": "Contract",
     "corporate": "Corporate projects",
     "factory": "Factory",
     "finishes": "Finishes",
-    "downloads": "Downloads",
+    "downloads": "Professionals",
     "stores": "Stores",
     "contact": "Contact",
-    "planner": "Room planner"
+    "planner": "Room planner",
+    "faq": "FAQ",
+    "partner": "Become a partner"
   },
   "footer": {
+    "backToTop": "Up",
+    "backToTopLabel": "Back to the top of the page",
     "cookies": "Cookie policy",
     "siteMap": "Site map",
     "privacy": "Privacy",
-    "terms": "Terms of use",
+    "terms": "Terms and Conditions of Use",
     "wordmark": "Franccino",
     "factory": "Factory: {address}",
     "catalog": "Catalogue",
     "service": "Customer care",
     "newsletter": "News by email",
-    "quotesWhatsapp": "WhatsApp for quotes",
+    "quotesWhatsapp": "Quotes",
     "assistanceWhatsapp": "Technical assistance",
-    "whereToFind": "Where to find us",
+    "whereToFind": "Stores",
     "copyright": "© {year} {company}.",
     "legal": "Legal information",
     "social": {
@@ -49,7 +53,8 @@
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
       "youtube": "YouTube"
-    }
+    },
+    "vortex": "A Vortex solution"
   },
   "language": {
     "label": "Language",
@@ -67,58 +72,68 @@
     "search": "Search",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "quoteList": "Quote list, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
-    "quoteListShort": "List",
-    "areaAll": "View all {area}"
+    "quoteList": "Wishlist, {count, plural, =0 {empty} one {# piece} other {# pieces}}",
+    "quoteListShort": "Wishlist",
+    "areaAll": "View all",
+    "collectionsAll": "View all",
+    "submenu": "Show the {area} options",
+    "seeAllLine": "View all"
   },
   "quote": {
-    "viewList": "View list",
-    "quickAdd": "Add {name} to the quote list",
+    "viewList": "View wishlist",
+    "quickAdd": "Add {name} to the wishlist",
     "addedPendingFinish": "{name} is on your list; finish to be defined.",
-    "listFull": "The list reached its 50-item limit. Send this list before starting another.",
+    "listFull": "The list has reached its limit of 50 items. Please send this request before starting a new one.",
     "inList": "On the list",
-    "inListNamed": "{name} is on the quote list.",
-    "addShort": "Add to list",
+    "inListNamed": "{name} is on the wishlist.",
+    "addShort": "Add to wishlist",
     "pendingFinish": "finish to be defined",
     "viewListCount": "View list ({count})",
     "decrease": "Decrease",
     "increase": "Increase",
-    "title": "Quote list",
-    "intro": "Check finishes and quantities. The Franccino team replies with the quote.",
+    "title": "Wishlist",
+    "intro": "Review the finishes and quantities. The Franccino team will reply with your quote.",
     "pieces": "{count, plural, one {# piece} other {# pieces}}",
     "remove": "Remove",
-    "removed": "{name} was removed from the list.",
+    "removed": "Piece removed from the list: {name}.",
     "quantityOf": "Quantity of {name}",
-    "messageHeading": "Pieces on the quote list:",
-    "whatsappIntro": "Hello! I would like a quote for these pieces:",
+    "messageHeading": "Pieces on the wishlist:",
+    "whatsappIntro": "Hello, I would like to request a quote for the following pieces:",
     "form": {
       "title": "Your details",
       "notes": "Notes",
-      "notesPlaceholder": "Timing, delivery address, custom sizes…",
-      "submit": "Send quote request",
-      "whatsapp": "Send the list by WhatsApp"
+      "notesPlaceholder": "Desired timing, delivery address, custom dimensions…",
+      "submit": "Email it to our sales team",
+      "whatsapp": "Send by WhatsApp"
     },
     "empty": {
-      "title": "Your quote list is empty",
-      "body": "Gather the pieces you like, with finish and quantity, and send them to the team at once.",
-      "catalog": "See the catalogue",
+      "title": "Your wishlist is empty",
+      "body": "Select the pieces you are interested in, with finish and quantity, and send a single request to our team.",
+      "catalog": "Explore the catalogue",
       "planner": "Plan a room"
     },
     "sent": {
       "title": "Request sent",
-      "body": "We received your list. The Franccino team will reply to the email you provided."
-    }
+      "body": "We have received your request. The Franccino team will contact you at the email address provided."
+    },
+    "addedToList": "Added to the list",
+    "recommendedTitle": "Recommended for you",
+    "whatsappShare": "Hello, I would like a quote for my wishlist ({count, plural, one {# piece} other {# pieces}}): {url}",
+    "shareFailed": "We could not create the list link. Please try again.",
+    "linkCopied": "List link copied.",
+    "copyLink": "Copy the list link",
+    "messageSummary": "Quote request for the wishlist ({count, plural, one {# piece} other {# pieces}})."
   },
   "errors": {
     "notFound": {
       "title": "Page not found",
-      "description": "The content you are looking for doesn't exist or has moved.",
-      "backHome": "Back to the homepage",
-      "catalog": "See the catalogue"
+      "description": "The content you are looking for does not exist or has been moved.",
+      "backHome": "Return to the homepage",
+      "catalog": "Explore the catalogue"
     },
     "serverError": {
-      "title": "Something went wrong",
-      "description": "We couldn't complete this action. Please try again.",
+      "title": "An unexpected error occurred",
+      "description": "We could not complete this action. Please try again.",
       "retry": "Try again"
     }
   },
@@ -127,8 +142,8 @@
     "submit": "Submit",
     "sending": "Sending…",
     "success": "Sent successfully.",
-    "error": "We couldn't send this. Please try again.",
-    "rateLimited": "Too many attempts. Please try again shortly.",
+    "error": "We could not complete the submission. Please try again.",
+    "rateLimited": "Several attempts were made in a row. Please wait a moment.",
     "consent": "I have read and agree to the <link>privacy policy</link>.",
     "turnstileLabel": "Security check",
     "fields": {
@@ -157,7 +172,7 @@
     "types": {
       "quote": "Quote",
       "assistance": "Technical assistance",
-      "partnership": "Become a partner",
+      "partnership": "Partnerships",
       "press": "Press",
       "other": "Something else"
     },
@@ -166,44 +181,44 @@
     "phone": "Phone",
     "company": "Company",
     "city": "City",
-    "state": "State (Brazil)",
-    "statePlaceholder": "Select",
-    "profession": "You are",
-    "professionPlaceholder": "Select",
+    "state": "State",
+    "statePlaceholder": "Select a state",
+    "profession": "Profile",
+    "professionPlaceholder": "Select a profile",
     "professions": {
       "architect": "Architect",
       "interior_designer": "Interior designer",
       "retailer": "Retailer",
-      "end_customer": "Home owner",
+      "end_customer": "Private client",
       "other": "Other"
     },
     "message": "Message",
     "consent": "I agree to the <privacy>privacy policy</privacy> and to being contacted by Franccino about this message.",
     "submit": "Send",
     "sending": "Sending…",
-    "success": "Message received. The Franccino team will reply to the email you provided.",
+    "success": "Message received. The Franccino team will reply to the email address provided.",
     "errorSummary": "Please check the highlighted fields.",
-    "failed": "We could not send it right now. Please try again shortly.",
-    "rateLimited": "Too many attempts in a row. Wait a minute and try again.",
+    "failed": "We could not send your message at this time. Please try again shortly.",
+    "rateLimited": "Several attempts were made in a row. Please wait a minute and try again.",
     "errors": {
       "required": "This field is required.",
       "invalidEmail": "Enter a valid email address.",
-      "tooLong": "This text is longer than allowed.",
-      "consent": "You need to accept the privacy policy."
+      "tooLong": "This text exceeds the allowed length.",
+      "consent": "Please accept the privacy policy."
     }
   },
   "newsletter": {
-    "intro": "Get Franccino launches by email.",
+    "intro": "Receive Franccino launches by email.",
     "emailLabel": "Your email",
     "placeholder": "Your email",
     "submit": "Subscribe",
     "consent": "I accept the <privacy>privacy policy</privacy>.",
     "status": {
       "sending": "Sending…",
-      "success": "Subscription received.",
+      "success": "Subscription received. Thank you for your interest.",
       "invalid": "Enter a valid email and accept the privacy policy.",
-      "failed": "We could not subscribe you right now. Please try again.",
-      "rateLimited": "Too many attempts in a row. Wait a minute."
+      "failed": "We could not complete your subscription at this time. Please try again.",
+      "rateLimited": "Several attempts were made in a row. Please wait a minute."
     }
   },
   "products": {
@@ -219,23 +234,23 @@
       "choose": "Choose a {group} finish."
     },
     "buyLabel": "Quote",
-    "pendingHint": "Finish to be defined: {groups}. Choose now or agree it with the team.",
+    "pendingHint": "Finish to be defined: {groups}. Select it now or define it later with our team.",
     "quantity": "Quantity",
-    "addToList": "Add to quote list",
+    "addToList": "Add to wishlist",
     "inList": "On the list",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Where to buy",
     "added": "{quantity} × {name} · {finishes}.",
-    "whatsappText": "Hello! I am interested in {quantity} × {name} ({finishes}). Could you help me with a quote?",
+    "whatsappText": "Hello, I am interested in {quantity} × {name} ({finishes}) and would like to request a quote.",
     "designBy": "Design <designer>{name}</designer>",
     "sku": "Ref. {sku}",
     "materials": "Materials: {materials}",
     "fallbackNotice": "This content is only available in Portuguese.",
-    "quoteOnlyThis": "Ask for a quote for this piece only",
+    "quoteOnlyThis": "Request a quote for this piece",
     "sendQuote": "Send quote request",
     "sameLine": "From the {line} line",
     "sameLineFallback": "From the same line",
-    "related": "More {category}",
+    "related": "More in {category}",
     "seeArea": "See {area}",
     "dimensions": {
       "title": "Dimensions (cm)",
@@ -258,7 +273,8 @@
         "height": "height {value} cm",
         "diameter": "diameter {value} cm",
         "seatHeight": "seat height {value} cm"
-      }
+      },
+      "range": "{min} to {max}"
     },
     "stage": {
       "viewLabel": "View",
@@ -266,13 +282,35 @@
       "model": "3D",
       "modelAlt": "3D model of {name}",
       "modelLoading": "Loading the 3D model…",
-      "modelError": "We could not load the 3D model now. See the photos or try again.",
+      "modelError": "The 3D model could not be loaded at this time. Please see the photos or try again.",
       "modelRetry": "Try again",
       "thumbsLabel": "Photos of the piece",
       "showImage": "Photo {index} of {total}"
     },
-    "downloads": { "title": "Technical files", "secureLink": "Secure link valid for 10 min" },
-    "designer": { "piecesBy": "Pieces by {name}" }
+    "downloads": {
+      "title": "Technical files",
+      "secureLink": "Secure link, valid for 10 minutes"
+    },
+    "designer": {
+      "piecesBy": "Pieces by {name}"
+    },
+    "moreWays": "Other ways to get in touch",
+    "addedToList": "Added to the list",
+    "library": {
+      "title": "Add it to your project",
+      "soon": "2D and 3D blocks, catalogues and spec sheets are in the Professionals area.",
+      "professionals": "See all files in the Professionals area",
+      "programs": {
+        "sketchup": "SketchUp",
+        "autocad": "AutoCAD",
+        "revit": "Revit",
+        "glb": "GLB (3D)"
+      },
+      "professionalsPiece": "See this piece's files in the Professionals area"
+    },
+    "variants": {
+      "title": "Variations"
+    }
   },
   "catalog": {
     "filters": {
@@ -283,9 +321,13 @@
       "finish": "Finish",
       "sort": "Sort by",
       "search": "Search",
-      "apply": "Filter",
+      "apply": "Apply",
       "allDesigners": "All designers",
-      "facetOption": "{name} ({count})"
+      "facetOption": "{name} ({count})",
+      "room": "Room",
+      "allRooms": "All rooms",
+      "allCategories": "All categories",
+      "allCollections": "All collections"
     },
     "sort": {
       "featured": "Featured",
@@ -296,28 +338,36 @@
       "label": "Pages",
       "previous": "Previous",
       "next": "Next",
-      "status": "Page {current} of {last}"
+      "status": "Page {current} of {last}",
+      "short": "{current} / {last}"
     },
-    "empty": "No products found.",
+    "empty": "No pieces found.",
     "emptyState": {
       "title": "No pieces match these filters.",
-      "body": "Remove a filter or talk to the team.",
+      "body": "Remove a filter or get in touch with our team.",
       "clear": "Clear filters"
     },
     "newTag": "New releases",
     "count": "{count, plural, =0 {No pieces} one {# piece} other {# pieces}}",
     "resultsLabel": "Results",
-    "view": { "label": "View", "grid": "Grid", "table": "Technical table" },
-    "products": { "title": "All pieces", "intro": "The complete Casa and Giardini catalogue." },
+    "view": {
+      "label": "View",
+      "grid": "Grid",
+      "table": "Technical table"
+    },
+    "products": {
+      "title": "Products",
+      "intro": "The complete Casa and Giardini catalogue."
+    },
     "technical": {
       "title": "Technical area",
-      "intro": "Pieces with dimensions and files for specification. Open a piece to see its finishes."
+      "intro": "Pieces with dimensions and files for specification. Finishes are shown on each piece’s page."
     },
     "launches": {
       "downloads": "Catalogs and presentations",
       "title": "Novelties",
       "intro": "Collections and pieces launched by Franccino.",
-      "empty": "No novelties published right now."
+      "empty": "No novelties have been published at the moment."
     },
     "table": {
       "label": "Technical table",
@@ -328,8 +378,29 @@
       "designer": "Designer",
       "dimensions": "Dimensions",
       "files": "Files",
-      "list": "Quote list",
-      "empty": "—"
+      "list": "Wishlist",
+      "empty": "—",
+      "filesMany": "{format} ({count} versions)"
+    },
+    "gridFill": {
+      "title": "Would you like guidance in your choice?",
+      "body": "Plan your room to scale with the real dimensions of each piece, or speak with the Franccino team.",
+      "planner": "Plan a room",
+      "contact": "Speak with a consultant"
+    },
+    "loadMore": {
+      "button": "View more",
+      "loading": "Loading…",
+      "nextPage": "See the next pieces",
+      "count": "{shown} of {total} pieces",
+      "error": "We could not load more pieces. Please try again."
+    },
+    "rooms": {
+      "balcony": "Balcony and garden",
+      "dining": "Dining room",
+      "living": "Living room",
+      "bedroom": "Bedroom",
+      "office": "Office"
     }
   },
   "stores": {
@@ -357,11 +428,19 @@
     "noResults": "No results found.",
     "resultsFor": "Results for “{query}”",
     "seeAll": "See all results",
-    "kind": { "product": "Piece", "designer": "Designer", "collection": "Collection" }
+    "kind": {
+      "product": "Piece",
+      "designer": "Designer",
+      "collection": "Collection"
+    }
   },
   "pages": {
-    "indoor": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" }
+    "indoor": {
+      "title": "Indoor"
+    },
+    "outdoor": {
+      "title": "Outdoor"
+    }
   },
   "dimensions": {
     "width": "W",
@@ -371,7 +450,7 @@
     "diameter": "Ø"
   },
   "downloads": {
-    "title": "Downloads",
+    "title": "Professionals",
     "count": "{count, plural, one {# piece with files} other {# pieces with files}}",
     "empty": "No pieces with files for these filters.",
     "pagination": "Download pages",
@@ -379,29 +458,43 @@
       "area": "Line",
       "allAreas": "All lines",
       "search": "Find a piece",
-      "submit": "Filter"
-    },
-    "table": {
-      "label": "Technical files by piece",
-      "caption": "Pieces and technical files to download",
-      "image": "Image",
-      "piece": "Piece",
-      "area": "Line",
-      "files": "Files"
+      "submit": "Filter",
+      "format": "File type",
+      "allFormats": "All types",
+      "formatOption": "{name} · {count, plural, one {# piece} other {# pieces}}"
     },
     "linkLabel": "Download {title} ({format})",
     "formatAndSize": "{format} · {size}",
-    "failed": "We could not create the link right now. Please try again.",
-    "rateLimited": "Too many downloads in a row. Wait a minute.",
-    "unavailable": "File unavailable right now."
+    "failed": "We could not generate the link at this time. Please try again.",
+    "rateLimited": "Several downloads were requested in a row. Please wait a minute.",
+    "unavailable": "File unavailable right now.",
+    "lead": {
+      "title": "Before you download",
+      "intro": "Share your details once to access the technical files. After that, downloads start right away.",
+      "profile": "You are",
+      "professional": "Professional (architect, designer, specifier)",
+      "client": "End customer",
+      "fields": {
+        "first_name": "First name",
+        "last_name": "Last name",
+        "email": "Email",
+        "interest": "Interest (optional)",
+        "phone": "Phone (optional)"
+      },
+      "consent": "I accept the <privacy>privacy policy</privacy>.",
+      "submit": "Continue and download",
+      "sending": "Sending…",
+      "cancel": "Cancel",
+      "failed": "We could not complete your registration. Please try again."
+    }
   },
   "planner": {
     "meta": {
       "title": "Room planner",
-      "description": "Draw your room with its real measures, place Franccino pieces to scale and send them to the quote list."
+      "description": "Draw your room with its real measurements, place Franccino pieces to scale and send the layout to the wishlist."
     },
     "title": "Room planner",
-    "intro": "Draw the room with its real measures, drag the pieces and see what fits. Everything to scale.",
+    "intro": "Draw the room with its real measurements, place the pieces and review the layout, all to scale.",
     "sideLabel": "Room and pieces",
     "roomSize": "Room size (m)",
     "roomWidth": "Width",
@@ -411,12 +504,13 @@
       "search": "Find a piece",
       "placeholder": "Sofa, armchair, table…",
       "searching": "Searching…",
-      "noResults": "No pieces with dimensions for this search.",
-      "add": "Place {name} in the room",
+      "noResults": "No pieces for this search.",
+      "add": "Add {name} to the room",
       "sizeRect": "{width} × {depth} cm",
-      "sizeRound": "Ø {diameter} cm"
+      "sizeRound": "Ø {diameter} cm",
+      "unsized": "Dimensions to be confirmed: not available for the plan yet"
     },
-    "hint": "Drag to move. With a piece selected, use the arrow keys (Shift moves 1 cm), R to rotate and Delete to remove.",
+    "hint": "Drag to move. With a piece selected, use the arrow keys to move it (with Shift, 1 cm at a time), R to rotate and Delete to remove.",
     "rotate": "Rotate",
     "remove": "Remove",
     "canvasLabel": "Room plan, {width} by {depth} metres",
@@ -425,23 +519,23 @@
     "pieceLabel": "{name}, {width} by {depth} cm",
     "pieceSize": "{width} × {depth}",
     "moved": "{name} at {x}, {y} cm.",
-    "added": "{name} is in the room.",
+    "added": "Piece added to the room: {name}.",
     "removed": "Piece removed.",
-    "maxPieces": "The room reached its piece limit.",
+    "maxPieces": "The room has reached its piece limit.",
     "checks": {
       "title": "Check",
       "ok": "Every piece fits without overlapping.",
       "conflicts": "{count, plural, one {# piece overlaps or is outside the room.} other {# pieces overlap or are outside the room.}}",
       "usage": "Floor used: {percent}%",
-      "usageTight": "Floor used: {percent}%, little room to move around"
+      "usageTight": "Floor used: {percent}%, with limited circulation space"
     },
     "summary": {
       "title": "Pieces in the room",
-      "empty": "No pieces yet.",
+      "empty": "No pieces added yet.",
       "count": "{count}×"
     },
-    "sendToList": "Send room to the list",
-    "sendHint": "Goes to the quote list with the room size noted.",
+    "sendToList": "Send room to the wishlist",
+    "sendHint": "The pieces go to the wishlist, with the room dimensions noted.",
     "needPieces": "Add at least one piece to the room.",
     "sent": "Room sent to the list ({count, plural, one {# piece} other {# pieces}}).",
     "roomNote": "Room {width} × {depth} m"
@@ -452,58 +546,76 @@
       "description": "Franccino catalogue: authorial design furniture from the Casa and Giardini lines, with dimensions, finishes and technical files."
     },
     "hero": {
-      "fallbackTitle": "Authorial design furniture",
-      "catalog": "See the catalogue",
+      "fallbackTitle": "Made to last",
+      "catalog": "Explore the catalogue",
       "planner": "Plan a room",
+      "open": "Discover the highlight",
       "designers": "{count, plural, one {# designer} other {# designers}}",
       "carousel": {
         "label": "Highlights",
         "roleDescription": "carousel",
         "slideRoleDescription": "highlight",
         "slide": "{current} of {total}",
-        "goTo": "Go to highlight {current} of {total}",
-        "previous": "Previous highlight",
-        "next": "Next highlight",
         "pause": "Pause automatic rotation",
-        "play": "Resume automatic rotation"
-      }
+        "play": "Resume automatic rotation",
+        "goTo": "Go to highlight {current} of {total}"
+      },
+      "fallbackSubtitle": "Authorial design furniture"
+    },
+    "scenes": {
+      "title": "Rooms",
+      "lead": "Select the points to discover each piece.",
+      "points": "Pieces in {title}",
+      "point": "Discover {name}"
     },
     "launches": {
       "title": "Novelties",
-      "viewAll": "See the launch"
+      "viewAll": "Discover the launch"
     },
     "lines": {
       "label": "Lines",
-      "viewPieces": "See pieces"
+      "viewPieces": "Discover the pieces"
     },
     "feature": {
       "dimensions": "Dimensions",
       "materials": "Materials",
       "designer": "Design",
-      "view": "See the piece"
+      "view": "Discover the piece"
     },
     "teaser": {
-      "title": "Plan your room to scale before asking for a quote.",
-      "body": "Enter the room size, place the pieces with their real dimensions and see what fits. The room becomes a quote list.",
+      "title": "Plan your room to scale before requesting a quote",
+      "body": "Enter the room dimensions, place the pieces at their real size and review the layout. The room then becomes a wishlist.",
       "cta": "Open the room planner"
     },
     "designers": {
-      "title": "Who designs",
+      "title": "The designers",
       "lead": "Designers and studios who sign pieces with the factory.",
       "all": "All designers"
     },
     "factory": {
-      "cta": "Visit the factory"
+      "cta": "Discover the factory"
     },
     "technical": {
       "title": "For specifiers",
-      "lead": "Dimensions and technical files for every piece, in one table.",
-      "cta": "Open the technical area"
+      "lead": "Dimensions and technical files for every piece, gathered in a single table.",
+      "cta": "Access the technical area"
     },
     "stores": {
-      "title": "See the pieces in store",
-      "lead": "Exclusive stores and resellers. Choose a state.",
-      "consultant": "Talk to a consultant"
+      "title": "Discover the pieces in our stores",
+      "lead": "Exclusive stores and resellers. Select a state.",
+      "consultant": "Speak with a consultant",
+      "all": "All stores"
+    },
+    "collections": {
+      "title": "Collections",
+      "all": "All collections",
+      "pieces": "{count, plural, one {# piece} other {# pieces}}"
+    },
+    "projects": {
+      "title": "Contract",
+      "lead": "Corporate projects with Franccino pieces.",
+      "all": "Discover the corporate projects",
+      "view": "Discover the project"
     }
   },
   "collections": {
@@ -511,7 +623,12 @@
     "description": "Franccino collections and the pieces in each one.",
     "designers": "Design",
     "gallery": "Collection images",
-    "piecesTitle": "Pieces in the collection"
+    "piecesTitle": "Pieces in the collection",
+    "othersTitle": "Other collections",
+    "fillLaunch": "Discover the novelties",
+    "fillAllTitle": "All pieces",
+    "fillAllCta": "Discover the pieces",
+    "video": "{name} collection film"
   },
   "designers": {
     "downloads": "Catalogs and presentations",
@@ -520,12 +637,15 @@
     "count": "{count, plural, one {# designer} other {# designers}}",
     "website": "Website",
     "instagram": "Instagram",
-    "collections": "Designer's collections",
-    "piecesTitle": "Pieces by this designer"
+    "collections": "Collections by this designer",
+    "piecesTitle": "Pieces by this designer",
+    "othersTitle": "Other designers",
+    "fillTitle": "Discover the collections",
+    "fillCta": "Explore the collections"
   },
   "projects": {
-    "title": "Projects",
-    "description": "Residential and corporate projects with Franccino pieces.",
+    "title": "Contract",
+    "description": "Corporate projects with Franccino pieces.",
     "typeFilter": "Project type",
     "allTypes": "All",
     "types": {
@@ -538,7 +658,12 @@
     "location": "Location",
     "year": "Year",
     "gallery": "Project images",
-    "piecesTitle": "Pieces in the project"
+    "piecesTitle": "Pieces used in this project",
+    "type": "Type",
+    "othersTitle": "Other projects",
+    "sceneTitle": "Pieces in the space",
+    "sceneLead": "Select the points to discover each piece.",
+    "video": "{name} project film"
   },
   "corporate": {
     "title": "Contract",
@@ -546,11 +671,23 @@
     "clients": "Some of our clients"
   },
   "factory": {
-    "title": "Factory"
+    "title": "Factory",
+    "nextTitle": "Discover more of Franccino",
+    "nextStores": "Find a store",
+    "nextProjects": "Discover the projects",
+    "nextCollections": "Explore the collections"
   },
   "finishes": {
     "title": "Finishes",
-    "count": "{count, plural, one {# finish} other {# finishes}}"
+    "count": "{count, plural, one {# finish} other {# finishes}}",
+    "zoom": {
+      "detail": "See in detail",
+      "open": "See {name} in detail",
+      "dialog": "{name} in detail",
+      "actual": "See at actual size",
+      "fit": "See it whole",
+      "hint": "Scroll the image to move across the texture."
+    }
   },
   "storesPage": {
     "title": "Stores",
@@ -558,7 +695,7 @@
   },
   "contactPage": {
     "title": "Contact",
-    "channelsTitle": "Talk to Franccino",
+    "channelsTitle": "Contact Franccino",
     "formTitle": "Send a message",
     "channels": {
       "phone": "Phone",
@@ -567,14 +704,14 @@
       "assistance": "Technical assistance",
       "assistancePhone": "Assistance phone",
       "address": "Factory",
-      "openWhatsapp": "Chat on WhatsApp"
+      "openWhatsapp": "Contact us on WhatsApp"
     }
   },
   "legal": {
     "cookies": "Cookie policy",
     "privacy": "Privacy policy",
-    "terms": "Terms of use",
-    "pending": "This page's text has not been published yet."
+    "terms": "Terms and Conditions of Use",
+    "pending": "The text of this page has not been published yet."
   },
   "searchPage": {
     "title": "Search",
@@ -589,12 +726,25 @@
     "home": "Home"
   },
   "consent": {
-    "title": "Cookies",
-    "body": "We use analytics cookies to understand how the site is used. It's your choice.",
-    "accept": "Accept",
+    "title": "Cookies and privacy",
+    "body": "We use cookies that the site needs to work and, with your permission, analytics and marketing cookies. You choose what to accept and can change it anytime in the Cookie policy, in the footer.",
+    "accept": "Accept all",
     "decline": "Decline",
+    "customize": "Customize",
+    "save": "Save choices",
+    "categories": "Cookie categories",
+    "necessary": "Necessary.",
+    "necessaryText": "Make the site work (wishlist, room planner, form security). Always on.",
+    "analytics": "Analytics.",
+    "analyticsText": "Show, in aggregate, how the site is used (Google Analytics).",
+    "marketing": "Marketing.",
+    "marketingText": "Measure campaigns and ads.",
     "policy": "Cookie policy",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "preferences": "Cookie preferences",
+    "currentChoice": "This is your current choice. Change the categories and save whenever you like.",
+    "noChoice": "You have not chosen yet. Tick the categories you accept and save.",
+    "saved": "Preferences saved."
   },
   "mediaLinks": {
     "title": "Videos and links",
@@ -604,6 +754,187 @@
     "video": "Video"
   },
   "blocks": {
-    "timeline": "Timeline"
+    "timeline": "Timeline",
+    "timelineTitle": "Our history"
+  },
+  "ideas": {
+    "meta": {
+      "title": "Idea bank",
+      "description": "The idea bank with Franccino's decision and the status of each idea on the site."
+    },
+    "title": "Idea bank",
+    "intro": "The ideas you approved in your feedback PDF, with the same numbering, working with the site's current content. Where material is still missing, the demo uses an example and says what is missing. At the end, the ones left for later and the discarded ones.",
+    "number": "Idea {number}",
+    "adjustmentLabel": "Requested adjustment:",
+    "missingLabel": "What we still need from you:",
+    "decision": {
+      "approved": "Approved",
+      "adjusted": "Approved with adjustments",
+      "later": "Later",
+      "discarded": "Discarded"
+    },
+    "status": {
+      "live": "Live",
+      "waiting": "Needs content"
+    },
+    "legend": {
+      "live": "works on the site with the current content.",
+      "waiting": "works, but the final result depends on material from you."
+    },
+    "carousel": {
+      "title": "Carousel with the featured piece",
+      "adjustment": "no finishes, no \"view piece\" and no \"view in 3D\"; clicking the photo opens the piece.",
+      "description": "The piece in the centre is large and its neighbours smaller. Drag or use the arrows: the next piece grows and the name changes with it. Clicking the photo opens the piece's page."
+    },
+    "scroll": {
+      "title": "Parallax and reveal on scroll",
+      "description": "While scrolling, the background, the piece and the text move at slightly different speeds, in a short movement. Photos open like a curtain when they enter the screen, and titles rise a little while they appear. Scroll slowly to see it."
+    },
+    "scenes": {
+      "title": "Room with clickable points",
+      "description": "A photo of a furnished room with a point on each piece. The point opens the piece's photo and name, which lead to its page. Set up in the panel, under Content, Rooms: click on the photo, choose the piece and save.",
+      "missing": "photos of furnished rooms with the pieces (landscape, high resolution) and which pieces appear in each photo.",
+      "demoTitle": "Example room",
+      "demoNote": "Example with a collection photo and three real pieces in illustrative positions, only to show how it works."
+    },
+    "finish": {
+      "title": "Detail magnifier and materials strip",
+      "adjustment": "on the finishes page, with a fixed high-resolution image.",
+      "description": "On the Finishes page, clicking a sample opens the finish in a large fixed image, whole or at real size, to browse the texture.",
+      "missing": "high-resolution scans of the finishes (2500 px or more), with the name and code of each."
+    },
+    "morph": {
+      "title": "Page transition with the photo",
+      "description": "When you click a piece, the card photo grows into the large photo on the piece's page. Try it on one of the pieces below."
+    },
+    "micro": {
+      "title": "Micro-interactions",
+      "adjustment": "confirm which ones will be used.",
+      "description": "Small movements that answer what the visitor does. Each one is below, on its own, so you can choose which ones stay: the ones not chosen are removed without touching the others.",
+      "letter": "12{letter}",
+      "arrow": {
+        "title": "Arrow that slides on the button",
+        "body": "On hover, the arrow on the button and on the link slides a little to the right.",
+        "button": "View the catalogue",
+        "link": "View the collections"
+      },
+      "underline": {
+        "title": "Underline that grows",
+        "body": "On hover over a text link, the underline grows from left to right, as in the menu and the footer.",
+        "collections": "Collections",
+        "designers": "Designers",
+        "projects": "Projects"
+      },
+      "drag": {
+        "title": "\"Drag\" cursor on the carousel",
+        "body": "Over the carousel in idea 01, the cursor becomes a circle with the word \"Drag\". Hover over the pieces up there."
+      },
+      "added": {
+        "title": "Wishlist confirmation",
+        "body": "When a piece goes into the list, the button shows a check and \"Added to the list\", and the list icon at the top of the page pulses once. Try it: the piece really goes into the list and can be removed later."
+      },
+      "count": {
+        "title": "Numbers that count up",
+        "body": "Numbers count up to their value when they appear on screen, like the ones on the Factory page. These come from the current catalogue.",
+        "products": "pieces in the catalogue",
+        "collections": "collections",
+        "designers": "designers"
+      },
+      "loading": {
+        "title": "Smooth loading",
+        "body": "While a photo or a list loads, a light band passes over its space, instead of the word \"Loading…\"."
+      }
+    },
+    "video": {
+      "title": "Short looping video in the banner",
+      "description": "The banner accepts a short silent video that loops over the photo. It only downloads when the banner is on screen; visitors who asked for less motion or data saving see the photo.",
+      "missing": "a 10 to 20 second silent MP4 video for the banner. Upload it in the panel, under Banners.",
+      "note": "There is no banner with a video yet: below, the banner with its photo."
+    },
+    "others": {
+      "title": "Later and discarded",
+      "intro": "The ideas you left for a next stage or discarded in the feedback PDF.",
+      "i02": {
+        "title": "Piece stepping out of the frame",
+        "note": "On the product card the movement is interesting, but with no colour in the background."
+      },
+      "i03": {
+        "title": "Piece name in layers",
+        "note": "The banners come from marketing."
+      },
+      "i05": {
+        "title": "Frosted glass",
+        "note": "Left for a next stage."
+      },
+      "i06": {
+        "title": "Light and gradient in the piece's colour",
+        "note": "Discarded by you."
+      },
+      "i08": {
+        "title": "Finish that changes the photo",
+        "note": "First understand the complexity of the combinations."
+      },
+      "i11": {
+        "title": "360° spin",
+        "note": "Discarded by you."
+      },
+      "i14": {
+        "title": "Menu with image preview",
+        "note": "Discarded by you."
+      }
+    }
+  },
+  "recent": {
+    "title": "Recently viewed pieces"
+  },
+  "featureCarousel": {
+    "roleDescription": "carousel",
+    "slideRoleDescription": "piece",
+    "slide": "{current} of {total}: {name}",
+    "status": "{current} of {total}: {name}",
+    "counter": "{current} / {total}",
+    "meta": "{category} · {area}",
+    "previous": "Previous piece",
+    "next": "Next piece",
+    "drag": "Drag"
+  },
+  "featurePiece": {
+    "label": "Featured piece",
+    "view": "Discover the piece"
+  },
+  "faqPage": {
+    "title": "Frequently asked questions",
+    "description": "Answers about Franccino pieces and technical assistance.",
+    "pending": "The answers on this page have not been published yet.",
+    "helpTitle": "Still have questions?",
+    "helpText": "The Franccino team answers through the contact form and WhatsApp. In our stores, you can see the pieces up close.",
+    "contact": "Talk to the team",
+    "stores": "See the stores"
+  },
+  "partnerPage": {
+    "title": "Become a partner",
+    "description": "For those who wish to open a Franccino store or resell our pieces.",
+    "formTitle": "Talk to our team"
+  },
+  "sharedList": {
+    "title": "Wishlist",
+    "lead": "Shared list with {count, plural, one {# piece} other {# pieces}}. The link is valid until {date}.",
+    "quantity": "Quantity: {count}",
+    "finishes": "Finishes: {list}",
+    "note": "Note: {note}",
+    "addAll": "Add to my list",
+    "openMine": "View my list",
+    "missing": {
+      "title": "This list link has expired",
+      "body": "The list no longer exists or the link has expired. Ask the sender for a new link or build your own list from the catalogue.",
+      "catalog": "View the catalogue"
+    }
+  },
+  "gallery": {
+    "more": "See {count, plural, one {# more image} other {# more images}}",
+    "less": "See less",
+    "open": "See {count, plural, one {the image} other {all # images}}",
+    "openAt": "Open image {index}",
+    "close": "Close the images"
   }
 }

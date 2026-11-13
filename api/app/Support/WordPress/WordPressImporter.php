@@ -85,6 +85,29 @@ class WordPressImporter
         return $this->report;
     }
 
+    /**
+     * One product of the old site that the full import skipped because it had no area or category there: the area
+     * (`areas.key`) and the category (slug in Portuguese) come from the caller; the rest (texts, measures, materials,
+     * designer, photos) from the old page, as in the full import. Published when `publish` is set.
+     */
+    public function importOne(int $wpId, string $areaKey, string $categorySlug, bool $publish = true, bool $withMedia = true): ImportReport
+    {
+        $this->report = new ImportReport;
+        $item = $this->client->item('produtos', $wpId);
+        $categoryId = Category::query()->where('slug->pt', $categorySlug)->value('id');
+        if ($categoryId === null) {
+            $this->report->count('products', 'skipped');
+            $this->report->gap('products', self::title($item), "categoria {$categorySlug} não existe no site");
+
+            return $this->report;
+        }
+
+        $areas = Area::query()->pluck('id', 'key')->mapWithKeys(fn ($id, $key) => [(string) $key => (int) $id])->all();
+        $this->importProduct($item, self::title($item), $areas, false, $withMedia, $publish, $areaKey, (int) $categoryId);
+
+        return $this->report;
+    }
+
     private function loadTerms(): void
     {
         foreach ($this->client->paginate('areas') as $term) {
@@ -272,15 +295,16 @@ class WordPressImporter
      * @param  array<string, mixed>  $item
      * @param  array<string, int>  $areas
      */
-    private function importProduct(array $item, string $name, array $areas, bool $dryRun, bool $withMedia, bool $publish): void
+    private function importProduct(array $item, string $name, array $areas, bool $dryRun, bool $withMedia, bool $publish, ?string $areaOverride = null, ?int $categoryOverride = null): void
     {
         $html = $this->client->html((string) $item['link']);
         $gallery = $this->parser->gallery($html);
         $specs = $this->parser->specs($html);
         $designerSlug = $this->parser->designerSlug($html);
+        $texts = $this->parser->texts($html);
 
-        $areaKey = $this->areaTerms[(int) ($item['areas'][0] ?? 0)] ?? self::areaFromCategory($item);
-        $categoryId = $this->categoryFor((int) ($item['categorias-produtos'][0] ?? 0), $dryRun, $publish);
+        $areaKey = $areaOverride ?? $this->areaTerms[(int) ($item['areas'][0] ?? 0)] ?? self::areaFromCategory($item);
+        $categoryId = $categoryOverride ?? $this->categoryFor((int) ($item['categorias-produtos'][0] ?? 0), $dryRun, $publish);
         if ($areaKey === null || ! isset($areas[$areaKey]) || ($categoryId === null && ! $dryRun)) {
             $this->report->count('products', 'skipped');
             $this->report->gap('products', $name, 'sem área ou categoria no WordPress: não importado');
@@ -321,6 +345,10 @@ class WordPressImporter
             'legacy_wp_id' => $item['id'],
             'legacy_url' => $item['link'],
         ]);
+        $this->fillEmptyTranslation($product, 'tagline', $texts['tagline']);
+        if (blank(strip_tags((string) $product->getTranslation('description', 'pt', false))) && filled($texts['description'])) {
+            $product->setTranslation('description', 'pt', $texts['description']);
+        }
         $this->fillEmptyTranslation($product, 'materials', $materials);
         $this->fillEmptyTranslation($product, 'finishes_note', $finishes);
         $this->fillEmptyTranslation($product, 'seo_title', isset($seo['title']) ? (string) preg_replace('/\s+-\s+Franccino$/u', '', (string) $seo['title']) : null);

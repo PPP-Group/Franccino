@@ -21,7 +21,7 @@ class DownloadLogsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['productFile.product', 'productFile.designer', 'productFile.launch']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['productFile.product', 'productFile.designer', 'productFile.launch', 'downloadLead']))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('Date'))
@@ -32,6 +32,21 @@ class DownloadLogsTable
                     ->state(fn (DownloadLog $log): ?string => self::ownerName($log)),
                 TextColumn::make('productFile.title')
                     ->label(__('File')),
+                // Cadastro antes do download (item 22 da revisão de 12/11/2026): nome, e-mail e perfil de quem baixou.
+                TextColumn::make('downloadLead.first_name')
+                    ->label(__('Who downloaded'))
+                    ->state(fn (DownloadLog $log): ?string => $log->downloadLead
+                        ? trim($log->downloadLead->first_name.' '.$log->downloadLead->last_name)
+                        : null)
+                    ->description(fn (DownloadLog $log): ?string => $log->downloadLead?->email)
+                    ->searchable(['first_name', 'last_name', 'email']),
+                TextColumn::make('downloadLead.profile')
+                    ->label(__('Profile'))
+                    ->formatStateUsing(fn (?string $state): ?string => match ($state) {
+                        'professional' => __('Professional'),
+                        'client' => __('Private client'),
+                        default => $state,
+                    }),
                 TextColumn::make('locale')
                     ->label(__('Language')),
             ])

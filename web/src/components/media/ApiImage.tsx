@@ -1,8 +1,11 @@
 /**
  * Renders an API `Image` as a native `<img>` — not `next/image` — because the
- * API already produces the resized conversions (`srcset`) and blur
- * placeholder (`blur_data_url`); Next's own image optimization would be
- * redundant. See `web/CLAUDE.md`.
+ * API already produces the resized conversions (`srcset`); Next's own image
+ * optimization would be redundant. See `web/CLAUDE.md`.
+ *
+ * Loading (retorno de 07/11/2026): no blurred preview any more (`blur_data_url` is
+ * ignored). While the photo loads, the box shows a soft placeholder and the photo
+ * fades in once it arrives (`data-img`; BootScript marks `data-loaded`, motion.css).
  */
 
 import type { CSSProperties } from 'react';
@@ -14,9 +17,11 @@ type ApiImageProps = {
   sizes: string;
   priority?: boolean;
   className?: string;
+  /** `false`: sem o placeholder e sem o fade (a foto de chegada do movimento de abrir a peça já está pronta). */
+  fade?: boolean;
 };
 
-export function ApiImage({ image, sizes, priority = false, className }: ApiImageProps) {
+export function ApiImage({ image, sizes, priority = false, className, fade = true }: ApiImageProps) {
   if (!image) {
     return null;
   }
@@ -24,14 +29,6 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
   const srcSet = buildSrcSet(image);
 
   const style: CSSProperties = {};
-  // The placeholder takes the same box as an `object-fit: contain` photo (most product plates):
-  // with `cover` it filled the letterbox and stayed visible as blurred bands after the photo loaded.
-  if (image.blur_data_url) {
-    style.backgroundImage = `url(${image.blur_data_url})`;
-    style.backgroundSize = 'contain';
-    style.backgroundRepeat = 'no-repeat';
-    style.backgroundPosition = 'center';
-  }
   // Reserves layout space (avoids CLS) only when both dimensions are known;
   // with just one, an aspect-ratio would distort the image instead.
   if (image.width && image.height) {
@@ -53,6 +50,9 @@ export function ApiImage({ image, sizes, priority = false, className }: ApiImage
       decoding="async"
       className={className}
       style={hasStyle ? style : undefined}
+      data-img={fade ? '' : undefined}
+      // O BootScript marca `data-loaded` quando a foto chega, às vezes antes de o React hidratar a página.
+      suppressHydrationWarning
     />
   );
 }

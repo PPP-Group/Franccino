@@ -1,6 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/ui/chunk-reload';
 import { Link } from '@/i18n/navigation';
 
 type LocaleErrorProps = {
@@ -8,7 +10,11 @@ type LocaleErrorProps = {
   reset: () => void;
 };
 
-export default function LocaleError({ reset }: LocaleErrorProps) {
+export default function LocaleError({ error, reset }: LocaleErrorProps) {
+  // Script de outra versão do site que não carregou (deploy em andamento): recarrega uma vez.
+  useEffect(() => {
+    reloadOnceForChunkError(error);
+  }, [error]);
   const t = useTranslations('errors.serverError');
   const notFound = useTranslations('errors.notFound');
 

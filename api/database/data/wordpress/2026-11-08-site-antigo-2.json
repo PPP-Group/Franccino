@@ -1,0 +1,182 @@
+{
+ "version": "2026-11-08-site-antigo-2",
+ "note": "Segunda extração de franccino.com.br (08/11/2026): as 10 lojas e revendas do site antigo que faltavam no preview (endereço, telefone, e-mail e posição no mapa do próprio site antigo; Espaço Fátima Lima sem CEP nem telefone lá) e 4 fotos de ateliê da home antiga (2560 px) acrescentadas à galeria da Fábrica. Só cria o que não existe.",
+ "new_stores": [
+  {
+   "legacy_wp_id": 11807,
+   "name": "Franccino Porto Alegre",
+   "type": "exclusive",
+   "address": "Rua Silva Jardim, 120",
+   "district": "Montserrat",
+   "city": "Porto Alegre",
+   "state": "RS",
+   "country": "BR",
+   "latitude": -30.0275552,
+   "longitude": -51.1899036,
+   "phone": "51 3072-1883",
+   "legacy_url": "https://franccino.com.br/?p=11807",
+   "image": "https://franccino.com.br/wp-content/uploads/2026/10/FACHADA-1.webp",
+   "whatsapp": "51 3072-1883"
+  },
+  {
+   "legacy_wp_id": 9210,
+   "name": "Móveis Modernos",
+   "type": "reseller",
+   "address": "Av. Paraná, 8020",
+   "district": "Zona III",
+   "city": "Umuarama",
+   "state": "PR",
+   "postal_code": "87502-000",
+   "country": "BR",
+   "latitude": -23.7530014,
+   "longitude": -53.2755644,
+   "phone": "44 99125-2856",
+   "email": "moveismodernosumuarama@gmail.com",
+   "legacy_url": "https://franccino.com.br/?p=9210"
+  },
+  {
+   "legacy_wp_id": 9209,
+   "name": "Hanna Decor",
+   "type": "reseller",
+   "address": "Rua Corsino Amarante, 1150",
+   "district": "Duque de Caxias",
+   "city": "Cuiabá",
+   "state": "MT",
+   "postal_code": "78043-390",
+   "country": "BR",
+   "latitude": -15.5854766,
+   "longitude": -56.1066574,
+   "phone": "65 99809-5334",
+   "email": "hannadecor@hotmail.com",
+   "legacy_url": "https://franccino.com.br/?p=9209"
+  },
+  {
+   "legacy_wp_id": 9208,
+   "name": "Espaço Fátima Lima",
+   "type": "reseller",
+   "address": "Av. dos Holandeses, 1 – Quadra 1",
+   "district": "Calhau",
+   "city": "São Luís",
+   "state": "MA",
+   "country": "BR",
+   "latitude": -2.4930248,
+   "longitude": -44.2821327,
+   "legacy_url": "https://franccino.com.br/?p=9208"
+  },
+  {
+   "legacy_wp_id": 9207,
+   "name": "Casa TMG",
+   "type": "reseller",
+   "address": "Av. dos Lagos, 2920",
+   "city": "Primavera do Leste",
+   "state": "MT",
+   "postal_code": "78850-000",
+   "country": "BR",
+   "latitude": -15.5403587,
+   "longitude": -54.3128255,
+   "phone": "66 99903-1012",
+   "email": "casamarquesegandiozo@gmail.com",
+   "legacy_url": "https://franccino.com.br/?p=9207"
+  },
+  {
+   "legacy_wp_id": 9171,
+   "name": "Armazém 401",
+   "type": "reseller",
+   "address": "Rodovia José Carlos Daux, 4529",
+   "district": "Saco Grande",
+   "city": "Florianópolis",
+   "state": "SC",
+   "postal_code": "88032-005",
+   "country": "BR",
+   "latitude": -27.542303,
+   "longitude": -48.5050878,
+   "phone": "48 99981-8926",
+   "email": "armazemsc401@gmail.com",
+   "legacy_url": "https://franccino.com.br/?p=9171"
+  },
+  {
+   "legacy_wp_id": 9170,
+   "name": "Casal Design",
+   "type": "reseller",
+   "address": "Av. Leitão da Silva, 615",
+   "district": "Gurigica",
+   "city": "Vitória",
+   "state": "ES",
+   "postal_code": "29050-040",
+   "country": "BR",
+   "latitude": -20.3098553,
+   "longitude": -40.3027807,
+   "phone": "27 3225-8188",
+   "email": "casal@casaldesign.com.br",
+   "legacy_url": "https://franccino.com.br/?p=9170"
+  },
+  {
+   "legacy_wp_id": 9169,
+   "name": "Paux Design",
+   "type": "reseller",
+   "address": "Av. Comendador José da Silva Martha, 8-8",
+   "district": "Jardim Estoril",
+   "city": "Bauru",
+   "state": "SP",
+   "postal_code": "17016-080",
+   "country": "BR",
+   "latitude": -22.341558,
+   "longitude": -49.0745005,
+   "phone": "14 3206-5262",
+   "email": "contato@paux.com.br",
+   "legacy_url": "https://franccino.com.br/?p=9169"
+  },
+  {
+   "legacy_wp_id": 9168,
+   "name": "Forma e Conforto",
+   "type": "reseller",
+   "address": "R. Rio de Janeiro, 1525",
+   "district": "Centro",
+   "city": "Cascavel",
+   "state": "PR",
+   "postal_code": "85801-030",
+   "country": "BR",
+   "latitude": -24.9589464,
+   "longitude": -53.4625241,
+   "phone": "45 99116-2297",
+   "email": "forma@formaeconforto.com.br",
+   "legacy_url": "https://franccino.com.br/?p=9168"
+  },
+  {
+   "legacy_wp_id": 9166,
+   "name": "Franttone",
+   "type": "reseller",
+   "address": "Avenida Princesa do Sul, 494",
+   "district": "Jardim Andere",
+   "city": "Varginha",
+   "state": "MG",
+   "postal_code": "37026-080",
+   "country": "BR",
+   "latitude": -21.5728793,
+   "longitude": -45.440006,
+   "phone": "35 3113-1856",
+   "email": "contato@franttone.com.br",
+   "legacy_url": "https://franccino.com.br/?p=9166"
+  }
+ ],
+ "pages": [
+  {
+   "key": "factory",
+   "blocks": [
+    {
+     "type": "gallery",
+     "merge": true,
+     "data": {
+      "images": [
+       "https://franccino.com.br/wp-content/uploads/2026/03/1-scaled.webp",
+       "https://franccino.com.br/wp-content/uploads/2026/03/15-scaled.webp",
+       "https://franccino.com.br/wp-content/uploads/2026/03/30-scaled.webp",
+       "https://franccino.com.br/wp-content/uploads/2026/03/7-scaled.webp"
+      ],
+      "caption": null
+     }
+    }
+   ]
+  }
+ ]
+}

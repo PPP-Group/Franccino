@@ -1,26 +1,85 @@
 /* ---------- product plates (portado de design/prototype/assets/styles.css:508-631) ---------- */
 
-.rail {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: clamp(250px, 24vw, 340px);
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 12px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line-strong) transparent;
+/*
+  Esteira de peças (ProductRail sobre o `Rail` de pages.css). O hover não tira mais nada do quadro (retorno de
+  06/11/2026: a sombra e o "vem para frente" eram cortados no fim da esteira); a folga em volta fica só para o contorno
+  de foco (6 px fora do link), e a margem negativa devolve o primeiro card ao alinhamento da página.
+*/
+.product-rail .scroll-rail__track {
+  margin-inline: calc(-1 * var(--space-2));
+}
+
+.product-rail .scroll-rail__track > ul {
+  gap: var(--space-6);
+  padding: var(--space-2);
+}
+
+.product-rail .scroll-rail__track > ul > li {
+  width: clamp(250px, 24vw, 340px);
 }
 
 /*
-  Produtos soltos sobre o fundo branco, sem caixa nem borda (ajustes do cliente, 06/10/2026, referências Saccaro e
-  Jader Almeida): 3 por linha no desktop, só foto e nome; ao passar o mouse a peça "vem para frente" (leve aumento
-  com sombra suave).
+  Produtos soltos sobre o fundo branco, sem caixa, borda nem sombra (ajustes do cliente, 06/10/2026, referências Saccaro
+  e Jader Almeida): 3 por linha no desktop, só foto e nome. No celular, 2 por linha (revisão de 06/11/2026): o catálogo
+  tem perto de 200 peças, e uma por tela obrigava a rolar demais para comparar. Hover (retorno de 06/11/2026): só o
+  zoom padrão da foto dentro do quadro (`.hover-zoom`, base.css) e o nome que ganha o preto cheio.
 */
 .grid-plates {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(36px, 4vw, 64px) clamp(20px, 3vw, 48px);
+  gap: var(--space-8) var(--space-7);
+  /* Altura do quadro da foto (4:3 de uma coluna), para o bloco complementar ter a mesma altura das fotos. */
+  container-type: inline-size;
+  --plate-frame-h: calc((100cqi - 2 * var(--space-7)) / 4);
+}
+
+/*
+  Bloco complementar da última linha (ProductGrid, lib/catalog/grid-fill.ts): ocupa as colunas que sobram, com a altura
+  do quadro das fotos, em areia, sem borda nem sombra. Escondido quando a linha já fecha naquela largura.
+*/
+.grid-fill {
+  display: none;
+  align-self: start;
+  min-height: var(--plate-frame-h);
+  padding: var(--space-6);
+  background: var(--sand);
+  align-content: center;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.grid-fill--d1 {
+  display: grid;
+  grid-column: span 1;
+}
+
+.grid-fill--d2 {
+  display: grid;
+  grid-column: span 2;
+}
+
+.grid-fill__copy {
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--measure);
+}
+
+.grid-fill__title {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.grid-fill__copy p {
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.grid-fill__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
 }
 
 .plate {
@@ -34,7 +93,7 @@
 .plate__link {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 14px;
+  gap: var(--space-4);
   color: inherit;
   text-decoration: none;
 }
@@ -44,80 +103,142 @@
 }
 
 .plate__media {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  display: grid;
+  place-items: center;
   background: var(--paper);
-  transition:
-    transform var(--t-mid) var(--ease-out),
-    box-shadow var(--t-mid) var(--ease-out);
 }
 
 .plate__media--empty {
   background: var(--portrait-ground);
 }
 
+/*
+  A peça aparece inteira, centrada no quadro branco (`contain`), nunca cortada: a foto ocupa o quadro por posição
+  absoluta. Numa grade, `height: 100%` não vale (a linha da grade tem altura automática) e a foto em pé (1080×1350)
+  ficava com a altura da própria proporção, cortada em cima e embaixo pelo `overflow` (retorno de 06/11/2026). A foto
+  nunca passa da própria largura (`--plate-img-max`, posto pelo ProductPlate): centrada, em vez de ampliada.
+*/
 .plate__media img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 100%;
   height: 100%;
+  max-width: var(--plate-img-max, 100%);
   object-fit: contain;
+  object-position: center;
 }
 
 .plate__media--cover img {
   object-fit: cover;
 }
 
-.plate:hover .plate__media,
-.plate__link:focus-visible .plate__media {
-  transform: translateY(-6px) scale(1.04);
-  box-shadow: var(--shadow-lift);
-}
-
+/* Nome e, quando é lançamento, o rótulo discreto embaixo dele: centrados sob a foto. */
 .plate__body {
   display: grid;
-  gap: 4px;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-1);
+  text-align: center;
 }
 
+/* Nome da peça: texto corrido (--fs-body), no máximo duas linhas equilibradas; no hover, o preto cheio (opacidade). */
 .plate__name {
-  font-size: 1.05rem;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: var(--lh-ui);
   font-weight: 500;
-  text-align: center;
+  letter-spacing: 0;
+  text-wrap: balance;
+  opacity: 0.82;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .plate__link:hover .plate__name {
+    opacity: 1;
+  }
+}
+
+.plate__link:focus-visible .plate__name {
+  opacity: 1;
+}
+
+/*
+  "Lançamentos" no card: rótulo em caixa alta pequena (--fs-label), na cor madeira, sem caixa nem borda, sempre no
+  mesmo lugar (abaixo do nome). Não aparece na página de Lançamentos, onde toda peça é lançamento.
+*/
+.plate__flag {
+  font-size: var(--fs-label);
+  line-height: var(--lh-ui);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--wood);
 }
 
 @media (max-width: 73.75rem) {
   .grid-plates {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+    --plate-frame-h: calc((100cqi - var(--space-6)) * 3 / 8);
+  }
+
+  .grid-fill--d1,
+  .grid-fill--d2 {
+    display: none;
+  }
+
+  .grid-fill--m1 {
+    display: grid;
+    grid-column: span 1;
   }
 }
 
 @media (max-width: 35rem) {
   .grid-plates {
-    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6) var(--space-4);
+    --plate-frame-h: calc((100cqi - var(--space-4)) * 3 / 8);
+  }
+
+  /* Meia largura de celular: só o título e os dois caminhos. */
+  .grid-fill {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .grid-fill__title {
+    font-size: var(--fs-body);
+  }
+
+  .grid-fill__copy p {
+    display: none;
+  }
+
+  .grid-fill__links {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .plate__link {
+    gap: var(--space-3);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .plate__media {
+  .plate__name {
     transition: none;
   }
-
-  .plate:hover .plate__media,
-  .plate__link:focus-visible .plate__media {
-    transform: none;
-  }
-}
-
-.plate__tags {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  display: flex;
-  gap: 6px;
 }
 
 .quick-add {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  z-index: 1;
+  top: var(--space-2);
+  right: var(--space-2);
   width: 44px;
   height: 44px;
   border: 1px solid var(--line-field);
@@ -126,9 +247,7 @@
   place-items: center;
   cursor: pointer;
   opacity: 0;
-  transition:
-    opacity var(--t-fast) ease,
-    background var(--t-fast) ease;
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 .quick-add .icon {

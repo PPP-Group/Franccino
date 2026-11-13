@@ -26,6 +26,7 @@ export function productCard(overrides: Partial<ProductCard> = {}): ProductCard {
     category: { id: 3, slug: 'cadeiras', name: 'Cadeiras', singular_name: 'Cadeira' },
     designer: { id: 5, slug: 'daniela-ferro', name: 'Daniela Ferro' },
     cover: image(),
+    // Sem `cutout`: o campo é opcional no card (e `toProductCard` não o leva); quem testa a foto sem fundo passa no override.
     is_new: true,
     ...overrides,
   };

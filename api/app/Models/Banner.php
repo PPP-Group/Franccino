@@ -40,6 +40,10 @@ class Banner extends Model implements HasMedia
     {
         $this->addMediaCollection('image')->singleFile();
         $this->addMediaCollection('image_mobile')->singleFile();
+        // Short muted loop played over the image (banco de ideias, idea 14); the image stays as the poster.
+        $this->addMediaCollection('video')
+            ->singleFile()
+            ->acceptsMimeTypes(['video/mp4']);
     }
 
     /**

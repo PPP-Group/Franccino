@@ -1,113 +1,171 @@
 'use client';
 
-import { Children, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  Children,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FocusEvent,
+  type ReactNode,
+} from 'react';
 import { useTranslations } from 'next-intl';
-import { Icon } from '@/components/ui/Icon';
 import { CAROUSEL_INTERVAL_MS, shouldAutoplay, wrapIndex } from '@/lib/ui/carousel';
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-
-/** `true` no servidor: nada gira antes da hidratação, e quem pediu menos movimento nunca vê girar. */
-function useReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => true,
-  );
-}
+import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
 
 /**
  * Carrossel dos banners da home (Anexo I: banner principal em carrossel). Os slides chegam prontos do
- * servidor (`HeroSection`); aqui só se escolhe qual aparece. Gira sozinho a cada 7 s, pausa no foco,
- * no hover e no botão, e respeita `prefers-reduced-motion`.
+ * servidor (`HeroSection`); aqui só se escolhe qual aparece. Rodada 3 (06/11/2026): os slides ficam empilhados na
+ * mesma caixa e trocam por fusão; a foto do slide ativo aproxima enquanto ele está na tela (home.css).
+ *
+ * Retorno de 09/11/2026: a troca não pausa mais com o mouse em cima (o banner ocupa a tela inteira, e a troca quase
+ * nunca acontecia); no lugar do traço fino embaixo do título, uma barra por slide, que enche no tempo do slide, e o
+ * fim dela troca o slide (a barra e a troca andam juntas). Cada barra leva ao slide dela.
+ *
+ * Banco de ideias (26/10/2026, ideia 14): sem setas nem botão de pausa na tela. A troca para com o foco do teclado,
+ * nunca acontece para quem pediu menos movimento, e o botão de pausa continua no teclado e no leitor de tela (aparece
+ * só com o foco), para a troca automática poder ser parada (WCAG 2.2.2).
  */
 export function HeroCarousel({ children }: { children: ReactNode }) {
   const t = useTranslations('home.hero.carousel');
   const slides = Children.toArray(children);
   const total = slides.length;
-  const [active, setActive] = useState(0);
+  // `previous`: o slide que acabou de sair continua com a foto aproximada durante a fusão (sem pulo no zoom).
+  // `round`: recomeça a barra quando o mesmo slide volta a ficar ativo.
+  const [{ active, previous, round }, setSlides] = useState({
+    active: 0,
+    previous: null as number | null,
+    round: 0,
+  });
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  // `undefined` até medir (no HTML do servidor as barras ficam escondidas, sem pular de lugar ao hidratar).
+  const [barsTop, setBarsTop] = useState<number | null | undefined>(undefined);
+  const rootRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
-  const autoplay = shouldAutoplay(total, paused || hovered, reducedMotion);
+  const autoplay = shouldAutoplay(total, paused || focused, reducedMotion);
 
-  useEffect(() => {
-    if (!autoplay) return;
-    const timer = window.setInterval(
-      () => setActive((index) => wrapIndex(index + 1, total)),
-      CAROUSEL_INTERVAL_MS,
-    );
-    return () => window.clearInterval(timer);
-  }, [autoplay, total]);
+  const go = useCallback(
+    (index: number) => {
+      setSlides((current) =>
+        index === current.active
+          ? current
+          : { active: wrapIndex(index, total), previous: current.active, round: current.round + 1 },
+      );
+    },
+    [total],
+  );
+
+  // O mesmo texto em todos os slides (retorno de 12/11/2026): ele entra uma vez e depois fica parado, sem subir de novo a
+  // cada troca de foto. Só o texto que muda anima.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || previous === null || previous === undefined) return;
+    const copy = (index: number) =>
+      root.querySelectorAll('.hero-carousel__slide')[index]?.querySelector('.hero__content')?.textContent ??
+      null;
+    root.classList.toggle('is-steady-copy', copy(active) !== null && copy(active) === copy(previous));
+  }, [active, previous]);
+
+  // As barras ficam no lugar do traço do título do slide ativo; sem título (arte com texto), embaixo.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const place = () => {
+      const title = root.querySelectorAll('.hero-carousel__slide')[active]?.querySelector('.hero__title');
+      if (!title) {
+        setBarsTop(null);
+        return;
+      }
+      // Pelo `offsetTop` (sem os `transform`): o título ainda está subindo na entrada quando é medido.
+      let top = (title as HTMLElement).offsetHeight;
+      let node: HTMLElement | null = title as HTMLElement;
+      while (node && node !== root) {
+        top += node.offsetTop;
+        node = node.offsetParent as HTMLElement | null;
+      }
+      setBarsTop(top);
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [active]);
 
   if (total <= 1) return <>{slides}</>;
 
+  // Só o foco do teclado pausa: o clique numa barra também dá foco, e não deve parar a troca.
+  function onFocus(event: FocusEvent<HTMLElement>) {
+    setFocused(event.target instanceof HTMLElement && event.target.matches(':focus-visible'));
+  }
+
+  const style = { '--hero-interval': `${CAROUSEL_INTERVAL_MS}ms` } as CSSProperties;
   return (
     <section
-      className="hero-carousel"
+      ref={rootRef}
+      className={autoplay ? 'hero-carousel' : 'hero-carousel is-paused'}
+      style={style}
       aria-roledescription={t('roleDescription')}
       aria-label={t('label')}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
+      onFocus={onFocus}
+      onBlur={() => setFocused(false)}
     >
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          className="hero-carousel__slide"
-          role="group"
-          aria-roledescription={t('slideRoleDescription')}
-          aria-label={t('slide', { current: index + 1, total })}
-          hidden={index !== active}
-        >
-          {slide}
-        </div>
-      ))}
-      <div className="hero-carousel__controls">
-        <button
-          type="button"
-          className="hero-carousel__button"
-          aria-label={paused ? t('play') : t('pause')}
-          onClick={() => setPaused((value) => !value)}
-        >
-          <Icon name={paused ? 'play' : 'pause'} />
-        </button>
-        <button
-          type="button"
-          className="hero-carousel__button hero-carousel__button--previous"
-          aria-label={t('previous')}
-          onClick={() => setActive((index) => wrapIndex(index - 1, total))}
-        >
-          <Icon name="arrow" />
-        </button>
-        <ol className="hero-carousel__dots">
-          {slides.map((_, index) => (
-            <li key={index}>
-              <button
-                type="button"
-                className="hero-carousel__dot"
-                aria-label={t('goTo', { current: index + 1, total })}
-                aria-current={index === active ? 'true' : undefined}
-                onClick={() => setActive(index)}
+      <button
+        type="button"
+        className="hero-carousel__pause"
+        aria-pressed={paused}
+        onClick={() => setPaused((value) => !value)}
+      >
+        {paused ? t('play') : t('pause')}
+      </button>
+      {slides.map((slide, index) => {
+        const isActive = index === active;
+        const classes = ['hero-carousel__slide'];
+        if (isActive) classes.push('is-active');
+        else if (index === previous) classes.push('is-prev');
+        return (
+          <div
+            key={index}
+            className={classes.join(' ')}
+            role="group"
+            aria-roledescription={t('slideRoleDescription')}
+            aria-label={t('slide', { current: index + 1, total })}
+            aria-hidden={isActive ? undefined : true}
+            inert={!isActive}
+          >
+            {slide}
+          </div>
+        );
+      })}
+      <div
+        className={
+          barsTop === undefined
+            ? 'hero-carousel__bars is-unplaced'
+            : barsTop === null
+              ? 'hero-carousel__bars is-bottom'
+              : 'hero-carousel__bars'
+        }
+        style={typeof barsTop === 'number' ? { top: barsTop } : undefined}
+      >
+        {slides.map((_, index) => {
+          const state = index === active ? 'is-active' : index < active ? 'is-done' : '';
+          return (
+            <button
+              key={index}
+              type="button"
+              className={`hero-carousel__bar ${state}`}
+              aria-label={t('goTo', { current: index + 1, total })}
+              aria-current={index === active ? 'true' : undefined}
+              onClick={() => go(index)}
+            >
+              <span
+                key={index === active ? `fill-${round}` : 'fill'}
+                className="hero-carousel__fill"
+                onAnimationEnd={index === active ? () => go(active + 1) : undefined}
               />
-            </li>
-          ))}
-        </ol>
-        <button
-          type="button"
-          className="hero-carousel__button"
-          aria-label={t('next')}
-          onClick={() => setActive((index) => wrapIndex(index + 1, total))}
-        >
-          <Icon name="arrow" />
-        </button>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

@@ -41,7 +41,7 @@ it('returns the expected facet groups', function () {
 
     $this->getJson('/api/v1/products/facets')
         ->assertOk()
-        ->assertJsonStructure(['data' => ['categories', 'designers', 'collections', 'lines', 'finish_groups']]);
+        ->assertJsonStructure(['data' => ['categories', 'designers', 'collections', 'lines', 'finish_groups', 'rooms']]);
 });
 
 it('rejects an invalid area filter', function () {
@@ -60,4 +60,15 @@ it('treats % in the q filter as a literal character, not a SQL wildcard', functi
     $payload = collect($response->json('data.categories'))->firstWhere('slug', $category->getTranslation('slug', 'pt', false));
 
     expect($payload['count'])->toBe(1);
+});
+
+it('counts products by room, in the order of the room list (revisão de 12/11/2026)', function () {
+    $indoor = area('indoor');
+    Product::factory()->for($indoor)->create(['rooms' => ['dining', 'living']]);
+    Product::factory()->for($indoor)->create(['rooms' => ['living']]);
+    Product::factory()->for($indoor)->create(['rooms' => null]);
+
+    $this->getJson('/api/v1/products/facets')
+        ->assertOk()
+        ->assertJsonPath('data.rooms', [['key' => 'dining', 'count' => 1], ['key' => 'living', 'count' => 2]]);
 });

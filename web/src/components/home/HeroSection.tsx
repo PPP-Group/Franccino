@@ -3,7 +3,9 @@ import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Banner } from '@/lib/api/types';
+import { heroSizes } from '@/lib/images/cover';
 import { buildSrcSet } from '@/lib/images/srcset';
+import { HeroVideo } from './HeroVideo';
 
 type HeroSectionProps = {
   banner: Banner | null;
@@ -14,31 +16,100 @@ type HeroSectionProps = {
 };
 
 /**
- * Hero do primeiro banner. Todos os campos do banner podem vir `null` (R19): sem imagem de desktop
- * vira a placa sem foto, e texto ausente não é inventado (o título cai no `fallbackTitle` da placa).
+ * Banner da home. Todos os campos podem vir `null` (R19).
+ *
+ * - Com foto (ou vídeo), rodada 3 (06/11/2026, pedido do tech lead): a foto ocupa a tela inteira (`hero--photo`,
+ *   100svh, `object-fit: cover`), sempre, inclusive a faixa larga do WordPress (vale sobre a regra anterior de seguir a
+ *   proporção da arte). No meio, pequeno, o título cadastrado (ou o título padrão da home), que aparece devagar depois
+ *   da foto; embaixo, uma linha fina que convida a rolar. Com `cta_url`, o banner inteiro é o link. O primeiro banner
+ *   leva `hero--full`, a marca que deixa o cabeçalho transparente por cima dele (chrome.css); a página de ideias usa
+ *   um slide seguinte (`index` 1) e fica com o cabeçalho de sempre. O resto da home rola por cima do banner (home.css).
+ * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
  */
 export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
-  const hasMeta = brandNames.length > 0 || designerCount > 0;
   const first = index === 0;
   const titleId = first ? 'hero-title' : `hero-title-${index + 1}`;
   const Heading = first ? 'h1' : 'h2';
+
+  if (!banner || !photo) {
+    return (
+      <PlainHero
+        banner={banner}
+        brandNames={brandNames}
+        designerCount={designerCount}
+        titleId={titleId}
+        heading={Heading}
+      />
+    );
+  }
+
+  const cta = banner.cta_url ? { url: banner.cta_url, label: banner.cta_label } : null;
   return (
-    <section className={photo ? 'hero' : 'hero hero--plain'} aria-labelledby={titleId}>
-      {photo ? (
-        <picture className="hero__picture">
-          {banner?.image_mobile ? (
-            <source media="(max-width: 47.99rem)" srcSet={buildSrcSet(banner.image_mobile)} sizes="100vw" />
-          ) : null}
-          <ApiImage image={photo} sizes="100vw" priority={first} className="hero__img" />
-        </picture>
+    <section className={first ? 'hero hero--photo hero--full' : 'hero hero--photo'} aria-labelledby={titleId}>
+      <picture className="hero__picture">
+        {banner.image_mobile ? (
+          <source
+            media="(max-width: 47.99rem)"
+            srcSet={buildSrcSet(banner.image_mobile)}
+            sizes={heroSizes(banner.image_mobile)}
+          />
+        ) : null}
+        <ApiImage image={photo} sizes={heroSizes(photo)} priority={first} className="hero__img" />
+      </picture>
+      {banner.video ? <HeroVideo src={banner.video} /> : null}
+      <div className="hero__content">
+        <Heading className="hero__title" id={titleId}>
+          {banner.title ?? t('fallbackTitle')}
+        </Heading>
+        {/* Sem texto no painel: o slogan, com o "design autoral" na linha de apoio (revisão da Franccino, item 1). */}
+        {banner.subtitle ? (
+          <p className="hero__subtitle">{banner.subtitle}</p>
+        ) : banner.title ? null : (
+          <p className="hero__subtitle">{t('fallbackSubtitle')}</p>
+        )}
+        {cta?.label ? (
+          <span className="hero__cta" aria-hidden="true">
+            <span>{cta.label}</span>
+            <Icon name="arrow" />
+          </span>
+        ) : null}
+      </div>
+      <span className="hero__scroll" aria-hidden="true" />
+      {cta ? (
+        <a className="hero__link" href={cta.url} aria-label={cta.label ?? (photo.alt || t('open'))} />
       ) : null}
+    </section>
+  );
+}
+
+function PlainHero({
+  banner,
+  brandNames,
+  designerCount,
+  titleId,
+  heading: Heading,
+}: {
+  banner: Banner | null;
+  brandNames: string[];
+  designerCount: number;
+  titleId: string;
+  heading: 'h1' | 'h2';
+}) {
+  const t = useTranslations('home.hero');
+  const hasMeta = brandNames.length > 0 || designerCount > 0;
+  return (
+    <section className="hero hero--plain" aria-labelledby={titleId}>
       <div className="hero__plate">
         <Heading className="display" id={titleId}>
           {banner?.title ?? t('fallbackTitle')}
         </Heading>
-        {banner?.subtitle ? <p className="lead">{banner.subtitle}</p> : null}
+        {banner?.subtitle ? (
+          <p className="lead">{banner.subtitle}</p>
+        ) : banner?.title ? null : (
+          <p className="lead">{t('fallbackSubtitle')}</p>
+        )}
         <div className="hero__actions">
           {banner?.cta_label && banner.cta_url ? (
             <a className="btn" href={banner.cta_url}>

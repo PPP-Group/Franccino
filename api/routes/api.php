@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Import\ImportController;
 use App\Http\Controllers\Api\V1;
 use Illuminate\Support\Facades\Route;
 
@@ -27,18 +28,22 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('stores', [V1\StoreController::class, 'index'])->name('stores.index');
         Route::get('finishes', [V1\FinishController::class, 'index'])->name('finishes.index');
         Route::get('banners', [V1\BannerController::class, 'index'])->name('banners.index');
+        Route::get('scenes', [V1\SceneController::class, 'index'])->name('scenes.index');
         Route::get('pages/{key}', [V1\PageController::class, 'show'])->name('pages.show');
         Route::get('settings', V1\SettingsController::class)->name('settings');
         Route::get('downloads', [V1\DownloadController::class, 'index'])->name('downloads.index');
         Route::get('search', V1\SearchController::class)->name('search');
         Route::get('sitemap', V1\SitemapController::class)->name('sitemap');
         Route::get('redirects', [V1\RedirectController::class, 'index'])->name('redirects.index');
+        Route::get('quote-lists/{code}', [V1\QuoteListController::class, 'show'])->name('quote-lists.show');
     });
 
     Route::middleware('throttle:api-forms')->group(function () {
         Route::post('contact', V1\ContactController::class)->name('contact');
         Route::post('newsletter', V1\NewsletterController::class)->name('newsletter');
         Route::post('consents', V1\ConsentController::class)->name('consents');
+        Route::post('download-leads', V1\DownloadLeadController::class)->name('download-leads');
+        Route::post('quote-lists', [V1\QuoteListController::class, 'store'])->name('quote-lists.store');
     });
 
     Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])
@@ -47,4 +52,14 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
     Route::post('products/{slug}/model-3d/link', [V1\ProductModelController::class, 'link'])
         ->middleware('throttle:api-downloads')
         ->name('products.model-3d.link');
+});
+
+// Bulk import for the team (docs/api.md, "Importação em massa"): off unless CONTENT_IMPORT_TOKEN is set.
+Route::prefix('import')->name('api.import.')->middleware(['no-store', 'import.token', 'throttle:api-import'])->group(function () {
+    Route::post('media', [ImportController::class, 'media'])->name('media');
+    Route::post('media/remove', [ImportController::class, 'removeMedia'])->name('media.remove');
+    Route::post('files', [ImportController::class, 'files'])->name('files');
+    Route::post('covers', [ImportController::class, 'covers'])->name('covers');
+    Route::post('content', [ImportController::class, 'content'])->name('content');
+    Route::post('translations', [ImportController::class, 'translations'])->name('translations');
 });

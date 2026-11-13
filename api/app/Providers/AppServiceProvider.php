@@ -28,7 +28,9 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\Project;
+use App\Models\QuoteList;
 use App\Models\Redirect;
+use App\Models\Scene;
 use App\Models\Store;
 use App\Models\User;
 use App\Observers\RecordsActivity;
@@ -108,10 +110,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Client::class, ContentPolicy::class);
         Gate::policy(Store::class, ContentPolicy::class);
         Gate::policy(Banner::class, ContentPolicy::class);
+        Gate::policy(Scene::class, ContentPolicy::class);
 
         Gate::policy(Redirect::class, AdminOnlyPolicy::class);
 
         Gate::policy(ContactMessage::class, InboxPolicy::class);
+        Gate::policy(QuoteList::class, InboxPolicy::class);
         Gate::policy(NewsletterSubscriber::class, InboxPolicy::class);
         Gate::policy(ConsentRecord::class, InboxPolicy::class);
 
@@ -188,6 +192,9 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configureRateLimiters(): void
     {
+        // Bulk import (`/api/import/*`): one request per photo, so a batch of hundreds goes through in a few minutes.
+        RateLimiter::for('api-import', fn (Request $request) => Limit::perMinute(240)->by($request->ip()));
+
         RateLimiter::for('api-read', function (Request $request) {
             $key = config('franccino.frontend.api_key');
 

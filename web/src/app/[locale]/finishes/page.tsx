@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { FinishZoom } from '@/components/catalog/FinishZoom';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { PageHead } from '@/components/layout/PageHead';
-import { ApiImage } from '@/components/media/ApiImage';
 import type { Locale } from '@/i18n/config';
 import { getFinishes } from '@/lib/api/catalog';
 import { getPage } from '@/lib/api/content';
@@ -54,15 +54,20 @@ export default async function FinishesPage({ params }: Props) {
             <ul className="finish-grid">
               {group.items.map((item) => (
                 <li key={item.id} className="finish-card">
-                  <div className="finish-card__swatch">
-                    {item.swatch ? (
-                      <ApiImage image={item.swatch} sizes="(max-width: 35rem) 50vw, 180px" />
-                    ) : (
+                  {item.swatch ? (
+                    <FinishZoom
+                      name={item.name}
+                      code={item.code}
+                      description={item.description}
+                      swatch={item.swatch}
+                    />
+                  ) : (
+                    <div className="finish-card__swatch">
                       <span className="finish-card__fallback" aria-hidden="true">
                         {item.code ?? item.name.slice(0, 2)}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <strong>{item.name}</strong>
                   {item.code ? <span className="meta num">{item.code}</span> : null}
                   {item.description ? <p className="meta">{item.description}</p> : null}

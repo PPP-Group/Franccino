@@ -5,6 +5,7 @@ namespace App\Http\Resources\V1;
 use App\Models\Collection as CollectionModel;
 use App\Models\Designer;
 use App\Models\Product;
+use App\Support\ImagePresenter;
 use App\Support\Localized;
 use App\Support\RichText;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -42,6 +43,7 @@ class DesignerResource extends DesignerCardResource
 
         return array_merge(parent::toArray($request), [
             'bio' => RichText::sanitize(Localized::value($designer, 'bio')),
+            'signature' => ImagePresenter::present($designer->getFirstMedia('signature'), $designer->name),
             'website_url' => $designer->website_url,
             'instagram_url' => $designer->instagram_url,
             'products' => ProductCardResource::collection($this->products)->toArray($request),

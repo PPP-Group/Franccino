@@ -8,6 +8,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* O cabeçalho fixo não cobre âncoras nem o elemento com foco. */
+  scroll-padding-top: calc(var(--header) + var(--space-4));
 }
 
 body {
@@ -15,11 +17,13 @@ body {
   background: var(--stone);
   color: var(--ink);
   font-family: var(--font);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   font-variation-settings: 'wdth' var(--text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Nada passa da largura da tela (as peças das pontas do carrossel); `clip` não quebra o `position: sticky`. */
+  overflow-x: clip;
 }
 
 img {
@@ -45,6 +49,53 @@ textarea {
 :focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
+}
+
+/* Seleção de texto em ink sobre papel (pedido do tech lead, 06/11/2026: nada do azul do navegador); no rodapé escuro, o inverso. */
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-footer ::selection {
+  background: var(--stone);
+  color: var(--ink);
+}
+
+/*
+  Barras de rolagem finas, da página e de toda área que rola por dentro (lista de opções, tabela técnica): trilho
+  areia e alça ink suave, que escurece ao passar o mouse. `scrollbar-color` herda; `scrollbar-width` não, por isso o *.
+  Trilhos e carrosséis que escondem a barra (scrollbar-width: none) continuam valendo: as regras deles vêm depois.
+  Os ::-webkit-scrollbar ficam para o Safari (Chrome e Firefox usam as propriedades padrão).
+*/
+html {
+  scrollbar-color: var(--ink-muted) var(--sand);
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sand);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border: 2px solid var(--sand);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--sand);
 }
 
 .visually-hidden {
@@ -84,48 +135,58 @@ h2,
 h3 {
   margin: 0;
   font-family: var(--font-heading);
-  font-weight: 500;
-  letter-spacing: 0;
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
   text-wrap: balance;
 }
 
 .display {
-  font-size: clamp(2.5rem, 5.2vw, 4.9rem);
-  line-height: 1.02;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
 }
 
 h1 {
-  font-size: clamp(2.1rem, 3.6vw, 3.4rem);
-  line-height: 1.05;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-heading);
 }
 
 h2 {
-  font-size: clamp(1.55rem, 2.4vw, 2.35rem);
-  line-height: 1.1;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
 }
 
 h3 {
-  font-size: 1.25rem;
-  line-height: 1.3;
-  font-weight: 600;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 p {
   margin: 0;
-  max-width: 68ch;
+  max-width: var(--measure);
+  text-wrap: pretty;
 }
 
 .lead {
-  font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+  font-size: var(--fs-lead);
   line-height: 1.55;
   color: var(--ink-muted);
 }
 
 .meta {
-  font-size: 0.8125rem;
-  line-height: 1.4;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
   color: var(--ink-muted);
+}
+
+/* Rótulo curto em caixa alta (etiquetas, cabeçalho de tabela): o único uso de caixa alta no texto. */
+.label {
+  font-size: var(--fs-label);
+  line-height: var(--lh-ui);
   font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 .num {
@@ -160,5 +221,25 @@ p {
   *::after {
     transition-duration: 1ms !important;
     animation-duration: 1ms !important;
+  }
+}
+
+/*
+  Hover padrão de foto clicável em todo o site (retorno de 06/11/2026): a foto aproxima devagar dentro do próprio
+  quadro, sem sombra e sem mover a caixa. Use .hover-zoom no quadro da foto; o gatilho é o link ou o card em volta.
+*/
+.hover-zoom {
+  overflow: hidden;
+}
+
+.hover-zoom img {
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a:hover .hover-zoom img,
+  a:focus-visible .hover-zoom img,
+  .hover-zoom:hover img {
+    transform: scale(1.05);
   }
 }

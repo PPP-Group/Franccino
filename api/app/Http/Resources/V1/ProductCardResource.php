@@ -29,6 +29,7 @@ class ProductCardResource extends JsonResource
             'category' => Refs::category($product->category),
             'designer' => Refs::designer($product->designer),
             'cover' => ImagePresenter::present($product->getFirstMedia('cover'), Localized::value($product, 'name')),
+            'cutout' => ImagePresenter::present($product->getFirstMedia('cutout'), Localized::value($product, 'name')),
             'is_new' => $product->isNew(),
         ];
     }

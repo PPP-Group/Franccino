@@ -1,10 +1,16 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
-import type { AreaMenuKey, AreaMenus } from './area-menu';
+import type { AreaMenuKey, NavMenuKey, NavMenus } from './area-menu';
 import { HeaderSearch } from './HeaderSearch';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { activeNavKey, NAV_ITEMS } from './nav';
@@ -12,9 +18,20 @@ import { QuoteListLink } from './QuoteListLink';
 
 // Mesmo corte do menu recolhido em `styles/chrome.css` (`@media (max-width: 1180px)`).
 const COLLAPSED_NAV_QUERY = '(max-width: 1180px)';
+// Tempo para o mouse sair do item e chegar ao painel (ou voltar) sem o painel fechar no caminho.
+const CLOSE_DELAY_MS = 250;
+// Intenção de hover: o mouse que só atravessa o menu não abre painel nenhum.
+const OPEN_DELAY_MS = 120;
 
-function isAreaKey(key: string): key is AreaMenuKey {
-  return key === 'indoor' || key === 'outdoor';
+function isMenuKey(key: string): key is NavMenuKey {
+  return key === 'products' || key === 'indoor' || key === 'outdoor' || key === 'collections';
+}
+
+/** Linhas que viram abas no painel de Produtos, na ordem da referência da Franccino (Área interna, Área externa). */
+const PRODUCT_AREAS: AreaMenuKey[] = ['indoor', 'outdoor'];
+
+function isDesktop() {
+  return !window.matchMedia(COLLAPSED_NAV_QUERY).matches;
 }
 
 function categoryHref(area: AreaMenuKey, category: string) {
@@ -23,19 +40,76 @@ function categoryHref(area: AreaMenuKey, category: string) {
     : ({ pathname: '/indoor/[category]', params: { category } } as const);
 }
 
-export function HeaderNav({ menus }: { menus: AreaMenus }) {
+function entryHref(menu: NavMenuKey, slug: string) {
+  if (menu === 'collections') return { pathname: '/collections/[slug]', params: { slug } } as const;
+  // Produtos sem aba escolhida: a categoria com as peças das duas linhas.
+  if (menu === 'products') return { pathname: '/products', query: { category: slug } } as const;
+  return categoryHref(menu, slug);
+}
+
+export function HeaderNav({ menus }: { menus: NavMenus }) {
   const t = useTranslations('header');
   const nav = useTranslations('nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // Painel de categorias aberto (Casa ou Giardini). No desktop abre no clique e ao passar o mouse; no menu
-  // recolhido funciona como sanfona dentro da lista.
-  const [panel, setPanel] = useState<AreaMenuKey | null>(null);
+  // Painel aberto (Casa, Giardini ou Coleções). Retorno do tech lead (06/11/2026): o clique no nome leva direto à
+  // lista completa; o painel abre só ao passar o mouse (com a intenção de hover) ou pela seta ao lado do nome (teclado,
+  // toque e leitor de tela; a seta para baixo no nome também abre). No menu recolhido, a seta abre a sanfona.
+  const [panel, setPanel] = useState<NavMenuKey | null>(null);
+  // Aba do painel de Produtos: nenhuma (todas as categorias) ou uma das linhas (só as categorias dela).
+  const [productsTab, setProductsTab] = useState<AreaMenuKey | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
-  // Quando o mouse acabou de abrir o painel, o clique que vem em seguida não deve fechá-lo.
-  const hoverOpenedAt = useRef(0);
+  // Aberto pela seta (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
+  const pinned = useRef(false);
+  const closeTimer = useRef<number | null>(null);
+  const openTimer = useRef<number | null>(null);
+  // Painel a focar no primeiro link assim que abrir (seta para baixo no nome).
+  const focusFirst = useRef<NavMenuKey | null>(null);
   const active = activeNavKey(pathname);
+
+  function cancelClose() {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function cancelOpen() {
+    if (openTimer.current !== null) {
+      window.clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+  }
+
+  function closePanel() {
+    setProductsTab(null);
+    cancelClose();
+    cancelOpen();
+    pinned.current = false;
+    setPanel(null);
+  }
+
+  // Desmontar com a abertura ou o fechamento agendado: cancela os timers.
+  useEffect(() => {
+    const timers = [closeTimer, openTimer];
+    return () => {
+      for (const timer of timers) {
+        if (timer.current !== null) {
+          window.clearTimeout(timer.current);
+        }
+      }
+    };
+  }, []);
+
+  // Seta para baixo no nome: o painel abre e o foco vai para o primeiro link dele.
+  useEffect(() => {
+    if (!panel || focusFirst.current !== panel) {
+      return;
+    }
+    focusFirst.current = null;
+    navRef.current?.querySelector<HTMLElement>(`#nav-panel-${panel} a`)?.focus();
+  }, [panel]);
 
   // Trocar de página fecha o menu e o painel.
   const [lastPathname, setLastPathname] = useState(pathname);
@@ -63,6 +137,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
       }
       if (panel) {
         const trigger = navRef.current?.querySelector<HTMLButtonElement>(`[data-panel-trigger="${panel}"]`);
+        pinned.current = false;
         setPanel(null);
         trigger?.focus();
         return;
@@ -85,6 +160,7 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
     function handlePointerDown(event: PointerEvent) {
       const header = navRef.current?.closest('.site-header');
       if (header && event.target instanceof Node && !header.contains(event.target)) {
+        pinned.current = false;
         setPanel(null);
       }
     }
@@ -130,34 +206,81 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
     };
   }, [open]);
 
-  // Passar o mouse abre o painel só no desktop; no menu recolhido ele abre no toque.
-  function hoverOpen(key: AreaMenuKey, at: number) {
-    if (!window.matchMedia(COLLAPSED_NAV_QUERY).matches) {
-      hoverOpenedAt.current = at;
-      setPanel(key);
-    }
-  }
-
-  function toggleArea(key: AreaMenuKey, at: number) {
-    if (panel === key && at - hoverOpenedAt.current < 600) {
+  // Passar o mouse abre o painel só no desktop e só com mouse (no toque, a seta abre), depois de um instante parado
+  // (intenção de hover); com outro painel já aberto, troca na hora. Sair fecha depois de um instante, para o caminho
+  // do item até o painel (ou de volta) não fechar nada.
+  function pointerOpen(key: NavMenuKey, event: ReactPointerEvent) {
+    if (event.pointerType !== 'mouse' || !isDesktop()) {
       return;
     }
-    setPanel((value) => (value === key ? null : key));
+    cancelClose();
+    cancelOpen();
+    if (panel === key) {
+      return;
+    }
+    if (panel) {
+      pinned.current = false;
+      setPanel(key);
+      return;
+    }
+    openTimer.current = window.setTimeout(() => {
+      openTimer.current = null;
+      pinned.current = false;
+      setPanel(key);
+    }, OPEN_DELAY_MS);
   }
 
-  function hoverClose() {
-    if (!window.matchMedia(COLLAPSED_NAV_QUERY).matches) {
-      setPanel(null);
+  function pointerLeave(event: ReactPointerEvent) {
+    if (event.pointerType !== 'mouse' || !isDesktop()) {
+      return;
     }
+    cancelOpen();
+    if (pinned.current) {
+      return;
+    }
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      setPanel(null);
+    }, CLOSE_DELAY_MS);
+  }
+
+  // Seta ao lado do nome: abre e fixa; no painel já aberto pelo mouse, fixa; no painel fixo, fecha.
+  function clickTrigger(key: NavMenuKey) {
+    cancelClose();
+    cancelOpen();
+    if (panel === key && pinned.current) {
+      closePanel();
+      return;
+    }
+    pinned.current = true;
+    setPanel(key);
+  }
+
+  // Seta para baixo no nome (ou na seta): abre o painel e leva o foco ao primeiro link.
+  function keyDownTrigger(key: NavMenuKey, event: ReactKeyboardEvent) {
+    if (event.key !== 'ArrowDown') {
+      return;
+    }
+    event.preventDefault();
+    cancelClose();
+    cancelOpen();
+    pinned.current = true;
+    if (panel === key) {
+      navRef.current?.querySelector<HTMLElement>(`#nav-panel-${key} a`)?.focus();
+      return;
+    }
+    focusFirst.current = key;
+    setPanel(key);
   }
 
   return (
     <>
       <nav ref={navRef} id="site-nav" className={open ? 'nav is-open' : 'nav'} aria-label={t('navLabel')}>
         {NAV_ITEMS.map((item) => {
-          const area = isAreaKey(item.key) ? item.key : null;
-          const categories = area ? menus[area] : [];
-          if (!area || categories.length === 0) {
+          const area = isMenuKey(item.key) ? item.key : null;
+          const entries = area ? menus[area] : [];
+          if (!area || entries.length === 0) {
             return (
               <Link
                 key={item.key}
@@ -175,36 +298,79 @@ export function HeaderNav({ menus }: { menus: AreaMenus }) {
             <div
               key={area}
               className={expanded ? 'nav-area is-open' : 'nav-area'}
-              onMouseEnter={(event) => hoverOpen(area, event.timeStamp)}
-              onMouseLeave={hoverClose}
+              onPointerEnter={(event) => pointerOpen(area, event)}
+              onPointerLeave={pointerLeave}
             >
-              <button
-                type="button"
+              <Link
                 className="nav-area__trigger"
-                data-panel-trigger={area}
+                href={item.href}
                 data-active={area === active ? 'true' : undefined}
-                aria-expanded={expanded}
-                aria-controls={panelId}
-                onClick={(event) => toggleArea(area, event.timeStamp)}
+                aria-current={area === active ? 'page' : undefined}
+                onKeyDown={(event) => keyDownTrigger(area, event)}
+                onClick={() => {
+                  closePanel();
+                  setOpen(false);
+                }}
               >
                 {nav(area)}
+              </Link>
+              <button
+                type="button"
+                className="nav-area__toggle"
+                data-panel-trigger={area}
+                aria-expanded={expanded}
+                aria-controls={panelId}
+                aria-label={t('submenu', { area: nav(area) })}
+                onKeyDown={(event) => keyDownTrigger(area, event)}
+                onClick={() => clickTrigger(area)}
+              >
                 <Icon name="chevron" />
               </button>
               <div id={panelId} className="nav-panel" hidden={!expanded}>
                 <div className="wrap nav-panel__inner">
-                  <Link
-                    className="nav-panel__all"
-                    href={item.href}
-                    aria-current={area === active ? 'page' : undefined}
-                    onClick={() => setOpen(false)}
-                  >
-                    {t('areaAll', { area: nav(area) })}
-                  </Link>
+                  {area === 'products' ? (
+                    <div className="nav-panel__tabs" role="group" aria-label={nav('products')}>
+                      {PRODUCT_AREAS.filter((line) => menus[line].length > 0).map((line) => (
+                        <div key={line} className="nav-panel__tab">
+                          <button
+                            type="button"
+                            aria-pressed={productsTab === line}
+                            onClick={() => setProductsTab((current) => (current === line ? null : line))}
+                          >
+                            {nav(line)}
+                          </button>
+                          <Link
+                            className="nav-panel__see-all"
+                            href={line === 'outdoor' ? '/outdoor' : '/indoor'}
+                            onClick={() => setOpen(false)}
+                          >
+                            {t('seeAllLine')}
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Link
+                      className="nav-panel__all"
+                      href={item.href}
+                      aria-current={area === active ? 'page' : undefined}
+                      onClick={() => setOpen(false)}
+                    >
+                      {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
+                    </Link>
+                  )}
                   <ul className="nav-panel__list">
-                    {categories.map((category) => (
-                      <li key={category.slug}>
-                        <Link href={categoryHref(area, category.slug)} onClick={() => setOpen(false)}>
-                          {category.name}
+                    {(area === 'products' && productsTab ? menus[productsTab] : entries).map((entry) => (
+                      <li key={entry.slug}>
+                        <Link
+                          href={
+                            area === 'products' && productsTab
+                              ? categoryHref(productsTab, entry.slug)
+                              : entryHref(area, entry.slug)
+                          }
+                          onClick={() => setOpen(false)}
+                        >
+                          {entry.name}
                         </Link>
                       </li>
                     ))}

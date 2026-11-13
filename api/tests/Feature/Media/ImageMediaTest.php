@@ -46,9 +46,32 @@ it('presents an image in the api format', function () {
     $image = ImagePresenter::present($media->refresh(), 'Cadeira Aura');
 
     expect($image)->toMatchArray(['id' => $media->id, 'alt' => 'Cadeira Aura', 'width' => 1200, 'height' => 800])
-        ->and(collect($image['srcset'])->pluck('width')->all())->toBe([480, 960])
-        ->and($image['src'])->toBe($image['srcset'][1]['url'])
+        ->and(collect($image['srcset'])->pluck('width')->all())->toBe([480, 960, 1200])
+        ->and($image['src'])->toBe($image['srcset'][2]['url'])
+        ->and($image['src'])->toBe($media->getFullUrl('w1440'))
         ->and($image['blur_data_url'])->toStartWith('data:image/webp;base64,');
+});
+
+it('serves a web-ready original at its own size instead of compressing it again', function () {
+    $stub = MediaStub::create();
+    $media = $stub->addMedia(UploadedFile::fake()->image('peca.webp', 1200, 800))->toMediaCollection('cover');
+
+    $image = ImagePresenter::present($media->refresh(), 'Cadeira Aura');
+
+    expect(collect($image['srcset'])->pluck('width')->all())->toBe([480, 960, 1200])
+        ->and($image['srcset'][2]['url'])->toBe($media->getFullUrl())
+        ->and($image['srcset'][1]['url'])->toBe($media->getFullUrl('w960'));
+});
+
+it('offers the original while its full-size conversion is not generated yet', function () {
+    $stub = MediaStub::create();
+    $media = $stub->addMedia(UploadedFile::fake()->image('peca.jpg', 900, 600))->toMediaCollection('cover');
+    $media->refresh()->markAsConversionNotGenerated('w960');
+
+    $image = ImagePresenter::present($media->refresh(), 'Cadeira Aura');
+
+    expect(collect($image['srcset'])->pluck('width')->all())->toBe([480, 900])
+        ->and($image['srcset'][1]['url'])->toBe($media->getFullUrl());
 });
 
 it('returns null without media', function () {

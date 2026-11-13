@@ -25,7 +25,9 @@ import type {
   ProjectCard,
   ProjectDetail,
   RedirectRule,
+  Scene,
   Settings,
+  SharedList,
   SitemapEntry,
   Store,
 } from './types';
@@ -179,6 +181,16 @@ export async function getClients(locale: Locale): Promise<Client[]> {
   return data;
 }
 
+/** Ambientes com pontos clicáveis da home (banco de ideias, ideia 7). */
+export async function getScenes(locale: Locale): Promise<Scene[]> {
+  const { data } = await apiGet<Item<Scene[]>>('/scenes', {
+    locale,
+    tags: ['scenes'],
+    fallback: { data: [] },
+  });
+  return data;
+}
+
 export async function getStores(locale: Locale, params: StoreListParams = {}): Promise<StoreList> {
   const result = await apiGet<Item<Store[]> & { meta: { states: string[] } }>('/stores', {
     locale,
@@ -236,4 +248,14 @@ export async function getSitemap(locale: Locale): Promise<SitemapEntry[]> {
 export async function getRedirects(locale: Locale): Promise<RedirectRule[]> {
   const { data } = await apiGet<Item<RedirectRule[]>>('/redirects', { locale, tags: ['redirects'] });
   return data;
+}
+
+/** Lista de desejos compartilhada (`GET /quote-lists/{code}`), sem cache; vencida ou inexistente, `null`. */
+export async function getSharedList(locale: Locale, code: string): Promise<SharedList | null> {
+  const result = await apiGetOrNull<Item<SharedList>>(`/quote-lists/${encodeURIComponent(code)}`, {
+    locale,
+    tags: [],
+    revalidate: 0,
+  });
+  return result?.data ?? null;
 }

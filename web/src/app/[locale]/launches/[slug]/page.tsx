@@ -4,10 +4,13 @@ import { notFound } from 'next/navigation';
 import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
-import { ViewToggle } from '@/components/catalog/ViewToggle';
+import { ByView, CatalogViewProvider, ViewToggle } from '@/components/catalog/ViewToggle';
+import { firstWithCover } from '@/components/content/layout';
 import { RichText } from '@/components/content/RichText';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
@@ -15,6 +18,9 @@ import { getLaunch, getLaunches } from '@/lib/api/content';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { parseCatalogView } from '@/lib/catalog/view';
 import { alternateHrefs, buildMetadata } from '@/lib/seo/metadata';
+
+/** Peças da primeira linha da grade (3 colunas no desktop). */
+const FIRST_ROW = 3;
 
 type Props = { params: Promise<{ locale: string; slug: string }>; searchParams: Promise<SearchParams> };
 
@@ -54,55 +60,72 @@ export default async function LaunchPage({ params, searchParams }: Props) {
     getTranslations({ locale, namespace: 'catalog' }),
     getTranslations({ locale, namespace: 'common' }),
   ]);
-  const rows =
-    view === 'table'
-      ? (
-          await getProductDetails(
-            locale,
-            launch.products.map((product) => product.slug),
-          )
-        ).map(toTechnicalRow)
-      : [];
+  const year = launch.year && !launch.title.includes(String(launch.year)) ? launch.year : null;
+  // A peça em destaque não repete a primeira linha da grade logo abaixo (quando houver outras).
+  const feature = launch.description
+    ? firstWithCover([launch.products.slice(FIRST_ROW), launch.products])
+    : null;
+  // As duas vistas vêm prontas: a troca Grade/Tabela técnica é no navegador (`ViewToggle`).
+  const rows = (
+    await getProductDetails(
+      locale,
+      launch.products.map((product) => product.slug),
+    )
+  ).map(toTechnicalRow);
 
   return (
-    <main className="wrap catalog">
-      <Breadcrumbs
-        label={common('breadcrumb')}
-        items={[
-          { label: common('home'), href: '/' },
-          { label: t('launches.title'), href: '/launches' },
-          { label: launch.title },
-        ]}
-      />
-      <div className="catalog-head">
-        <div className="catalog-head__copy">
-          <h1>{launch.title}</h1>
-          {launch.year ? <p className="meta num">{launch.year}</p> : null}
-          {launch.summary ? <p className="lead">{launch.summary}</p> : null}
-        </div>
-        <p className="meta num">{t('count', { count: launch.products.length })}</p>
-      </div>
-      {launch.description ? <RichText html={launch.description} className="catalog-description" /> : null}
-      <FileDownloads
-        files={launch.files}
-        title={t('launches.downloads')}
-        headingId="launch-downloads"
-        className="media-links--wide block"
-      />
-      <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
-      <div className="toolbar toolbar--end">
-        <ViewToggle
-          view={view}
-          hrefFor={(next) => ({ ...launchHref(slug), query: next === 'table' ? { view: 'table' } : {} })}
+    <main>
+      <div className="wrap catalog">
+        <Breadcrumbs
+          label={common('breadcrumb')}
+          items={[
+            { label: common('home'), href: '/' },
+            { label: t('launches.title'), href: '/launches' },
+            { label: launch.title },
+          ]}
         />
+        {/*
+          Com texto, a direita mostra uma peça do lançamento em foto grande (retorno do tech lead de 06/11/2026: o texto
+          ficava sozinho à esquerda). O ano só aparece quando o título não o traz ("Lançamentos 2026" já diz o ano).
+        */}
+        <div className={feature ? 'catalog-head catalog-head--split' : 'catalog-head'}>
+          <div className="catalog-head__copy">
+            <h1>{launch.title}</h1>
+            {launch.summary ? <p className="lead">{launch.summary}</p> : null}
+            {feature && year ? <p className="meta num">{year}</p> : null}
+            {feature && launch.description ? <RichText html={launch.description} className="prose" /> : null}
+          </div>
+          {feature ? <FeaturePiece product={feature} /> : year ? <p className="meta num">{year}</p> : null}
+        </div>
+        {!feature && launch.description ? (
+          <RichText html={launch.description} className="prose catalog-description" />
+        ) : null}
+        <CatalogViewProvider key={view} initial={view}>
+          <div className="toolbar">
+            <p className="meta num">{t('count', { count: launch.products.length })}</p>
+            <ViewToggle
+              view={view}
+              hrefs={{ grid: launchHref(slug), table: { ...launchHref(slug), query: { view: 'table' } } }}
+            />
+          </div>
+          <section className="catalog-results" aria-label={t('resultsLabel')}>
+            <ByView
+              // Toda peça aqui é lançamento: sem o rótulo no card (lei de Tesler).
+              grid={<ProductGrid products={launch.products} priorityCount={3} />}
+              table={<TechTable rows={rows} />}
+            />
+          </section>
+        </CatalogViewProvider>
+        {/* Arquivos e vídeos depois das peças, como na página Lançamentos. */}
+        <FileDownloads
+          files={launch.files}
+          title={t('launches.downloads')}
+          headingId="launch-downloads"
+          className="media-links--wide block"
+        />
+        <MediaLinks items={launch.media_links} headingId="launch-media" className="media-links--wide block" />
       </div>
-      <section className="catalog-results" aria-label={t('resultsLabel')}>
-        {view === 'table' ? (
-          <TechTable rows={rows} />
-        ) : (
-          <ProductGrid products={launch.products} showNew priorityCount={4} />
-        )}
-      </section>
+      <RecentlyViewed excludeIds={launch.products.map((product) => product.id)} />
     </main>
   );
 }

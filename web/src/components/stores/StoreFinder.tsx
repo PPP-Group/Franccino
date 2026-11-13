@@ -1,13 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
+import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Icon } from '@/components/ui/Icon';
 import type { Store } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { filterStores, STORE_TYPES } from '@/lib/stores/filter';
 import { mapSearchUrl } from '@/lib/stores/map-link';
+import { isFullyVisible } from '@/lib/stores/scroll';
 import { StoreMap } from './StoreMap';
 
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
@@ -20,16 +22,33 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
   );
 }
 
-function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
+type StoreCardProps = {
+  store: Store;
+  detailed: boolean;
+  active?: boolean;
+  /** Muda a cada escolha no mapa: alterna o nome da animação para o brilho recomeçar. */
+  flash?: 'a' | 'b' | null;
+  onHover?: (id: number | null) => void;
+};
+
+function StoreCard({ store, detailed, active = false, flash = null, onHover }: StoreCardProps) {
   const t = useTranslations('stores');
   const type = t.has(`types.${store.type}`) ? t(`types.${store.type}`) : store.type;
   const whatsapp = detailed ? whatsappUrl(store.whatsapp) : null;
+  // A foto aparece também na seção de lojas da home (retorno de 09/11/2026), não só na página Lojas.
+  const className = ['store', store.image ? 'store--with-image' : '', active ? 'is-active' : '']
+    .filter(Boolean)
+    .join(' ');
   return (
     <article
       id={`store-${store.id}`}
-      className={detailed && store.image ? 'store store--with-image' : 'store'}
+      className={className}
+      tabIndex={active ? -1 : undefined}
+      data-flash={active && flash ? flash : undefined}
+      onMouseEnter={onHover ? () => onHover(store.id) : undefined}
+      onMouseLeave={onHover ? () => onHover(null) : undefined}
     >
-      {detailed && store.image ? (
+      {store.image ? (
         <div className="store__image">
           <ApiImage image={store.image} sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw" />
         </div>
@@ -57,7 +76,7 @@ function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
             {whatsapp ? (
               <li>
                 <ExternalLink href={whatsapp}>
-                  <Icon name="chat" />
+                  <BrandIcon name="whatsapp" size={16} />
                   <span>{t('whatsapp')}</span>
                 </ExternalLink>
               </li>
@@ -89,7 +108,17 @@ function StoreCard({ store, detailed }: { store: Store; detailed: boolean }) {
             </li>
           </ul>
         </>
-      ) : null}
+      ) : (
+        // Na home também (retornos de 09 e 12/11/2026): o mesmo "Ver no mapa" da página Lojas.
+        <ul className="store__links">
+          <li>
+            <ExternalLink href={mapSearchUrl(store)}>
+              <Icon name="pin" />
+              <span>{t('map')}</span>
+            </ExternalLink>
+          </li>
+        </ul>
+      )}
     </article>
   );
 }
@@ -121,6 +150,37 @@ export function StoreFinder({
   const [type, setType] = useState<string | null>(null);
   const types = typeFilter ? STORE_TYPES.filter((value) => stores.some((store) => store.type === value)) : [];
   const visible = filterStores(stores, { state, type });
+  const [activeId, setActiveId] = useState<number | null>(null);
+  const [hoverId, setHoverId] = useState<number | null>(null);
+  const [flash, setFlash] = useState<'a' | 'b' | null>(null);
+  const pending = useRef<number | null>(null);
+
+  // Depois do clique no pino (e da renderização com o destaque), rola só se a loja estiver fora da tela e leva o foco
+  // até ela, sem pular a tela, para o teclado e o leitor de tela continuarem dali.
+  useEffect(() => {
+    const id = pending.current;
+    if (id === null) {
+      return;
+    }
+    pending.current = null;
+    const element = document.getElementById(`store-${id}`);
+    if (!element) {
+      return;
+    }
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header')) || 0;
+    if (!isFullyVisible(element.getBoundingClientRect(), window.innerHeight, header)) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      element.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }
+    element.focus({ preventScroll: true });
+  }, [activeId, flash]);
+
+  function select(id: number) {
+    pending.current = id;
+    setActiveId(id);
+    setFlash((current) => (current === 'a' ? 'b' : 'a'));
+  }
+
   return (
     <div className="stores">
       <div className="stores__intro">
@@ -166,11 +226,20 @@ export function StoreFinder({
             ))}
           </div>
         ) : null}
-        {map ? <StoreMap stores={visible} /> : null}
+        {map ? <StoreMap stores={visible} activeId={activeId} hoverId={hoverId} onSelect={select} /> : null}
       </div>
-      <div className="store-list" aria-live="polite">
+      <div className="store-list" aria-live="polite" data-reveal="stagger">
         {visible.length > 0 ? (
-          visible.map((store) => <StoreCard key={store.id} store={store} detailed={detailed} />)
+          visible.map((store) => (
+            <StoreCard
+              key={store.id}
+              store={store}
+              detailed={detailed}
+              active={store.id === activeId}
+              flash={store.id === activeId ? flash : null}
+              onHover={map ? setHoverId : undefined}
+            />
+          ))
         ) : (
           <p className="lead">{t('empty')}</p>
         )}

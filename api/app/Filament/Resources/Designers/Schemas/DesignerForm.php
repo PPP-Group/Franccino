@@ -57,6 +57,10 @@ class DesignerForm
                     ->label(__('Portrait'))
                     ->collection('portrait')
                     ->image(),
+                SpatieMediaLibraryFileUpload::make('signature')
+                    ->label(__('Signature (logo)'))
+                    ->collection('signature')
+                    ->image(),
             ]);
     }
 }

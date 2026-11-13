@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Enums\ProductRoom;
 use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Models\Line;
 use App\Support\Locales;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -97,6 +99,21 @@ class ProductForm
                 ->searchable(),
             Toggle::make('is_featured')
                 ->label(__('Featured')),
+            CheckboxList::make('rooms')
+                ->label(__('Rooms'))
+                ->options(ProductRoom::options())
+                ->columns(2),
+            Select::make('variants')
+                ->label(__('Variations'))
+                ->relationship(
+                    'variants',
+                    'sku',
+                    fn ($query, $record) => $record ? $query->whereKeyNot($record->getKey()) : $query,
+                )
+                ->getOptionLabelFromRecordUsing(fn ($record) => (string) $record->getTranslation('name', 'pt', false))
+                ->multiple()
+                ->searchable(['name', 'sku'])
+                ->preload(),
             ...CommonFields::publication(),
         ];
     }
@@ -135,17 +152,29 @@ class ProductForm
                     TextInput::make('width')
                         ->label(__('Width (mm)'))
                         ->numeric(),
+                    TextInput::make('width_max')
+                        ->label(__('Width up to (mm)'))
+                        ->numeric(),
                     TextInput::make('depth')
                         ->label(__('Depth (mm)'))
                         ->numeric(),
+                    TextInput::make('depth_max')
+                        ->label(__('Depth up to (mm)'))
+                        ->numeric(),
                     TextInput::make('height')
                         ->label(__('Height (mm)'))
+                        ->numeric(),
+                    TextInput::make('height_max')
+                        ->label(__('Height up to (mm)'))
                         ->numeric(),
                     TextInput::make('seat_height')
                         ->label(__('Seat height (mm)'))
                         ->numeric(),
                     TextInput::make('diameter')
                         ->label(__('Diameter (mm)'))
+                        ->numeric(),
+                    TextInput::make('diameter_max')
+                        ->label(__('Diameter up to (mm)'))
                         ->numeric(),
                 ])
                 ->reorderable()
@@ -168,6 +197,16 @@ class ProductForm
                 ->image()
                 ->multiple()
                 ->reorderable(),
+            SpatieMediaLibraryFileUpload::make('cutout')
+                ->label(__('Cutout photo (carousel)'))
+                ->collection('cutout')
+                ->image()
+                ->acceptedFileTypes(['image/png', 'image/webp']),
+            SpatieMediaLibraryFileUpload::make('top_view')
+                ->label(__('Top view (room planner)'))
+                ->collection('top_view')
+                ->image()
+                ->acceptedFileTypes(['image/png', 'image/webp']),
             SpatieMediaLibraryFileUpload::make('model_3d')
                 ->label(__('3D model'))
                 ->collection('model_3d')

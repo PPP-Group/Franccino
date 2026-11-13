@@ -48,6 +48,8 @@ return [
                 'Aba Medidas: clique em "Adicionar" e informe largura, profundidade e altura em milímetros. Peça com mais de um tamanho ganha uma linha por versão (ex.: "2,00 m" e "2,70 m").',
                 'Depois de salvar, na lista Acabamentos (abaixo do formulário): "Anexar" para escolher os acabamentos da peça e arraste para mudar a ordem.',
                 'Aba Mídia e 3D: envie a foto de capa (obrigatória para publicar) e, se tiver, as fotos da galeria e o arquivo 3D em GLB.',
+                'Capa sempre no mesmo padrão: a peça de frente, na diagonal, virada levemente para a esquerda, em fundo branco. As outras vistas vão para a galeria.',
+                'Opcional, na mesma aba: a "Foto sem fundo (carrossel)", a peça da capa recortada em PNG ou WebP com fundo transparente, sem sombra, com pelo menos 2000 px. Ela aparece no carrossel de lançamentos e coleções; sem ela, o carrossel usa a capa.',
                 'Aba SEO: opcional. Vazio, o site usa o nome e a descrição.',
                 'Ligue "Publicado" (aba Geral) e clique em "Criar".',
                 'Para fichas técnicas e blocos SketchUp/DWG, abra o produto salvo e use a área "Arquivos" no fim da página.',
@@ -99,6 +101,22 @@ return [
                 'Para ligar a peça ao designer, abra o produto e escolha o designer na aba Geral.',
             ],
             'tips' => [],
+        ],
+
+        'scenes' => [
+            'title' => 'Ambientes com pontos clicáveis',
+            'summary' => 'Fotos de ambientes montados, com um ponto em cada peça que leva à página dela. Aparecem na página inicial.',
+            'steps' => [
+                'Menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
+                'Salve uma vez com a foto. Na edição, a foto aparece grande: clique em cima de cada peça e escolha qual é na busca que abre ali mesmo. O ponto entra na lista Pontos com a posição preenchida.',
+                'Clique num ponto já marcado para trocar a peça, mover o ponto (clique depois no novo lugar) ou remover.',
+                'A posição também pode ser digitada na lista, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
+                'Ligue "Publicado" e salve. Abra a página inicial e confira se cada ponto caiu em cima da peça; ajuste os números se precisar.',
+            ],
+            'tips' => [
+                'Ponha o ponto no meio da peça, longe da borda da foto.',
+                'Peça despublicada some do ambiente sozinha; o ponto volta quando ela for publicada de novo.',
+            ],
         ],
 
         'banners' => [

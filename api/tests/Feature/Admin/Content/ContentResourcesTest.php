@@ -13,6 +13,9 @@ use App\Filament\Resources\Launches\Pages\CreateLaunch;
 use App\Filament\Resources\Launches\Pages\ListLaunches;
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
+use App\Filament\Resources\Scenes\Pages\CreateScene;
+use App\Filament\Resources\Scenes\Pages\EditScene;
+use App\Filament\Resources\Scenes\Pages\ListScenes;
 use App\Filament\Resources\Stores\Pages\CreateStore;
 use App\Filament\Resources\Stores\Pages\ListStores;
 use App\Models\Banner;
@@ -21,6 +24,7 @@ use App\Models\Collection as CollectionModel;
 use App\Models\Designer;
 use App\Models\Launch;
 use App\Models\Project;
+use App\Models\Scene;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -152,6 +156,65 @@ it('creates a client', function () {
         ->assertHasNoFormErrors();
 
     expect(Client::sole())->name->toBe('Studio Aurora');
+});
+
+// Scenes
+
+it('lists scenes', function () {
+    $scenes = Scene::factory()->count(2)->create();
+
+    livewire(ListScenes::class)->assertCanSeeTableRecords($scenes);
+});
+
+it('creates a scene with a point on a piece', function () {
+    $product = publishedProduct();
+
+    livewire(CreateScene::class)
+        ->fillForm([
+            'title' => ['pt' => 'Varanda', 'en' => 'Porch'],
+            'is_published' => true,
+            'image' => UploadedFile::fake()->image('varanda.jpg', 1600, 900),
+            'hotspots' => [
+                ['product_id' => $product->id, 'x' => 42.5, 'y' => 61],
+            ],
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $scene = Scene::sole();
+
+    expect($scene->getTranslation('title', 'en'))->toBe('Porch')
+        ->and($scene->hotspots)->toHaveCount(1)
+        ->and($scene->hotspots->first())->product_id->toBe($product->id)->x->toBe(42.5);
+});
+
+it('offers to place a point by clicking the saved photo and choosing the piece there', function () {
+    Storage::fake('media');
+    $product = publishedProduct();
+    $scene = Scene::factory()->create();
+    $scene->addMedia(UploadedFile::fake()->image('varanda.jpg', 1600, 900))->toMediaCollection('image');
+    $scene->hotspots()->create(['product_id' => $product->id, 'x' => 49.8, 'y' => 50]);
+
+    livewire(EditScene::class, ['record' => $scene->getRouteKey()])
+        ->assertOk()
+        ->assertSee(__('Which piece is here?'))
+        ->assertSee('Cadeira Aura', false)
+        // The click gives one decimal (e.g. 49.8); a coarser step would make the browser refuse to save.
+        ->assertSeeHtml('step="0.1"')
+        ->assertSee($scene->getFirstMediaUrl('image'), false);
+});
+
+it('keeps a point inside the photo', function () {
+    livewire(CreateScene::class)
+        ->fillForm([
+            'title' => ['pt' => 'Varanda'],
+            'image' => UploadedFile::fake()->image('varanda.jpg', 1600, 900),
+            'hotspots' => [
+                ['product_id' => publishedProduct()->id, 'x' => 140, 'y' => -2],
+            ],
+        ])
+        ->call('create')
+        ->assertHasFormErrors();
 });
 
 // Stores

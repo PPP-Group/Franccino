@@ -3,10 +3,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { SearchParams } from '@/components/catalog/area-pages';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { TechTable } from '@/components/catalog/TechTable';
-import { ViewToggle } from '@/components/catalog/ViewToggle';
+import { ByView, CatalogViewProvider, ViewToggle } from '@/components/catalog/ViewToggle';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
 import { getLaunch, getLaunches, getPage } from '@/lib/api/content';
@@ -71,39 +73,47 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
     launches.find((launch) => launch.cover)?.cover ??
     launches.flatMap((launch) => launch.gallery)[0] ??
     null;
-  const rows =
-    view === 'table'
-      ? (
-          await getProductDetails(
-            locale,
-            products.map((product) => product.slug),
-          )
-        ).map(toTechnicalRow)
-      : [];
+  // Peça em destaque escolhida no painel (Páginas → Lançamentos); sem escolha, nenhuma (revisão da Franccino).
+  const feature = page?.featured_product?.cover ? page.featured_product : null;
+  // As duas vistas vêm prontas: a troca Grade/Tabela técnica é no navegador (`ViewToggle`).
+  const rows = (
+    await getProductDetails(
+      locale,
+      products.map((product) => product.slug),
+    )
+  ).map(toTechnicalRow);
 
   return (
     <main>
-      <PageBanner image={banner} title={page?.title ?? t('title')} lead={page?.intro ?? t('intro')} />
+      {/* À direita do título, uma peça dos lançamentos (retorno do tech lead de 06/11/2026: nada de metade vazia). */}
+      <PageBanner
+        image={banner}
+        title={page?.title ?? t('title')}
+        lead={page?.intro ?? t('intro')}
+        aside={feature ? <FeaturePiece product={feature} compact /> : null}
+      />
       <div className="wrap catalog">
         {products.length > 0 ? (
           <>
-            <div className="toolbar">
-              <p className="meta num">{catalog('count', { count: products.length })}</p>
-              <ViewToggle
-                view={view}
-                hrefFor={(next) => ({
-                  pathname: '/launches',
-                  query: next === 'table' ? { view: 'table' } : {},
-                })}
-              />
-            </div>
-            <section className="catalog-results" aria-label={catalog('resultsLabel')}>
-              {view === 'table' ? (
-                <TechTable rows={rows} />
-              ) : (
-                <ProductGrid products={products} showNew priorityCount={3} />
-              )}
-            </section>
+            <CatalogViewProvider key={view} initial={view}>
+              <div className="toolbar">
+                <p className="meta num">{catalog('count', { count: products.length })}</p>
+                <ViewToggle
+                  view={view}
+                  hrefs={{
+                    grid: { pathname: '/launches' },
+                    table: { pathname: '/launches', query: { view: 'table' } },
+                  }}
+                />
+              </div>
+              <section className="catalog-results" aria-label={catalog('resultsLabel')}>
+                <ByView
+                  // Toda peça aqui é lançamento: o rótulo "Lançamentos" no card não diria nada (lei de Tesler).
+                  grid={<ProductGrid products={products} priorityCount={3} />}
+                  table={<TechTable rows={rows} />}
+                />
+              </section>
+            </CatalogViewProvider>
           </>
         ) : (
           <div className="empty">
@@ -122,6 +132,7 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
           className="media-links--wide block"
         />
       </div>
+      <RecentlyViewed excludeIds={products.map((product) => product.id)} />
     </main>
   );
 }

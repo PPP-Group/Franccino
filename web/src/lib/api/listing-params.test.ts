@@ -14,6 +14,12 @@ describe('listing params', () => {
     expect(parseListingParams({ page: '-1', sort: 'random', finish: 'abc' })).toEqual({});
   });
 
+  it('keeps only known rooms (item 8)', () => {
+    expect(parseListingParams({ room: 'office' })).toEqual({ room: 'office' });
+    expect(parseListingParams({ room: 'attic' })).toEqual({});
+    expect(listingQueryString({ room: 'balcony', page: 2 })).toBe('?room=balcony&page=2');
+  });
+
   it('serializes back without empty values', () => {
     expect(listingQueryString({ category: 'cadeiras', page: 1, q: '' })).toBe('?category=cadeiras');
   });

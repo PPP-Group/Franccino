@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Product;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(fn () => useScratchDownloadsDisk());
 
@@ -21,6 +24,17 @@ it('returns the product detail in portuguese by default', function () {
         ->assertJsonMissingPath('data.search_text');
 
     expect($this->getJson('/api/v1/products/cadeira-aura')->json('data.description'))->not->toContain('script');
+});
+
+it('returns flexible dimensions as a range (revisão de 12/11/2026)', function () {
+    publishedProduct(['dimensions' => [['width' => 1000, 'width_max' => 1500, 'depth' => 600, 'height' => 750]]]);
+
+    $this->getJson('/api/v1/products/cadeira-aura')
+        ->assertOk()
+        ->assertJsonPath('data.dimensions.0.width', 1000)
+        ->assertJsonPath('data.dimensions.0.width_max', 1500)
+        ->assertJsonPath('data.dimensions.0.depth_max', null)
+        ->assertJsonPath('data.dimensions.0.height', 750);
 });
 
 it('finds the product by the english slug', function () {
@@ -117,4 +131,39 @@ it('refuses a 3d link for a product with the 3d off, without a model or unpublis
 
 it('rejects unsupported locales', function () {
     $this->getJson('/api/v1/products/x?locale=es')->assertStatus(422)->assertJsonValidationErrors('locale');
+});
+
+it('leaves out of the gallery a copy of the cover file', function () {
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $product = publishedProduct();
+    $fake = UploadedFile::fake();
+    $product->addMedia($fake->image('capa.jpg', 800, 600))->toMediaCollection('cover');
+    // Same file uploaded again to the gallery (WordPress import, panel): same bytes, another id.
+    $product->addMedia($fake->image('capa-copia.jpg', 800, 600))->toMediaCollection('gallery');
+    $side = $product->addMedia($fake->image('lateral.jpg', 640, 480))->toMediaCollection('gallery');
+
+    $gallery = $this->getJson('/api/v1/products/cadeira-aura')->assertOk()->json('data.gallery');
+
+    expect($gallery)->toHaveCount(1)
+        ->and($gallery[0]['id'])->toBe($side->id);
+});
+
+it('lists published variations in both directions, with rooms and top view (revisão de 12/11/2026)', function () {
+    $product = publishedProduct(['rooms' => ['living']]);
+    $armchair = Product::factory()->for(area('indoor'))->create([
+        'name' => ['pt' => 'Cadeira Aura com braço'],
+        'slug' => ['pt' => 'cadeira-aura-com-braco'],
+    ]);
+    $draft = Product::factory()->for(area('indoor'))->create(['is_published' => false]);
+    $stool = Product::factory()->for(area('indoor'))->create(['slug' => ['pt' => 'banqueta-aura']]);
+    $product->variants()->attach([$armchair->id, $draft->id]);
+    $stool->variants()->attach($product->id);
+
+    $response = $this->getJson('/api/v1/products/cadeira-aura')->assertOk();
+
+    expect($response->json('data.rooms'))->toBe(['living'])
+        ->and($response->json('data.top_view'))->toBeNull()
+        ->and(collect($response->json('data.variants'))->pluck('slug')->all())
+        ->toBe(['cadeira-aura-com-braco', 'banqueta-aura']);
 });

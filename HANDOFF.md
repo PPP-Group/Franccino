@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (18, de 22/10/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, com o complemento 30.3). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -624,7 +624,7 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
 ### 17.1 Depois do merge na `main`, no VPS
 
 1. Deploy da API e do site no EasyPanel. Em 16/10 o deploy automático estava desligado; confira.
-2. No próximo login, o admin configura o 2FA (app autenticador).
+2. ~~No próximo login, o admin configura o 2FA.~~ Em 27/10 ficou decidido: 2FA desligado no preview (seção 19).
 3. Rodar, nesta ordem (passo a passo em `docs/deploy-preview.md`):
    1. `php artisan franccino:redirects:generate`;
    2. `php artisan franccino:translations:import database/data/translations/en.json --dry-run`, depois sem
@@ -671,3 +671,679 @@ Tudo foi para a `main` pelo PR #44 (`develop` → `main`).
   - **Duplicado:** PPP-82 foi juntado ao PPP-92.
   - **Novo:** PPP-119, "Publicar no preview e conferir a entrega do backend".
 - **`docs/HANDOFF.md`:** as linhas que sobraram da tabela antiga no resumo foram removidas.
+
+## 19. 27/10/2026: 2FA desligado no preview
+
+- O Pedro Ivo publicou a entrega no preview, e o login do painel passou a pedir o código do app autenticador. Ninguém
+  tinha configurado o app, e isso também travaria os testes da Franccino.
+- **Decisão:** no preview, 2FA desligado (`PANEL_ADMIN_MFA_REQUIRED=false` nas variáveis da API no EasyPanel). No
+  staging e na produção, ligado (é o padrão da imagem).
+- Se o painel ainda pedir o código depois da variável, zerar o 2FA dos usuários do preview com o comando de
+  `docs/deploy-preview.md` (seção "Serviço da API").
+- `.env.preview.example` já traz a variável desligada.
+
+## 20. 30/10/2026: banco de ideias aprovado e início da rodada 2 do design
+
+- **Retorno do banco de ideias (26/10):** reunião com o Matheus e texto do Marcelo, registrados ideia por ideia em
+  [`docs/reunioes/2026-10-26-retorno-banco-de-ideias.md`](docs/reunioes/2026-10-26-retorno-banco-de-ideias.md). Quando
+  as duas respostas divergem, vale a da Franccino. O PDF do banco de ideias e o PDF de respostas não estavam no
+  repositório nem no Linear: a numeração foi reconstruída pela conversa e precisa ser conferida.
+- **Plano e o que já foi feito:** [`docs/plans/2026-10-30-rodada-2-banco-de-ideias.md`](docs/plans/2026-10-30-rodada-2-banco-de-ideias.md).
+  Branch `claude/banner-cover-images-vcdpmb`, saída da `develop`. Entraram as ideias aprovadas:
+  - esteira só com foto e nome (1); o nome vem para frente com a peça (2); cabeçalho branco sólido (5);
+  - banner sem texto por cima quando a arte já tem texto, carrossel sem botões na tela (3, 14);
+  - vídeo curto em loop no banner, enviado no painel (14);
+  - revelação na rolagem e a peça em destaque que "vira e se desfaz" (4), tudo em `web/src/styles/motion.css`;
+  - **ambientes com pontos clicáveis (7):** painel Conteúdo → Ambientes, `GET /scenes`, seção na home;
+  - acabamento em detalhe na página Acabamentos (9); a foto do card cresce até a página da peça (10);
+  - números que contam e faixa de carregamento nas fotos (12).
+- **Migration nova:** `2026_10_30_100000_create_scenes_tables` (`scenes` e `scene_hotspots`). O banner ganhou a mídia
+  `video` (sem migration). `docs/api.md` e `docs/data-model.md` atualizados.
+- **Para o tech lead decidir:** a pausa do carrossel ficou só para teclado e leitor de tela (o cliente pediu sem botões);
+  o `docs/HANDOFF.md` §5.2 listava "hotspots" como escopo novo, e a ideia 7 entrou por ter sido aprovada no banco de
+  ideias da etapa 2 (a ideia 8 e o configurador 3D seguem fora).
+- **Depois do merge, no preview:** cadastrar um ambiente de teste e, se houver, um vídeo curto num banner, antes de
+  mostrar à Franccino. O Matheus recebe o acesso ao painel.
+
+### 20.1 Complemento (30/10): Linear limpo e o que faltava das ideias
+
+- **Linear** (visível para o cliente, texto neutro):
+  - PPP-43 em andamento, com as sub-tarefas da rodada 2: PPP-120 (esteira, cards e cabeçalho), PPP-121 (banner limpo
+    com vídeo), PPP-122 (ambientes com pontos), PPP-123 (acabamento em detalhe), PPP-124 (animações) e PPP-125
+    (publicar no preview e consolidar o retorno, com o Pedro Ivo);
+  - PPP-98 marcada como duplicada da PPP-116, que passou para em andamento (acesso ao painel para o Matheus);
+  - descrições vazias ou desatualizadas preenchidas: PPP-10, 13, 15, 59, 61, 84 a 88, 91, 93 (agora "Enviar o sitemap
+    ao Search Console") e 99;
+  - dependências ligadas: PPP-28 bloqueia 56 e 63; PPP-11 bloqueia 59 e 79; PPP-10 bloqueia 13 e 15; PPP-16 bloqueia 93;
+    PPP-13 e 18 bloqueiam 97; PPP-43 bloqueia 44 e 87; PPP-23 bloqueia 84;
+  - retorno de 26/10 registrado em PPP-62, 23 e 105; PPP-119 com o deploy de 27/10 e o 2FA desligado marcados.
+  - Os marcos ("Sprint 0" a "Sprint 5") continuam com as datas do plano original; a rodada 2 está no "Sprint 2". Mudar
+    as datas é decisão do tech lead.
+- **Código:** marcar o ponto clicando na foto, no painel do ambiente; "Ver em detalhe" do acabamento escolhido na página
+  da peça.
+
+## 21. 06/11/2026: novo preview revisado (rodada 3 do layout)
+
+Pedido do Pedro Ivo: preview novo, revisado página por página, com a hierarquia de fonte e os espaços padronizados,
+mais premium (quadrado, preto no branco) e com os 31 pontos de retorno dele e o pedido de mais imagem e fundos
+alternados na home. Branch `claude/banner-cover-images-vcdpmb`, PR para a `develop` e depois `develop` → `main`.
+
+- **Escala única** (`web/src/styles/tokens.css`, regras em `web/DESIGN.md`): 9 tamanhos de texto, espaços na grade de
+  4 px, 5 tempos de movimento, tom areia (`--sand`) para alternar fundos. Sem sombra em lugar nenhum: o hover de foto é o
+  zoom (`.hover-zoom`). Aparecer ao rolar por `data-reveal` (`RevealObserver`), uma vez só.
+- **Global:** tela de abertura com o logo (uma vez por sessão), troca de página com fade, cabeçalho transparente sobre o
+  banner que fica branco no hover e ao rolar, menus por clique e por hover com atraso (Coleções ganhou submenu), busca
+  animada, ícones oficiais (`@tabler/icons-react`, dependência nova pedida pelo tech lead), página abre no topo.
+- **Home:** banner em tela cheia (100svh), fixo enquanto o conteúdo sobe; seções novas de coleções e projetos com fotos
+  grandes; fundos alternando branco e areia.
+- **Catálogo e peça:** card sem sombra, etiqueta "Lançamento" em versalete abaixo do nome, grade sempre completa
+  (célula vazia vira outro conteúdo), quantidade e botões da peça refeitos, tabela técnica com a linha inteira marcada e
+  2 a 3 fotos perto do cursor, "Peças que você viu" no fim das páginas.
+- **Coleções, projetos e designers:** retratos dos designers na coleção, "Outras coleções", filtros de projeto em chips
+  quadrados, página do projeto editorial, foto do topo fixa.
+- **Fábrica, lojas e sala:** fábrica editorial, linha do tempo horizontal de verdade, clique no mapa destaca a loja e
+  rola até ela, a sala para montar mostra a foto da peça.
+- **Fotos:** a API passou a servir a original quando nenhuma conversão cobre a largura (até 2560 px) e as conversões
+  grandes saem com qualidade 90 (`ImagePresenter`, `HasImageConversions`). A maior parte da perda vem das próprias
+  fontes: os banners e capas do WordPress têm 1920×500 e as fotos de produto vieram comprimidas.
+- **Página das ideias aprovadas** (`/pt/ideias`, `noindex`, fora do sitemap): cada ideia com o exemplo funcionando e o
+  que falta para entrar de vez.
+- **Pesquisa** (`docs/pesquisas/2026-11-06-fonte-fundo-e-capas.md`): fonte oficial (PPP-129), fundo branco sem perder
+  qualidade (PPP-130) e capa sempre na diagonal virada para a esquerda (dica no painel já entrou).
+- **Verificação local:** lint, typecheck, 374 testes do site e o build como no CI. O PHP 8.4 não roda nesta máquina:
+  Pest e Larastan só no CI.
+- **Linear:** PPP-126 (layout), PPP-127 (fotos), PPP-128 (microinterações), PPP-129 (fonte) e PPP-130 (fundo branco).
+
+### 21.1 Do Pedro Ivo, depois do merge na `main`
+
+1. Conferir o deploy da API e do site no EasyPanel (o automático pode estar desligado).
+2. Painel → Páginas → Fábrica: bloco "Vídeo" com `https://youtu.be/OG_GNCn0HoQ` (ou um MP4 de até 150 MB).
+3. Painel → Conteúdo → Ambientes: um ambiente de teste com 2 ou 3 pontos.
+4. Conteúdo a corrigir: bio da Andrea Zanocchi começa em minúscula; banners sem texto alternativo; a capa da Fábrica é
+   uma sala, não a fábrica; a capa da Coleção Caminhos responde 403; a descrição do Clara Arte repete parágrafos.
+5. Opcional, com os workers parados: `php artisan media-library:regenerate --force` para gerar as fotos na qualidade
+   nova.
+
+### 21.2 Da Franccino
+
+Banners em 16:9 (2560 px) e em 4:5; capas das coleções e das páginas; fotos originais das peças em fundo branco e na
+diagonal; fotos de ambientes com as peças de cada um; acabamentos digitalizados (2500 px ou mais); números da fábrica;
+MP4 curto para o banner; logo em SVG; decisão da fonte (PPP-129) e ok para o piloto do fundo branco (PPP-130).
+
+### 21.3 Complemento (06/11): o PDF de respostas, capas e fundo branco
+
+- **PDF de respostas do banco de ideias (16/10, preenchido pela Franccino):** é a fonte oficial e a numeração dele vale
+  sobre a reconstruída em `docs/reunioes/2026-10-26-retorno-banco-de-ideias.md`. Aprovadas: 01 (carrossel com a peça em
+  destaque, com ajustes: sem acabamentos, sem "ver peça" e sem "ver em 3D", o clique na foto abre a peça), 04
+  (paralaxe e revelação), 07 (ambiente com pontos), 09 (acabamento em detalhe, na página de acabamentos), 10
+  (transição com a foto), 12 (microinterações, "validar quais serão usadas") e 13 (vídeo em loop). Mais tarde: 02, 05, 08. Descartadas: 03, 06, 11, 14. A página `/pt/ideias` segue essa numeração.
+- **Entrou nesta complementação:** o carrossel da ideia 01 (`FeatureCarousel`, na home, coleções e designers); a
+  paralaxe e a revelação em cortina (`data-parallax`, `data-reveal="curtain"`); as microinterações 12a a 12f, cada uma
+  num bloco de `motion.css` que dá para desligar (lista em `web/DESIGN.md`); no painel, o ponto do ambiente marcado com
+  um clique na foto e a peça escolhida ali mesmo.
+- **Capas:** 182 capas trocadas no preview pela foto na diagonal, virada para a esquerda
+  (`database/data/covers/2026-11-06-diagonal-esquerda.json`, aplicada no deploy) e uma segunda lista com 7 peças
+  (`…-2.json`). As 7 peças de estúdio da TEMPO com fundo bege (Toé, Sopro, Orvalho, Terezinha, Melina Estofada, Royale e
+  Majestic) foram limpas para fundo branco com o BiRefNet (licença MIT, rodado fora do servidor) e enviadas pelo painel.
+  Detalhes de perto e fotos com fundo preto não ficam bons com a limpeza: nessas peças a capa virou outra foto da
+  galeria.
+- **Logo em SVG:** não está no Drive compartilhado da Franccino nem no do Pedro Ivo. O Marcelo disse em 26/10 que está
+  num Drive que ele passou; falta o link.
+
+### 21.4 Complemento (06/11, noite): retorno do Pedro Ivo sobre o preview (PR #66)
+
+- **Campos:** lista de opções própria (`components/ui/Select.tsx`, lógica em `lib/ui/listbox.ts`) no lugar do
+  `<select>` nativo; seleção de texto e barra de rolagem nas cores da marca; textos mais formais em `messages/`.
+- **Foto que cresce e volta (ideia 10):** `components/media/MorphImage.tsx`, `lib/ui/morph.ts` e o controle da
+  navegação em `components/layout/navigation-motion.ts`. Só a navegação que abre a peça (ou volta dela pelo navegador,
+  pelo caminho ou pelo logo) anima; entre listagens nada se mexe. A rolagem de cada página do histórico é guardada e
+  devolvida na hora. Vale para peça, peça em destaque da home, coleção, projeto e os blocos Casa/Giardini (que agora
+  abrem com o banner da foto da área). Conferido no build de produção quadro a quadro, sem quadro branco.
+- **Carrossel da ideia 01** em leque e o campo novo **"Foto sem fundo (carrossel)"** no painel (coleção `cutout`,
+  PNG/WebP com transparência). Sem a foto sem fundo, o carrossel usa a capa.
+- **Layout:** menu com o clique indo para a listagem completa e as subcategorias no hover; peça em destaque ao lado do
+  título nas páginas que tinham metade vazia; coluna dos designers alinhada na coleção; fundos alternados na peça;
+  banner fixo da home só atrás da primeira seção; paralaxe mais forte.
+- **Peça em destaque da home:** é a primeira peça marcada como "Destaque" (Produtos → Geral), pela ordem das peças.
+- **Qualidade das fotos do topo:** limite das fontes, não do recorte. Os banners do WordPress têm 1920×500 e as capas
+  de Casa e Giardini 900×576; esticadas para a tela inteira, perdem nitidez. Precisa das fotos originais (Banners e
+  Áreas, no painel), em 2560 px ou mais.
+- **Capas:** as 7 da TEMPO foram limpas de novo (fundo branco sem halo nem cinza) e reenviadas. Sofá Antônio e Sofá
+  Royale não têm foto em diagonal: precisam de foto nova.
+- **Depois do deploy:** enviar a foto sem fundo das 15 peças de lançamento (recortes prontos na área temporária da
+  sessão; script de envio pelo painel em `painel/enviar-recorte.js` dessa área). O usuário de teste do painel criado
+  para isso deve ser apagado pelo Pedro Ivo.
+
+### 21.5 Complemento (06/11, noite): auditoria do Drive, logo e Corporativo (PR #68)
+
+- **Auditoria do Drive** (planilha "Auditoria_Drive_Site_Franccino.xlsx", de outra sessão; não está no repositório):
+  532 arquivos para subir ou substituir, 518 marcados "Usar". **Ainda não subidos:** o conector do Drive só entrega
+  arquivos até ~4 MB, e os pequenos voltam inteiros na conversa (gasto alto). O caminho barato é pôr
+  "Qualquer pessoa com o link: Leitor" nas pastas `_PEDRO VAI EXTRAIR DO SITE`, `_FOTOS E VÍDEOS FRANCCINO` e nas pastas
+  de produto da raiz (nunca na `_A PLANILHA`); aí um script baixa tudo de uma vez. Nem o Pedro Ivo nem a conta da
+  sessão são gerentes do Drive compartilhado: o pedido foi feito à Franccino.
+- **Logo:** FRANCCINO em SVG (`web/src/components/layout/Logo.tsx`), com as letras da Adobe Garamond Pro do Drive e o
+  espaçamento da logo do site atual. Só os contornos entram no site, nunca o arquivo da fonte.
+- **Fonte:** Jost no site inteiro, títulos e texto (pedido do Pedro Ivo, mais tarde no mesmo dia; licença SIL OFL,
+  servida pelo próprio site via `next/font`). Substitui Cormorant Garamond e EB Garamond. O painel continua como estava.
+- **Projetos virou "Corporativo"** (menu, título, rodapé e seção da home), sem os filtros Todos e Residencial.
+- **Movimento:** saiu a faixa de carregamento das fotos; a cortina da esquerda para a direita ficou só nas coleções.
+
+## 22. 07/11/2026: revisão do preview (carrossel, fotos, tabela técnica, Corporativo, Cadeira Toé)
+
+Retorno do tech lead sobre o preview publicado em 06/11. Branch `claude/francine-site-review-htegfp`. Tudo conferido
+num `next dev` local apontado para a API do preview, com Playwright (capturas e vídeo da navegação).
+
+- **Carrossel da home (ideia 01):** saiu o degradê do palco (quebrava nos cantos); as peças ficam direto no fundo da
+  seção e as das pontas passam da largura do conteúdo. As distantes deixaram de ficar transparentes (uma aparecia dentro
+  da outra): agora um véu branco por filtro (`invert` + `brightness` + `invert`) as clareia e elas continuam opacas. A
+  peça do centro cabe com o nome embaixo numa tela de notebook (altura limitada pela janela, nome logo abaixo da sombra).
+- **Fotos carregando:** sem a prévia borrada (`blur_data_url` não é mais usado). Enquanto a foto não chega, a caixa
+  mostra um tom claro com brilho lento, e a foto entra com fade (`ApiImage` marca `data-img`; o `BootScript` marca
+  `data-loaded`; bloco 12g de `motion.css`). Foto que já estava no cache entra sem animar.
+- **Cortina das coleções:** só abre com a foto pronta (espera carregar e decodificar, até 2,5 s); a foto começa a baixar
+  600 px antes de entrar na tela.
+- **Fábrica na home:** o "tranco" da foto fixa vinha da revelação ao rolar aplicada na faixa inteira (o `transform`
+  mudava a referência do `position: fixed`). A revelação ficou só no texto.
+- **Tabela técnica:** as fotos do hover (até 4) saem empilhadas e se abrem lado a lado; clicar em qualquer lugar da
+  linha abre a peça (`RowLinks`); categoria, linha (Franccino Casa/Giardini) e designer são links próprios.
+- **Corporativo → projeto:** a foto passava do tamanho do banner e depois "pulava". Causa: o `object-fit: cover` da
+  camada do movimento não era recortado; `motion.css` recorta o par (`overflow: clip`).
+- **Cadeira Toé cortada:** no palco da peça, a foto em pé (4:5, coleção TEMPO) ignorava a altura do quadro 4:3 e
+  transbordava. A foto agora ocupa o quadro por posição absoluta (`product.css`). Vale para todas as fotos em pé.
+- **Fotos repetidas na galeria:** a API não manda na galeria um arquivo igual ao da capa (mesmos bytes e tipo;
+  `docs/api.md`). Entre as 15 peças do carrossel, afetava Toé, Sopro, Orvalho, Terezinha, Royale e Buffet Heritage.
+- **Capa da Toé:** nova lista de capas `api/database/data/covers/2026-11-07-diagonal-esquerda-3.json` (foto 1972, marrom,
+  na diagonal para a esquerda), aplicada no deploy. O recorte do carrossel precisa acompanhar: ver a seção 23 (o arquivo
+  não fica no repositório).
+- **Recortes das outras 14 peças:** a borda está limpa (conferido sobre fundo escuro). O "embaçado em volta" vinha do
+  estilo antigo do carrossel (transparência, filtros e degradê) e da resolução das fontes: os recortes da TEMPO têm de
+  600 a 1000 px e o carrossel mostra a peça do centro com até 520 px (1040 px em tela retina). Fica nítido só com as
+  fotos originais em alta.
+- **Rolagem:** não entrou rolagem suavizada por script (seria dependência nova, como Lenis, ou código que briga com o
+  trackpad). O que deixava a rolagem estranha era a foto da Fábrica, as fotos aparecendo de uma vez e a cortina sobre o
+  tom de carregamento, corrigidos acima.
+- **Verificação:** lint, typecheck e 415 testes do site. API: testes novos em `ProductShowTest` e `CoversTest` (rodar no
+  CI: nesta máquina o PHP é 8.3 e o Composer não termina a instalação).
+
+### 22.1 Depois do merge na `main`
+
+1. Conferir o deploy da API e do site. O entrypoint troca a capa da Toé na primeira subida (o recorte, seção 23).
+2. Diagonal para a esquerda: além da Toé, Sofá Antônio e Sofá Royale continuam sem foto na diagonal (seção 21.4);
+   precisam de foto nova da Franccino.
+
+## 23. 07 e 08/11/2026: conteúdo do site antigo, ambientes nos projetos, importação em massa e capas
+
+Mesma branch (`claude/francine-site-review-htegfp`). **O push foi recusado (403):** o app do Claude não tem acesso ao
+`PPP-Group/Franccino` nesta conta. Os commits estão só na sessão até o acesso ser liberado (claude.ai → conectar o
+GitHub, ou um dono da organização instala o app do Claude no repositório).
+
+- **Extração do site antigo (o que faltou na P5b T4):** o importador nunca lia a frase de destaque nem a descrição das
+  peças (ficam em blocos de texto do Elementor, não na API REST do WordPress). Corrigido em
+  `ProductPageParser::texts()` e no `WordPressImporter`. A extração de 07/11 está em
+  `api/database/data/wordpress/2026-11-07-site-antigo.json`, aplicada no deploy por `franccino:content:apply` (uma vez;
+  só preenche o que está vazio; baixa as fotos de franccino.com.br na hora):
+  - frase e descrição de 377 das 400 peças (23 não têm texto no site antigo);
+  - foto de 13 lojas (Porto Alegre não existe no preview; as 10 revendas sem foto no site antigo também não);
+  - galeria dos 3 projetos do Corporativo (Clara Arte +3, Boa Vista +1, Kûara +2) e os logos de 6 clientes (Cyrela e
+    Botânico Shopping não têm logo no site antigo);
+  - Fábrica: bloco Vídeo ("Conheça a Franccino", YouTube, com a capa do site antigo) e galeria com as fotos
+    institucionais e a fachada;
+  - ambiente de teste com pontos no Fazenda Boa Vista (espreguiçadeira → Chaise Madri; poltrona de madeira → Poltrona
+    Derby; as peças exatas da foto não estão no catálogo).
+- **Ambiente ligado a projeto:** migration `2026_11_07_100000_add_project_id_to_scenes_table`; campo "Projeto" no
+  Ambiente (painel); `ProjectCard.scene` em `GET /projects` e `GET /projects/{slug}`; `GET /scenes` só traz os sem
+  projeto (`docs/api.md`, `docs/data-model.md`). No site: pontos sobre a foto da faixa do Corporativo (acompanham o
+  recorte 3:2 e o zoom do hover; `ScenePoints`, `coverPoint`) e a seção "Peças no ambiente" na página do projeto.
+- **Importação em massa (`/api/import/*`):** fotos (capa, galeria, foto sem fundo de peça; capa e galeria de projeto;
+  foto de loja; logo; foto de ambiente) e listas de capas ou de conteúdo, por `curl`, sem painel e sem passar pelo
+  repositório. Desligada sem `CONTENT_IMPORT_TOKEN` na API. Uso em `design/recortes/LEIA-ME.md`; contrato em
+  `docs/api.md`. É o caminho para a auditoria do Drive: baixar as pastas e enviar com o laço do LEIA-ME.
+- **Recorte da Toé:** saiu do repositório (regra de mídia), junto com o comando de recortes. O script que gera o recorte
+  (rembg + borda refinada no fundo branco) está em `design/recortes/recortar.py`; depois do deploy, gerar da foto 1972 e
+  enviar como `cutout` pela importação.
+- **Capas na diagonal para a esquerda:** revisadas as 197 peças fora das listas de 06/11 (139 têm outra foto além da
+  capa). Entraram na lista de 07/11: Aparador Hera, Balanço Dome, Cadeira Arp e Mesa de centro Noá Quadrada, além da
+  Toé. As demais já estão na diagonal para a esquerda ou não têm essa foto (Sofá Antônio, Sofá Royale, Poltrona Costa,
+  Banco Adhara, Banco Julia, entre outras: precisam de foto nova).
+- **Volta do projeto para o Corporativo:** a foto pousava e "piscava" (trocava de versão com o fade de carregamento) e a
+  faixa estava 20 px abaixo, invisível, até o observador marcá-la. Agora a volta já começa com os blocos à vista
+  (`data-reveal-instant` no `popstate`), a foto do movimento não refaz o fade e, nas fotos recortadas, só a de destino
+  aparece durante o movimento (sem imagem dupla). Conferido em vídeo, ida e volta.
+- **Paralaxe:** só na home: blocos Casa e Giardini, peça em destaque, mosaico de projetos e o texto da faixa da Fábrica
+  (e em `/pt/ideias`, ideia 04). Não há paralaxe nas páginas de peça.
+- **Verificação:** lint, typecheck, 418 testes e build do site; pontos e volta conferidos num `next dev` contra a API do
+  preview, com o ambiente injetado por um proxy local. API: testes novos (`LegacyContentTest`, `ImportTest`,
+  `ScenesTest`, `ProductPageParserTest`), só no CI (PHP 8.3 aqui e o Composer não instala).
+
+### 23.1 Depois do merge na `main`
+
+1. Deploy da API e do site. Nos logs da API, a tabela do `franccino:content:apply` mostra o que foi preenchido.
+2. Preencher `CONTENT_IMPORT_TOKEN` na API (só letras e números), redeploy, e enviar o recorte da Toé
+   (`design/recortes/LEIA-ME.md`). Depois dos lotes, apagar a variável.
+3. Conferir no preview: Corporativo → Fazenda Boa Vista (pontos na faixa e na página), Lojas (fotos), Fábrica (vídeo e
+   galeria), uma peça sem descrição antes (ex.: Mesa Joey).
+
+## 24. 08/11/2026: depois do deploy, retorno do tech lead e o que faltava do site antigo
+
+PRs #71 e #72 mergeados (`develop` e `main`) e o deploy conferido de fora: textos das peças, lojas, Boa Vista, logos,
+Fábrica e capas no preview. Com o `CONTENT_IMPORT_TOKEN` (guardado como segredo de rede da sessão, ninguém vê o valor),
+os recortes do carrossel foram refeitos e enviados pela importação: as 15 peças de lançamento e mais 59 peças dos
+carrosséis das coleções e dos designers, que agora seguem o padrão da home (peças juntas, com o véu).
+
+- **Versões misturadas e serviço cinza no EasyPanel:** de fora, a API e o site passam no teste de saúde e o site devolve
+  sempre a mesma versão (16 de 16). A mistura aparece na janela do deploy (o site compila ao iniciar, e o container
+  antigo responde até o novo ficar pronto) e em abas abertas com o JavaScript antigo: recarregar a página depois do
+  deploy. O cinza no EasyPanel não deu para ver daqui; se continuar, mandar o texto do status do serviço.
+- **Corrigido no site:**
+  - grade em branco ao voltar da tabela técnica (o observador da revelação não via a grade nova; agora revisa a página
+    a cada mudança e revela assim que qualquer parte entra na tela);
+  - Toé cortada nas miniaturas ("peça em destaque" e fotos do hover da tabela): foto em pé por posição absoluta;
+  - paralaxe forte o bastante para ver (8% da altura da foto) e também nas faixas de coleções da home;
+  - borda do "O" do logo; sublinhado do seletor de idioma só embaixo do "EN";
+  - sala para montar: a planta salva troca as fotos pelas atuais do catálogo (as antigas tinham sumido com a troca de capas);
+  - tabela técnica: peças com medida primeiro;
+  - lista de orçamento: faixa areia com as peças vistas e as recomendadas;
+  - rodapé: selo "uma solução Vortex" (desenho do `endosso-negativo.svg` do repositório app-vtx-tap).
+- **Foto que cresce e encaixa:** agora também na miniatura da tabela técnica, no cartão dos pontos do ambiente, no caminho
+  (breadcrumb) da peça para a categoria e em todo retrato de designer (lista, home, coleção e página da peça) até a página
+  do designer. No preview atual as transições medidas rodaram inteiras (uma por navegação, ~800 ms); o "às vezes não
+  funciona" coincidiu com as versões misturadas do deploy.
+- **Inglês:** 317 peças mostravam o texto em português no `/en`. Tradução por máquina (OpenNMT/Argos, rodada fora do
+  servidor) com os nomes das peças e um glossário protegidos, em `api/database/data/translations/en-2026-11-08-produtos.json`
+  (`reviewed: false`, como o arquivo anterior); rota nova `POST /api/import/translations` para aplicar sem esperar deploy.
+- **Site antigo, segunda parte** (`api/database/data/wordpress/2026-11-08-site-antigo-2.json`, aplicada no deploy):
+  - as 10 lojas e revendas que faltavam (Porto Alegre, Móveis Modernos, Hanna Decor, Espaço Fátima Lima, Casa TMG,
+    Armazém 401, Casal Design, Paux, Forma e Conforto, Franttone), com endereço, contato e posição no mapa;
+  - 4 fotos de ateliê da home antiga (2560 px) na galeria da Fábrica;
+  - as fotos das coleções no site antigo são as miniaturas das peças e o banner, que o preview já tem; as fotos de
+    ambiente residencial ficaram de fora (o Corporativo não tem mais Residencial).
+- **Scroll suave:** descartado pelo tech lead.
+- **Publicado (08/11, 22h30 UTC):** PRs #73 e #74 mergeados; no preview, 22 lojas no mapa, 7 fotos na galeria da
+  Fábrica e o inglês das peças aplicado pela rota `POST /api/import/translations` (amostra de 40 peças no `/en`: nenhuma
+  volta para o português).
+
+## 25. 09/11/2026: retorno do tech lead sobre o preview de 08/11
+
+Mesma branch (`claude/francine-site-review-htegfp`). Cada item conferido num `next dev` local contra a API do preview,
+com Playwright (medidas, capturas e quadros da transição).
+
+- **Paralaxe:** funcionava no Chrome, mas a foto andava só 8% da altura na passagem inteira (quase imperceptível), e no
+  Safari sem `animation-timeline` dependia de um script que só existia na home. Agora o componente `Parallax` (script,
+  todos os navegadores) escreve `--parallax-shift` em cada bloco: a foto anda 14% da altura em cada sentido (escala 1.3)
+  e o texto 80 px no sentido oposto. A peça em destaque anda menos (foto de estúdio, 5%).
+- **Capa da Tempo cortada na home:** era a escala da paralaxe nas faixas das coleções (a arte tem texto). As coleções
+  saíram da paralaxe.
+- **Grade em branco ao voltar da tabela técnica (Casa):** o nó da grade voltava sem a classe `is-revealed` e ficava
+  fora da observação. O `RevealObserver` observa de novo qualquer bloco sem a classe (também quando o `class` muda).
+- **Foto que cresce e encaixa em todo lugar:** peça em destaque (projeto, Corporativo, Designers, Lançamentos), sugestões
+  da busca do cabeçalho (peça, designer e coleção), miniaturas da lista de orçamento e da área de downloads.
+- **Carrossel → página da peça (o "tranco" no fim):** a página da peça mostrava a peça sem fundo do carrossel como foto
+  provisória e trocava pela foto real (com margem branca) só no fim. Agora o par usa o encaixe `cutout`: a página usa a
+  própria foto (o carrossel a baixa quando o mouse passa pela peça) e as duas se misturam do começo ao fim.
+- **Caminho (breadcrumb) da peça para a categoria:** anima quando a peça está na primeira página da categoria. Se a peça
+  está numa página seguinte da lista, não há foto de destino na tela, e a troca é sem movimento.
+- **Banner da home:** a troca não pausa mais com o mouse em cima (o banner ocupa a tela toda; era por isso que "às vezes
+  não trocava"); 6 s por slide, aproximação de 8% no mesmo tempo; no lugar do traço embaixo do título, uma barra por
+  slide que enche no tempo dele (clicar leva ao slide).
+- **Clientes (Corporativo e Projetos):** faixa em loop contínuo, para no hover; logos em preto e branco com a cor no
+  hover, todas com o mesmo peso visual (`logoBox`). As 6 logos foram recortadas (sem fundo nem margem; a da Clara, que
+  era clara em fundo verde, ficou verde) e reenviadas pela importação. Cyrela e Botânico Shopping seguem sem logo (nome).
+- **Selo Vortex:** a regra `.site-footer a` (inline-block) deixava o selo no topo da área de toque; agora alinhado.
+- **Lojas na home:** as lojas mostram a foto também ali.
+- **Fábrica:** o vídeo com capa não mostra mais o nosso botão de play (a capa já tem o desenho).
+- **"+" no card:** no hover, o "+" no canto da foto põe a peça na lista sem abrir a página. Ao adicionar (card, tabela,
+  destaque ou página da peça), a foto vira um quadradinho que voa até o ícone da lista, que pulsa quando ela chega
+  (`lib/ui/fly-to-quote.ts`).
+- **Etiqueta "Lançamentos":** fica como está (o tech lead acha que não precisa voltar).
+
+## 26. 09/11/2026 (tarde): segundo retorno do dia
+
+- **Busca do cabeçalho como a tabela técnica:** cada peça sugerida mostra foto, nome e categoria, linha, designer e
+  medida, e as fotos se abrem ao lado do ponteiro no hover (`RowPeek` passou a servir à lista da busca). A ação da
+  busca pede o detalhe das peças sugeridas; sem ele, a linha sai só com foto e nome. O clique faz a foto crescer: a lista
+  some no mesmo quadro em que a página nova entra (o cabeçalho não desmonta, e sem isso não havia foto de origem).
+- **Esteiras ("Peças que você viu", "Recomendadas", da mesma linha, relacionadas, do designer, carrossel e ambiente):**
+  cada uma com o próprio nome na transição (`ProductRail scope`, `ProductPlate morphScope`). A mesma peça em duas
+  esteiras dava dois nomes iguais, e a transição falhava na ida (na volta funcionava).
+- **Sala para montar:** a foto e o nome de cada peça da biblioteca abrem a página da peça, com a foto que cresce; o "+"
+  continua pondo na planta. **Lista de orçamento:** o nome também abre a peça com a foto que cresce.
+- **Coleções e designers no mesmo formato:** carrossel (quando cabe) e, embaixo, grade e tabela técnica com a barra do
+  catálogo (`PiecesSection`, troca no navegador; as páginas seguem estáticas). Na Avito, por exemplo, só havia o
+  carrossel. Lançamento já tinha a barra.
+- **Designer na coleção:** retrato com no máximo 168 px, mesmo sozinho (ocupava a coluna e deixava o texto com vão).
+- **Coleções (índice):** sem a faixa branca entre a última linha e o rodapé.
+- **Banner das páginas pelo menu:** sobe de leve e encaixa com fade (650 ms) quando a página abre sem a foto que cresce
+  (`is-arriving` no `MorphImage` de destino).
+- **Favicon:** F da logo em preto num quadrado branco de cantos arredondados (`src/app/icon.svg`, `favicon.ico`,
+  `apple-icon.png`).
+- **Volta da página da peça com outra foto:** a foto do palco é sempre a da transição; trocada a foto na galeria, a volta
+  encolhe a foto que está à vista até o card (sair e voltar de novo mostra a capa).
+- **Capas na diagonal para a esquerda, segunda revisão:** "virada para a esquerda" = a frente da peça voltada para a
+  esquerda da foto (o encosto fica à direita; nas mesas, bancos e aparadores, a ponta direita mais perto). A revisão a olho
+  em miniatura errava o lado. Lista `api/database/data/covers/2026-11-09-diagonal-esquerda-4.json` (11 peças: cadeiras
+  com a vista de trás como capa, viradas para a direita e mesas de frente), aplicada no deploy; a capa antiga passa a ficar
+  na galeria (`franccino:covers:apply`). A medida automática da direção serve nas cadeiras (lado do encosto), mas
+  erra nas peças compridas (a sombra no chão engana o lado do pé mais perto): nelas, só a conferência a olho vale.
+  Espelhadas pela importação, com o ok do tech lead e a foto original na galeria: Mesa lateral Petra, Rack Coda e
+  Poltrona Tereré. Banco Hera, Mesa de jantar Minas, Sofá Mumbai e Sofá Snodo chegaram a ser espelhados por engano da
+  medida (já estavam virados para a esquerda) e voltaram à capa original no mesmo dia. Sem foto para a esquerda e
+  assimétricas (o espelho mostraria uma configuração que não existe), à espera de foto nova da Franccino: Mesa de centro
+  Kit, Buffet Bloco e Sofá Nu.
+- **Troca de página nas listas:** "Anterior" e "Próxima" também na barra de cima, lado a lado logo depois da contagem
+  (`Pagination position="top"`); a lista nova entra peça por peça (a seção remonta pela página) e, quando o clique foi
+  na paginação de baixo, a página rola suave até o começo da lista (`PageScroll`, `[data-page-anchor]`). Vale no
+  catálogo e nos downloads.
+- **Filtro sem recarregar:** "Aplicar" (designer no catálogo; linha, busca e área nos downloads) troca só a lista, pelo
+  roteador e sem rolar (`FilterForm`); a lista remonta e as peças entram de novo com a revelação. Sem JavaScript, o
+  formulário GET continua funcionando.
+- **"Peças que você viu" no catálogo:** o mesmo respiro em cima e embaixo (saiu a regra que zerava o de cima).
+- **"Outros projetos", "Outras coleções" e "Outros designers":** a foto cresce até o topo da página aberta e volta
+  (`CardRail` com `morph`).
+- **Troca de foto na página da peça:** fade cruzado; a foto anterior fica por cima e some quando a nova carrega
+  (`gallery__leaving` no `ProductStage`), sem desmontar a foto da transição de abrir e voltar.
+- **Filtro de designer:** ao passar o mouse num nome da lista aberta, o retrato do designer flutua ao lado da lista
+  (em preto e branco, como nas páginas de designer), como as fotos da tabela técnica (`SelectOption.image`,
+  `RowPeek beside`).
+- **Faixa da Fábrica na home → página da Fábrica:** a foto cresce até o banner e volta (`morphName('page', 'factory')`).
+  Durante a transição a foto da faixa deixa de ser fixa (`:active-view-transition`), para o movimento partir do recorte
+  à vista.
+- **Logo:** recarrega a página inicial e abre no topo, sempre (link comum, `data-no-motion`), sem a foto que volta.
+- **Banner da home com fotos dos projetos:** a importação aceita `target=banner` (`key` = posição no carrossel, 1 a n).
+  Depois do deploy, as três fotos (Clara Arte 2042, Kûara 2046 e Boa Vista 1721, todas com 2560 px) entram nos três
+  banners por ela.
+
+### 26.0 Complemento (09/11, noite)
+
+- **Painel:** favicon com o F claro no fundo escuro, o contrário do site (`api/public/favicon-panel.svg`, `favicon.ico`,
+  `->favicon()` no `AdminPanelProvider`).
+- **Lojas na home:** cada loja ganhou o "Ver no mapa", como na página Lojas.
+- **Tabela técnica nas listas:** as fotos do hover saíam longe do ponteiro (no topo e no fim da página). A animação de
+  entrada da lista ficava presa no fim (`both`) e o `transform` dela virava a referência do `position: fixed` da prévia;
+  agora a animação não fica depois do fim (`backwards`). Na home e na busca já funcionava (sem essa animação).
+- **Carrossel nas coleções e designers grandes:** a Tempo (15 peças) ficava sem carrossel, que ia só até 12. Agora aparece
+  a partir de 2 peças e mostra até 24 (`carouselPieces`); a grade embaixo continua com todas.
+
+### 26.1 Deploy de 09/11: duas versões do site no ar
+
+Depois do merge do #76, o preview passou a servir duas versões do site ao mesmo tempo: o mesmo arquivo de script responde
+200 num minuto e 404 no seguinte (mesmo `buildId`, pedaços diferentes). Uma página de uma versão pede scripts da outra, a
+parte interativa não carrega (banner parado, sem as barras) e às vezes aparece a tela "Algo deu errado". A causa está no
+EasyPanel (dois containers do serviço do site respondendo pelo mesmo domínio), não no código. Paliativo no site: ao
+falhar o carregamento de um script, a página recarrega uma vez (`lib/ui/chunk-reload.ts`, nas telas de erro).
+
+### 26.2 Próximo passo: auditoria do Drive (pedido do tech lead, para quando o resto terminar)
+
+Usar a planilha "Auditoria_Drive_Site_Franccino.xlsx" (532 arquivos, 518 "Usar"). Caminho combinado em 08/11: o tech lead
+gera um token de acesso só de leitura do Drive no OAuth Playground do Google (`drive.readonly`, vale cerca de 1 hora) e o
+entrega pelo formulário seguro da sessão (`request_credential`, host `www.googleapis.com`); a sessão baixa os arquivos
+marcados "Usar" e envia pela importação em massa (`design/recortes/LEIA-ME.md`), sem passar pelo repositório nem pelo painel.
+
+## 27. 12/11/2026: revisão da Franccino ("Revisão Novo website", 29 itens)
+
+Branch `claude/banner-cover-images-vcdpmb`, PR #80 para a `develop`. Decisões tomadas por padrão (o tech lead pode
+mudar): menu "Produtos" com as abas Área interna e Área externa em cima (exemplo 2 do PDF); "Ver mais" traz 24 peças
+por vez, 3 vezes, e depois um link para a página seguinte; todo download pede o cadastro.
+
+- **Bloco 1 (visual e textos):** paralaxe removida do site inteiro; carrossel mais arrumado (círculo de arrastar menor,
+  a peça do centro sempre a maior, peças largas e altas na mesma medida visual); categorias do menu em ordem
+  alfabética com "Ver todos"; "Lista de desejos" (ícone de sacola) e envio "por e-mail à equipe de vendas" ou pelo
+  WhatsApp; o cabeçalho some ao rolar para baixo e volta ao subir; botão "Topo" no rodapé; Área do Profissional
+  (`/pt/area-do-profissional`, com 301 do `/pt/downloads`); designers sem a peça em destaque, retrato colorido no
+  hover; logos dos clientes no mesmo peso; títulos das páginas legais sem repetição.
+- **Bloco 2:** menu Produtos (Área interna e externa); "Ver mais" na grade (a tabela técnica continua paginada);
+  peça em destaque escolhida no painel em cada página (Páginas → "Peça em destaque"; migration
+  `2026_11_12_100000`), sem a peça automática; páginas novas **Tire suas dúvidas** (`/pt/tire-suas-duvidas`) e **Seja um
+  parceiro** (`/pt/seja-um-parceiro`, formulário de parceria), com o texto pelo painel (migration `2026_11_12_110000`);
+  banner de campanha: com um banner no período (`starts_at`/`ends_at`), só ele aparece, e o agendador revalida o site
+  no início e no fim.
+- **Bloco 3:**
+  - **Cadastro antes do download** (Boca do Lobo): perfil, nome, sobrenome, e-mail, interesse e telefone opcionais,
+    aceite da privacidade. O navegador guarda o token; sem ele, a API recusa o link (`422`). Tabela
+    `download_leads` (retenção de 730 dias, `RETENTION_DOWNLOAD_LEADS_DAYS`); no painel, "Quem baixou" e "Perfil" no
+    registro de downloads.
+  - **"Integre ao seu projeto"** na peça: um botão por programa (SketchUp `.skp` e Revit `.rfa` como "Bloco 3D",
+    AutoCAD `.dwg`/`.dxf` como "Bloco 2D", em Arquivos da peça) e o caminho para a Área do Profissional.
+  - **Medidas com intervalo** (largura, profundidade e altura "até", no painel) e setas por medida.
+  - **Ambientes** (Produtos → Geral → Ambientes) e o filtro "Ambiente" no catálogo (some enquanto nenhuma peça tiver
+    ambiente).
+  - **Variações** (Produtos → Geral → Variações): ligar numa peça mostra nas duas.
+  - **Vista de cima** (Produtos → Mídia e 3D): na sala para montar, entra no lugar da foto.
+  - Migrations `2026_11_12_120000` e `2026_11_12_130000`; `docs/api.md` e `docs/data-model.md` atualizados.
+- **Bloco 4 (prontos para ligar, dependem das contas):** GA4 pelo Tag Manager; AdOpt pelo modelo dela no Tag Manager,
+  ligada com `NEXT_PUBLIC_CONSENT_PROVIDER=adopt` (o aviso do site some e o Consent Mode nasce negado); newsletter:
+  exportação do painel até confirmar a ferramenta (Zoho?) e a chave; saúde do site com UptimeRobot. Passo a passo em
+  `docs/runbook-deploy.md`, seção "Cookies, Analytics, marketing e monitoramento".
+- **Verificação:** site com lint, typecheck e 443 testes; API com Pint (Pest e Larastan só no CI: PHP 8.3 aqui).
+
+### 27.1 Pendências
+
+- Da Franccino: o conteúdo das páginas Tire suas dúvidas e Seja um parceiro; ambientes, variações e vistas de cima
+  das peças; os arquivos de bloco por programa; as contas do Tag Manager, GA4 e AdOpt; confirmar a ferramenta de
+  marketing; o slogan; quem decide o lugar das abas do menu e a grade dos designers (Marcelo); o que é a "Coleção
+  Franccino".
+- Do tech lead: rodar `php artisan migrate` (vai no deploy) e conferir o cadastro do download no preview.
+- A auditoria do Drive continua à espera do link das pastas (seção 26.2).
+
+## 28. 12/11/2026 (tarde): segundo retorno do dia e o que faltava do PDF
+
+Branch `claude/banner-cover-images-vcdpmb`, recriada da `develop` depois do merge do #80 e do #81.
+
+- **PDF, o que tinha ficado para trás:**
+  - **Slogan (item 1):** o banner sem texto no painel mostra "Feito para permanecer" (a primeira opção do PDF), com
+    "Móveis de design autoral" na linha de apoio. O título e a linha de cada banner continuam editáveis em Banners.
+  - **Corporativo na home (item 4):** todos os nomes no mesmo tamanho e à mesma distância da borda de baixo.
+  - **Ambientes (item 8):** a lista do PDF (Varanda e jardim, Sala de jantar, Living, Quarto, Escritório). Ainda não
+    havia peça com ambiente, então nada mudou de dado.
+  - "Adicionar ao orçamento" que tinha sobrado virou "Adicionar à lista de desejos".
+- **Carrosséis:** dão a volta (a partir de 3 peças), começam na primeira peça no centro e andam sozinhos (4,5 s por
+  peça; param com o mouse em cima, com o foco do teclado e fora da tela). A volta da página da peça cai na peça que
+  estava no centro (guardada por página na sessão). O encaixe até a página da peça: a caixa do movimento no carrossel
+  tem o tamanho da capa (com o recorte no meio) e, na página, a foto ocupa a caixa da proporção dela (`--stage-ratio`);
+  o recorte vira a capa no primeiro terço e o resto é só a foto encaixando, sem fade no fim.
+- **Filtros nas listagens:** categoria (com a foto de uma peça quando a categoria não tem capa), ambiente, coleção e
+  designer, todos com a foto flutuando no hover. A barra presa no topo sobe e desce junto com o cabeçalho
+  (`--header-offset`).
+- **API:** o `GET /categories` mandava, a partir do segundo item, a forma do detalhe sem `product_count` (a coleção
+  passava o índice como "detalhe"). Corrigido, com teste.
+- **Animações:** a volta da peça aberta por um ponto do ambiente reabre o cartão do ponto e a foto encolhe até ele;
+  durante a foto que cresce nenhuma foto mostra o tom bege de carregamento; o cabeçalho tem camada própria no movimento e
+  fica sempre por cima; as duas primeiras coleções também abrem em cortina; o texto do banner que se repete nos slides
+  entra uma vez só.
+- **Projeto:** "Peça em destaque" no painel (Projetos), migration `2026_11_12_140000`. Sem escolha, a primeira peça dos
+  pontos do ambiente ou a primeira do projeto (nunca uma peça de fora). Tamanho compacto, como nas outras páginas.
+- **Conteúdo:**
+  - Política de cookies e "Tire suas dúvidas" com texto inicial (migration `2026_11_12_150000`, só onde a página estava
+    vazia; a Franccino revisa no painel). O FAQ não promete prazo, preço nem garantia.
+  - Aviso de cookies sempre na primeira visita: Aceitar todos, Recusar e Personalizar (necessários, análise,
+    marketing), com "Preferências de cookies" no rodapé. A versão da política mudou, então todos veem o aviso de novo.
+  - Mapa do site em ordem alfabética (seções e itens), com as categorias de cada área.
+  - Favicon do painel: o endereço saía com `http://` numa página `https://` e o navegador bloqueava.
+  - "Ver no mapa" nas lojas da home: estava dentro do bloco que só aparece na página Lojas.
+  - Setas das medidas com 16 px (a regra do desenho as deixava com 360 px).
+- **Lista de desejos por link:** `POST /quote-lists` e `GET /quote-lists/{code}` (migration `2026_11_12_160000`,
+  tabela `quote_lists`, validade `QUOTE_LIST_DAYS`, padrão 90 dias). O WhatsApp manda um link curto
+  (`/pt/lista/{código}`) no lugar das linhas; "Copiar link da lista"; o pedido por e-mail guarda a lista com a mensagem
+  e o e-mail da equipe leva o botão "Ver a lista com as fotos". A página da lista mostra foto, quantidade, acabamentos e
+  observação, com "Adicionar à minha lista". No painel: Relacionamento → Listas de desejos.
+
+### 28.1 Depois do deploy
+
+- As migrations rodam no deploy. Conferir no painel: Projetos → Peça em destaque; Páginas → Política de cookies e
+  Tire suas dúvidas (revisar o texto); Relacionamento → Listas de desejos.
+- Marcar ambientes nas peças (Produtos → Geral → Ambientes) para o filtro aparecer.
+
+## 29. 12/11/2026 (noite): auditoria do Drive pronta para enviar
+
+Pedido do Pedro Ivo: subir o que a auditoria do Drive marcou como "Usar", principalmente os blocos 3D e 2D (a
+Franccino pergunta todo dia). Branch `claude/banner-cover-images-vcdpmb`.
+
+- **API:** `POST /api/import/files` grava um arquivo técnico (bloco 3D/2D, ficha, catálogo) de peça, designer ou
+  lançamento, publicado, no disco privado; o mesmo nome de arquivo no mesmo dono troca o arquivo. `/api/import/media`
+  ganhou os destinos `designer`, `collection`, `launch` e `page` (galeria da Fábrica) e ignora a mesma `source` de novo.
+  O limite do arquivo técnico subiu de 50 para 200 MB (o bloco da Poltrona Noa tem 188 MB), com o PHP em 210M.
+- **Site:** "Integre ao seu projeto" agrupa por programa; com várias versões (o Sofá Noa tem 15 blocos SketchUp), o
+  nome do programa fica em cima e cada botão mostra a versão.
+- **Lote:** `design/drive/2026-11-12-auditoria.json` (255 arquivos: 53 blocos de 12 peças, 83 fotos de galeria de
+  peça, 56 da Fábrica, 46 de projetos e 17 de coleções) e `design/drive/importar.py`, que baixa do Drive e envia.
+  O que ficou fora do lote e por quê: `design/drive/LEIA-ME.md`.
+- **Não enviado ainda:** a sessão não tem os tokens do Drive nem da importação, e token não se cola no chat.
+
+### 29.1 Para rodar o envio
+
+1. Merge do PR na `develop` e na `main`, e o deploy (a rota nova e o limite de 200 MB precisam estar no ar).
+2. Gerar o token do Drive no OAuth Playground (`drive.readonly`, passo a passo em `design/drive/LEIA-ME.md`) e pôr
+   `GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOKEN` nas configurações do ambiente da sessão. Abrir uma sessão nova e pedir
+   para rodar `design/drive/importar.py`: primeiro `--so files` (os blocos), depois `--so media`.
+
+### 29.2 13/11/2026: o envio feito e o que ficou para a Franccino
+
+Com os tokens no ambiente da sessão (`GOOGLE_DRIVE_TOKEN` e `CONTENT_IMPORT_TOKEN`), o lote foi enviado ao preview:
+
+- **Blocos:** os 53 blocos 3D e 2D (12 peças das linhas ARP, Adhara e Noa).
+- **Fotos do lote:** as 202. As 56 da Fábrica em HEIC passaram pelo Pillow com `pillow-heif` (o ImageMagick da sessão não lê o
+  HEIC do iPhone); `importar.py` usa o Pillow quando ele está instalado.
+- **Decisões do tech lead (13/11):**
+  - as imagens com cara de IA sobem;
+  - no Clara Arte, só as versões editadas (`replaces` troca a foto e mantém a posição);
+  - os 48 trechos brutos de vídeo ficam de fora.
+- **PRs #86 e #87:**
+  - vídeo em projeto e coleção (`video` e `video_poster`);
+  - filme como bloco Vídeo de página;
+  - galeria com legenda na página;
+  - assinatura (logo) do designer;
+  - `new_products` no `content:apply`, com a lista `2026-11-13-drive.json`: 11 peças do site antigo, publicadas com
+    área e categoria deduzidas, e o texto do Clara Arte.
+- **Também no preview:**
+  - os filmes do Clara Arte (60 MB) e do Manifesto TEMPO (46 MB);
+  - o filme novo da marcenaria (86 MB), que não é o do YouTube; os dois ficam na Fábrica;
+  - na Fábrica, as galerias "Peças em produção" (12 fotos) e "Lojas e ambientes" (11) e a foto dos sócios;
+  - 6 RAW da Mesa Polux;
+  - 4 imagens de IA da Mesa Joey e da Poltrona Pinot;
+  - a Pitá sem braço cinza (das 23 "outro ângulo", 22 já estavam no site, na versão certa da peça);
+  - as 12 assinaturas dos designers, recortadas das faixas do site antigo.
+- **Correção de 13/11:** o upload de MP4 em projeto e coleção dava 500. A conversão `lqip` (síncrona) tentava tirar um
+  quadro do vídeo. `HasImageConversions` não gera tamanhos para vídeo.
+- **PDF para a Franccino**, entregue ao Pedro Ivo (não está no repositório):
+  - 36 peças novas, a cadastrar com os dados deles;
+  - o que falta nas 11 peças do site antigo;
+  - 7 fotos de peça sem dono nas pastas dos designers;
+  - os catálogos do Clara Arte;
+  - os pedidos de lojas do texto do Clara Arte;
+  - o filme novo no YouTube.
+
+## 30. 13/11/2026: retorno do tech lead sobre o preview (16 pontos)
+
+PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [#91](https://github.com/PPP-Group/Franccino/pull/91)
+(para a `main`). Branch `claude/banner-cover-images-vcdpmb`.
+
+- **Grade e tabela técnica:** a troca é no navegador, sem ir ao servidor (antes, às vezes recarregava, mais com filtro).
+  A página já vem com as duas vistas; o endereço muda por `history.replaceState` (`ViewToggle`, `CatalogViewProvider`,
+  `ByView`). Vale no catálogo e nos lançamentos.
+- **Galerias:** no projeto e na Fábrica, as primeiras fotos e "Ver mais"; aberta, o "Ver menos" fica preso ao pé da tela
+  (`ShowMore`). Na coleção, as peças vêm logo depois da introdução; embaixo do texto, 3 miniaturas e "Ver imagens", que
+  abre a galeria inteira numa janela (`GalleryDialog`); o vídeo vai para depois das peças.
+- **FAQ** no desenho do site (perguntas numeradas, "Ainda com dúvidas?" ao lado). **Cookies:** um link só no rodapé; as
+  preferências ficam dentro da página Política de cookies (migration `2026_11_13_100000` troca a frase do texto).
+- **Área do Profissional:** o layout da tabela técnica (fotos no hover, foto que cresce, "+"); na peça, o link leva à
+  Área do Profissional já filtrada por ela; várias versões no mesmo formato viram um link só ("SKP (15 versões)").
+- **Filtros:** a foto do hover na proporção dela (coleção deitada, retrato em pé). **Retrato do designer:** sem o fundo
+  bege no destino da animação.
+- **Medidas:** 81 peças com a medida do site antigo (`api/database/data/wordpress/2026-11-13-medidas.json`, aplicada no
+  deploy; só preenche peça sem medida) e o campo "Diâmetro até" no painel. Continuam sem medida 19 peças que nem o site
+  antigo tem (ex.: Sofá Noa, Sofá Antônio, Sofá Majestic, Sofá Pinot Square, Mesa de centro Noa redonda).
+- **Sala para montar:** a peça sem medida aparece na busca, com "Medidas a confirmar", em vez de sumir (o Sofá Noa "não
+  existia" por isso). Nenhuma peça tem vista de cima cadastrada ainda; o caminho no código está pronto.
+- **Importação:** `POST /api/import/media/remove` tira fotos de um registro (`docs/api.md`). O limite da biblioteca de
+  mídia subiu para 200 MB: era ele que dava 500 no envio dos filmes do Clara Arte e do Manifesto TEMPO.
+- **Fotos em produto errado (do lote do Drive de 13/11):** a planilha ligava a pasta de uma peça a um produto só, e fotos
+  de versões irmãs entraram no produto errado ("com braço" no "sem braço", Noa quadrada na redonda, Samburá individual no
+  duplo, Barcelona sem encosto no com encosto e outras). Todas já existiam, iguais, no produto certo: saem do errado.
+  Junto, as fotos repetidas dentro do mesmo produto e as 3 cópias antigas do começo da galeria do Clara Arte. São 70
+  fotos em 25 registros (lista em `remover.json` na área temporária da sessão), removidas pela rota nova depois do deploy.
+- **Capas:** revisadas as 338 peças com mais de uma foto. Só duas fugiam da regra: Mesa de cabeceira Xove (capa de
+  perfil) e Sofá Dara Indoor (diagonal virada para a direita). Lista `api/database/data/covers/2026-11-13-diagonal-esquerda-5.json`.
+- **Respostas de dados (sem mudança de código):**
+  - arquivos com a mesma extensão numa peça são versões diferentes (tamanhos e configurações), não duplicados;
+  - Estante Bloco e Sofá Pinot Square não têm foto no site antigo nem no Drive: despublicar ou pedir as fotos;
+  - Acabamentos vazio: não há lista de acabamentos no Drive "Site Franccino" nem no site antigo (PPP-23);
+  - o 3D da página da peça precisa de GLB. Os blocos SketchUp e AutoCAD não abrem no navegador, e converter formato
+    está fora do escopo. Só a Cadeira Marcela tem GLB, e o "Produto de Teste" publicado no preview deve ser apagado.
+
+### 30.1 Depois do deploy (13/11, conferido)
+
+- No ar: os filmes do Clara Arte e do Manifesto TEMPO, as capas novas da Xove e do Sofá Dara Indoor e as medidas das 81
+  peças (conferido pela API do preview).
+- **Falta tirar as 70 fotos** (`design/drive/2026-11-13-remover.json`, comando em `design/drive/LEIA-ME.md`): a
+  verificação de segurança da sessão bloqueou a remoção no preview. Roda com o ok do tech lead, numa máquina com o
+  `CONTENT_IMPORT_TOKEN`, ou numa sessão com a permissão liberada.
+- Apagar o "Produto de Teste" publicado no preview (painel).
+
+### 30.2 13/11/2026 (tarde): remoções, Produto de Teste, blocos que faltavam, acabamentos e 3D
+
+- **Remoções aprovadas e feitas:** as 70 fotos de `design/drive/2026-11-13-remover.json` saíram do preview.
+- **Produto de Teste:** a migration `2026_11_13_110000_remove_test_product` o tira do ar no deploy. A exclusão é
+  reversível (soft delete) e só pega a peça com esse nome e esse endereço.
+- **Blocos que faltavam:** o Drive "Site Franccino" tem 410 blocos (250 SketchUp, 159 AutoCAD, 1 DXF), quase todos
+  enviados em 16/10, e o lote de 12/11 levou só 53. Os outros estão em `design/drive/2026-11-13-blocos.json`: 324
+  arquivos. A peça vem da planilha de dados dos produtos ("_DADOS DOS PRODUTOS EXTRAIDOS DO SITE"), e o com e sem braço
+  se separa pelo código do nome do arquivo (C-BR, S-BR). A pasta "POLTRONA MAJESTIC" tem os 16 módulos do Sofá Majestic.
+  Ficaram de fora 33 arquivos de peças que não estão no site e 3 da Melina Casa na pasta da Giardini. Enviados 323
+  (conferidos pela API: os títulos no ar batem com a lista); o SketchUp do Balanço Pina (258 MB) passa do limite de 200 MB
+  e foi pedido mais leve no PDF.
+- **Acabamentos:** não há mostruário em nenhum dos 5.667 arquivos do Drive "Site Franccino", nem no outro Drive
+  compartilhado. Os textos das peças só dizem "conforme mostruário Franccino". O pedido entrou no PDF para a Franccino.
+- **3D:** o navegador não abre SketchUp nem AutoCAD. O SDK da Trimble não tem versão para Linux. A OpenSKP (MIT, lê
+  SketchUp e exporta glTF) é a saída; instalá-la nesta sessão foi bloqueado pela verificação de segurança e precisa do
+  ok do tech lead. O AutoCAD aqui é desenho 2D: não serve para o visualizador 3D.
+- **PDF para a Franccino** ("O que precisamos para terminar o site", 13/11): reúne o PDF da manhã e todas as
+  pendências com eles (acabamentos, medidas, fotos, blocos, peças novas, textos, dados dos filtros, Clara Arte, vídeos,
+  contas e decisões). Entregue ao Pedro Ivo; não está no repositório.
+
+### 30.3 13/11/2026 (noite): 3D a partir dos blocos SketchUp, página do projeto e sala
+
+- **3D:** o OpenSKP foi instalado com o ok do tech lead. A importação aceita o GLB da peça (`collection=model_3d`, PR
+  [#94](https://github.com/PPP-Group/Franccino/pull/94)). O processo está em `design/3d/LEIA-ME.md`.
+  - A 1ª conversão (119 de 154 peças) saiu toda branca e não foi enviada. O conversor clareava as cores para um tom
+    neutro, e o OpenSKP perdia o material dos componentes.
+  - O conversor novo mantém a cor de cada material do arquivo, com a cor em linear, e o patch do OpenSKP lê o material
+    do componente.
+  - Conferido em 11 peças contra a miniatura que o próprio SketchUp grava no arquivo: Chaise Coce bege com alumínio e
+    rodas pretas, Sofá Antonio cinza com base escura, Sofá Majestic com pés pretos.
+  - Vários blocos da Franccino não têm material nenhum (Banco Dublin, Escrivaninha Pampulha, Mesa lateral Eros, Mesa de
+    jantar Noa): no SketchUp eles também aparecem brancos. Nenhum dos arquivos conferidos tem textura.
+  - **Falta:** rodar a conversão nova, que precisa de um token novo do Drive (o anterior expirou), e enviar os GLB.
+- **Página do projeto:** o resumo aparecia em destaque mesmo quando o texto já o trazia no meio. No Clara Arte, ele é o
+  3º parágrafo. Agora o resumo some sempre que o texto já o traz (`distinctLead`).
+- **Sala para montar:** o código atual acha o Sofá Noa na busca ("Medidas a confirmar"), conferido num `next dev` contra
+  a API do preview. Se o preview não mostra, a aba aberta está com a versão anterior do site: recarregar a página depois
+  do deploy.
+
+### 30.4 13/11/2026 (noite): 3D no ar, GLB para baixar, filtros e medidas
+
+- **Conversão feita** com o token do Drive que o tech lead mandou na conversa: o valor salvo no ambiente continuava o
+  antigo, e nem a sessão nem um subagente remoto conseguiam ler o novo. A cópia foi apagada no fim. Como o token também
+  trazia o refresh token, com acesso ao Drive inteiro, o tech lead deve revogar o acesso do OAuth Playground na conta
+  Google.
+- **3D no preview:** 126 de 154 peças têm o modelo 3D (`model_3d`), com as cores e texturas do arquivo. As peças com
+  textura (Aparador Xove, Banqueta Apruma, Cadeira Dara) pedem o Pillow no venv.
+- **Não entraram:**
+  - 7 blocos que o OpenSKP não abre, de formato antigo (Banco ARP, Banco Coda, Banqueta Júlia, Buffet Twin, Cadeira
+    Lorena, Cadeira Páglia, Mesa de centro Irene);
+  - 2 SketchUp acima de 150 MB (Balanço Pina, Poltrona Noa);
+  - 8 GLB acima de 20 MB (Banqueta Dara, Cadeira Melina sem braço, Cadeira Noa, Poltrona Caeté, Poltrona Irani, Sofá
+    Adhara, Sofá Snodo, Sofá Sol), que pedem otimização (simplificar a malha);
+  - 11 blocos cujo tamanho não bate com a peça, com objetos a mais ou outra versão (ex.: Cadeira Toé com 6,7 m, Mesa
+    Polux com 9,1 m). Esses foram pedidos à Franccino no PDF.
+- **GLB para baixar:** os 126 também viraram arquivo da peça ("Modelo 3D (GLB)", tipo `block_3d`). "Integre ao seu
+  projeto" ganhou o GLB como programa.
+- **Área do Profissional:** filtro "Tipo de arquivo" (`GET /downloads?format=`, com `meta.formats`). PR
+  [#96](https://github.com/PPP-Group/Franccino/pull/96).
+- **Filtro de categoria:** `GET /categories` manda a capa da primeira peça quando a categoria não tem capa no painel
+  (`CategorySampleCovers`, a mesma regra de `GET /areas/{key}`).
+- **Medidas a partir dos blocos:** como dado do site, não servem. Em 94 peças com medida cadastrada, só 29 batem: o
+  bloco costuma ser outra versão ou trazer objetos a mais. Das 19 peças sem medida, 6 têm bloco (Sofá Antônio, Majestic,
+  Noa e Boto, Sofá Pinot Square e Mesa de centro Noa redonda). Elas foram medidas versão por versão e entraram no PDF
+  para a Franccino confirmar. As outras 13 não têm arquivo nenhum.
+- **PDF final para a Franccino** ("O que precisamos para terminar o site", 13/11, 13 páginas), entregue ao Pedro Ivo.
+  Ele inclui as medidas para confirmar e a situação do 3D.

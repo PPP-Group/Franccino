@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import {
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -27,6 +28,7 @@ import {
   addPiece,
   planEntries,
   planToQuoteInputs,
+  refreshPlanProducts,
   removePiece,
   setRoom,
   updatePiece,
@@ -53,6 +55,13 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
   const locale = useLocale() as Locale;
   const baseId = useId();
   const plan = useSyncExternalStore(subscribePlan, getPlan, getServerPlan);
+
+  // A planta salva guarda a foto de cada peça: troca pelas fotos atuais do catálogo (as antigas podem ter sumido).
+  useEffect(() => {
+    const current = getPlan();
+    const refreshed = refreshPlanProducts(current, initialLibrary);
+    if (refreshed !== current) savePlan(refreshed);
+  }, [initialLibrary]);
   const [selected, setSelected] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const [announcement, setAnnouncement] = useState('');
@@ -196,7 +205,7 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
     <div className="planner">
       <aside className="planner__side" aria-label={t('sideLabel')}>
         <fieldset className="room-fieldset">
-          <legend className="label">{t('roomSize')}</legend>
+          <legend className="planner__heading">{t('roomSize')}</legend>
           <div className="pair">
             <div className="field">
               <label htmlFor={`${baseId}-w`}>{t('roomWidth')}</label>
@@ -282,10 +291,16 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
         </p>
       </div>
 
-      <aside className="planner__side" aria-labelledby={`${baseId}-checks`}>
-        <h2 id={`${baseId}-checks`} className="planner__heading">
-          {t('checks.title')}
-        </h2>
+      {/* A conferência só aparece com peças na sala (sem peça, não há o que conferir). */}
+      <aside
+        className="planner__side"
+        aria-labelledby={plan.pieces.length > 0 ? `${baseId}-checks` : `${baseId}-summary`}
+      >
+        {plan.pieces.length > 0 ? (
+          <h2 id={`${baseId}-checks`} className="planner__heading">
+            {t('checks.title')}
+          </h2>
+        ) : null}
         {plan.pieces.length > 0 ? (
           <ul className="checks">
             {conflicts.size > 0 ? (
@@ -309,7 +324,9 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
             </li>
           </ul>
         ) : null}
-        <h2 className="planner__heading">{t('summary.title')}</h2>
+        <h2 id={`${baseId}-summary`} className="planner__heading">
+          {t('summary.title')}
+        </h2>
         <ul className="summary-list num">
           {counts.length > 0 ? (
             counts.map(({ productId, count }) => (
@@ -325,7 +342,7 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
           )}
         </ul>
         <button type="button" className="btn btn--block" onClick={sendToQuote}>
-          <Icon name="list" />
+          <Icon name="bag" />
           <span>{t('sendToList')}</span>
         </button>
         <p className="meta">{t('sendHint')}</p>

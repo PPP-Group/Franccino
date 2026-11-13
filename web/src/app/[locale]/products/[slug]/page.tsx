@@ -8,11 +8,15 @@ import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
+import { ProductVariants } from '@/components/products/ProductVariants';
+import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
+import { TrackView } from '@/components/recent/TrackView';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { AreaDot } from '@/components/ui/AreaDot';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
+import { programOf, TechnicalLibrary } from '@/components/downloads/TechnicalLibrary';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import type { Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
@@ -24,8 +28,12 @@ import { toProductCard } from '@/lib/catalog/card';
 import { galleryImages } from '@/lib/product/gallery';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld';
 import { absoluteUrl, alternateHrefs, buildMetadata, type Href } from '@/lib/seo/metadata';
+import { productMorphName } from '@/components/products/ProductPlate';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+/** Outras peças do designer ao lado do texto dele, na faixa do designer. */
+const DESIGNER_PIECES = 2;
 
 const productHref = (slug: string) => ({ pathname: '/products/[slug]', params: { slug } }) as const;
 
@@ -66,16 +74,17 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
   const designerRef = product.designer;
-  const [t, common, settings, designer] = await Promise.all([
+  const [t, common, nav, settings, designer] = await Promise.all([
     getTranslations({ locale, namespace: 'product' }),
     getTranslations({ locale, namespace: 'common' }),
+    getTranslations({ locale, namespace: 'nav' }),
     getSettings(locale),
     designerRef ? getDesigner(locale, designerRef.slug) : Promise.resolve(null),
   ]);
 
   const crumbs: BreadcrumbItem[] = [
     { label: common('home'), href: '/' },
-    { label: product.area.brand_name, href: areaPath(product.area.key) },
+    { label: nav(product.area.key), href: areaPath(product.area.key) },
     { label: product.category.name, href: categoryHref(product) },
     { label: product.name },
   ];
@@ -86,6 +95,17 @@ export default async function ProductPage({ params }: Props) {
       url: crumb.href ? absoluteUrl(getPathname({ href: crumb.href as Href, locale })) : url,
     })),
   );
+  // Cada peça aparece uma vez só na página: a foto dela é o alvo da transição do card (ideia 10), e dois cards com o
+  // mesmo nome cancelariam a transição.
+  const shown = new Set([product.id, ...product.line_products.map((item) => item.id)]);
+  const related = product.related.filter((item) => !shown.has(item.id));
+  // Outras peças do designer ao lado do texto dele (no máximo duas), sem repetir as das esteiras.
+  const designerPieces = (designer?.products ?? [])
+    .filter((item) => item.cover && !shown.has(item.id) && !related.some((other) => other.id === item.id))
+    .slice(0, DESIGNER_PIECES);
+  // "Peças que você viu" no fim não repete a peça aberta nem as das esteiras acima.
+  const onPage = [...shown, ...related.map((item) => item.id), ...designerPieces.map((item) => item.id)];
+  const card = toProductCard(product);
   // Conteúdo sem tradução volta em português (locale_fallback): marcar o idioma para leitores de tela.
   const contentLang = product.locale_fallback && locale !== 'pt' ? 'pt-BR' : undefined;
 
@@ -93,8 +113,13 @@ export default async function ProductPage({ params }: Props) {
     <main>
       <JsonLd data={productJsonLd(product, url)} />
       <JsonLd data={breadcrumb} />
+      <TrackView product={card} />
       <div className="wrap">
-        <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
+        <Breadcrumbs
+          label={common('breadcrumb')}
+          items={crumbs}
+          morph={product.cover ? productMorphName(product.slug) : undefined}
+        />
         <div className="product">
           <ProductStage
             images={galleryImages(product)}
@@ -135,61 +160,75 @@ export default async function ProductPage({ params }: Props) {
               {contentLang ? <p className="meta">{t('fallbackNotice')}</p> : null}
             </div>
 
+            <ProductVariants variants={product.variants ?? []} />
+
             <ProductConfigurator
-              product={{ ...toProductCard(product), finishes: product.finishes }}
+              product={{ ...card, finishes: product.finishes }}
               whatsapp={settings.quotes_whatsapp}
               finishesNote={product.finishes_note}
+              quoteForm={<ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />}
             >
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
 
-            <FileDownloads files={product.files} title={t('downloads.title')} />
+            <TechnicalLibrary files={product.files} productName={product.name} />
+
+            <FileDownloads
+              files={product.files.filter((file) => programOf(file) === null)}
+              title={t('downloads.title')}
+            />
 
             <MediaLinks items={product.media_links} headingId="product-media" />
-
-            <details className="quote-inline block">
-              <summary>{t('quoteOnlyThis')}</summary>
-              <ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />
-            </details>
           </div>
         </div>
       </div>
 
-      {designer ? <DesignerStrip designer={designer} /> : null}
+      {/*
+        Seções de continuidade com o fundo alternado (areia, branco...), como na home: cada uma fica separada da
+        outra (retorno do tech lead de 06/11/2026: "tudo no branco"). A alternância é do CSS (`.tone-stack`), então
+        a seção que some não quebra a sequência.
+      */}
+      <div className="tone-stack">
+        {designer ? <DesignerStrip designer={designer} pieces={designerPieces} /> : null}
 
-      {product.line_products.length > 0 ? (
-        <section className="section" aria-labelledby="line-title">
-          <div className="wrap">
-            <div className="section-head">
-              <h2 id="line-title">
-                {product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
-              </h2>
+        {product.line_products.length > 0 ? (
+          <section className="section" aria-labelledby="line-title">
+            <div className="wrap" data-reveal>
+              <div className="section-head">
+                <h2 id="line-title">
+                  {product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
+                </h2>
+              </div>
+              <ProductRail
+                label={product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
+                products={product.line_products}
+                scope="line"
+              />
             </div>
-            <ProductRail
-              label={product.line ? t('sameLine', { line: product.line.name }) : t('sameLineFallback')}
-              products={product.line_products}
-            />
-          </div>
-        </section>
-      ) : null}
+          </section>
+        ) : null}
 
-      {product.related.length > 0 ? (
-        <section className="section" aria-labelledby="related-title">
-          <div className="wrap">
-            <div className="section-head">
-              <h2 id="related-title">{t('related', { category: product.category.name })}</h2>
-              <Link className="link-arrow" href={areaPath(product.area.key)}>
-                <span>{t('seeArea', { area: product.area.brand_name })}</span>
-                <Icon name="arrow" />
-              </Link>
+        {related.length > 0 ? (
+          <section className="section" aria-labelledby="related-title">
+            <div className="wrap" data-reveal>
+              <div className="section-head">
+                <h2 id="related-title">{t('related', { category: product.category.name })}</h2>
+                <Link className="link-arrow" href={areaPath(product.area.key)}>
+                  <span>{t('seeArea', { area: product.area.brand_name })}</span>
+                  <Icon name="arrow" />
+                </Link>
+              </div>
+              <ProductRail
+                label={t('related', { category: product.category.name })}
+                products={related}
+                scope="related"
+              />
             </div>
-            <ProductRail
-              label={t('related', { category: product.category.name })}
-              products={product.related}
-            />
-          </div>
-        </section>
-      ) : null}
+          </section>
+        ) : null}
+
+        <RecentlyViewed excludeIds={onPage} />
+      </div>
     </main>
   );
 }

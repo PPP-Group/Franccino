@@ -1,6 +1,6 @@
 {
   "common": {
-    "nothingYet": "Ainda não há conteúdo publicado aqui.",
+    "nothingYet": "Ainda não há conteúdo publicado nesta seção.",
     "skipToContent": "Pular para o conteúdo",
     "loading": "Carregando…",
     "close": "Fechar",
@@ -13,34 +13,38 @@
     "scrollNext": "Avançar"
   },
   "nav": {
-    "indoor": "Casa",
-    "outdoor": "Giardini",
+    "indoor": "Área interna",
+    "outdoor": "Área externa",
     "products": "Produtos",
     "launches": "Lançamentos",
     "collections": "Coleções",
     "designers": "Designers",
-    "projects": "Projetos",
+    "projects": "Corporativo",
     "corporate": "Projetos corporativos",
     "factory": "Fábrica",
     "finishes": "Acabamentos",
-    "downloads": "Downloads",
+    "downloads": "Área do Profissional",
     "stores": "Lojas",
     "contact": "Contato",
-    "planner": "Sala para montar"
+    "planner": "Sala para montar",
+    "faq": "Tire suas dúvidas",
+    "partner": "Seja um parceiro"
   },
   "footer": {
+    "backToTop": "Topo",
+    "backToTopLabel": "Voltar ao topo da página",
     "cookies": "Política de cookies",
     "siteMap": "Mapa do site",
     "privacy": "Privacidade",
-    "terms": "Termos de uso",
+    "terms": "Termos e Condições de Uso",
     "wordmark": "Franccino",
     "factory": "Fábrica: {address}",
     "catalog": "Catálogo",
     "service": "Atendimento",
     "newsletter": "Novidades por e-mail",
-    "quotesWhatsapp": "WhatsApp de orçamentos",
+    "quotesWhatsapp": "Orçamentos",
     "assistanceWhatsapp": "Assistência técnica",
-    "whereToFind": "Onde encontrar",
+    "whereToFind": "Lojas",
     "copyright": "© {year} {company}.",
     "legal": "Informações legais",
     "social": {
@@ -49,7 +53,8 @@
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
       "youtube": "YouTube"
-    }
+    },
+    "vortex": "Uma solução Vortex"
   },
   "language": {
     "label": "Idioma",
@@ -67,58 +72,68 @@
     "search": "Buscar",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
-    "quoteList": "Lista de orçamento, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
-    "quoteListShort": "Lista",
-    "areaAll": "Ver tudo de {area}"
+    "quoteList": "Lista de desejos, {count, plural, =0 {vazia} one {# peça} other {# peças}}",
+    "quoteListShort": "Lista de desejos",
+    "areaAll": "Ver todos",
+    "collectionsAll": "Ver todas",
+    "submenu": "Mostrar as opções de {area}",
+    "seeAllLine": "Ver tudo"
   },
   "quote": {
-    "viewList": "Ver lista",
-    "quickAdd": "Adicionar {name} à lista de orçamento",
+    "viewList": "Ver a lista de desejos",
+    "quickAdd": "Adicionar {name} à lista de desejos",
     "addedPendingFinish": "{name} está na lista, com acabamento a definir.",
-    "listFull": "A lista chegou ao limite de 50 itens. Envie esta lista antes de montar outra.",
+    "listFull": "A lista atingiu o limite de 50 itens. Envie esta solicitação antes de iniciar uma nova.",
     "inList": "Na lista",
-    "inListNamed": "{name} está na lista de orçamento.",
-    "addShort": "Pôr na lista",
+    "inListNamed": "{name} está na lista de desejos.",
+    "addShort": "Adicionar à lista de desejos",
     "pendingFinish": "acabamento a definir",
     "viewListCount": "Ver lista ({count})",
     "decrease": "Diminuir",
     "increase": "Aumentar",
-    "title": "Lista de orçamento",
-    "intro": "Confira acabamentos e quantidades. A equipe da Franccino responde com o orçamento.",
+    "title": "Lista de desejos",
+    "intro": "Revise os acabamentos e as quantidades. A equipe Franccino retornará com o orçamento.",
     "pieces": "{count, plural, one {# peça} other {# peças}}",
     "remove": "Remover",
-    "removed": "{name} saiu da lista.",
+    "removed": "Peça removida da lista: {name}.",
     "quantityOf": "Quantidade de {name}",
-    "messageHeading": "Peças da lista de orçamento:",
-    "whatsappIntro": "Olá! Quero um orçamento destas peças:",
+    "messageHeading": "Peças da lista de desejos:",
+    "whatsappIntro": "Olá, gostaria de solicitar um orçamento das seguintes peças:",
     "form": {
       "title": "Seus dados",
       "notes": "Observações",
-      "notesPlaceholder": "Prazo, endereço de entrega, medidas especiais…",
-      "submit": "Enviar pedido de orçamento",
-      "whatsapp": "Enviar a lista pelo WhatsApp"
+      "notesPlaceholder": "Prazo desejado, endereço de entrega, medidas especiais…",
+      "submit": "Enviar por e-mail à equipe de vendas",
+      "whatsapp": "Enviar pelo WhatsApp"
     },
     "empty": {
-      "title": "Sua lista de orçamento está vazia",
-      "body": "Junte as peças que interessam, com acabamento e quantidade, e mande tudo de uma vez para a equipe.",
-      "catalog": "Ver o catálogo",
-      "planner": "Montar uma sala"
+      "title": "Sua lista de desejos está vazia",
+      "body": "Selecione as peças de seu interesse, com acabamento e quantidade, e envie uma única solicitação à nossa equipe.",
+      "catalog": "Explorar o catálogo",
+      "planner": "Planejar um ambiente"
     },
     "sent": {
       "title": "Pedido enviado",
-      "body": "Recebemos a sua lista. A equipe da Franccino responde pelo e-mail informado."
-    }
+      "body": "Recebemos sua solicitação. A equipe Franccino entrará em contato pelo e-mail informado."
+    },
+    "addedToList": "Adicionada à lista",
+    "recommendedTitle": "Recomendadas para você",
+    "whatsappShare": "Olá, gostaria de um orçamento da minha lista de desejos ({count, plural, one {# peça} other {# peças}}): {url}",
+    "shareFailed": "Não foi possível gerar o link da lista. Tente de novo.",
+    "linkCopied": "Link da lista copiado.",
+    "copyLink": "Copiar link da lista",
+    "messageSummary": "Pedido de orçamento da lista de desejos ({count, plural, one {# peça} other {# peças}})."
   },
   "errors": {
     "notFound": {
       "title": "Página não encontrada",
       "description": "O conteúdo que você procura não existe ou foi movido.",
-      "backHome": "Voltar para a página inicial",
-      "catalog": "Ver o catálogo"
+      "backHome": "Voltar à página inicial",
+      "catalog": "Explorar o catálogo"
     },
     "serverError": {
-      "title": "Algo deu errado",
-      "description": "Não foi possível concluir esta ação. Tente novamente.",
+      "title": "Ocorreu um erro inesperado",
+      "description": "Não foi possível concluir esta ação. Por favor, tente novamente.",
       "retry": "Tentar novamente"
     }
   },
@@ -127,8 +142,8 @@
     "submit": "Enviar",
     "sending": "Enviando…",
     "success": "Enviado com sucesso.",
-    "error": "Não foi possível enviar. Tente novamente.",
-    "rateLimited": "Muitas tentativas. Tente novamente em alguns instantes.",
+    "error": "Não foi possível concluir o envio. Por favor, tente novamente.",
+    "rateLimited": "Foram feitas várias tentativas seguidas. Por favor, aguarde alguns instantes.",
     "consent": "Li e concordo com a <link>política de privacidade</link>.",
     "turnstileLabel": "Verificação de segurança",
     "fields": {
@@ -157,7 +172,7 @@
     "types": {
       "quote": "Orçamento",
       "assistance": "Assistência técnica",
-      "partnership": "Seja um parceiro",
+      "partnership": "Parcerias",
       "press": "Imprensa",
       "other": "Outro assunto"
     },
@@ -166,44 +181,44 @@
     "phone": "Telefone",
     "company": "Empresa",
     "city": "Cidade",
-    "state": "UF",
-    "statePlaceholder": "Selecione",
-    "profession": "Você é",
-    "professionPlaceholder": "Selecione",
+    "state": "Estado",
+    "statePlaceholder": "Selecione o estado",
+    "profession": "Perfil",
+    "professionPlaceholder": "Selecione o perfil",
     "professions": {
       "architect": "Arquiteto(a)",
       "interior_designer": "Designer de interiores",
       "retailer": "Lojista",
-      "end_customer": "Cliente final",
+      "end_customer": "Cliente particular",
       "other": "Outro"
     },
     "message": "Mensagem",
     "consent": "Concordo com a <privacy>política de privacidade</privacy> e com o contato da Franccino sobre esta mensagem.",
     "submit": "Enviar",
     "sending": "Enviando…",
-    "success": "Mensagem recebida. A equipe da Franccino responde pelo e-mail informado.",
+    "success": "Mensagem recebida. A equipe Franccino responderá pelo e-mail informado.",
     "errorSummary": "Confira os campos destacados.",
-    "failed": "Não foi possível enviar agora. Tente novamente em instantes.",
-    "rateLimited": "Muitos envios seguidos. Aguarde um minuto e tente de novo.",
+    "failed": "Não foi possível enviar sua mensagem no momento. Por favor, tente novamente em instantes.",
+    "rateLimited": "Foram feitas várias tentativas seguidas. Por favor, aguarde um minuto e tente novamente.",
     "errors": {
       "required": "Campo obrigatório.",
       "invalidEmail": "Informe um e-mail válido.",
-      "tooLong": "Texto maior que o permitido.",
-      "consent": "É preciso aceitar a política de privacidade."
+      "tooLong": "O texto excede o limite permitido.",
+      "consent": "É necessário aceitar a política de privacidade."
     }
   },
   "newsletter": {
     "intro": "Receba os lançamentos da Franccino por e-mail.",
     "emailLabel": "Seu e-mail",
     "placeholder": "Seu e-mail",
-    "submit": "Inscrever",
+    "submit": "Inscrever-se",
     "consent": "Aceito a <privacy>política de privacidade</privacy>.",
     "status": {
       "sending": "Enviando…",
-      "success": "Inscrição recebida.",
+      "success": "Inscrição recebida. Agradecemos o seu interesse.",
       "invalid": "Informe um e-mail válido e aceite a política de privacidade.",
-      "failed": "Não foi possível inscrever agora. Tente novamente.",
-      "rateLimited": "Muitas tentativas seguidas. Aguarde um minuto."
+      "failed": "Não foi possível concluir a inscrição no momento. Por favor, tente novamente.",
+      "rateLimited": "Foram feitas várias tentativas seguidas. Por favor, aguarde um minuto."
     }
   },
   "products": {
@@ -219,19 +234,19 @@
       "choose": "Escolha um acabamento de {group}."
     },
     "buyLabel": "Orçamento",
-    "pendingHint": "Acabamento a definir: {groups}. Escolha agora ou combine com a equipe.",
+    "pendingHint": "Acabamento a definir: {groups}. Selecione agora ou defina posteriormente com nossa equipe.",
     "quantity": "Quantidade",
-    "addToList": "Adicionar à lista de orçamento",
+    "addToList": "Adicionar à lista de desejos",
     "inList": "Na lista",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Onde comprar",
     "added": "{quantity} × {name} · {finishes}.",
-    "whatsappText": "Olá! Tenho interesse em {quantity} × {name} ({finishes}). Pode me ajudar com o orçamento?",
+    "whatsappText": "Olá, tenho interesse em {quantity} × {name} ({finishes}) e gostaria de solicitar um orçamento.",
     "designBy": "Design <designer>{name}</designer>",
     "sku": "Ref. {sku}",
     "materials": "Materiais: {materials}",
-    "fallbackNotice": "Conteúdo disponível só em português.",
-    "quoteOnlyThis": "Pedir orçamento só desta peça",
+    "fallbackNotice": "Conteúdo disponível apenas em português.",
+    "quoteOnlyThis": "Solicitar orçamento desta peça",
     "sendQuote": "Enviar pedido de orçamento",
     "sameLine": "Da linha {line}",
     "sameLineFallback": "Da mesma linha",
@@ -258,7 +273,8 @@
         "height": "altura {value} cm",
         "diameter": "diâmetro {value} cm",
         "seatHeight": "altura do assento {value} cm"
-      }
+      },
+      "range": "{min} a {max}"
     },
     "stage": {
       "viewLabel": "Visualização",
@@ -266,13 +282,35 @@
       "model": "3D",
       "modelAlt": "Modelo 3D de {name}",
       "modelLoading": "Carregando o modelo 3D…",
-      "modelError": "Não foi possível carregar o 3D agora. Veja as fotos ou tente de novo.",
-      "modelRetry": "Tentar de novo",
+      "modelError": "Não foi possível carregar o modelo 3D no momento. Consulte as fotos ou tente novamente.",
+      "modelRetry": "Tentar novamente",
       "thumbsLabel": "Fotos da peça",
       "showImage": "Foto {index} de {total}"
     },
-    "downloads": { "title": "Arquivos técnicos", "secureLink": "Link seguro por 10 min" },
-    "designer": { "piecesBy": "Peças de {name}" }
+    "downloads": {
+      "title": "Arquivos técnicos",
+      "secureLink": "Link seguro, válido por 10 minutos"
+    },
+    "designer": {
+      "piecesBy": "Peças de {name}"
+    },
+    "moreWays": "Outras formas de contato",
+    "addedToList": "Adicionada à lista",
+    "library": {
+      "title": "Integre ao seu projeto",
+      "soon": "Blocos 2D e 3D, catálogos e fichas técnicas das peças ficam na Área do Profissional.",
+      "professionals": "Ver todos os arquivos na Área do Profissional",
+      "programs": {
+        "sketchup": "SketchUp",
+        "autocad": "AutoCAD",
+        "revit": "Revit",
+        "glb": "GLB (3D)"
+      },
+      "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional"
+    },
+    "variants": {
+      "title": "Variações"
+    }
   },
   "catalog": {
     "filters": {
@@ -283,9 +321,13 @@
       "finish": "Acabamento",
       "sort": "Ordenar por",
       "search": "Buscar",
-      "apply": "Filtrar",
+      "apply": "Aplicar",
       "allDesigners": "Todos os designers",
-      "facetOption": "{name} ({count})"
+      "facetOption": "{name} ({count})",
+      "room": "Ambiente",
+      "allRooms": "Todos os ambientes",
+      "allCategories": "Todas as categorias",
+      "allCollections": "Todas as coleções"
     },
     "sort": {
       "featured": "Destaques",
@@ -296,22 +338,30 @@
       "label": "Páginas",
       "previous": "Anterior",
       "next": "Próxima",
-      "status": "Página {current} de {last}"
+      "status": "Página {current} de {last}",
+      "short": "{current} / {last}"
     },
-    "empty": "Nenhum produto encontrado.",
+    "empty": "Nenhuma peça encontrada.",
     "emptyState": {
       "title": "Nenhuma peça com esses filtros.",
-      "body": "Tire um filtro ou fale com a equipe.",
+      "body": "Remova algum filtro ou entre em contato com nossa equipe.",
       "clear": "Limpar filtros"
     },
     "newTag": "Lançamentos",
     "count": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
     "resultsLabel": "Resultados",
-    "view": { "label": "Visualização", "grid": "Grade", "table": "Tabela técnica" },
-    "products": { "title": "Todas as peças", "intro": "O catálogo completo das linhas Casa e Giardini." },
+    "view": {
+      "label": "Visualização",
+      "grid": "Grade",
+      "table": "Tabela técnica"
+    },
+    "products": {
+      "title": "Produtos",
+      "intro": "O catálogo completo das linhas Casa e Giardini."
+    },
     "technical": {
       "title": "Área técnica",
-      "intro": "Peças com medidas e arquivos para especificação. Abra a peça para ver acabamentos."
+      "intro": "Peças com medidas e arquivos para especificação. Os acabamentos estão na página de cada peça."
     },
     "launches": {
       "downloads": "Catálogos e apresentações",
@@ -328,8 +378,29 @@
       "designer": "Designer",
       "dimensions": "Medidas",
       "files": "Arquivos",
-      "list": "Lista de orçamento",
-      "empty": "—"
+      "list": "Lista de desejos",
+      "empty": "—",
+      "filesMany": "{format} ({count} versões)"
+    },
+    "gridFill": {
+      "title": "Gostaria de orientação na escolha?",
+      "body": "Planeje seu ambiente em escala, com as medidas reais das peças, ou converse com a equipe Franccino.",
+      "planner": "Planejar um ambiente",
+      "contact": "Fale com um consultor"
+    },
+    "loadMore": {
+      "button": "Ver mais",
+      "loading": "Carregando…",
+      "nextPage": "Ver as próximas peças",
+      "count": "{shown} de {total} peças",
+      "error": "Não foi possível carregar mais peças. Por favor, tente novamente."
+    },
+    "rooms": {
+      "balcony": "Varanda e jardim",
+      "dining": "Sala de jantar",
+      "living": "Living",
+      "bedroom": "Quarto",
+      "office": "Escritório"
     }
   },
   "stores": {
@@ -357,11 +428,19 @@
     "noResults": "Nenhum resultado encontrado.",
     "resultsFor": "Resultados para “{query}”",
     "seeAll": "Ver todos os resultados",
-    "kind": { "product": "Peça", "designer": "Designer", "collection": "Coleção" }
+    "kind": {
+      "product": "Peça",
+      "designer": "Designer",
+      "collection": "Coleção"
+    }
   },
   "pages": {
-    "indoor": { "title": "Indoor" },
-    "outdoor": { "title": "Outdoor" }
+    "indoor": {
+      "title": "Indoor"
+    },
+    "outdoor": {
+      "title": "Outdoor"
+    }
   },
   "dimensions": {
     "width": "L",
@@ -371,7 +450,7 @@
     "diameter": "Ø"
   },
   "downloads": {
-    "title": "Downloads",
+    "title": "Área do Profissional",
     "count": "{count, plural, one {# peça com arquivos} other {# peças com arquivos}}",
     "empty": "Nenhuma peça com arquivos para estes filtros.",
     "pagination": "Páginas de downloads",
@@ -379,29 +458,43 @@
       "area": "Linha",
       "allAreas": "Todas as linhas",
       "search": "Buscar peça",
-      "submit": "Filtrar"
-    },
-    "table": {
-      "label": "Arquivos técnicos por peça",
-      "caption": "Peças e arquivos técnicos para download",
-      "image": "Imagem",
-      "piece": "Peça",
-      "area": "Linha",
-      "files": "Arquivos"
+      "submit": "Filtrar",
+      "format": "Tipo de arquivo",
+      "allFormats": "Todos os tipos",
+      "formatOption": "{name} · {count, plural, one {# peça} other {# peças}}"
     },
     "linkLabel": "Baixar {title} ({format})",
     "formatAndSize": "{format} · {size}",
-    "failed": "Não foi possível gerar o link agora. Tente de novo.",
-    "rateLimited": "Muitos downloads seguidos. Aguarde um minuto.",
-    "unavailable": "Arquivo indisponível no momento."
+    "failed": "Não foi possível gerar o link no momento. Por favor, tente novamente.",
+    "rateLimited": "Foram solicitados vários downloads seguidos. Por favor, aguarde um minuto.",
+    "unavailable": "Arquivo indisponível no momento.",
+    "lead": {
+      "title": "Antes de baixar",
+      "intro": "Informe seus dados uma vez para acessar os arquivos técnicos. Depois disso, os downloads saem direto.",
+      "profile": "Você é",
+      "professional": "Profissional (arquiteto, designer, especificador)",
+      "client": "Cliente final",
+      "fields": {
+        "first_name": "Nome",
+        "last_name": "Sobrenome",
+        "email": "E-mail",
+        "interest": "Interesse (opcional)",
+        "phone": "Telefone (opcional)"
+      },
+      "consent": "Aceito a <privacy>política de privacidade</privacy>.",
+      "submit": "Continuar e baixar",
+      "sending": "Enviando…",
+      "cancel": "Cancelar",
+      "failed": "Não foi possível concluir o cadastro. Por favor, tente novamente."
+    }
   },
   "planner": {
     "meta": {
       "title": "Sala para montar",
-      "description": "Desenhe o ambiente com as medidas reais, posicione peças da Franccino em escala e envie para a lista de orçamento."
+      "description": "Desenhe o ambiente com as medidas reais, posicione peças da Franccino em escala e envie a composição para a lista de desejos."
     },
     "title": "Sala para montar",
-    "intro": "Desenhe o ambiente com as medidas reais, arraste as peças e veja o que cabe. Tudo em escala.",
+    "intro": "Desenhe o ambiente com as medidas reais, posicione as peças e confira a composição, tudo em escala.",
     "sideLabel": "Ambiente e peças",
     "roomSize": "Medidas do ambiente (m)",
     "roomWidth": "Largura",
@@ -411,12 +504,13 @@
       "search": "Buscar peça",
       "placeholder": "Sofá, poltrona, mesa…",
       "searching": "Buscando…",
-      "noResults": "Nenhuma peça com medidas para esta busca.",
-      "add": "Pôr {name} na sala",
+      "noResults": "Nenhuma peça para esta busca.",
+      "add": "Adicionar {name} ao ambiente",
       "sizeRect": "{width} × {depth} cm",
-      "sizeRound": "Ø {diameter} cm"
+      "sizeRound": "Ø {diameter} cm",
+      "unsized": "Medidas a confirmar: ainda não entra na planta"
     },
-    "hint": "Arraste para mover. Com a peça selecionada, use as setas (Shift move 1 cm), R para girar e Delete para remover.",
+    "hint": "Arraste para mover. Com a peça selecionada, use as setas para deslocá-la (com Shift, de 1 em 1 cm), R para girar e Delete para remover.",
     "rotate": "Girar",
     "remove": "Remover",
     "canvasLabel": "Planta do ambiente, {width} por {depth} metros",
@@ -425,26 +519,26 @@
     "pieceLabel": "{name}, {width} por {depth} cm",
     "pieceSize": "{width} × {depth}",
     "moved": "{name} em {x}, {y} cm.",
-    "added": "{name} entrou na sala.",
+    "added": "Peça adicionada ao ambiente: {name}.",
     "removed": "Peça removida.",
-    "maxPieces": "A sala chegou ao limite de peças.",
+    "maxPieces": "O ambiente atingiu o limite de peças.",
     "checks": {
       "title": "Conferência",
       "ok": "Todas as peças cabem sem sobreposição.",
       "conflicts": "{count, plural, one {# peça sobreposta ou fora do ambiente.} other {# peças sobrepostas ou fora do ambiente.}}",
       "usage": "Piso ocupado: {percent}%",
-      "usageTight": "Piso ocupado: {percent}%, pouca área de circulação"
+      "usageTight": "Piso ocupado: {percent}%, com pouca área de circulação"
     },
     "summary": {
-      "title": "Peças na sala",
-      "empty": "Nenhuma peça ainda.",
+      "title": "Peças no ambiente",
+      "empty": "Nenhuma peça adicionada.",
       "count": "{count}×"
     },
-    "sendToList": "Enviar sala para a lista",
-    "sendHint": "Vai para a lista de orçamento com as medidas do ambiente anotadas.",
+    "sendToList": "Enviar ambiente para a lista de desejos",
+    "sendHint": "As peças seguem para a lista de desejos, com as medidas do ambiente anotadas.",
     "needPieces": "Adicione ao menos uma peça à sala.",
-    "sent": "Sala enviada para a lista ({count, plural, one {# peça} other {# peças}}).",
-    "roomNote": "Sala {width} × {depth} m"
+    "sent": "Ambiente enviado para a lista ({count, plural, one {# peça} other {# peças}}).",
+    "roomNote": "Ambiente {width} × {depth} m"
   },
   "home": {
     "meta": {
@@ -452,58 +546,76 @@
       "description": "Catálogo da Franccino: móveis de design autoral das linhas Casa e Giardini, com medidas, acabamentos e arquivos técnicos."
     },
     "hero": {
-      "fallbackTitle": "Móveis de design autoral",
-      "catalog": "Ver o catálogo",
-      "planner": "Montar uma sala",
+      "fallbackTitle": "Feito para permanecer",
+      "catalog": "Explorar o catálogo",
+      "planner": "Planejar um ambiente",
+      "open": "Conheça o destaque",
       "designers": "{count, plural, one {# designer} other {# designers}}",
       "carousel": {
         "label": "Destaques",
         "roleDescription": "carrossel",
         "slideRoleDescription": "destaque",
         "slide": "{current} de {total}",
-        "goTo": "Ir para o destaque {current} de {total}",
-        "previous": "Destaque anterior",
-        "next": "Próximo destaque",
         "pause": "Pausar a troca automática",
-        "play": "Retomar a troca automática"
-      }
+        "play": "Retomar a troca automática",
+        "goTo": "Ir para o destaque {current} de {total}"
+      },
+      "fallbackSubtitle": "Móveis de design autoral"
+    },
+    "scenes": {
+      "title": "Ambientes",
+      "lead": "Selecione os pontos para conhecer cada peça.",
+      "points": "Peças em {title}",
+      "point": "Conheça {name}"
     },
     "launches": {
       "title": "Lançamentos",
-      "viewAll": "Ver o lançamento"
+      "viewAll": "Conheça o lançamento"
     },
     "lines": {
       "label": "Linhas",
-      "viewPieces": "Ver peças"
+      "viewPieces": "Conheça as peças"
     },
     "feature": {
       "dimensions": "Medidas",
       "materials": "Materiais",
       "designer": "Design",
-      "view": "Ver a peça"
+      "view": "Conheça a peça"
     },
     "teaser": {
-      "title": "Monte a sua sala em escala antes de pedir o orçamento.",
-      "body": "Informe as medidas do ambiente, posicione as peças com as dimensões reais e veja o que cabe. A sala vira uma lista de orçamento.",
+      "title": "Planeje seu ambiente em escala antes de solicitar o orçamento",
+      "body": "Informe as medidas do ambiente, posicione as peças com suas dimensões reais e confira a composição. O ambiente se transforma em uma lista de desejos.",
       "cta": "Abrir a Sala para montar"
     },
     "designers": {
-      "title": "Quem desenha",
+      "title": "Quem assina as peças",
       "lead": "Designers e estúdios que assinam peças com a fábrica.",
       "all": "Todos os designers"
     },
     "factory": {
-      "cta": "Conhecer a fábrica"
+      "cta": "Conheça a fábrica"
     },
     "technical": {
-      "title": "Para quem especifica",
-      "lead": "Medidas e arquivos técnicos de cada peça, numa tabela só.",
-      "cta": "Abrir a área técnica"
+      "title": "Para especificadores",
+      "lead": "Medidas e arquivos técnicos de cada peça, reunidos em uma única tabela.",
+      "cta": "Acessar a área técnica"
     },
     "stores": {
-      "title": "Veja as peças nas lojas",
-      "lead": "Lojas exclusivas e revendas. Escolha o estado.",
-      "consultant": "Falar com um consultor"
+      "title": "Conheça as peças em nossas lojas",
+      "lead": "Lojas exclusivas e revendas. Selecione o estado.",
+      "consultant": "Fale com um consultor",
+      "all": "Todas as lojas"
+    },
+    "collections": {
+      "title": "Coleções",
+      "all": "Todas as coleções",
+      "pieces": "{count, plural, one {# peça} other {# peças}}"
+    },
+    "projects": {
+      "title": "Corporativo",
+      "lead": "Projetos corporativos com peças da Franccino.",
+      "all": "Conheça os projetos corporativos",
+      "view": "Conheça o projeto"
     }
   },
   "collections": {
@@ -511,7 +623,12 @@
     "description": "Coleções da Franccino e as peças de cada uma.",
     "designers": "Design",
     "gallery": "Imagens da coleção",
-    "piecesTitle": "Peças da coleção"
+    "piecesTitle": "Peças da coleção",
+    "othersTitle": "Outras coleções",
+    "fillLaunch": "Conheça os lançamentos",
+    "fillAllTitle": "Todas as peças",
+    "fillAllCta": "Conheça as peças",
+    "video": "Vídeo da coleção {name}"
   },
   "designers": {
     "downloads": "Catálogos e apresentações",
@@ -521,11 +638,14 @@
     "website": "Site",
     "instagram": "Instagram",
     "collections": "Coleções do designer",
-    "piecesTitle": "Peças do designer"
+    "piecesTitle": "Peças do designer",
+    "othersTitle": "Outros designers",
+    "fillTitle": "Conheça as coleções",
+    "fillCta": "Explorar as coleções"
   },
   "projects": {
-    "title": "Projetos",
-    "description": "Projetos residenciais e corporativos com peças da Franccino.",
+    "title": "Corporativo",
+    "description": "Projetos corporativos com peças da Franccino.",
     "typeFilter": "Tipo de projeto",
     "allTypes": "Todos",
     "types": {
@@ -538,7 +658,12 @@
     "location": "Local",
     "year": "Ano",
     "gallery": "Imagens do projeto",
-    "piecesTitle": "Peças no projeto"
+    "piecesTitle": "Peças usadas neste projeto",
+    "type": "Tipo",
+    "othersTitle": "Outros projetos",
+    "sceneTitle": "Peças no ambiente",
+    "sceneLead": "Selecione os pontos para conhecer cada peça.",
+    "video": "Vídeo do projeto {name}"
   },
   "corporate": {
     "title": "Corporativo",
@@ -546,11 +671,23 @@
     "clients": "Alguns de nossos clientes"
   },
   "factory": {
-    "title": "Fábrica"
+    "title": "Fábrica",
+    "nextTitle": "Conheça mais a Franccino",
+    "nextStores": "Encontre uma loja",
+    "nextProjects": "Conheça os projetos",
+    "nextCollections": "Conheça as coleções"
   },
   "finishes": {
     "title": "Acabamentos",
-    "count": "{count, plural, one {# acabamento} other {# acabamentos}}"
+    "count": "{count, plural, one {# acabamento} other {# acabamentos}}",
+    "zoom": {
+      "detail": "Ver em detalhe",
+      "open": "Ver {name} em detalhe",
+      "dialog": "{name} em detalhe",
+      "actual": "Ver no tamanho real",
+      "fit": "Ver inteiro",
+      "hint": "Deslize a imagem para percorrer a textura."
+    }
   },
   "storesPage": {
     "title": "Lojas",
@@ -567,13 +704,13 @@
       "assistance": "Assistência técnica",
       "assistancePhone": "Telefone da assistência",
       "address": "Fábrica",
-      "openWhatsapp": "Conversar no WhatsApp"
+      "openWhatsapp": "Atendimento pelo WhatsApp"
     }
   },
   "legal": {
     "cookies": "Política de cookies",
     "privacy": "Política de privacidade",
-    "terms": "Termos de uso",
+    "terms": "Termos e Condições de Uso",
     "pending": "O texto desta página ainda não foi publicado."
   },
   "searchPage": {
@@ -589,12 +726,25 @@
     "home": "Início"
   },
   "consent": {
-    "title": "Cookies",
-    "body": "Usamos cookies de análise para entender como o site é usado. Você escolhe.",
-    "accept": "Aceitar",
+    "title": "Cookies e privacidade",
+    "body": "Usamos cookies necessários para o site funcionar e, com a sua permissão, cookies de análise e de marketing. Você escolhe o que aceita e pode mudar quando quiser na Política de cookies, no rodapé.",
+    "accept": "Aceitar todos",
     "decline": "Recusar",
+    "customize": "Personalizar",
+    "save": "Salvar escolhas",
+    "categories": "Categorias de cookies",
+    "necessary": "Necessários.",
+    "necessaryText": "Fazem o site funcionar (lista de desejos, sala para montar, segurança dos formulários). Sempre ligados.",
+    "analytics": "Análise.",
+    "analyticsText": "Mostram, de forma agregada, como o site é usado (Google Analytics).",
+    "marketing": "Marketing.",
+    "marketingText": "Medem campanhas e anúncios.",
     "policy": "Política de cookies",
-    "privacy": "Política de privacidade"
+    "privacy": "Política de privacidade",
+    "preferences": "Preferências de cookies",
+    "currentChoice": "Esta é a sua escolha atual. Mude as categorias e salve quando quiser.",
+    "noChoice": "Você ainda não escolheu. Marque as categorias que aceita e salve.",
+    "saved": "Preferências salvas."
   },
   "mediaLinks": {
     "title": "Vídeos e links",
@@ -604,6 +754,187 @@
     "video": "Vídeo"
   },
   "blocks": {
-    "timeline": "Linha do tempo"
+    "timeline": "Linha do tempo",
+    "timelineTitle": "Nossa história"
+  },
+  "ideas": {
+    "meta": {
+      "title": "Banco de ideias",
+      "description": "As ideias do banco de ideias com a decisão da Franccino e a situação de cada uma no site."
+    },
+    "title": "Banco de ideias",
+    "intro": "As ideias aprovadas no PDF de retorno de vocês, com a mesma numeração, funcionando com o conteúdo atual do site. Onde ainda falta material, a demonstração usa um exemplo e diz o que falta. No fim, as que ficaram para mais tarde e as descartadas.",
+    "number": "Ideia {number}",
+    "adjustmentLabel": "Ajuste pedido:",
+    "missingLabel": "O que falta de vocês:",
+    "decision": {
+      "approved": "Aprovada",
+      "adjusted": "Aprovada com ajustes",
+      "later": "Mais tarde",
+      "discarded": "Descartada"
+    },
+    "status": {
+      "live": "No ar",
+      "waiting": "Precisa de conteúdo"
+    },
+    "legend": {
+      "live": "funciona no site com o conteúdo atual.",
+      "waiting": "funciona, mas o resultado final depende de material de vocês."
+    },
+    "carousel": {
+      "title": "Carrossel com a peça em destaque",
+      "adjustment": "sem acabamentos, sem \"ver peça\" e sem \"ver em 3D\"; o clique na foto abre a peça.",
+      "description": "A peça do centro fica grande e as vizinhas menores. Arraste ou use as setas: a próxima peça cresce e o nome troca com ela. O clique na foto abre a página da peça."
+    },
+    "scroll": {
+      "title": "Paralaxe e revelação ao rolar",
+      "description": "Ao rolar, o fundo, a peça e o texto andam em velocidades um pouco diferentes, num movimento curto. As fotos abrem como uma cortina quando entram na tela, e os títulos sobem um pouco enquanto aparecem. Role devagar para ver."
+    },
+    "scenes": {
+      "title": "Ambiente com pontos clicáveis",
+      "description": "A foto de um ambiente montado, com um ponto em cada peça. O ponto abre a foto e o nome da peça, que levam à página dela. O cadastro é pelo painel, em Conteúdo, Ambientes: clicar na foto, escolher a peça e salvar.",
+      "missing": "fotos de ambientes montados com as peças (horizontais, em alta) e quais peças aparecem em cada foto.",
+      "demoTitle": "Ambiente de exemplo",
+      "demoNote": "Exemplo com uma foto de coleção e três peças reais em posições ilustrativas, só para mostrar o funcionamento."
+    },
+    "finish": {
+      "title": "Lupa de detalhe e faixa de materiais",
+      "adjustment": "na página de acabamentos, com a imagem fixa em alta.",
+      "description": "Na página Acabamentos, o clique numa amostra abre o acabamento numa imagem grande e fixa, inteira ou no tamanho real, para percorrer a textura.",
+      "missing": "as fotos digitalizadas dos acabamentos em alta resolução (a partir de 2500 px), com o nome e o código de cada um."
+    },
+    "morph": {
+      "title": "Transição de página com a foto",
+      "description": "Ao clicar numa peça, a foto do card cresce até virar a foto grande da página da peça. Experimente numa das peças abaixo."
+    },
+    "micro": {
+      "title": "Microinterações",
+      "adjustment": "validar quais serão utilizadas.",
+      "description": "Pequenos movimentos que respondem ao que a pessoa faz. Cada uma está abaixo, sozinha, para vocês escolherem quais ficam: as que não forem escolhidas saem sem mexer nas outras.",
+      "letter": "12{letter}",
+      "arrow": {
+        "title": "Seta que anda no botão",
+        "body": "Ao passar o mouse, a seta do botão e do link anda um pouco para a direita.",
+        "button": "Ver o catálogo",
+        "link": "Ver as coleções"
+      },
+      "underline": {
+        "title": "Sublinhado que cresce",
+        "body": "Ao passar o mouse num link de texto, o sublinhado cresce da esquerda para a direita, como no menu e no rodapé.",
+        "collections": "Coleções",
+        "designers": "Designers",
+        "projects": "Projetos"
+      },
+      "drag": {
+        "title": "Cursor \"Arraste\" no carrossel",
+        "body": "Sobre o carrossel da ideia 01, o cursor vira um círculo com a palavra \"Arraste\". Passe o mouse sobre as peças lá em cima."
+      },
+      "added": {
+        "title": "Confirmação na lista de desejos",
+        "body": "Ao adicionar uma peça à lista, o botão mostra o visto e \"Adicionada à lista\", e o ícone da lista no topo da página pulsa uma vez. Experimente: a peça entra na lista de verdade e pode ser removida depois."
+      },
+      "count": {
+        "title": "Números que contam",
+        "body": "Os números contam até o valor quando aparecem na tela, como os da página Fábrica. Estes vêm do catálogo atual.",
+        "products": "peças no catálogo",
+        "collections": "coleções",
+        "designers": "designers"
+      },
+      "loading": {
+        "title": "Carregamento suave",
+        "body": "Enquanto uma foto ou uma lista carrega, uma faixa clara passa pelo espaço dela, no lugar do texto \"Carregando…\"."
+      }
+    },
+    "video": {
+      "title": "Vídeo curto em loop no banner",
+      "description": "O banner aceita um vídeo curto, sem som, que roda em loop por cima da foto. Ele só baixa quando o banner aparece na tela; quem pediu menos movimento ou economia de dados vê a foto.",
+      "missing": "um vídeo de 10 a 20 segundos em MP4, sem som, para o banner. O envio é pelo painel, em Banners.",
+      "note": "Ainda não há banner com vídeo: abaixo, o banner com a foto."
+    },
+    "others": {
+      "title": "Mais tarde e descartadas",
+      "intro": "As ideias que vocês deixaram para uma próxima etapa ou descartaram no PDF de retorno.",
+      "i02": {
+        "title": "Peça saindo do quadro",
+        "note": "No card de produtos o movimento é interessante, mas sem cor no fundo."
+      },
+      "i03": {
+        "title": "Nome da peça em camadas",
+        "note": "Os banners vêm do marketing."
+      },
+      "i05": {
+        "title": "Vidro fosco",
+        "note": "Fica para uma próxima etapa."
+      },
+      "i06": {
+        "title": "Luz e gradiente na cor da peça",
+        "note": "Descartada por vocês."
+      },
+      "i08": {
+        "title": "Acabamento que troca a foto",
+        "note": "Entender a complexidade das combinações antes."
+      },
+      "i11": {
+        "title": "Giro 360°",
+        "note": "Descartada por vocês."
+      },
+      "i14": {
+        "title": "Menu com prévia de imagem",
+        "note": "Descartada por vocês."
+      }
+    }
+  },
+  "recent": {
+    "title": "Peças visualizadas recentemente"
+  },
+  "featureCarousel": {
+    "roleDescription": "carrossel",
+    "slideRoleDescription": "peça",
+    "slide": "{current} de {total}: {name}",
+    "status": "{current} de {total}: {name}",
+    "counter": "{current} / {total}",
+    "meta": "{category} · {area}",
+    "previous": "Peça anterior",
+    "next": "Próxima peça",
+    "drag": "Arraste"
+  },
+  "featurePiece": {
+    "label": "Peça em destaque",
+    "view": "Conheça a peça"
+  },
+  "faqPage": {
+    "title": "Tire suas dúvidas",
+    "description": "Respostas sobre as peças da Franccino e a assistência técnica.",
+    "pending": "As respostas desta página ainda não foram publicadas.",
+    "helpTitle": "Ainda com dúvidas?",
+    "helpText": "A equipe da Franccino responde pelo formulário de contato e pelo WhatsApp. Nas lojas, você vê as peças de perto.",
+    "contact": "Falar com a equipe",
+    "stores": "Ver as lojas"
+  },
+  "partnerPage": {
+    "title": "Seja um parceiro",
+    "description": "Para quem deseja abrir uma loja Franccino ou revender as nossas peças.",
+    "formTitle": "Fale com a nossa equipe"
+  },
+  "sharedList": {
+    "title": "Lista de desejos",
+    "lead": "Lista compartilhada com {count, plural, one {# peça} other {# peças}}. O link vale até {date}.",
+    "quantity": "Quantidade: {count}",
+    "finishes": "Acabamentos: {list}",
+    "note": "Observação: {note}",
+    "addAll": "Adicionar à minha lista",
+    "openMine": "Ver a minha lista",
+    "missing": {
+      "title": "Este link de lista expirou",
+      "body": "A lista não existe mais ou o link venceu. Peça um link novo a quem enviou ou monte a sua lista pelo catálogo.",
+      "catalog": "Ver o catálogo"
+    }
+  },
+  "gallery": {
+    "more": "Ver mais {count, plural, one {# imagem} other {# imagens}}",
+    "less": "Ver menos",
+    "open": "Ver {count, plural, one {a imagem} other {as # imagens}}",
+    "openAt": "Abrir a imagem {index}",
+    "close": "Fechar as imagens"
   }
 }

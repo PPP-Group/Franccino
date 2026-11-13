@@ -5,69 +5,131 @@
   regras de `.quote` e `.quote-item` 1962-1976), com os ajustes do plano P4
   (Task 12, Step 4):
   - `var(--ink-2)` → `var(--ink-muted)`.
-  - `.quote-item img` → `.quote-item img, .quote-item__blank` (o `__blank` com
-    `background: var(--stone)`).
+  - `.quote-item img` → `.quote-item img, .quote-item__blank`.
   - `.quote-item > :last-child` → `.quote-item__actions`.
   - R17: o botão "Remover" com alvo de 44px.
+  Rodada 2 (06/11/2026): tokens de tipo e espaço; sem caixas brancas sobre o fundo branco, os itens viram linhas
+  separadas por fio, e `.quote-form` (também usada no Contato) não tem mais recuo interno, para alinhar o título com
+  a coluna ao lado.
 */
 
 .quote {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(24px, 4vw, 64px);
+  gap: var(--space-7) clamp(var(--space-6), 5vw, var(--space-9));
   align-items: start;
-  padding-bottom: 96px;
+  padding-bottom: var(--section-y);
+}
+
+.quote-page {
+  padding-block: var(--space-8) var(--section-y);
 }
 
 .quote-items {
   display: grid;
-  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
 }
 
 .quote-item {
-  background: var(--paper);
   display: grid;
   grid-template-columns: 140px minmax(0, 1fr) auto;
-  gap: 20px;
-  padding: 14px;
+  gap: var(--space-5);
   align-items: center;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.quote-item__media {
+  display: block;
 }
 
 .quote-item img,
 .quote-item__blank {
   width: 140px;
-  aspect-ratio: 4/3;
+  aspect-ratio: 4 / 3;
   object-fit: contain;
 }
 
 .quote-item__blank {
-  background: var(--stone);
+  background: var(--portrait-ground);
+}
+
+.quote-item__copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.quote-item__name {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.quote-item__name a {
+  text-decoration: none;
+}
+
+.quote-item__name a:hover {
+  text-decoration: underline;
+}
+
+.quote-item__actions {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: end;
 }
 
 .quote-item .remove {
-  background: none;
-  border: 0;
-  cursor: pointer;
-  color: var(--ink-muted);
   display: inline-flex;
-  gap: 6px;
+  gap: var(--space-2);
   align-items: center;
   min-height: 44px;
-  font-size: 0.8125rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-size: var(--fs-caption);
 }
 
+.quote-item .remove:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.quote-item .remove .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Coluna do formulário (lista de orçamento e Contato): título, campos e ações, sem caixa em volta. */
 .quote-form {
-  background: var(--paper);
-  padding: clamp(20px, 3vw, 32px);
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
   position: sticky;
-  top: calc(var(--header) + 20px);
+  top: calc(var(--header) + var(--space-5));
+}
+
+/* Título de coluna (Contato e lista de orçamento): o mesmo tamanho de título de item. */
+.form-title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.quote-form > .form-title {
+  margin-bottom: 0;
 }
 
 @media (max-width: 980px) {
   .quote {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .quote-form {
@@ -78,6 +140,7 @@
 @media (max-width: 560px) {
   .quote-item {
     grid-template-columns: 96px minmax(0, 1fr);
+    gap: var(--space-3) var(--space-4);
   }
 
   .quote-item img,
@@ -87,58 +150,109 @@
 
   .quote-item__actions {
     grid-column: 1 / -1;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
   }
-}
 
-/* ---------- ajustes da revisão ---------- */
-
-@media (max-width: 980px) {
-  .quote {
+  .quote-form .pair {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-@media (max-width: 560px) {
-  .quote-form .pair {
-    grid-template-columns: 1fr;
-  }
-
-  .quote-item__actions {
-    justify-items: start !important;
-  }
+/*
+  Esqueleto da lista antes de ler o navegador (QuoteListView): as mesmas medidas da lista pronta, para nada pular
+  quando ela chega. A faixa que passa por cima é a microinteração 12f de motion.css.
+*/
+.quote-skeleton {
+  display: grid;
+  gap: var(--space-4);
 }
 
-/* ---------- acréscimos do plano (Task 12) ---------- */
-
-.quote-page {
-  padding-block: 64px 120px;
+.quote-skeleton__title {
+  width: min(28rem, 70%);
+  height: var(--fs-h1);
 }
 
-.quote-items {
-  list-style: none;
+.quote-skeleton__lead {
+  width: min(36rem, 90%);
+  height: var(--fs-lead);
+  margin-bottom: var(--space-6);
+}
+
+.quote-skeleton__thumb {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.quote-skeleton__lines {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.quote-skeleton__lines > .skeleton {
+  width: 60%;
+  height: var(--fs-body);
+}
+
+.quote-skeleton__lines > .skeleton + .skeleton {
+  width: 35%;
+  height: var(--fs-caption);
+}
+
+/* Faixa abaixo da lista: vistas por último e recomendadas, no tom areia, separadas da lista (retorno de 07/11/2026). */
+.quote-more {
+  margin-top: var(--section-y);
+  background: var(--sand);
+}
+
+.quote-more > .section,
+.quote-more > .recent {
+  background: transparent;
+}
+
+/* Lista de desejos compartilhada por link (/pt/lista/{código}): foto, nome, quantidade, acabamentos e observação. */
+.shared-list {
+  display: grid;
+  gap: var(--space-5);
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
-.quote-item__copy {
+.shared-list__item {
   display: grid;
-  gap: 6px;
+  grid-template-columns: minmax(96px, 200px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line);
 }
 
-.quote-item__name {
-  font-size: 1.1rem;
+.shared-list__media {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--paper);
 }
 
-.quote-item__name a {
+.shared-list__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.shared-list__copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.shared-list__name {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+
+.shared-list__name a {
+  color: inherit;
   text-decoration: none;
-}
-
-.quote-item__actions {
-  display: grid;
-  gap: 10px;
-  justify-items: end;
-}
-
-.quote-form h2 {
-  font-size: 1.25rem;
 }

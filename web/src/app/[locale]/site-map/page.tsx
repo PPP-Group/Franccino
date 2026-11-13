@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import { getAreas, getCategories } from '@/lib/api/catalog';
+import { getArea, getAreas } from '@/lib/api/catalog';
 import { getCollections, getDesigners, getLaunches } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { SITE_MAP_PAGES } from '@/lib/seo/site-map';
@@ -31,26 +31,40 @@ export default async function SiteMapPage({ params }: Props) {
     getTranslations({ locale, namespace: 'nav' }),
     getTranslations({ locale, namespace: 'footer' }),
     getAreas(locale),
-    getCategories(locale, { area: 'indoor' }),
-    getCategories(locale, { area: 'outdoor' }),
+    // Só as categorias com peça em cada área (as da área, não a lista geral).
+    getArea(locale, 'indoor').then((area) => area?.categories ?? []),
+    getArea(locale, 'outdoor').then((area) => area?.categories ?? []),
     getCollections(locale),
     getDesigners(locale),
     getLaunches(locale),
   ]);
   const labelFor = (page: (typeof SITE_MAP_PAGES)[number]) =>
     page.namespace === 'nav' ? nav(page.key) : page.namespace === 'footer' ? footer(page.key) : t(page.key);
-  const categoriesByArea = [
-    {
-      area: areas.find((area) => area.key === 'indoor'),
-      categories: indoor,
-      pathname: '/indoor/[category]' as const,
-    },
-    {
-      area: areas.find((area) => area.key === 'outdoor'),
-      categories: outdoor,
-      pathname: '/outdoor/[category]' as const,
-    },
+  // Tudo em ordem alfabética (retorno de 12/11/2026), a página inicial primeiro.
+  const byName = <T,>(items: T[], name: (item: T) => string) =>
+    [...items].sort((a, b) => name(a).localeCompare(name(b), locale));
+  const pages = [
+    ...SITE_MAP_PAGES.filter((page) => page.key === 'home'),
+    ...byName(
+      SITE_MAP_PAGES.filter((page) => page.key !== 'home'),
+      labelFor,
+    ),
   ];
+  const categoriesByArea = byName(
+    [
+      {
+        area: areas.find((area) => area.key === 'indoor'),
+        categories: byName(indoor, (category) => category.name),
+        pathname: '/indoor/[category]' as const,
+      },
+      {
+        area: areas.find((area) => area.key === 'outdoor'),
+        categories: byName(outdoor, (category) => category.name),
+        pathname: '/outdoor/[category]' as const,
+      },
+    ],
+    (entry) => (entry.area ? nav(entry.area.key) : ''),
+  );
 
   return (
     <main className="wrap">
@@ -61,7 +75,7 @@ export default async function SiteMapPage({ params }: Props) {
             {t('pages')}
           </h2>
           <ul>
-            {SITE_MAP_PAGES.map((page) => (
+            {pages.map((page) => (
               <li key={page.key}>
                 <Link href={page.href}>{labelFor(page)}</Link>
               </li>
@@ -72,7 +86,7 @@ export default async function SiteMapPage({ params }: Props) {
           area && categories.length > 0 ? (
             <section key={area.key} aria-labelledby={`site-map-${area.key}`}>
               <h2 id={`site-map-${area.key}`} className="section-title">
-                {area.brand_name}
+                {nav(area.key)}
               </h2>
               <ul>
                 {categories.map((category) => (
@@ -90,26 +104,10 @@ export default async function SiteMapPage({ params }: Props) {
               {nav('collections')}
             </h2>
             <ul>
-              {collections.map((collection) => (
+              {byName(collections, (collection) => collection.name).map((collection) => (
                 <li key={collection.id}>
                   <Link href={{ pathname: '/collections/[slug]', params: { slug: collection.slug } }}>
                     {collection.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {launches.length > 0 ? (
-          <section aria-labelledby="site-map-launches">
-            <h2 id="site-map-launches" className="section-title">
-              {nav('launches')}
-            </h2>
-            <ul>
-              {launches.map((launch) => (
-                <li key={launch.id}>
-                  <Link href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}>
-                    {launch.title}
                   </Link>
                 </li>
               ))}
@@ -122,10 +120,26 @@ export default async function SiteMapPage({ params }: Props) {
               {nav('designers')}
             </h2>
             <ul>
-              {designers.map((designer) => (
+              {byName(designers, (designer) => designer.name).map((designer) => (
                 <li key={designer.id}>
                   <Link href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}>
                     {designer.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+        {launches.length > 0 ? (
+          <section aria-labelledby="site-map-launches">
+            <h2 id="site-map-launches" className="section-title">
+              {nav('launches')}
+            </h2>
+            <ul>
+              {byName(launches, (launch) => launch.title).map((launch) => (
+                <li key={launch.id}>
+                  <Link href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}>
+                    {launch.title}
                   </Link>
                 </li>
               ))}

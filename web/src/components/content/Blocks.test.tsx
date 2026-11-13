@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { renderWithIntl } from '@/test/intl';
-import { Blocks } from './Blocks';
+import { Blocks, cleanCmsHtml } from './Blocks';
 
 describe('Blocks', () => {
   it('renders nothing for an empty list', () => {
@@ -17,7 +17,7 @@ describe('Blocks', () => {
       />,
     );
     expect(html).toContain(
-      '<div class="faq"><details><summary>Entregam em todo o Brasil?</summary><p>Resposta.</p></details></div>',
+      '<details class="faq__item"><summary><span class="faq__num num" aria-hidden="true">01</span><span class="faq__question">Entregam em todo o Brasil?</span>',
     );
   });
 
@@ -115,5 +115,27 @@ describe('Blocks', () => {
       />,
     );
     expect(html).toContain('<a class="btn" href="/pt/lojas">Ver lojas</a>');
+  });
+
+  it('strips WordPress presentation so rich text always uses the site fonts and scale', () => {
+    expect(
+      cleanCmsHtml(
+        '<h1 style="font-family: Arial">Quem somos</h1><p class="has-large-font-size"><font face="Arial" size="5">Texto</font> <span style="font-size:22px">x</span></p>',
+      ),
+    ).toBe('<h2>Quem somos</h2><p>Texto <span>x</span></p>');
+  });
+
+  it('lays blocks out as full-width editorial sections on the factory page', () => {
+    const html = renderWithIntl(
+      <Blocks
+        editorial
+        blocks={[
+          { type: 'rich_text', data: { body: '<h2>Quem somos</h2><p>Texto</p>' } },
+          { type: 'timeline', data: { items: [{ year: '2000', title: 'Fundação', text: '' }] } },
+        ]}
+      />,
+    );
+    expect(html).toContain('class="editorial editorial--rich_text"><div class="wrap"');
+    expect(html).toContain('class="editorial editorial--timeline"><section class="timeline-block"');
   });
 });

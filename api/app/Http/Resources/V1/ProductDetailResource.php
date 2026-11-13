@@ -11,6 +11,7 @@ use App\Support\RichText;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * `ProductDetail` from docs/api.md. Expects the product loaded with `area`,
@@ -43,7 +44,10 @@ class ProductDetailResource extends ProductCardResource
             'materials' => Localized::value($product, 'materials'),
             'finishes_note' => Localized::value($product, 'finishes_note'),
             'finishes' => $this->finishes($product),
-            'gallery' => ImagePresenter::presentMany($product->getMedia('gallery'), $name),
+            'gallery' => ImagePresenter::presentMany($this->galleryWithoutCover($product), $name),
+            'top_view' => ImagePresenter::present($product->getFirstMedia('top_view'), $name),
+            'rooms' => array_values(array_unique($product->rooms ?? [])),
+            'variants' => $this->variants($product),
             'model_3d' => $this->model3d($product),
             'files' => DownloadFileResource::collection($product->files)->resolve(),
             'media_links' => MediaLinkResource::collection($product->mediaLinks)->resolve(),
@@ -52,6 +56,35 @@ class ProductDetailResource extends ProductCardResource
             'seo' => Refs::seo($product, $product->getFirstMedia('cover'), $name),
             'locale_fallback' => Localized::missing($product, ['name', 'description']),
         ]);
+    }
+
+    /**
+     * Variações publicadas (item 13), nos dois sentidos da ligação, sem repetir e sem a própria peça.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function variants(Product $product): array
+    {
+        if (! $product->relationLoaded('variants') || ! $product->relationLoaded('variantOf')) {
+            return [];
+        }
+
+        return $product->variants
+            ->concat($product->variantOf)
+            ->unique('id')
+            ->reject(fn (Product $variant) => $variant->id === $product->id)
+            ->map(function (Product $variant): array {
+                $name = Localized::value($variant, 'name');
+
+                return [
+                    'id' => $variant->id,
+                    'slug' => Localized::value($variant, 'slug'),
+                    'name' => $name,
+                    'image' => ImagePresenter::present($variant->getFirstMedia('cover'), $name),
+                ];
+            })
+            ->values()
+            ->all();
     }
 
     /** @return array<string, string|null> */
@@ -69,10 +102,14 @@ class ProductDetailResource extends ProductCardResource
             ->map(fn (array $dimension) => [
                 'label' => Localized::array($dimension['label'] ?? null),
                 'width' => $dimension['width'] ?? null,
+                'width_max' => $dimension['width_max'] ?? null,
                 'depth' => $dimension['depth'] ?? null,
+                'depth_max' => $dimension['depth_max'] ?? null,
                 'height' => $dimension['height'] ?? null,
+                'height_max' => $dimension['height_max'] ?? null,
                 'seat_height' => $dimension['seat_height'] ?? null,
                 'diameter' => $dimension['diameter'] ?? null,
+                'diameter_max' => $dimension['diameter_max'] ?? null,
             ])
             ->values()
             ->all();
@@ -157,5 +194,23 @@ class ProductDetailResource extends ProductCardResource
             ->orderBy('id')
             ->limit(8)
             ->get();
+    }
+
+    /**
+     * Gallery without a copy of the cover. The WordPress import and the panel uploads of 06/11/2026 left the cover file
+     * also in the gallery (same file, another id), and the page showed the same photo twice (feedback of 07/11/2026).
+     * A copy is the same number of bytes and the same MIME type.
+     *
+     * @return Collection<int, Media>
+     */
+    private function galleryWithoutCover(Product $product): Collection
+    {
+        $cover = $product->getFirstMedia('cover');
+
+        return collect($product->getMedia('gallery'))
+            ->reject(fn ($media) => $cover !== null
+                && (int) $media->size === (int) $cover->size
+                && $media->mime_type === $cover->mime_type)
+            ->values();
     }
 }

@@ -4,6 +4,7 @@ import { Blocks } from '@/components/content/Blocks';
 import { ClientsRail } from '@/components/content/ClientsRail';
 import { ProjectRow } from '@/components/content/ProjectRow';
 import { PageBanner } from '@/components/layout/PageBanner';
+import { FeaturePiece } from '@/components/products/FeaturePiece';
 import type { Locale } from '@/i18n/config';
 import { getClients, getPage, getProjects } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -35,13 +36,20 @@ export default async function CorporatePage({ params }: Props) {
     getProjects(locale, { type: 'corporate', per_page: 12 }),
     getClients(locale),
   ]);
+  // Peça em destaque escolhida no painel (Páginas); sem escolha, nenhuma (revisão da Franccino, 12/11/2026).
+  const feature = page?.featured_product?.cover ? page.featured_product : null;
   return (
-    <main>
-      <PageBanner image={page?.cover ?? null} title={page?.title ?? t('title')} lead={page?.intro} />
+    <main className="page-end">
+      <PageBanner
+        image={page?.cover ?? null}
+        title={page?.title ?? t('title')}
+        lead={page?.intro}
+        aside={feature ? <FeaturePiece product={feature} compact /> : null}
+      />
       <div className="wrap">
         {page ? <Blocks blocks={page.content} /> : null}
         {projects.data.length > 0 ? (
-          <section aria-labelledby="corporate-projects">
+          <section aria-labelledby="corporate-projects" className="page-section">
             <h2 id="corporate-projects" className="section-title">
               {t('projects')}
             </h2>
@@ -60,8 +68,8 @@ export default async function CorporatePage({ params }: Props) {
             </div>
           </section>
         ) : null}
-        <ClientsRail clients={clients} />
       </div>
+      <ClientsRail clients={clients} />
     </main>
   );
 }

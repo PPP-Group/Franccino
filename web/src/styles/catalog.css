@@ -10,33 +10,60 @@
   width: 100%;
   min-width: 860px;
   border-collapse: collapse;
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
   background: var(--paper);
 }
 
 .tech-table th,
 .tech-table td {
   text-align: left;
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
 }
 
-.tech-table th {
+/* Cabeçalho da tabela: o rótulo em caixa alta do sistema (.label). */
+.tech-table thead th {
   white-space: nowrap;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--ink-muted);
   background: var(--stone);
 }
 
-.tech-table tr:hover td {
-  background: var(--row-hover);
+/*
+  Hover da linha em tom areia na linha INTEIRA, inclusive na coluna da foto e do nome (retorno de 06/11/2026: a
+  miniatura de fundo branco deixava essa coluna branca). A foto se mistura ao fundo (`multiply`): o branco dela vira
+  areia junto com a linha.
+*/
+@media (hover: hover) {
+  .tech-table tbody tr:hover > td,
+  .tech-table tbody tr:hover > th[scope='row'] {
+    background: var(--sand);
+  }
+
+  .tech-table tbody tr:hover .thumb {
+    background: transparent;
+    mix-blend-mode: multiply;
+  }
+}
+
+.tech-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* A coluna da miniatura fica do tamanho dela; o espaço que sobra vai para as colunas de texto. */
+.tech-table tr > :first-child {
+  width: 1%;
 }
 
 .tech-table .thumb {
   width: 64px;
+  /* Sem isto, o `max-width: 100%` do reset zera a foto na coluna de 1%. */
+  max-width: none;
   aspect-ratio: 4 / 3;
   object-fit: contain;
   background: var(--paper);
@@ -46,9 +73,141 @@
   font-weight: 400;
   background: transparent;
   color: var(--ink);
-  font-size: 0.9375rem;
-  letter-spacing: 0;
   white-space: normal;
+}
+
+.tech-table th[scope='row'] a {
+  text-decoration: none;
+}
+
+.tech-table th[scope='row'] a:hover {
+  text-decoration: underline;
+}
+
+.tech-table th[scope='row'] strong {
+  font-weight: 500;
+}
+
+/* A linha inteira abre a peça (RowLinks); categoria, linha e designer são links próprios, sublinhados no hover. */
+.tech-table tbody tr.is-linked {
+  cursor: pointer;
+}
+
+.tech-table td > a:has(.thumb) {
+  display: block;
+}
+
+.tech-table__sublink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tech-table__sublink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/*
+  Fotos que saem da linha da tabela no hover (RowPeek): uma camada fixa que segue o ponteiro (o `transform` vem do
+  script), sem eventos de ponteiro. Só desktop com mouse; com "menos movimento", aparece parada e sem crescer.
+*/
+.row-peek {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row-peek {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease-out);
+    will-change: transform, opacity;
+  }
+
+  .row-peek.is-visible {
+    opacity: 1;
+  }
+}
+
+.row-peek__group {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+  Fotos abertas lado a lado (`--i` é a posição, vinda do RowPeek), cada uma com uma inclinação leve e alternada. No
+  hover elas saem da pilha, uma atrás da outra, e deslizam até o lugar (retorno de 07/11/2026): a primeira (a capa)
+  fica na frente e não anda; as outras saem de trás dela, em sequência.
+*/
+.row-peek__photo {
+  --peek-step: 180px;
+  position: absolute;
+  top: 12px;
+  left: calc(12px + var(--i, 0) * var(--peek-step));
+  width: 168px;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  rotate: var(--peek-rotate, 0deg);
+}
+
+.row-peek__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/*
+  Foto da opção do filtro (categoria, ambiente, coleção, designer): uma só, na proporção dela (o tamanho vem do RowPeek,
+  com a mesma área para todas), preenchendo o quadro. Retratos dos designers em preto e branco, como nas páginas deles.
+*/
+.row-peek--natural .row-peek__photo {
+  aspect-ratio: auto;
+}
+
+.row-peek--natural .row-peek__photo img {
+  object-fit: cover;
+}
+
+.row-peek--mono .row-peek__photo img {
+  filter: grayscale(1) contrast(1.02);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .row-peek__photo {
+    animation: row-peek-deal var(--t-slow) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  .row-peek__photo:first-child {
+    animation-name: row-peek-in;
+    animation-duration: var(--t-mid);
+  }
+}
+
+@keyframes row-peek-in {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+/* Sai de trás da capa (na posição dela, sem inclinação) e desliza até o lugar. */
+@keyframes row-peek-deal {
+  from {
+    translate: calc(-1 * var(--i, 0) * var(--peek-step)) 0;
+    rotate: 0deg;
+  }
 }
 
 .table-scroll {
@@ -60,86 +219,51 @@
 
 .file-links {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
-.file-link {
+.file-link,
+.file-links__many {
   background: none;
   border: 0;
   min-height: 44px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   text-decoration: underline;
   color: var(--ink);
 }
 
 .download-error {
   display: block;
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--alert);
-}
-
-.download > button {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 12px;
-  align-items: center;
-  width: 100%;
-  min-height: 44px;
-  padding: 12px 16px;
-  border: 1px solid var(--line-field);
-  background: var(--paper);
-  color: var(--ink);
-  text-align: left;
-  cursor: pointer;
-}
-
-.download > button .icon {
-  grid-row: 1 / span 2;
-  width: 20px;
-  height: 20px;
-}
-
-.download > button strong {
-  font-weight: 600;
-}
-
-.download > button small {
-  color: var(--ink-muted);
-  font-size: 0.8125rem;
-}
-
-.download > button:hover {
-  border-color: var(--ink);
-}
-
-.download > button[aria-busy='true'] {
-  cursor: progress;
-  opacity: 0.7;
 }
 
 /* ---------- catalog ---------- */
 
 .catalog {
-  padding-bottom: 32px;
+  padding-bottom: var(--section-y);
 }
 
+/*
+  Cabeçalho das páginas de lista (PageHead e catálogo): título e frase de abertura à esquerda, metadado curto à
+  direita. Perto do título (--space-4) e longe da barra de baixo (--space-6).
+*/
 .catalog-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
+  gap: var(--space-5);
   align-items: end;
-  padding-block: clamp(32px, 4vw, 56px) 24px;
+  padding-block: clamp(var(--space-6), 4vw, var(--space-8)) var(--space-6);
 }
 
 .catalog-head__copy {
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .catalog-head--center {
@@ -148,33 +272,79 @@
   text-align: center;
 }
 
+.catalog-head--center .lead {
+  margin-inline: auto;
+}
+
+/* Celular: o metadado desce para baixo do título, alinhado à mesma margem, em vez de ficar solto à direita. */
+@media (max-width: 35rem) {
+  .catalog-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+/*
+  Cabeçalho com coluna à direita (retorno do tech lead de 06/11/2026: as duas colunas começam na altura do título, e
+  nada de metade vazia): título, frase e texto à esquerda; designers da coleção ou a peça em destaque à direita.
+*/
+.catalog-head--split {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: start;
+  padding-bottom: var(--section-y-tight);
+}
+
+.catalog-head--split .catalog-head__copy > .prose {
+  max-width: var(--measure);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 56.25rem) {
+  .catalog-head--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+}
+
 .catalog-head--tight {
-  padding-top: 8px;
+  padding-top: var(--space-2);
 }
 
 .catalog-description {
-  max-width: 68ch;
-  margin-bottom: 24px;
+  max-width: var(--measure);
+  margin-bottom: var(--space-7);
 }
 
-.catalog-results {
-  padding-bottom: 32px;
+/* Downloads e vídeos depois da grade (página de lançamentos). */
+.catalog > .block {
+  margin-top: var(--space-7);
 }
 
+/*
+  Barra do catálogo: contagem à esquerda; filtro e troca Grade/Tabela à direita, todos com 44 px de altura. Fica presa
+  sob o cabeçalho no desktop; no celular rola junto (duas linhas presas tomariam a tela).
+*/
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-3) var(--space-4);
   flex-wrap: wrap;
-  padding-block: 16px;
+  padding-block: var(--space-3);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   position: sticky;
-  top: var(--header);
+  top: var(--header-offset, var(--header));
   background: var(--stone);
   z-index: 10;
+}
+
+/* Peças de coleção, designer e lançamento: a barra não fica presa no topo (a página segue depois das peças). */
+.toolbar--pieces {
+  position: static;
+  margin-top: var(--space-6);
 }
 
 .toolbar--end {
@@ -183,22 +353,15 @@
 
 .toolbar__end {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
   flex-wrap: wrap;
 }
 
 .filter-form {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
-}
-
-.filter-form select {
-  border: 1px solid var(--line-field);
-  background: var(--paper);
-  padding: 8px 12px;
-  font-size: 0.875rem;
 }
 
 .view-toggle {
@@ -206,31 +369,64 @@
   border: 1px solid var(--ink);
 }
 
-.view-toggle a {
+.view-toggle a,
+.view-toggle button {
   border: 0;
   background: transparent;
-  min-height: 44px;
-  padding: 0 14px;
-  font-size: 0.8125rem;
+  min-height: 42px;
+  padding: 0 var(--space-4);
+  font-size: var(--fs-ui);
   cursor: pointer;
   display: inline-flex;
-  gap: 6px;
+  gap: var(--space-2);
   align-items: center;
   text-decoration: none;
   color: inherit;
 }
 
-.view-toggle a[aria-current='true'] {
+.view-toggle .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.view-toggle a[aria-current='true'],
+.view-toggle button[aria-pressed='true'] {
   background: var(--ink);
   color: var(--paper);
+}
+
+@media (max-width: 35rem) {
+  .toolbar {
+    position: static;
+  }
+
+  /* Celular: contagem e Grade/Tabela na primeira linha; o filtro de designer ocupa a segunda inteira. */
+  .toolbar--catalog {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .toolbar--catalog .toolbar__end {
+    display: contents;
+  }
+
+  .toolbar--catalog .filter-form {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .toolbar--catalog .filter-form .select {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding-block: 24px 96px;
+  gap: var(--space-4);
+  padding-top: var(--space-7);
 }
 
 /* Alvo de toque de 44 px sem mudar o sublinhado do link. */
@@ -241,5 +437,73 @@
 .pagination .link-arrow::after {
   content: '';
   position: absolute;
-  inset: -12px -8px;
+  inset: calc(-1 * var(--space-3)) calc(-1 * var(--space-2));
+}
+
+/* Anterior e Próxima lado a lado na barra de cima, logo depois da contagem (retorno de 09/11/2026). */
+.pagination--top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-top: 0;
+}
+
+.pagination__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-size: var(--fs-ui);
+  color: inherit;
+  text-decoration: none;
+}
+
+.pagination__step .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.pagination__step.is-prev .icon {
+  transform: scaleX(-1);
+}
+
+.pagination__step.is-off {
+  color: var(--ink-muted);
+  opacity: 0.45;
+}
+
+a.pagination__step:hover span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toolbar__start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+}
+
+/* O começo da lista, para onde a troca de página rola (PageScroll), abaixo do cabeçalho fixo. */
+[data-page-anchor] {
+  scroll-margin-top: calc(var(--header) + var(--space-4));
+}
+
+/* ---------- "Ver mais" das listagens (revisão da Franccino, 12/11/2026, item 11) ---------- */
+
+/* As peças somadas continuam a grade de cima, com o mesmo respiro entre as linhas. */
+.load-more__grid {
+  margin-top: var(--space-8);
+}
+
+.load-more {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  text-align: center;
+}
+
+.load-more .btn {
+  min-width: 220px;
 }

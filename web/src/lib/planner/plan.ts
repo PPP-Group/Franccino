@@ -51,6 +51,34 @@ export function setRoom(plan: Plan, room: Room): Plan {
 
 export type PlanEntry = { piece: PlacedPiece; product: PlannerProduct };
 
+/**
+ * Atualiza a foto e o nome das peças salvas no navegador com os dados atuais do catálogo (retorno de 07/11/2026: a
+ * planta guardava o endereço da foto, e a troca de capas apagou as fotos antigas, deixando os quadrados vazios).
+ * Devolve o mesmo objeto quando nada mudou, para não salvar à toa.
+ */
+export function refreshPlanProducts(plan: Plan, fresh: PlannerProduct[]): Plan {
+  let changed = false;
+  const products = { ...plan.products };
+  for (const item of fresh) {
+    const saved = products[String(item.id)];
+    if (
+      saved &&
+      (saved.image?.src !== item.image?.src ||
+        saved.topView?.src !== item.topView?.src ||
+        saved.name !== item.name)
+    ) {
+      products[String(item.id)] = {
+        ...saved,
+        image: item.image,
+        topView: item.topView ?? null,
+        name: item.name,
+      };
+      changed = true;
+    }
+  }
+  return changed ? { ...plan, products } : plan;
+}
+
 export function planEntries(plan: Plan): PlanEntry[] {
   return plan.pieces.flatMap((piece) => {
     const product = plan.products[String(piece.productId)];
@@ -89,6 +117,7 @@ const productSchema = z.object({
   depth: z.number().positive(),
   shape: z.enum(['rect', 'round']),
   image: z.object({ src: z.string(), alt: z.string() }).nullable(),
+  topView: z.object({ src: z.string(), alt: z.string() }).nullable().optional(),
 });
 
 const planSchema = z.object({

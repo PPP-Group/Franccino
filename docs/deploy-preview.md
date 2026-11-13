@@ -83,7 +83,18 @@ O resto já vem de fábrica na imagem e não precisa de configuração no EasyPa
 - Agendador (`RUN_SCHEDULER`, ligado): limpa os logs pelo prazo de retenção, os jobs com falha e as exportações, e faz o
   backup do SQLite.
 - Healthcheck na rota `/up`, que também confere o banco.
-- 2FA obrigatório para administradores (`PANEL_ADMIN_MFA_REQUIRED`, ligado) e cookie de sessão seguro.
+- Cookie de sessão seguro.
+- 2FA obrigatório para administradores: ligado por padrão na imagem (`PANEL_ADMIN_MFA_REQUIRED`). **No preview fica
+  desligado** (`PANEL_ADMIN_MFA_REQUIRED=false` nas variáveis da API), para a Franccino testar sem depender de quem
+  tem o app autenticador. Volta a ser ligado no staging e na produção.
+
+Se um administrador já tinha configurado o app autenticador, o painel continua pedindo o código mesmo com a variável
+desligada. Para zerar o 2FA de todos os usuários do preview:
+
+```bash
+API=$(docker ps -q -f name=sites_api-site-franccino | head -1)
+docker exec $API php artisan tinker --execute="App\Models\User::query()->update(['app_authentication_secret' => null, 'app_authentication_recovery_codes' => null]);"
+```
 
 ### Backup do preview
 
@@ -167,6 +178,19 @@ Depois, faça **Deploy do site** para o build pegar o conteúdo.
 
 Não reimportar o snapshot e não apagar o banco.
 
+Ao subir, a API também faz sozinha, uma vez por versão e em segundo plano (os detalhes estão em
+`api/docker/entrypoint.sh`):
+
+- aplica as listas de capas revisadas de `api/database/data/covers/*.json`
+  (`php artisan franccino:covers:apply`). Cada lista troca a capa de cada peça pela foto da galeria na diagonal,
+  virada para a esquerda. Foto que não está mais na galeria é ignorada, porque vale o que foi editado no painel;
+- põe na fila as fotos redimensionadas de novo quando o tamanho ou a qualidade delas muda
+  (`php artisan franccino:media:refresh <versão>`, versão em `MEDIA_REFRESH_VERSION`). Com 2 workers, o catálogo
+  inteiro fica pronto em cerca de meia hora, e até lá o site mostra as versões antigas.
+
+A marca de cada versão fica em `storage/` (`.covers-*`, `.media-refresh-*`): apagar a marca faz a versão rodar de
+novo na próxima subida.
+
 ### Traduzir o conteúdo para o inglês
 
 O arquivo `api/database/data/translations/en.json` traz a tradução de todo o conteúdo publicado no preview em 16/10/2026
@@ -206,6 +230,16 @@ pnpm check:redirects --site https://<domínio do site> --user <usuário do previ
 O relatório sai em `redirects-relatorio.csv`, com um endereço por linha: `ok` (redirect para uma página que abre, ou
 410 de propósito), `pagina` (abre direto) e `quebrado`. O comando termina com erro se houver algum quebrado; os 20
 primeiros aparecem na tela.
+
+### Conteúdo do site antigo e importação em massa
+
+- No deploy, o entrypoint aplica uma vez cada lista de `database/data/wordpress/` (`franccino:content:apply`): textos
+  das peças, fotos das lojas, galerias dos projetos, logos dos clientes, vídeo e fotos da Fábrica e o ambiente com
+  pontos do Fazenda Boa Vista. Só preenche o que está vazio e baixa as fotos de franccino.com.br na hora. Para
+  conferir antes: `php artisan franccino:content:apply database/data/wordpress/2026-11-07-site-antigo.json --dry-run`.
+- Para subir fotos em massa (recortes, fotos do Drive) sem o painel: preencha `CONTENT_IMPORT_TOKEN` na API (só letras e
+  números), faça o redeploy e siga `design/recortes/LEIA-ME.md`. Depois do lote, apague a variável para desligar as
+  rotas.
 
 ### Problemas comuns
 

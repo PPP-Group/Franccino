@@ -43,7 +43,7 @@ src/
     fonts.ts, globals.css
   components/
     layout/{SiteHeader,HeaderNav,HeaderSearch,SiteFooter,LanguageSwitcher,QuoteListLink,PageHead,PageBanner}.tsx, nav.ts, area-menu.ts
-    ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,SnapshotImage,ToastRegion}.tsx
+    ui/{Icon,Breadcrumbs,AreaDot,QuantityStepper,ToastRegion}.tsx
     media/{ApiImage,MediaLinks,VideoFacade}.tsx
     content/{RichText,Blocks,Tile,EmptyNotice}.tsx
     downloads/{DownloadsTable,FileDownloads}.tsx
@@ -54,8 +54,9 @@ src/
     products/{ProductPlate,ProductRail,QuickAddButton,ProductStage,ModelViewer,ProductConfigurator,...}.tsx
     planner/{RoomPlanner,PlannerLibrary,PlanSvg}.tsx
     quote/QuoteListView.tsx
-    home/{HeroSection,HeroCarousel,LaunchesSection,LinesSection,FeatureSection,PlannerTeaser,...}.tsx
+    home/{HeroSection,HeroCarousel,HeroVideo,SceneViewer,ScenesSection,LaunchesSection,LinesSection,FeatureSection,...}.tsx
     stores/StoreFinder.tsx
+    ideas/IdeaSection.tsx (página interna /pt/ideias: prévia das ideias aprovadas, noindex, fora do menu)
     seo/JsonLd.tsx
   i18n/{config,routing,navigation,request}.ts
   lib/
@@ -65,7 +66,8 @@ src/
     quote/{types,list,store,hooks,message,snapshot}.ts
     planner/{types,geometry,plan,plan-store,product,query,data,actions}.ts
     forms/contact.ts
-    ui/{local-store,toast,roving,use-is-client,carousel}.ts
+    ui/{local-store,toast,roving,use-is-client,use-reduced-motion,carousel,count-up}.ts
+    scenes/hotspot.ts
     media/links.ts
     consent/{store,gtm}.ts
     projects/type.ts
@@ -77,7 +79,7 @@ src/
     images/srcset.ts
     seo/{metadata,jsonld,sitemap,site-map}.ts
     security/{basic-auth,csp,csp-report}.ts
-  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages}.css
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,ideas,motion}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts
@@ -108,12 +110,14 @@ Alias `@/*` aponta para `src/*`.
   ali); utilitários Tailwind usam os tokens (`bg-stone`, `text-ink-muted`…), a paleta padrão do
   Tailwind está desligada. Classes de componente por área em `src/styles/*.css`, portadas do
   protótipo aprovado (`design/prototype/`).
-- Cantos retos, sem sombra em repouso (só no hover do card de produto), madeira = Casa,
+- Cantos retos, sem sombra (o hover de foto clicável é o zoom `.hover-zoom`, desde 06/11/2026), madeira = Casa,
   verde = Giardini/sucesso, metadado nunca acima do título.
-- Fontes em `src/app/fonts.ts`: Cormorant Garamond nos títulos e EB Garamond no texto (pedido do cliente,
-  licença aberta). Troca de fonte só ali e nos tokens.
+- Fonte em `src/app/fonts.ts`: Jost no site inteiro, títulos e texto (pedido de 06/11/2026, licença aberta). A logo é
+  o desenho da marca em vetor (`components/layout/Logo.tsx`). Troca de fonte só ali e nos tokens.
 - Lógica de estado (lista de orçamento, planta, acabamentos) em módulos puros de `src/lib/*`
   com testes; componentes só ligam estado a markup.
 - Estado do navegador (lista e planta) só por `src/lib/quote/store.ts` e
   `src/lib/planner/plan-store.ts`; componentes leem com os hooks, nunca direto do `localStorage`.
 - Nunca inventar preço, prazo, contagem ou especificação: sem dado da API, a seção some.
+- Movimento novo (rolagem, carregamento, transição entre páginas) fica em `src/styles/motion.css`, que se desliga
+  apagando o `@import`; nada se mexe com `prefers-reduced-motion: reduce` (hook `useReducedMotion`).

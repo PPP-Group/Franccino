@@ -24,24 +24,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 50px;
-  padding: 0 24px;
+  gap: var(--space-2);
+  /* 48 px: a mesma altura dos campos (.field input), para botão e campo alinharem lado a lado. */
+  min-height: 48px;
+  padding: 0 var(--space-5);
   border: 1px solid var(--ink);
   background: var(--ink);
   color: var(--paper);
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
   font-weight: 500;
+  line-height: var(--lh-ui);
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
+  /* Cor muda suave; o aperto (transform) é curto, como um botão físico (rodada 3: microinterações). */
   transition:
-    background var(--t-fast) ease,
-    color var(--t-fast) ease,
-    border-color var(--t-fast) ease;
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
 }
 
+/* A seta que anda para a direita no hover é uma microinteração de motion.css (12a). */
+
 .btn:hover {
-  background: #000;
+  background: color-mix(in srgb, var(--ink), black 45%);
+  border-color: color-mix(in srgb, var(--ink), black 45%);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
 }
 
 .btn--ghost {
@@ -51,6 +63,7 @@
 
 .btn--ghost:hover {
   background: var(--ink);
+  border-color: var(--ink);
   color: var(--paper);
 }
 
@@ -61,7 +74,8 @@
 }
 
 .btn--light:hover {
-  background: var(--stone);
+  background: var(--shimmer-base);
+  border-color: var(--shimmer-base);
 }
 
 .btn--block {
@@ -83,28 +97,57 @@
 .link-arrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9375rem;
+  position: relative;
+  gap: var(--space-2);
+  font-size: var(--fs-ui);
   font-weight: 500;
+  line-height: var(--lh-ui);
   text-decoration: none;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 2px;
+  padding-bottom: var(--space-1);
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+
+/* O fio do link: um traço de 1 px (não borda), para o sublinhado poder se redesenhar no hover (motion.css, 12b). */
+.link-arrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* Área de toque de 44 px sem mudar o desenho do link (texto + fio). */
+.link-arrow::after {
+  content: '';
+  position: absolute;
+  inset: calc((100% - 44px) / 2) 0;
+  min-height: 44px;
 }
 
 .link-arrow .icon {
   width: 16px;
   height: 16px;
-  transition: transform var(--t-fast) ease;
 }
 
-.link-arrow:hover .icon {
-  transform: translateX(3px);
+.link-arrow:active {
+  opacity: 0.7;
+}
+
+/* Link com símbolo de marca antes do texto (WhatsApp nos canais de contato). */
+.channel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 /* ---------- sections ---------- */
 
 .section {
-  padding-block: clamp(64px, 7.5vw, 112px);
+  padding-block: var(--section-y);
 }
 
 .section + .section--flush {
@@ -112,7 +155,7 @@
 }
 
 .section--tight {
-  padding-block: clamp(48px, 6vw, 88px);
+  padding-block: var(--section-y-tight);
 }
 
 .section--paper {
@@ -123,22 +166,23 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 24px;
-  margin-bottom: clamp(28px, 3.5vw, 48px);
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .section-head p {
-  margin-top: 14px;
+  margin-top: var(--space-3);
 }
 
 /* ---------- product plates (.tag, .area-dot) ---------- */
 
 .tag {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  padding: 3px 8px;
+  padding: var(--space-1) var(--space-2);
   border: 1px solid var(--line-strong);
   background: var(--paper);
   color: var(--ink-muted);
@@ -150,11 +194,11 @@
 }
 
 .area-dot {
+  /* Quadrado, como o resto da marca (rodada 3: nenhum canto arredondado). */
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   display: inline-block;
-  margin-right: 6px;
+  margin-right: var(--space-2);
   vertical-align: 1px;
 }
 
@@ -171,23 +215,35 @@
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .chip {
-  font-size: 0.8125rem;
-  padding: 6px 12px;
-  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-4);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  border: 1px solid var(--line-strong);
   background: transparent;
   text-decoration: none;
   cursor: pointer;
   transition:
-    border-color var(--t-fast) ease,
-    background var(--t-fast) ease;
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
 }
 
 .chip:hover {
   border-color: var(--ink);
+}
+
+.chip:active {
+  transform: translateY(1px) scale(0.985);
 }
 
 .chip[aria-pressed='true'],
@@ -200,9 +256,10 @@
 /* ---------- breadcrumb ---------- */
 
 .crumbs {
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
   color: var(--ink-muted);
-  padding-block: 20px;
+  padding-block: var(--space-5);
 }
 
 .crumbs a {
@@ -216,7 +273,7 @@
 .crumbs__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -224,42 +281,56 @@
 
 .crumbs__list li + li::before {
   content: '/';
-  margin-right: 8px;
+  margin-right: var(--space-2);
   color: var(--ink-muted);
+}
+
+/* Fim de página sem seção própria (busca): o mesmo respiro de seção antes do rodapé. */
+.page-end {
+  padding-bottom: var(--section-y);
 }
 
 /* ---------- catalog (.empty) ---------- */
 
 .empty {
-  padding: 64px 24px;
+  padding: var(--space-8) var(--space-5);
   text-align: center;
   background: var(--paper);
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   justify-items: center;
 }
 
-/* ---------- planner (.field, .pair) ---------- */
+/* ---------- campos (.field, .pair): um só estilo para formulário, busca e sala ---------- */
 
 .field {
   display: grid;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
-.field label,
-.field .label {
-  font-size: 0.8125rem;
-  font-weight: 600;
+.field label:not(.consent) {
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  line-height: var(--lh-ui);
 }
 
-.field input,
+/* 48 px de altura em input e select (o select nativo não segue o padding do input sem altura mínima). */
+.field input:not([type='checkbox'], [type='radio']),
 .field select,
 .field textarea {
+  width: 100%;
+  min-height: 48px;
   border: 1px solid var(--line-field);
   background: var(--paper);
-  padding: 11px 12px;
-  font-size: 0.9375rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
   border-radius: 0;
+}
+
+.field textarea {
+  min-height: 8rem;
+  resize: vertical;
 }
 
 .field input:focus,
@@ -270,12 +341,12 @@
 }
 
 .field .hint {
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
 
 .field .error {
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--alert);
 }
 
@@ -285,8 +356,8 @@
 
 .pair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
 }
 
 /* ---------- misc (.toast) ---------- */
@@ -294,21 +365,22 @@
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 24px;
-  transform: translate(-50%, calc(100% + 32px));
+  bottom: var(--space-5);
+  transform: translate(-50%, calc(100% + var(--space-6)));
   visibility: hidden;
   background: var(--ink);
   color: var(--paper);
-  padding: 14px 18px;
+  padding: var(--space-3) var(--space-5);
   display: flex;
-  gap: 16px;
+  gap: var(--space-4);
   align-items: center;
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
   z-index: 60;
   transition:
     transform var(--t-mid) var(--ease-out),
     visibility 0s linear var(--t-mid);
-  max-width: calc(100% - 32px);
+  max-width: calc(100% - var(--space-6));
 }
 
 .toast.is-visible {
@@ -321,7 +393,15 @@
 
 .toast a {
   color: var(--paper);
-  font-weight: 600;
+  font-weight: 500;
+}
+
+@media (max-width: 560px) {
+  /* Celular: ações do estado vazio empilhadas, todas com a mesma largura. */
+  .empty__actions {
+    flex-direction: column;
+    justify-self: stretch;
+  }
 }
 
 @media (max-width: 640px) {
@@ -331,7 +411,7 @@
   }
 
   .btn {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 }
 
@@ -339,12 +419,14 @@
 
 .btn--compact {
   min-height: 44px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
 }
 
+/* Ações um passo mais longe do texto (proximidade): título e frase juntos, botões abaixo. */
 .empty__actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -360,29 +442,65 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px 32px;
-  padding: 20px var(--gutter);
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-5) var(--gutter);
   background: var(--paper);
   border-top: 1px solid var(--line);
 }
 
 .consent-banner__copy {
   display: grid;
-  gap: 6px;
-  max-width: 72ch;
+  gap: var(--space-2);
+  max-width: var(--measure);
+}
+
+.consent-banner__copy p {
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
+}
+
+.consent-banner__copy .meta-inline {
+  font-size: var(--fs-caption);
 }
 
 .consent-banner__title {
-  font-size: 1rem;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 .consent-banner__copy a {
   text-decoration: underline;
 }
 
+.consent-banner__options {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--fs-ui);
+}
+
+.consent-banner__options label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.consent-banner__options input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.15em;
+  accent-color: var(--ink);
+}
+
 .consent-banner__actions {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -404,11 +522,11 @@
 
 .media-links__videos {
   display: grid;
-  gap: 20px;
+  gap: var(--space-5);
 }
 
 .media-links--wide {
-  margin-bottom: 56px;
+  margin-bottom: var(--space-7);
 }
 
 .media-links--wide .media-links__videos {
@@ -418,11 +536,11 @@
 .video {
   margin: 0;
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .video figcaption {
-  font-size: 0.875rem;
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
 
@@ -454,13 +572,112 @@
 .video__play .icon {
   width: 56px;
   height: 56px;
-  padding: 14px;
+  padding: var(--space-4);
   border: 1px solid var(--ink);
   background: var(--paper);
-  transition: background var(--t-mid) var(--ease-out);
+  transition: transform var(--t-base) var(--ease-out);
 }
 
-.video__play:hover .icon,
 .video__play:focus-visible .icon {
-  background: var(--stone);
+  background: var(--shimmer-base);
+}
+
+@media (hover: hover) {
+  .video__play:hover .icon {
+    transform: scale(1.06);
+  }
+}
+
+/*
+  Esqueleto de carregamento: blocos no lugar do conteúdo que ainda vai chegar, no lugar de um "Carregando…" escrito
+  (o texto fica só para o leitor de tela). Parado aqui; a faixa que passa por cima é a microinteração 12f de motion.css.
+*/
+.skeleton {
+  display: block;
+  background-color: var(--shimmer-base);
+}
+
+.skeleton--fill {
+  position: absolute;
+  inset: 0;
+}
+
+/* Ícone do botão de adicionar à lista: troca (lista ou + → visto) remontando este quadro (motion.css, 12d). */
+.add-icon {
+  display: inline-grid;
+}
+
+/*
+  Link de texto com o sublinhado do cabeçalho e do rodapé (fio de 1 px que aparece no hover), para usar fora deles.
+  O fio crescer da esquerda é a microinteração 12b de motion.css.
+*/
+.link-grow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--fs-ui);
+  line-height: var(--lh-ui);
+  text-decoration: none;
+}
+
+.link-grow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(50% - 0.85em);
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.link-grow:hover::after,
+.link-grow:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Preferências de cookies na página Política de cookies (13/11/2026): as mesmas opções do aviso, no corpo da página. */
+.consent-preferences {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 72ch;
+  margin-top: var(--section-y);
+  padding-top: var(--space-7);
+  border-top: 1px solid var(--line);
+}
+
+.consent-preferences h2 {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+
+.consent-preferences__options {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.consent-preferences__options label {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.consent-preferences__options input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.2em;
+  accent-color: var(--ink);
+}
+
+.consent-preferences__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }

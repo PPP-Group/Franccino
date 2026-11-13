@@ -13,30 +13,30 @@ colors:
   alert: '#9b2c1f'
 typography:
   display:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: 'clamp(2.5rem, 5.2vw, 4.9rem)'
     fontWeight: 400
     lineHeight: 1.02
     letterSpacing: '-0.025em'
   headline:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: 'clamp(2.1rem, 3.6vw, 3.4rem)'
     fontWeight: 400
     lineHeight: 1.05
     letterSpacing: '-0.015em'
   title:
-    fontFamily: "'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '1.125rem'
     fontWeight: 500
     lineHeight: 1.3
     letterSpacing: '-0.005em'
   body:
-    fontFamily: "'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '1rem'
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "'EB Garamond', Garamond, Georgia, serif"
+    fontFamily: "'Jost', system-ui, sans-serif"
     fontSize: '0.8125rem'
     fontWeight: 500
     lineHeight: 1.4
@@ -93,7 +93,7 @@ components:
 
 # Design System: Franccino
 
-> **Beta notice (2026-10-21).** This file documents the site as built for the beta. The visual design gets a full revamp in month 2, so expect this file to be rewritten then. Since the client's round 1 feedback (2026-10-06): the page ground is white (`--stone: #ffffff`); headings use Cormorant Garamond and text uses EB Garamond (SIL Open Font License, served by `next/font` from `src/app/fonts.ts`). The wordmark is still text, waiting for the logo in vector format. Every color, type, spacing and radius value is a CSS custom property in `src/styles/tokens.css`. Treat hex values, font families and imagery direction as replaceable, and the structural rules (grid, spacing rhythm, corners, elevation, named rules) as the durable system.
+> **Beta notice (2026-10-21).** This file documents the site as built for the beta. The visual design gets a full revamp in month 2, so expect this file to be rewritten then. Since the client's round 1 feedback (2026-10-06): the page ground is white (`--stone: #ffffff`); since 2026-11-06 the whole site uses Jost (SIL Open Font License, served by `next/font` from `src/app/fonts.ts`), and the wordmark is the brand logo in vector form (`components/layout/Logo.tsx`). Every color, type, spacing and radius value is a CSS custom property in `src/styles/tokens.css`. Treat hex values, font families and imagery direction as replaceable, and the structural rules (grid, spacing rhythm, corners, elevation, named rules) as the durable system.
 
 ## Overview
 
@@ -106,9 +106,9 @@ The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23
 **Key Characteristics:**
 
 - White plates on a stone ground; paper is the surface color, stone is the field.
-- A Garamond pairing: Cormorant Garamond for headings, EB Garamond for running text (client request, 2026-10-06).
+- One family, Jost, for headings and running text (request of 2026-11-06; it replaced the Garamond pairing).
 - Square corners everywhere except two small functional exceptions (badge pill, status dot).
-- Flat by default; a single soft ambient shadow appears only as hover feedback on interactive plates, never as a resting decoration.
+- Flat always: no shadows. Since 06/11/2026 the hover feedback on clickable photos is a slow 5% zoom inside the frame (`.hover-zoom`), never a shadow.
 - Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color.
 
 ## Colors
@@ -141,9 +141,9 @@ Note on incumbent tokens not canonized: `--ink-3` (`#8a887f`) is declared in `as
 
 ## Typography
 
-**Fonts:** Cormorant Garamond (headings: display, headline, title; weights 400–700) and EB Garamond (body, lead, labels), both SIL Open Font License 1.1, loaded by `next/font/google` and served by the site itself (`src/app/fonts.ts`, tokens `--font-heading` and `--font`). They replaced Archivo, the provisional grotesque of the prototype, on 2026-10-07.
+**Fonts:** Jost for every role (headings 400, h3 500, text 400, UI 500), SIL Open Font License 1.1, loaded by `next/font/google` and served by the site itself (`src/app/fonts.ts`, tokens `--font-heading` and `--font`). It replaced Cormorant Garamond and EB Garamond on 2026-11-06.
 
-**Character:** A classic book serif in two optical voices: Cormorant's high contrast carries titles at large sizes, EB Garamond keeps running copy dense and legible. Hierarchy comes from size and weight. Neither family has a width axis, so the old `wdth` tokens (`--wide`, `--text`) no longer change anything.
+**Character:** A geometric sans with a calm, open rhythm. Hierarchy comes from size and weight, never from a second family. Jost has no width axis, so the old `wdth` tokens (`--wide`, `--text`) change nothing.
 
 ### Hierarchy
 
@@ -158,7 +158,7 @@ Note on incumbent tokens not canonized: `--ink-3` (`#8a887f`) is declared in `as
 
 ### Named Rules
 
-**The Two Faces Rule.** Headings use Cormorant Garamond and every other text role uses EB Garamond. No third family (no sans accent, no mono display face). A change of fonts happens only in `src/app/fonts.ts` and the tokens.
+**The One Face Rule.** Every text role uses Jost. No second family. The logo is a drawing, not text. A change of fonts happens only in `src/app/fonts.ts` and the tokens.
 
 **The No-Kicker Rule.** Metadata (`.meta`) sits _below or beside_ a heading as a supporting fact line — designer name, category, price cue — never as a small-caps label placed above a headline to announce it. The build never uses eyebrows/kickers; don't introduce them on new surfaces.
 
@@ -172,11 +172,11 @@ Two data-dense screens depart from the fluid container's comfort: the technical 
 
 ## Elevation & Depth
 
-The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The one exception is a soft, ambient shadow (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`) that appears solely on hover/focus of an interactive product plate — it is a state response signaling "this is clickable," not a resting decoration. This is a narrow, deliberate divergence from the direction contract's stated "no decorative shadows": it is used exactly once, as functional hover feedback, never at rest and never on non-interactive cards (tech table rows, store cards, factory facts use borders only). Do not generalize it into a resting card shadow elsewhere.
+The system is flat by default: separation between surfaces comes from hairline borders (`--line`, `--line-strong`) and the stone/paper color break, not from shadow. The plate-hover shadow was removed on 06/11/2026 (it looked cheap and was clipped at the end of rails): clickable photos now answer hover with a slow zoom inside their frame (`.hover-zoom`).
 
 ### Shadow Vocabulary
 
-- **Plate hover** (`box-shadow: 0 18px 40px -28px rgba(23, 23, 23, 0.35)`): interactive product plate on `:hover`, signaling affordance only.
+- None. Hover feedback is the photo zoom (`.hover-zoom`), not a shadow.
 
 ### Named Rules
 
@@ -210,7 +210,7 @@ Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips a
 
 - **Corner style:** square (0 radius).
 - **Background:** paper on a stone field.
-- **Shadow strategy:** flat at rest; ambient hover shadow only on interactive plates (see Elevation & Depth).
+- **Shadow strategy:** none; hover is the photo zoom (see Elevation & Depth).
 - **Border:** a single `--stone` divider between media and body; no outer border on the plate itself.
 - **Internal padding:** 16px 18px 20px body padding; 16px gap in card grids.
 - **Area identity:** a small colored dot (wood/garden) precedes the category label to mark Casa vs. Giardini at a glance.
@@ -240,15 +240,102 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 ### Do:
 
 - **Do** treat every color, font-family, spacing and radius value as a swappable custom property — the brand manual will replace some of them, not the structure.
-- **Do** build hierarchy with size and weight inside the two Garamond families, never with a third family.
+- **Do** build hierarchy with size and weight inside Jost, never with a second family.
 - **Do** keep corners square (`border-radius: 0`); reserve rounding for the count badge and area dot only.
 - **Do** reuse garden as the single success/confirmed signal and wood/garden as the only area identifiers.
 - **Do** keep metadata (`.meta`) below or beside headings as supporting fact, never as an uppercase kicker above them.
 
 ### Don't:
 
-- **Don't** add a resting shadow to a card, table row, or panel — shadow is reserved for interactive-plate hover only.
+- **Don't** add a shadow to a card, table row, or panel, at rest or on hover.
 - **Don't** introduce a third saturated accent color; wood and garden are reserved for Casa/Giardini identity.
 - **Don't** round a button, input, table, or card corner; square corners are the system's form language throughout.
 - **Don't** reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects — daylight photography and one grotesque are the world.
 - **Don't** promote `--ink-3` into use without a real call site; it is declared but unused in the current build.
+
+## Escala de tipos e de espaços (rodada 2, 06/11/2026)
+
+Regra única para o site inteiro. Tokens em `src/styles/tokens.css`; nenhum arquivo de estilo usa `font-size`, `padding`,
+`margin` ou `gap` com valor solto quando existe token para ele. Fontes das regras: as leis de UX usadas no VTX Tap
+(proximidade, Tesler, grade de 4 px, área de toque, 4 tempos de movimento) e o checklist das skills de design
+(Vercel web-interface-guidelines, Anthropic frontend-design, better-typography, impeccable, baseline-ui, web-quality).
+
+### Tipos
+
+| Token          | Tamanho                   | Uso                                                              | Fonte, peso, entrelinha |
+| -------------- | ------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| `--fs-display` | 44 a 80 px                | Uma vez por página, no máximo: banner sem foto, peça em destaque | Jost 400, 1.02          |
+| `--fs-h1`      | 36 a 56 px                | Título da página                                                 | Jost 400, 1.12          |
+| `--fs-h2`      | 28 a 40 px                | Título de seção                                                  | Jost 400, 1.12          |
+| `--fs-h3`      | 22 px                     | Título de item (card de projeto, grupo, coluna)                  | Jost 500, 1.25          |
+| `--fs-lead`    | 18 a 20 px                | Uma frase de abertura abaixo do título                           | Jost 400, 1.55          |
+| `--fs-body`    | 16 px                     | Texto corrido, nome de peça no card                              | Jost 400, 1.6           |
+| `--fs-ui`      | 15 px                     | Botões, menu, campos, filtros                                    | Jost 500, 1.4           |
+| `--fs-caption` | 14 px                     | Metadados, legendas, rodapé de tabela                            | Jost 400, 1.4           |
+| `--fs-label`   | 12 px, caixa alta, 0.08em | Etiquetas e cabeçalho de tabela; o único texto em caixa alta     | Jost 500, 1.4           |
+
+- Títulos de 24 px ou mais com `letter-spacing: -0.01em`; `text-wrap: balance` em títulos e `pretty` em parágrafos.
+- Texto corrido com no máximo `--measure` (65 caracteres) por linha. Nada abaixo de 12 px.
+- Metadado nunca acima do título; nada de rótulo em caixa alta acima de cada título.
+- Números que mudam ou ficam em coluna com `.num` (algarismos tabulares).
+
+### Espaços
+
+Grade de 4 px: `--space-1` (4) a `--space-10` (128). Ritmo vertical:
+
+- **Proximidade:** título → seu conteúdo com `--space-3` a `--space-4`; bloco → próximo bloco da mesma seção com
+  `--space-7`; seção → seção com `--section-y` (64 a 128 px). Uma seção mais densa usa `--section-y-tight`.
+- Entre itens irmãos de uma grade ou lista, sempre `gap`, nunca margem no item.
+- Margem lateral da página: `--gutter`; largura máxima: `--max`.
+
+### Interação e movimento
+
+- Área de toque de 44 px em todo controle; foco visível com contorno de 2 px.
+- Movimento só com `transform` e `opacity`, nos tempos `--t-press` (120), `--t-fast` (180), `--t-base` (240),
+  `--t-mid` (320) e `--t-slow` (700, só para movimento grande: foto que cresce, blocos que aparecem, zoom de foto),
+  curvas `--ease-out` e `--ease-in-out`. Hover só em `@media (hover: hover)` quando mudar layout.
+- Hover de foto clicável: `.hover-zoom` no quadro (a foto aproxima 5% dentro do quadro). Sem sombra em card.
+- Aparecer ao rolar (ideia 04): `data-reveal` no bloco de texto (sobe 20 px enquanto aparece), `data-reveal="stagger"`
+  num grupo (filhos em sequência), `data-reveal="curtain"` em volta de uma foto (os filhos diretos abrem como cortina,
+  da esquerda para a direita; só nas coleções, retorno da Franccino de 06/11/2026) e `data-reveal="curtain-stagger"`
+  num mosaico ou grade de fotos (hoje sem uso). Dispara uma vez
+  (RevealObserver), nunca preso à rolagem. O recorte da cortina fica sempre nos filhos: um bloco recortado por inteiro
+  não conta como visível e nunca abriria.
+- Paralaxe (ideia 04): `data-parallax` no bloco que mede a rolagem, `data-parallax-layer="back"` na foto (ou
+  `<ApiImage parallax />`) e `data-parallax-layer="front"` no texto. Só `translate`, pelo componente `Parallax` (script,
+  todos os navegadores, desde 09/11/2026): a foto anda 14% da altura em cada sentido, mais devagar que a página, e o
+  texto 80 px no sentido oposto (8% e 32 px no celular). Não usar em arte com texto (capas das coleções), porque a foto
+  ganha 30% de sobra (`--parallax-scale`).
+- Grade sempre completa: a última linha não fica com buraco; o espaço vazio recebe um bloco complementar (destaque,
+  outra coleção, chamada) ou a grade muda o número de colunas.
+- Continuidade: o fim de cada página leva a outra coisa para ver (outras coleções, peças relacionadas, "Peças que você
+  viu"), sem obrigar a voltar à home.
+- `prefers-reduced-motion`: nada se mexe; o conteúdo aparece pronto.
+- Lei de Tesler (VTX): a interface não mostra o que não se aplica agora (seção sem dado some; sem botão sem ação).
+
+### Imagens
+
+- Cada `ApiImage` declara um `sizes` igual à largura real em que é desenhada (contando o recorte de `object-fit:
+cover`), para o navegador baixar a versão certa em tela retina.
+- Arte de banner com texto (faixa larga do marketing) não é recortada: o banner segue a proporção da imagem.
+
+### Movimento: o que dá para desligar
+
+Tudo vive em `src/styles/motion.css`, um bloco por item, com o título no comentário. Apagar o `@import` em
+`globals.css` desliga tudo; apagar um bloco desliga só aquele item. Com `prefers-reduced-motion: reduce`, nada se mexe.
+
+| Item                                                                                                         | Bloco em motion.css                                   | Sem o bloco                                           |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- |
+| 04 Revelação ao rolar (texto sobe, foto abre como cortina)                                                   | "Ideia 04 — revelação ao rolar"                       | Tudo aparece pronto                                   |
+| 04 Paralaxe (três camadas)                                                                                   | "Ideia 04 — paralaxe suave"                           | Fotos e textos rolam juntos                           |
+| 10 A foto do card cresce até a página que ele abre e encolhe de volta (só a foto; entre listagens, nada)     | "abrir a peça e voltar dela (ideia 10)"               | A página troca sem movimento                          |
+| 12a Seta que anda no hover (botão, `.link-arrow`)                                                            | "12a"                                                 | A seta fica parada                                    |
+| 12b Sublinhado que cresce da esquerda (cabeçalho, rodapé, `.link-grow`; o fio do `.link-arrow` se redesenha) | "12b"                                                 | O fio aparece de uma vez                              |
+| 12c Cursor "Arraste" no carrossel                                                                            | em `carousel.css`                                     | Cursor normal                                         |
+| 12d Peça adicionada: o visto entra e o ícone e o contador da lista pulsam uma vez                            | "12d"                                                 | O visto e "Adicionada à lista" aparecem sem movimento |
+| 12e Números que contam (`CountUp`)                                                                           | é o componente: trocar `<CountUp value=…>` pelo valor | O número aparece pronto                               |
+| 12f Faixa de carregamento (só `.skeleton`; as fotos não têm)                                                 | "12f"                                                 | Os esqueletos ficam parados, na cor de fundo          |
+| 12g Foto carregando: tom claro com brilho lento, e a foto entra com fade (sem prévia borrada; `ApiImage`)    | "12g"                                                 | A foto aparece de uma vez sobre o tom claro           |
+
+A Franccino escolhe quais microinterações ficam (PDF de retorno: "validar quais serão utilizados"); cada uma está
+sozinha em `/pt/ideias`, ideia 12.

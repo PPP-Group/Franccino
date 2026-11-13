@@ -3,7 +3,8 @@
  * Confere os endereços do site antigo contra o site novo (P5b T14). Lê o sitemap do WordPress (todos os sitemaps
  * filhos), pede cada caminho ao site novo sem seguir o redirect e classifica a resposta:
  *
- * - ok: 301/302 para uma página que responde 200, ou 410 (conteúdo que saiu de propósito);
+ * - ok: 301/302/307/308 para uma página que responde 200, ou 410 (conteúdo que saiu de propósito), direto ou depois
+ *   do redirect que tira a barra final;
  * - pagina: o caminho responde 200 direto no site novo (raro: só a raiz e os caminhos iguais);
  * - quebrado: 404, 5xx, redirect para 404 ou erro de rede.
  *
@@ -83,7 +84,8 @@ async function check(path) {
         status: first.status,
         to,
         final: final.status,
-        result: final.status === 200 ? 'ok' : 'quebrado',
+        // 410 depois do redirect também é proposital: o Next tira a barra final (308) antes de a regra de 410 valer.
+        result: final.status === 200 || final.status === 410 ? 'ok' : 'quebrado',
       };
     }
     return { path, status: first.status, to: '', final: '', result: 'quebrado' };
