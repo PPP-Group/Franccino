@@ -410,6 +410,8 @@ Mais campos (2026-11-13): em `page`, `caption` (e `caption_en`) escolhe o bloco 
 foto da coleção e põe a nova no lugar dela, na mesma posição (a versão editada no lugar da original). `video` aceita MP4
 até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em `page`, `collection=video` grava um bloco Vídeo com o MP4, `title` (e `title_en`) e a capa opcional em
 `poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
+Em `product`, `collection=model_3d` grava o GLB do visualizador 3D (disco privado, até
+`franccino.uploads.model_3d_max_kb`), no lugar do anterior.
 `media/remove` apaga as fotos `ids` daquele registro e daquela coleção (ex.: a cópia antiga de uma foto que voltou do
 Drive); um id de outro registro ou de outra coleção não é tocado e volta em `not_found`.
 

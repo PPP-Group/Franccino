@@ -35,7 +35,7 @@ class ImportController extends Controller
 {
     /** Collections each kind of record accepts, and how the record is found. */
     private const TARGETS = [
-        'product' => ['model' => Product::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'cutout']],
+        'product' => ['model' => Product::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'cutout', 'model_3d']],
         'project' => ['model' => Project::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
         'designer' => ['model' => Designer::class, 'key' => 'slug', 'collections' => ['portrait', 'signature']],
         'collection' => ['model' => Collection::class, 'key' => 'slug->pt', 'collections' => ['cover', 'gallery', 'video', 'video_poster']],
@@ -64,10 +64,13 @@ class ImportController extends Controller
             return $request->input('collection') === 'video' ? $this->pageVideo($request) : $this->pageGallery($request);
         }
 
-        // `video` takes the page film (MP4, up to the page video limit); every other collection takes a photo.
-        $file = $request->input('collection') === 'video'
-            ? ['required', 'file', 'mimetypes:video/mp4', 'max:'.config('franccino.uploads.video_max_kb')]
-            : ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'];
+        // `video` takes the page film (MP4, up to the page video limit), `model_3d` the product's GLB (the 3D viewer,
+        // private disk); every other collection takes a photo.
+        $file = match ($request->input('collection')) {
+            'video' => ['required', 'file', 'mimetypes:video/mp4', 'max:'.config('franccino.uploads.video_max_kb')],
+            'model_3d' => ['required', 'file', 'extensions:glb', 'max:'.config('franccino.uploads.model_3d_max_kb')],
+            default => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
+        };
         $data = $request->validate([
             'target' => ['required', Rule::in(array_keys(self::TARGETS))],
             'key' => ['required', 'string', 'max:200'],

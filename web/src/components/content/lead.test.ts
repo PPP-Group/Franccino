@@ -16,6 +16,10 @@ describe('distinctLead', () => {
     expect(distinctLead('Traz ao desenho de produto uma leitura precisa…', bio)).toBeNull();
   });
 
+  it('hides the summary when it is a paragraph further down the full text', () => {
+    expect(distinctLead('Cada peça é pensada como presença.', bio)).toBeNull();
+  });
+
   it('keeps a summary that says something else', () => {
     expect(distinctLead('Designer italiano.', bio)).toBe('Designer italiano.');
     expect(distinctLead('Designer italiano.', null)).toBe('Designer italiano.');

@@ -1,0 +1,926 @@
+{
+  "banco-adhara": {
+    "drive_id": "1KPB9atUyxUJIvIIRrhEnzL40C-U0Aji7",
+    "name": "BANCO ADHARA.skp",
+    "size_mb": 17.79,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banco-arp": {
+    "drive_id": "1by1xXj3AA-Bn2WTW-ppELlIN0O0gmsrd",
+    "name": "BANCO ARP.skp",
+    "size_mb": 4.28,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-adhara": {
+    "drive_id": "19Gc8pBQtT1apV7_1hWpAK5vcxQJH37wn",
+    "name": "CADEIRA ADHARA.skp",
+    "size_mb": 15.31,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-arp": {
+    "drive_id": "1toAL4aR2xkWbPghPKDDU2Mlb1ACQn8KY",
+    "name": "CADEIRA ARP.skp",
+    "size_mb": 5.57,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-noa": {
+    "drive_id": "1UyrxCLhL_2ZO6a-kvzs4zXAg8P4tSer3",
+    "name": "CADEIRA NOA.skp",
+    "size_mb": 119.54,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-arp": {
+    "drive_id": "1pvg7DFUWIp_791TwmFQBJwEpBX_Nh3Tc",
+    "name": "MESA CENTRO ARP - TAMPO AL.skp",
+    "size_mb": 0.24,
+    "title": "Bloco 3D (SketchUp) – tampo de alumínio"
+  },
+  "mesa-de-centro-noa-quadrada": {
+    "drive_id": "1xa3pZ5FHquJmGlNeXW7pzm2i4HknoGul",
+    "name": "MESA CENTRO NOA - QUAD-RET - TPO AL.skp",
+    "size_mb": 0.24,
+    "title": "Bloco 3D (SketchUp) – quadrada ou retangular, tampo de alumínio"
+  },
+  "mesa-de-centro-noa-redonda": {
+    "drive_id": "1bxyeVpoS6XnMK7cdnoTMq9L91rpd4HgP",
+    "name": "MESA CENTRO NOA - RED - TPO AL.skp",
+    "size_mb": 0.26,
+    "title": "Bloco 3D (SketchUp) – redonda, tampo de alumínio"
+  },
+  "mesa-de-jantar-arp": {
+    "drive_id": "127NPbigihcGAJHM_Qm9z19qpbHBw8zfi",
+    "name": "MESA JANTAR ARP - TAMPO AL.skp",
+    "size_mb": 0.24,
+    "title": "Bloco 3D (SketchUp) – tampo de alumínio"
+  },
+  "mesa-de-jantar-noa": {
+    "drive_id": "1RiULg3u0_rTs8gWFfXL4Df_Ra3NTzeWz",
+    "name": "MESA JANTAR NOA - RET - TPO MD.skp",
+    "size_mb": 0.29,
+    "title": "Bloco 3D (SketchUp) – retangular, tampo de madeira"
+  },
+  "poltrona-adhara": {
+    "drive_id": "1k6bVWpaUc3fm37PGdVXWGkYn82T93cJV",
+    "name": "POLTRONA ADHARA.skp",
+    "size_mb": 13.45,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-arp": {
+    "drive_id": "12wYIX5-4etktf3Znu62V8qF83U02rLM_",
+    "name": "POLTRONA ARP.skp",
+    "size_mb": 5.09,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-noa": {
+    "drive_id": "1ebukijQMrpjH-1HD9poIrCqrRdgw0nKF",
+    "name": "POLTRONA NOA.skp",
+    "size_mb": 188.05,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-adhara": {
+    "drive_id": "1jK9qGKlNt4ZQQVf4BOYlbpnFav8qlc8J",
+    "name": "SOFA ADHARA.skp",
+    "size_mb": 62.65,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-noa": {
+    "drive_id": "1hCvNAbIyS-sdMYxDC5BSmXe0hWgxAcdU",
+    "name": "SOFA NOA - PUFF.skp",
+    "size_mb": 0.85,
+    "title": "Bloco 3D (SketchUp) – pufe"
+  },
+  "poltrona-caete": {
+    "drive_id": "1_zNmfnOD5cCHcMdQE246_AjYnxviPHtm",
+    "name": "POLTRONA CAETE.skp",
+    "size_mb": 48.09,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-melina-sem-braco": {
+    "drive_id": "12-bKqZdqANphv4yDmLsVVvLf4KetDh-Q",
+    "name": "CADEIRA MELINA GIARDINI - [S-BR].skp",
+    "size_mb": 94.43,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-dara-2": {
+    "drive_id": "1l74PLVIHXSWNJEDbv7cHpOf1R6JA5Ezh",
+    "name": "CADEIRA DARA CASA - INDOOR.skp",
+    "size_mb": 21.91,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-maria-com-braco": {
+    "drive_id": "17juImoJRdsHDIesHH0TibbHtd0KGJGXh",
+    "name": "CADEIRA MARIA - [C-BR].skp",
+    "size_mb": 6.45,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-maria-sem-braco": {
+    "drive_id": "1vf_EdWuPbpG_8H13CDJrnFlZG0RCnNxb",
+    "name": "CADEIRA MARIA - [S-BR].skp",
+    "size_mb": 6.66,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-self-sem-braco": {
+    "drive_id": "1BVp9sXxFS8VR2GqFnLb5_z0NzAmd1Sar",
+    "name": "CADEIRA SELF - [S-BR].skp",
+    "size_mb": 15.26,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-malu": {
+    "drive_id": "1RjLKkrdrGGWFjFXU19ahQ-djVzOkbOEa",
+    "name": "CADEIRA MALU.skp",
+    "size_mb": 1.81,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-carola": {
+    "drive_id": "1R7JQ11UtfFZsXEDsHxExhWsUz3m9VkYZ",
+    "name": "CADEIRA CAROLA.skp",
+    "size_mb": 5.0,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-alias": {
+    "drive_id": "143pCwf910LQwh4mnwsJo8fqDYCyDfnfY",
+    "name": "CADEIRA ALIAS MD - [S-BR].skp",
+    "size_mb": 0.44,
+    "title": "Bloco 3D (SketchUp) – madeira, sem braço"
+  },
+  "cadeira-julia": {
+    "drive_id": "1JEbp_8CZOXc6PkgrPBeEo3R5rmQLgSCi",
+    "name": "CADEIRA JULIA - C-BR.skp",
+    "size_mb": 4.22,
+    "title": "Bloco 3D (SketchUp) – com braço"
+  },
+  "cadeira-lorena": {
+    "drive_id": "1-r4kJLeK9AUDpnK2MWt-PKFRI-mIHsta",
+    "name": "CADEIRA LORENA.skp",
+    "size_mb": 3.82,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-fran-com-braco": {
+    "drive_id": "1NIVsN2gZJW9pzhPz-afufE8ttW9bwwk3",
+    "name": "CADEIRA FRAN - [C-BR].skp",
+    "size_mb": 5.59,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-beatriz": {
+    "drive_id": "1Ml0a3bMD-McW1FvVJqIHdCr_iYbuDUvy",
+    "name": "CADEIRA BEATRIZ.skp",
+    "size_mb": 2.57,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-fran-sem-braco": {
+    "drive_id": "1_BUMvh-c_7_uddZsrOL8UkgbBez4L3_-",
+    "name": "CADEIRA FRAN - [S-BR].skp",
+    "size_mb": 6.8,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-marcela-com-braco": {
+    "drive_id": "1qEWUbxaJ3Mk6ZzfE6QWHenHJrDlsz0iG",
+    "name": "CADEIRA MARCELA CASA - C-BR.skp",
+    "size_mb": 3.88,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-marcela-sem-braco": {
+    "drive_id": "180dIK5-El2rJV5nMS0JFjAMoVItXENnE",
+    "name": "CADEIRA MARCELA CASA - S-BR.skp",
+    "size_mb": 3.56,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-lisa-sem-braco": {
+    "drive_id": "1ph987YpRUseFohm6QBzoq_bpASQKviYo",
+    "name": "CADEIRA LISA - [S-BR].skp",
+    "size_mb": 1.82,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-angulo": {
+    "drive_id": "15SDVsAbXLYQu6h12RFPcYKe8EpQyvnS5",
+    "name": "CADEIRA ANGULO.skp",
+    "size_mb": 0.58,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-lisa-com-braco": {
+    "drive_id": "1x_C052mn3rNx47z4wk_9zzpTmdOf6s4A",
+    "name": "CADEIRA LISA - [C-BR].skp",
+    "size_mb": 2.1,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-paglia": {
+    "drive_id": "1l5pxjQGcJkazpRPcuVfI0ECQWCk_vSbz",
+    "name": "CADEIRA PAGLIA.skp",
+    "size_mb": 0.77,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-self-com-braco": {
+    "drive_id": "1TYZunS0n9z9SJiW_YL1KVllZhNaHj0cy",
+    "name": "CADEIRA SELF - [C-BR].skp",
+    "size_mb": 15.31,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-rio": {
+    "drive_id": "1U856EoMwKGsG_3ePLupo5F87SBDd3fc5",
+    "name": "CADEIRA RIO.skp",
+    "size_mb": 1.21,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-vest-sem-braco": {
+    "drive_id": "1fggXNkKm3hUPA6MkdP9hpuP5J3-M19-V",
+    "name": "CADEIRA VEST - [S-BR].skp",
+    "size_mb": 0.54,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "bar-coda": {
+    "drive_id": "1INQvpUqwvr9OlShSa60Rrd6THJbYqq1L",
+    "name": "BAR CODA.skp",
+    "size_mb": 0.33,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "buffet-line": {
+    "drive_id": "1kieBYfHFv-R3obPm_MrXGdHvS_zFsoAT",
+    "name": "BUFFET LINE.skp",
+    "size_mb": 0.29,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "buffet-juno": {
+    "drive_id": "15sOmcLLYCrRvsVzB7pyrjM6iXwhp0laN",
+    "name": "BUFFET JUNO.skp",
+    "size_mb": 0.57,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "buffet-twin": {
+    "drive_id": "1pUVtYxMXvFpyD27Q3lOCmnm2wlM9d_sF",
+    "name": "BUFFET TWIN.skp",
+    "size_mb": 0.14,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jogos-ponto": {
+    "drive_id": "1Ll_9ikQ9rhR_SU2Gb9LHc_bH8bcyc4br",
+    "name": "MESA JOGOS PONTO - 5 COPOS.skp",
+    "size_mb": 0.66,
+    "title": "Bloco 3D (SketchUp) – 5 copos"
+  },
+  "banco-julia": {
+    "drive_id": "19OhMrbg-U9srM1huCOct1Z_pvLxYs8Bm",
+    "name": "BANCO JULIA - 1 LUGAR.skp",
+    "size_mb": 0.92,
+    "title": "Bloco 3D (SketchUp) – 1 lugar"
+  },
+  "banco-dublin": {
+    "drive_id": "1dAVh3wWB3Wm_nhByHmchp3g7ExxHrQS3",
+    "name": "BANCO DUBLIN.skp",
+    "size_mb": 0.72,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banco-twiggy": {
+    "drive_id": "1R60pZAcZhDOE8C494tze40O-gCByXCO7",
+    "name": "BANCO TWIGGY.skp",
+    "size_mb": 4.63,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banco-coda": {
+    "drive_id": "1h64nKO0Ww4jZfQrYc6KKp3T4drMkGkt3",
+    "name": "BANCO CODA.skp",
+    "size_mb": 3.2,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banco-paco": {
+    "drive_id": "14sLBZRf5Vp_KLMzXDHuh6VnKn-99UDtB",
+    "name": "BANCO PACO.skp",
+    "size_mb": 1.72,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "balanco-dome": {
+    "drive_id": "1rdpFLmnZ_-i_14fAjsOCmR2ddwOrg_35",
+    "name": "BALANCO DOME CASA.skp",
+    "size_mb": 8.46,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banqueta-fran": {
+    "drive_id": "153FAds1G9vZymT77OHCJaSdTSnEWHUbZ",
+    "name": "BANQUETA FRAN - S-BR ESTOF.skp",
+    "size_mb": 6.39,
+    "title": "Bloco 3D (SketchUp) – sem braço, estofada"
+  },
+  "banqueta-julia": {
+    "drive_id": "1WAJm9PP2iQmDtpnkNLnn97JSgbysfSbA",
+    "name": "BANQUETA JULIA.skp",
+    "size_mb": 4.45,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banqueta-paglia": {
+    "drive_id": "17qM_4lBKbsMOzPemMh4XckcUBUb-qcpJ",
+    "name": "BANQUETA PAGLIA.skp",
+    "size_mb": 1.86,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banqueta-vest": {
+    "drive_id": "1m2-UYMcQ7k9I6pp2dhf2UAF3gcW-AOrc",
+    "name": "BANQUETA VEST.skp",
+    "size_mb": 0.31,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-luz": {
+    "drive_id": "13ER7wEu8yJuLkmsgFpkwUett5IrY-ija",
+    "name": "MESA CENTRO LUZ - DANIELA FERRO_FRANCCINO_LUZ-MESA-CENTRO.skp",
+    "size_mb": 9.98,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-italy": {
+    "drive_id": "1G_pJ4ItlbMvBYhYH_24dfgs1FKfzyFY-",
+    "name": "MESA CENTRO ITALY - [TAMPO INF MDF - TAMPO SUP MDF].skp",
+    "size_mb": 0.19,
+    "title": "Bloco 3D (SketchUp) – tampos de MDF"
+  },
+  "mesa-de-centro-nina": {
+    "drive_id": "1RCMSx2xYSgEnOzRYPuNBf-bYY4yZQLKN",
+    "name": "MESA CENTRO NINA - S-GV.skp",
+    "size_mb": 0.13,
+    "title": "Bloco 3D (SketchUp) – sem gaveta"
+  },
+  "mesa-de-centro-vic": {
+    "drive_id": "1tXi9WX4FApiMUzJk32ifMP4JmP39DeGE",
+    "name": "MESA CENTRO VIC.skp",
+    "size_mb": 0.13,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-anne": {
+    "drive_id": "1Bsv-QWdQAs_5Qbhsm5r0pwnnpx060R79",
+    "name": "MESA CENTRO ANNE.skp",
+    "size_mb": 0.15,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-kit": {
+    "drive_id": "1ACpFGvMFwsKV7TyRXv6lS2dMY4ncYjyp",
+    "name": "MESA CENTRO KIT.skp",
+    "size_mb": 0.16,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-irene": {
+    "drive_id": "1nmZLZiH3U_Y57OZXLHUiX7x1rEVs0tkh",
+    "name": "MESA CENTRO IRENE - RET.skp",
+    "size_mb": 0.17,
+    "title": "Bloco 3D (SketchUp) – retangular"
+  },
+  "mesa-de-centro-mimo": {
+    "drive_id": "12xzTqMxP30REN78-BicoQX2Q-q7Xndx1",
+    "name": "MESA CENTRO MIMO.skp",
+    "size_mb": 0.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-eros": {
+    "drive_id": "1nsLgc5qEGWAjAmsZB0-BurRXHyB_Zh2C",
+    "name": "MESA LATERAL EROS.skp",
+    "size_mb": 0.67,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-lira": {
+    "drive_id": "1kidwhOzEbg854YB3g5nTbQJLld31X6MZ",
+    "name": "MESA LATERAL LIRA - 1.skp",
+    "size_mb": 0.23,
+    "title": "Bloco 3D (SketchUp) – modelo 1"
+  },
+  "mesa-lateral-kit": {
+    "drive_id": "18MlmEVdOKUlrMAr5LXRotVnw5617PRdf",
+    "name": "MESA LATERAL KIT.skp",
+    "size_mb": 0.12,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-alex": {
+    "drive_id": "1uUKCtOObiGira2W1tAq-2jz8QhGMauUl",
+    "name": "MESA LATERAL ALEX.skp",
+    "size_mb": 0.23,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-mimo": {
+    "drive_id": "1L66K42qXLpJwYrwALHwELYeVdO4ehJ14",
+    "name": "MESA LATERAL MIMO.skp",
+    "size_mb": 0.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesas-laterais-pino-cone-e-lua": {
+    "drive_id": "1anRuDFp53uRQeyY_ohUfx_mPQB9n89vu",
+    "name": "MESA LATERAL CONE.skp",
+    "size_mb": 0.1,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-petra": {
+    "drive_id": "1S4w165cyVi0GtcWYbeWA7A2ynOKIECra",
+    "name": "MESA LATERAL PETRA.skp",
+    "size_mb": 0.14,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-pat": {
+    "drive_id": "13Rmvssip90MXQuLk5TAAGbIEBcZSLOst",
+    "name": "MESA LATERAL PAT.skp",
+    "size_mb": 0.12,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-italy": {
+    "drive_id": "1XQgA3MMjdlcNwp48R73Uqemj4q3_nSzm",
+    "name": "MESA LATERAL ITALY.skp",
+    "size_mb": 0.1,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-tri": {
+    "drive_id": "1_TiPtduX4kuwpsiIKsbOd8eV3DuRT0wF",
+    "name": "MESA LATERAL TRI.skp",
+    "size_mb": 0.33,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-minas": {
+    "drive_id": "1gZJr-n4YQpsGzIzkSdmUPsR2hLlhUgG0",
+    "name": "MESA JANTAR MINAS CASA.skp",
+    "size_mb": 1.35,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-slim": {
+    "drive_id": "1I5OzzN4Lj7DMcVGLI8EtHzsMxV00Z72s",
+    "name": "MESA JANTAR SLIM CASA.skp",
+    "size_mb": 0.83,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-bem-te-vi": {
+    "drive_id": "1IPz66zsqXidhdshhT3L0e5Brgu8uQWGw",
+    "name": "MESA JANTAR BEM TE VI.skp",
+    "size_mb": 0.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-anne": {
+    "drive_id": "10cV8SjeD5FHKUe0WxWkw7h_lvvacmzaS",
+    "name": "MESA JANTAR ANNE.skp",
+    "size_mb": 0.16,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-lumia": {
+    "drive_id": "12sbWZzg0wJfE0UEk7Wi1kwsGDGjG8u-6",
+    "name": "MESA JANTAR LUMIA.skp",
+    "size_mb": 0.66,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-eros": {
+    "drive_id": "1eiKfAPSXn6fynI2Wv6XBNkPB_F0jjv2o",
+    "name": "MESA JANTAR EROS.skp",
+    "size_mb": 0.66,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-twiggy": {
+    "drive_id": "1hkLIEUOqHhoJrmFR9GOCvcJUFMezSV_e",
+    "name": "MESA JANTAR TWIGGY - TWYGGY RET.skp",
+    "size_mb": 0.53,
+    "title": "Bloco 3D (SketchUp) – retangular"
+  },
+  "mesa-de-cabeceira-alfa": {
+    "drive_id": "1TKxABuqc8jJufCqrsHo64Sk3EW-2Zao2",
+    "name": "MESA CABECEIRA ALFA.skp",
+    "size_mb": 0.21,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "a-mesa-de-cabeceira-agla": {
+    "drive_id": "1ctohgymZ6I60R6LBhBvyyeHr_ua_bPEP",
+    "name": "MESA CABECEIRA AGLA.skp",
+    "size_mb": 0.15,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "a-mesa-de-cabeceira-bola": {
+    "drive_id": "1i_5jRUaQ47bD42A6kfmRPsld3j7zxlkK",
+    "name": "MESA CABECEIRA BOLA.skp",
+    "size_mb": 0.2,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-cabeceira-malibu": {
+    "drive_id": "1rRv_wA2OJ1_QG0Mebey7O8gTxjXMBpIp",
+    "name": "MESA CABECEIRA MALIBU.skp",
+    "size_mb": 0.98,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-cabeceira-chambre": {
+    "drive_id": "1xBlnIkG5e_gl6ofHW_rwFsqthfijOStt",
+    "name": "MESA CABECEIRA CHAMBRE.skp",
+    "size_mb": 0.18,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-cabeceira-el": {
+    "drive_id": "1QsX9PfSqtNa4JA9Q7MFdm0_6XX4NAzqu",
+    "name": "MESA CABECEIRA EL.skp",
+    "size_mb": 0.21,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "espelho-silver": {
+    "drive_id": "1y51GOHCuWx4dg5nKC2tRnFy0j5wP_cVE",
+    "name": "ESPELHO SILVER.skp",
+    "size_mb": 0.09,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "espelho-onix": {
+    "drive_id": "1ab8r3jYWxtLPcjVfZFaTAgJwCkSDbkXm",
+    "name": "ESPELHO ONIX.skp",
+    "size_mb": 0.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "espelho-safira": {
+    "drive_id": "12aydTPd7ht09qaoAsAb8mEI5T6YXtglg",
+    "name": "ESPELHO SAFIRA.skp",
+    "size_mb": 0.62,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "escrivaninha-pampulha": {
+    "drive_id": "1om48QV9VY4jHZzuN3WYx0uExi172wLza",
+    "name": "ESCRIVANINHA PAMPULHA - [S-NCH].skp",
+    "size_mb": 0.14,
+    "title": "Bloco 3D (SketchUp) – sem nicho"
+  },
+  "revisteiro-near": {
+    "drive_id": "1XE_9-xPtHrwV-XHTbyXDWmQPAFZLHQ4u",
+    "name": "REVISTEIRO NEAR.skp",
+    "size_mb": 0.48,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cama-lenyr": {
+    "drive_id": "1sqnu9gdHwHV9CM4QMLjW2-km7iQNuxX7",
+    "name": "CAMA LENYR.skp",
+    "size_mb": 14.1,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cama-link": {
+    "drive_id": "1VmHq5hES_Gt68O3EOIFN44EWaqOb64Nk",
+    "name": "CAMA LINK.skp",
+    "size_mb": 14.17,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cama-nick": {
+    "drive_id": "17POeYg8TJ8i4AKrgT9KmCiE44EAT8MJ2",
+    "name": "CAMA NICK.skp",
+    "size_mb": 9.43,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "estante-italy": {
+    "drive_id": "1yVMIHkngmUghfruE3b2vz0Z5mbBcjHjo",
+    "name": "ESTANTE ITALY.skp",
+    "size_mb": 0.25,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-costa": {
+    "drive_id": "1dOXidqo7sIRGGsR_bWZZRBp8GNqlX2sM",
+    "name": "POLTRONA COSTA.skp",
+    "size_mb": 18.36,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-serra": {
+    "drive_id": "170MtjeGK4VEghMJKu6_aIU0jnZ4Hio1J",
+    "name": "POLTRONA SERRA.skp",
+    "size_mb": 4.66,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-bou": {
+    "drive_id": "1T5e0HIHTt62qygRtdS7nMvmwymXkeM2F",
+    "name": "POLTRONA BOU.skp",
+    "size_mb": 6.04,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-cais": {
+    "drive_id": "1PZ3FASUhSRHhUeNX-BAKCKE4kPEotsym",
+    "name": "POLTRONA CAIS.skp",
+    "size_mb": 9.31,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "buffet-bloco": {
+    "drive_id": "1p9ZYdCMdkVTh8UgTb_HO15eCoy5gMvJU",
+    "name": "BUFFET BLOCO.skp",
+    "size_mb": 2.23,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-pinot-living": {
+    "drive_id": "1Egk8oMIN0jJUZ74iW949GCNOE09vbh8j",
+    "name": "SOFA PINOT LIVING.skp",
+    "size_mb": 20.28,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-pinot-square": {
+    "drive_id": "1HieY-9BoFlFL_m5vZN2i5dcMhZhaEqbm",
+    "name": "SOFA PINOT SQUARE.skp",
+    "size_mb": 18.94,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-faro": {
+    "drive_id": "1BoHKdKwgpP-rqfDnQUSUZ0SslaTFrtBk",
+    "name": "MESA LATERAL FARO.skp",
+    "size_mb": 5.21,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-cais": {
+    "drive_id": "1ZblrsVpMzx8IJ2OPTjC5wDZkmGKO2VFe",
+    "name": "CADEIRA CAIS.skp",
+    "size_mb": 5.08,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "estante-bloco": {
+    "drive_id": "1dZSLX3TmFjCAWOCHFN8TVWvV5LpzM4gP",
+    "name": "ESTANTE BLOCO.skp",
+    "size_mb": 1.11,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-polux": {
+    "drive_id": "13JRz094nLQdasoqe5rn1vHPM0j2m5h2k",
+    "name": "MESA JANTAR POLUX.skp",
+    "size_mb": 1.86,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-sirius": {
+    "drive_id": "1vDtlvGKzWJNrxYpqGAwcijzQanQXa0eo",
+    "name": "CADEIRA SIRIUS.skp",
+    "size_mb": 3.6,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "escrivaninha-bruma": {
+    "drive_id": "1QAiIlrYvZVQjWtR-acRPyB9YbVWE0iAj",
+    "name": "ESCRIVANINHA BRUMA.skp",
+    "size_mb": 3.16,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "chaise-coce": {
+    "drive_id": "1JJeK57jR-wAzo171o5ddLhfVkIbrtxZt",
+    "name": "CHAISE COCE MD - [INDIVIDUAL].skp",
+    "size_mb": 7.14,
+    "title": "Bloco 3D (SketchUp) – individual"
+  },
+  "banqueta-arreda": {
+    "drive_id": "1ydLITdsrE0bLDpg6zmPznoX1ebUc3byd",
+    "name": "BANQUETA ARREDA.skp",
+    "size_mb": 7.25,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "aparador-xove": {
+    "drive_id": "18s24Fa9IWr1D-WhD3d6XxJ2H_sY_zUr1",
+    "name": "APARADOR XOVE.skp",
+    "size_mb": 1.87,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-so": {
+    "drive_id": "1_7rXWLHcMYYNEX0OIV8H4j-3ltk94yPi",
+    "name": "POLTRONA SO.skp",
+    "size_mb": 34.33,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-cabeceira-xove": {
+    "drive_id": "1Jvip0o38cdZPxL6qMECZ5V6JBwQp55w9",
+    "name": "MESA CABECEIRA XOVE.skp",
+    "size_mb": 2.39,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-nu": {
+    "drive_id": "1YsH8gbjqoauaV5rilmLHYa5wwJUfhSWC",
+    "name": "SOFA NU - C.skp",
+    "size_mb": 19.55,
+    "title": "Bloco 3D (SketchUp) – modelo C"
+  },
+  "banqueta-apruma": {
+    "drive_id": "1ha82NC1xK0xmXeAaSfooCBxhK-7HiUND",
+    "name": "BANQUETA APRUMA.skp",
+    "size_mb": 26.79,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-so": {
+    "drive_id": "1LPV9XmH_1SYmFsKyifN-sZwTCDB5Ukg9",
+    "name": "SOFA SO.skp",
+    "size_mb": 35.2,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-apruma": {
+    "drive_id": "1NrJCt0Nx7vp6Q4BzOmUaF5d5_alXLZlT",
+    "name": "CADEIRA APRUMA.skp",
+    "size_mb": 26.68,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-arreda": {
+    "drive_id": "1zbVw9TXpTJLPB3kE4Eu_ALfjLsoODemb",
+    "name": "CADEIRA ARREDA.skp",
+    "size_mb": 7.32,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-rito": {
+    "drive_id": "13RIy8i_m6kqqzPuHS9jLj_ddbgvq4B7J",
+    "name": "MESA LATERAL RITO.skp",
+    "size_mb": 6.98,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-royale": {
+    "drive_id": "1kn5DV2nuZmntJmUPcCcY3B0vkThJarJU",
+    "name": "SOFA ROYALE - 1800 X 1000.skp",
+    "size_mb": 5.24,
+    "title": "Bloco 3D (SketchUp) – 1800 × 1000 mm"
+  },
+  "sofa-antonio": {
+    "drive_id": "133Da9-hf4k0WsfgjJ9oPYLRH4NPHmEXI",
+    "name": "SOFA ANTONIO - PUFF.skp",
+    "size_mb": 0.44,
+    "title": "Bloco 3D (SketchUp) – puff"
+  },
+  "sofa-majestic": {
+    "drive_id": "1PZLQv1jJYOuA0042TSd5n2gmEOzWAL2z",
+    "name": "SOFA MAJESTIC - PUFF 900X900.skp",
+    "size_mb": 2.52,
+    "title": "Bloco 3D (SketchUp) – puff, 900 × 900 mm"
+  },
+  "mesa-joey": {
+    "drive_id": "17p8uLHMiYSTbdmIsSpksQSAt3GxDA0y1",
+    "name": "MESA JANTAR JOEY - 1200X745.skp",
+    "size_mb": 2.16,
+    "title": "Bloco 3D (SketchUp) – 1200 × 745 mm"
+  },
+  "cadeira-toe": {
+    "drive_id": "15ie0hUkkdOb-0h8VRRu7Y377eFNpIWh6",
+    "name": "CADEIRA TOE.skp",
+    "size_mb": 5.51,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-sopro": {
+    "drive_id": "10Zhbf6Depc913sTHXsnGfs5lfqRSIdk9",
+    "name": "CADEIRA SOPRO.skp",
+    "size_mb": 6.48,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "buffet-heritage": {
+    "drive_id": "1o_lhPwY-JPzXRWrcIstMVNhLhdvbZ1se",
+    "name": "BUFFET HERITAGE - 2100 X 460 X 640 C-PORTA.skp",
+    "size_mb": 0.69,
+    "title": "Bloco 3D (SketchUp) – 2100 × 460 × 640 mm, com porta"
+  },
+  "cadeira-aura": {
+    "drive_id": "1Ai683uTwCT5bDS2b5MPxqrlrrRdzeG7t",
+    "name": "CADEIRA AURA.skp",
+    "size_mb": 13.96,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-trem": {
+    "drive_id": "1zUs8l5WpGyd-Su-UZb_YdaNBBqJliGcg",
+    "name": "MESA CENTRO TREM - [TPO PD] - 1600 X 1200 X 350.skp",
+    "size_mb": 0.37,
+    "title": "Bloco 3D (SketchUp) – tampo de pedra, 1600 × 1200 × 350 mm"
+  },
+  "poltrona-terezinha": {
+    "drive_id": "1PoOAGirZ4lrU-seYn3Lc4g0ddZhW9zoK",
+    "name": "POLTRONA TEREZINHA.skp",
+    "size_mb": 3.48,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-lateral-epoca": {
+    "drive_id": "16ogmPnmZkGHaJvV0Lafb8g9z6d3Ki325",
+    "name": "MESA LATERAL EPOCA.skp",
+    "size_mb": 1.52,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-orvalho": {
+    "drive_id": "1_ZkH5VMAGsvGf3bV-4pClKs7t4Ursu7G",
+    "name": "POLTRONA ORVALHO.skp",
+    "size_mb": 6.36,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "banqueta-dara": {
+    "drive_id": "1xpcgnTCg2aEYwkQEVoC2RDZFnNdYyhbB",
+    "name": "BANQUETA DARA GIARDINI.skp",
+    "size_mb": 83.54,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-snodo": {
+    "drive_id": "1PNMhqlDCkxFznBNAtEHQiRWfL_M__v95",
+    "name": "SOFA SNODO.skp",
+    "size_mb": 48.05,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "chaise-ata": {
+    "drive_id": "1rc_ti1-AGYIOJe_mXf1vKCdTY1Q2pSVH",
+    "name": "CHAISE ATA.skp",
+    "size_mb": 12.15,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-jantar-duna": {
+    "drive_id": "19XMgQElf_Le5XShPXfn_WXidtLcsxfBx",
+    "name": "MESA JANTAR DUNA.skp",
+    "size_mb": 2.6,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-irani": {
+    "drive_id": "1dc28HK3uIgWlozSZjBGtUQUnpEYNbBVu",
+    "name": "POLTRONA IRANI.skp",
+    "size_mb": 73.37,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "aparador-paco": {
+    "drive_id": "1q1fDpgiUbTDqOc28wfP8NTSvXWeT0e6p",
+    "name": "APARADOR PACO.skp",
+    "size_mb": 1.01,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "aparador-twiggy": {
+    "drive_id": "13fPBlm8naEj1DdQO28k0xJu30dgCnC87",
+    "name": "APARADOR TWIGGY.skp",
+    "size_mb": 0.98,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "aparador-italy": {
+    "drive_id": "1LPsywKg54fv2wrOMEMRTwS9fcpZZ-qUP",
+    "name": "APARADOR ITALY.skp",
+    "size_mb": 0.35,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "aparador-matriz": {
+    "drive_id": "1dxN5sZze77uNlU9VvyOdzBamkCWGvpwB",
+    "name": "APARADOR MATRIX.skp",
+    "size_mb": 0.31,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "revisteiro-marine": {
+    "drive_id": "15dmTChwJxRhyvVr_qNcoyVHlvBWjyCT_",
+    "name": "REVISTEIRO MARINE AL.skp",
+    "size_mb": 0.56,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "balanco-pina": {
+    "drive_id": "1jFg0YrbNZ5ro-PielyhUlzd-69cVn08r",
+    "name": "BALANCO PINA.skp",
+    "size_mb": 258.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-sol": {
+    "drive_id": "1KUNU9AJymQJL8ATMFJg9gjBeDR0Bx64_",
+    "name": "SOFA SOL.skp",
+    "size_mb": 112.19,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-beijamin": {
+    "drive_id": "1c4BFELC1mlrrwa6ffuDSLUQuPmilbSTk",
+    "name": "SOFA BENJAMIN - INTEIRO 2 ASS.skp",
+    "size_mb": 27.57,
+    "title": "Bloco 3D (SketchUp) – inteiro, 2 assentos"
+  },
+  "mesa-de-centro-sol": {
+    "drive_id": "1FPxRH59odsFfkdudvC2f4nqrrpxRL9Pr",
+    "name": "MESA CENTRO SOL.skp",
+    "size_mb": 1.72,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-gama": {
+    "drive_id": "1LM4pbLE7KPyL_T1myMbw8p9uRlEeiBxs",
+    "name": "CADEIRA GAMA - S-BR.skp",
+    "size_mb": 9.36,
+    "title": "Bloco 3D (SketchUp) – sem braço"
+  },
+  "cadeira-brisa-com-braco": {
+    "drive_id": "1xmvL8l8EdTPL7UkMmCYPu2WX6ZoCCojN",
+    "name": "CADEIRA BRISA - [C-BR].skp",
+    "size_mb": 8.88,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-brisa-sem-braco": {
+    "drive_id": "1Qpvj9hnvbvGuv1wKDq40PbfAJnGZNvvW",
+    "name": "CADEIRA BRISA - [S-BR].skp",
+    "size_mb": 8.91,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-luzy-sem-braco": {
+    "drive_id": "1biKEHHbEAOqc7XaCnrhzPqGvG9L5834_",
+    "name": "CADEIRA LUZY - [S-BR].skp",
+    "size_mb": 12.02,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-luzy-com-braco": {
+    "drive_id": "1MlKc4rzbfBIoRbOraD3Ipyh0vlBv8jpG",
+    "name": "CADEIRA LUZY - [C-BR].skp",
+    "size_mb": 11.24,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-tucuma": {
+    "drive_id": "1Cnlj2dyQq0nTnBFr2FPkYFPaUG93Iulo",
+    "name": "MESA CENTRO TUCUMA.skp",
+    "size_mb": 1.2,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-toe": {
+    "drive_id": "1zWNqPCijk39c-PlLQNGNNWPYLqYq4G_b",
+    "name": "POLTRONA TOE.skp",
+    "size_mb": 1.39,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "poltrona-zinia": {
+    "drive_id": "13Ko7e90rqwH9-gxpw43LR7MdGCSU67gA",
+    "name": "POLTRONA ZINIA.skp",
+    "size_mb": 6.35,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "sofa-boto": {
+    "drive_id": "16F7XvRtU97EOp_ONLuDPTFoWUVRWkj22",
+    "name": "SOFA BOTO.skp",
+    "size_mb": 41.91,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "cadeira-marina": {
+    "drive_id": "1w0xsevtUwlN-XWK90ODvGaUhS_XnsXFQ",
+    "name": "CADEIRA MARINA.skp",
+    "size_mb": 53.04,
+    "title": "Bloco 3D (SketchUp)"
+  },
+  "mesa-de-centro-so": {
+    "drive_id": "19RiHPw40mAG1EftgK37UMx-llskHEs57",
+    "name": "MESA CENTRO SO - [TPO AL].skp",
+    "size_mb": 0.76,
+    "title": "Bloco 3D (SketchUp) – tampo de alumínio"
+  }
+}
