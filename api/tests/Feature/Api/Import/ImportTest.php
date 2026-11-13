@@ -259,3 +259,25 @@ it('swaps a gallery photo for another version in the same place', function () {
     expect($product->refresh()->getMedia('gallery')->map(fn ($media) => $media->getCustomProperty('legacy_url'))->all())
         ->toBe(['drive:editada', 'drive:outra']);
 });
+
+it('adds a film to a page as a video block, keeping the YouTube one', function () {
+    config(['franccino.import.token' => 'abc123']);
+    $page = Page::factory()->create(['key' => 'factory', 'content' => [['type' => 'video', 'data' => ['url' => 'https://youtu.be/x', 'title' => ['pt' => 'Conheça']]]]]);
+    $send = fn () => $this->post('/api/import/media', [
+        'target' => 'page',
+        'key' => 'factory',
+        'collection' => 'video',
+        'title' => 'Marcenaria',
+        'file' => UploadedFile::fake()->create('fabrica.mp4', 2048, 'video/mp4'),
+        'poster' => UploadedFile::fake()->image('capa.jpg', 1920, 1080),
+    ], ['Authorization' => 'Bearer abc123']);
+
+    $send()->assertCreated()->assertJsonPath('data.replaced', false);
+    $send()->assertCreated()->assertJsonPath('data.replaced', true);
+
+    $content = $page->refresh()->content;
+    expect($content)->toHaveCount(2)
+        ->and($content[0]['data']['url'])->toBe('https://youtu.be/x')
+        ->and($content[1]['data']['file'])->toStartWith('videos/')
+        ->and($content[1]['data']['poster'])->toStartWith('pages/');
+});

@@ -407,7 +407,8 @@ Com `source`, a mesma origem de novo na mesma coleção não acrescenta outra fo
 Mais campos (2026-11-13): em `page`, `caption` (e `caption_en`) escolhe o bloco Galeria com essa legenda em português
 (ex.: "Peças em produção", na Fábrica), criado no fim se não houver. `replaces` (uma `source` enviada antes) tira essa
 foto da coleção e põe a nova no lugar dela, na mesma posição (a versão editada no lugar da original). `video` aceita MP4
-até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB.
+até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em `page`, `collection=video` grava um bloco Vídeo com o MP4, `title` (e `title_en`) e a capa opcional em
+`poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
 
 `/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
 privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um

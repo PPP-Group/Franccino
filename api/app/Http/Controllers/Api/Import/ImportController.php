@@ -61,7 +61,7 @@ class ImportController extends Controller
     public function media(Request $request): JsonResponse
     {
         if ($request->input('target') === 'page') {
-            return $this->pageGallery($request);
+            return $request->input('collection') === 'video' ? $this->pageVideo($request) : $this->pageGallery($request);
         }
 
         // `video` takes the page film (MP4, up to the page video limit); every other collection takes a photo.
@@ -150,6 +150,41 @@ class ImportController extends Controller
         $page->update(['content' => $content]);
 
         return response()->json(['data' => ['path' => $path, 'skipped' => false]], 201);
+    }
+
+    /**
+     * A film for a fixed page (e.g. the factory film): a Video block with the MP4 (disk `media`, `videos/`, as the panel
+     * stores it), the optional cover and the title. A block with the same title in Portuguese gets the new file; any
+     * other video block (e.g. the YouTube one) stays.
+     */
+    private function pageVideo(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'key' => ['required', 'string', 'max:60'],
+            'title' => ['required', 'string', 'max:160'],
+            'title_en' => ['nullable', 'string', 'max:160'],
+            'file' => ['required', 'file', 'mimetypes:video/mp4', 'max:'.config('franccino.uploads.video_max_kb')],
+            'poster' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
+        ]);
+        $page = Page::query()->where('key', $data['key'])->firstOrFail();
+        $block = ['type' => 'video', 'data' => [
+            'file' => $data['file']->storeAs('videos', Str::lower(Str::random(8)).'-'.Str::slug($data['title']).'.mp4', 'media'),
+            'poster' => isset($data['poster']) ? $data['poster']->store('pages', 'media') : null,
+            'url' => null,
+            'title' => array_filter(['pt' => $data['title'], 'en' => $data['title_en'] ?? null]),
+        ]];
+
+        $content = array_values((array) ($page->content ?? []));
+        $index = collect($content)->search(fn ($item) => ($item['type'] ?? null) === 'video'
+            && (($item['data']['title']['pt'] ?? null) === $data['title']));
+        if ($index === false) {
+            $content[] = $block;
+        } else {
+            $content[$index] = $block;
+        }
+        $page->update(['content' => $content]);
+
+        return response()->json(['data' => ['file' => $block['data']['file'], 'replaced' => $index !== false]], 201);
     }
 
     /**
