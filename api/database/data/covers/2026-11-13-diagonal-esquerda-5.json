@@ -1,0 +1,8 @@
+{
+  "version": "2026-11-13-diagonal-esquerda-5",
+  "note": "Retorno de 13/11/2026: revisão das capas de todas as peças com mais de uma foto (338). Regra: a foto na diagonal virada para a esquerda é a capa; sem ela, a peça de frente, nunca de lado. Mesa de cabeceira Xove tinha a capa de perfil (passa para a diagonal para a esquerda) e o Sofá Dara Indoor a diagonal virada para a direita (passa para a de frente, que é a única opção). Conferidas a olho, em tamanho grande. Ids das fotos do preview. A capa antiga vai para a galeria.",
+  "covers": [
+    { "product": "mesa-de-cabeceira-xove", "media": 2368 },
+    { "product": "sofa-dara-indoor", "media": 1462 }
+  ]
+}
