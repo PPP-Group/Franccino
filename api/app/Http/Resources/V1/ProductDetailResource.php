@@ -109,6 +109,7 @@ class ProductDetailResource extends ProductCardResource
                 'height_max' => $dimension['height_max'] ?? null,
                 'seat_height' => $dimension['seat_height'] ?? null,
                 'diameter' => $dimension['diameter'] ?? null,
+                'diameter_max' => $dimension['diameter_max'] ?? null,
             ])
             ->values()
             ->all();

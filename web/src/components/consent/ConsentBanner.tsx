@@ -4,15 +4,13 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useState, useSyncExternalStore } from 'react';
 import type { Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
-import { recordConsent } from '@/lib/api/forms';
 import { applyConsent, denyConsentByDefault, loadGtm } from '@/lib/consent/gtm';
+import { saveConsentChoice } from '@/lib/consent/save';
 import {
   CONSENT_OPEN_EVENT,
-  COOKIE_POLICY_VERSION,
   getConsent,
   getConsentCategories,
   getServerConsent,
-  setConsent,
   subscribeConsent,
   type ConsentCategories,
 } from '@/lib/consent/store';
@@ -76,17 +74,9 @@ export function ConsentBanner() {
   }
 
   const save = (chosen: ConsentCategories) => {
-    const choice = chosen.analytics || chosen.marketing ? 'granted' : 'denied';
-    const visitorId = setConsent(choice, undefined, chosen);
+    saveConsentChoice(chosen, locale);
     setReopened(false);
     setCustomizing(false);
-    // O registro é prova, não condição: falha de rede não trava o site.
-    void recordConsent({
-      visitor_id: visitorId,
-      choice,
-      policy_version: COOKIE_POLICY_VERSION,
-      locale,
-    }).catch(() => undefined);
   };
 
   return (

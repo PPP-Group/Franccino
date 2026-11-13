@@ -46,6 +46,7 @@ export type Dimension = {
   height_max?: number | null;
   seat_height: number | null;
   diameter: number | null;
+  diameter_max?: number | null;
 };
 
 export type MediaLink = {

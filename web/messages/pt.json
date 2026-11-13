@@ -304,7 +304,8 @@
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
         "revit": "Revit"
-      }
+      },
+      "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional"
     },
     "variants": {
       "title": "Variações"
@@ -377,7 +378,8 @@
       "dimensions": "Medidas",
       "files": "Arquivos",
       "list": "Lista de desejos",
-      "empty": "—"
+      "empty": "—",
+      "filesMany": "{format} ({count} versões)"
     },
     "gridFill": {
       "title": "Gostaria de orientação na escolha?",
@@ -457,14 +459,6 @@
       "search": "Buscar peça",
       "submit": "Filtrar"
     },
-    "table": {
-      "label": "Arquivos técnicos por peça",
-      "caption": "Peças e arquivos técnicos para download",
-      "image": "Imagem",
-      "piece": "Peça",
-      "area": "Linha",
-      "files": "Arquivos"
-    },
     "linkLabel": "Baixar {title} ({format})",
     "formatAndSize": "{format} · {size}",
     "failed": "Não foi possível gerar o link no momento. Por favor, tente novamente.",
@@ -506,10 +500,11 @@
       "search": "Buscar peça",
       "placeholder": "Sofá, poltrona, mesa…",
       "searching": "Buscando…",
-      "noResults": "Nenhuma peça com medidas para esta busca.",
+      "noResults": "Nenhuma peça para esta busca.",
       "add": "Adicionar {name} ao ambiente",
       "sizeRect": "{width} × {depth} cm",
-      "sizeRound": "Ø {diameter} cm"
+      "sizeRound": "Ø {diameter} cm",
+      "unsized": "Medidas a confirmar: ainda não entra na planta"
     },
     "hint": "Arraste para mover. Com a peça selecionada, use as setas para deslocá-la (com Shift, de 1 em 1 cm), R para girar e Delete para remover.",
     "rotate": "Girar",
@@ -728,7 +723,7 @@
   },
   "consent": {
     "title": "Cookies e privacidade",
-    "body": "Usamos cookies necessários para o site funcionar e, com a sua permissão, cookies de análise e de marketing. Você escolhe o que aceita e pode mudar quando quiser em \"Preferências de cookies\", no rodapé.",
+    "body": "Usamos cookies necessários para o site funcionar e, com a sua permissão, cookies de análise e de marketing. Você escolhe o que aceita e pode mudar quando quiser na Política de cookies, no rodapé.",
     "accept": "Aceitar todos",
     "decline": "Recusar",
     "customize": "Personalizar",
@@ -742,7 +737,10 @@
     "marketingText": "Medem campanhas e anúncios.",
     "policy": "Política de cookies",
     "privacy": "Política de privacidade",
-    "preferences": "Preferências de cookies"
+    "preferences": "Preferências de cookies",
+    "currentChoice": "Esta é a sua escolha atual. Mude as categorias e salve quando quiser.",
+    "noChoice": "Você ainda não escolheu. Marque as categorias que aceita e salve.",
+    "saved": "Preferências salvas."
   },
   "mediaLinks": {
     "title": "Vídeos e links",
@@ -903,7 +901,11 @@
   "faqPage": {
     "title": "Tire suas dúvidas",
     "description": "Respostas sobre as peças da Franccino e a assistência técnica.",
-    "pending": "As respostas desta página ainda não foram publicadas."
+    "pending": "As respostas desta página ainda não foram publicadas.",
+    "helpTitle": "Ainda com dúvidas?",
+    "helpText": "A equipe da Franccino responde pelo formulário de contato e pelo WhatsApp. Nas lojas, você vê as peças de perto.",
+    "contact": "Falar com a equipe",
+    "stores": "Ver as lojas"
   },
   "partnerPage": {
     "title": "Seja um parceiro",
@@ -923,5 +925,12 @@
       "body": "A lista não existe mais ou o link venceu. Peça um link novo a quem enviou ou monte a sua lista pelo catálogo.",
       "catalog": "Ver o catálogo"
     }
+  },
+  "gallery": {
+    "more": "Ver mais {count, plural, one {# imagem} other {# imagens}}",
+    "less": "Ver menos",
+    "open": "Ver {count, plural, one {a imagem} other {as # imagens}}",
+    "openAt": "Abrir a imagem {index}",
+    "close": "Fechar as imagens"
   }
 }

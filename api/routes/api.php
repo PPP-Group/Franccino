@@ -57,6 +57,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
 // Bulk import for the team (docs/api.md, "Importação em massa"): off unless CONTENT_IMPORT_TOKEN is set.
 Route::prefix('import')->name('api.import.')->middleware(['no-store', 'import.token', 'throttle:api-import'])->group(function () {
     Route::post('media', [ImportController::class, 'media'])->name('media');
+    Route::post('media/remove', [ImportController::class, 'removeMedia'])->name('media.remove');
     Route::post('files', [ImportController::class, 'files'])->name('files');
     Route::post('covers', [ImportController::class, 'covers'])->name('covers');
     Route::post('content', [ImportController::class, 'content'])->name('content');

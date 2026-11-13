@@ -638,3 +638,46 @@
 .link-grow:focus-visible::after {
   transform: scaleX(1);
 }
+
+/* Preferências de cookies na página Política de cookies (13/11/2026): as mesmas opções do aviso, no corpo da página. */
+.consent-preferences {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 72ch;
+  margin-top: var(--section-y);
+  padding-top: var(--space-7);
+  border-top: 1px solid var(--line);
+}
+
+.consent-preferences h2 {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+
+.consent-preferences__options {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.consent-preferences__options label {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.consent-preferences__options input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.2em;
+  accent-color: var(--ink);
+}
+
+.consent-preferences__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

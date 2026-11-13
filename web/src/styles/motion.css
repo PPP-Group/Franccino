@@ -784,3 +784,30 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
       transform var(--t-slow) var(--ease-out);
   }
 }
+
+/* ---------- Tire suas dúvidas: a resposta abre deslizando e o "+" vira "−" (13/11/2026) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .faq {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--t-mid) var(--ease-out),
+      content-visibility var(--t-mid) allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+
+  .faq__icon,
+  .faq__icon::before,
+  .faq__icon::after {
+    transition:
+      transform var(--t-base) var(--ease-out),
+      background-color var(--t-base) var(--ease-out);
+  }
+}

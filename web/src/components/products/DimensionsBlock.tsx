@@ -35,7 +35,7 @@ function factsOf(dimension: Dimension): Fact[] {
     min !== null && max !== null && max !== undefined && max > min ? max : null;
   const candidates: { key: FactKey; value: number | null; max: number | null }[] = round
     ? [
-        { key: 'diameter', value: dimension.diameter, max: null },
+        { key: 'diameter', value: dimension.diameter, max: upTo(dimension.diameter, dimension.diameter_max) },
         { key: 'height', value: dimension.height, max: upTo(dimension.height, dimension.height_max) },
         { key: 'seatHeight', value: dimension.seat_height, max: null },
       ]

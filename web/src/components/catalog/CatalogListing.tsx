@@ -26,6 +26,7 @@ import { LoadMore } from './LoadMore';
 import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
 import { TechTable } from './TechTable';
+import { ByView, CatalogViewProvider } from './ViewToggle';
 
 export type CatalogListingProps = {
   locale: Locale;
@@ -97,15 +98,13 @@ export async function CatalogListing(props: CatalogListingProps) {
     facets = EMPTY_FACETS;
   }
 
-  const rows =
-    view === 'table'
-      ? (
-          await getProductDetails(
-            locale,
-            page.data.map((product) => product.slug),
-          )
-        ).map(toTechnicalRow)
-      : [];
+  // As duas vistas vêm prontas: a troca Grade/Tabela técnica é no navegador (`ViewToggle`).
+  const rows = (
+    await getProductDetails(
+      locale,
+      page.data.map((product) => product.slug),
+    )
+  ).map(toTechnicalRow);
 
   const hiddenQuery = listingQuery(props.categoryInPath ? { ...params, category: undefined } : params, view, {
     designer: undefined,
@@ -161,6 +160,7 @@ export async function CatalogListing(props: CatalogListingProps) {
         return { ...filter, image: portraits.get(filter.value) ?? null };
       }),
       active: params.designer,
+      imageTone: 'mono' as const,
     },
   ];
 
@@ -168,98 +168,108 @@ export async function CatalogListing(props: CatalogListingProps) {
 
   return (
     <main>
-      {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
-      <div className="wrap catalog" data-page-anchor="">
-        <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
-        {banner ? (
-          props.intro ? (
-            <div className="catalog-head">
-              <div className="catalog-head__copy">{props.intro}</div>
-            </div>
-          ) : null
-        ) : (
-          <div className="catalog-head">
-            <div className="catalog-head__copy">
-              <h1>{props.title}</h1>
-              {props.intro}
-            </div>
-          </div>
-        )}
-        <CatalogToolbar
-          count={t('count', { count: page.meta.total })}
-          view={view}
-          hrefFor={hrefFor}
-          filters={filters}
-          formAction={props.formAction}
-          hiddenQuery={hiddenQuery}
-          pager={
-            // Na grade, o "Ver mais" embaixo substitui a paginação (revisão da Franccino, item 11); a tabela técnica
-            // continua com as páginas.
-            view === 'table' ? (
-              <Pagination
-                meta={page.meta}
-                hrefFor={(next) => hrefFor({ page: next })}
-                label={t('pagination.label')}
-                position="top"
-              />
+      {/* A chave segue a vista do endereço: a navegação de volta (ou um link com outra vista) recomeça dela. */}
+      <CatalogViewProvider key={view} initial={view}>
+        {banner?.image ? <PageBanner image={banner.image} title={props.title} morph={banner.morph} /> : null}
+        <div className="wrap catalog" data-page-anchor="">
+          <Breadcrumbs label={common('breadcrumb')} items={props.crumbs} />
+          {banner ? (
+            props.intro ? (
+              <div className="catalog-head">
+                <div className="catalog-head__copy">{props.intro}</div>
+              </div>
             ) : null
-          }
-        />
-        {/*
-          A chave remonta a lista a cada página e a cada filtro: as peças novas entram com a revelação, não de uma vez.
-        */}
-        <section
-          key={`${JSON.stringify(params)}-${page.meta.current_page}`}
-          className="catalog-results"
-          aria-label={t('resultsLabel')}
-        >
-          {page.data.length === 0 ? (
-            <div className="empty">
-              <h2>{t('emptyState.title')}</h2>
-              <p className="lead">{t('emptyState.body')}</p>
-              <Link
-                className="btn btn--ghost"
-                href={hrefFor({
-                  category: undefined,
-                  designer: undefined,
-                  room: undefined,
-                  collection: undefined,
-                  q: undefined,
-                })}
-              >
-                {t('emptyState.clear')}
-              </Link>
-            </div>
-          ) : view === 'table' ? (
-            <TechTable rows={rows} />
           ) : (
-            <ProductGrid products={page.data} showNew priorityCount={3} />
+            <div className="catalog-head">
+              <div className="catalog-head__copy">
+                <h1>{props.title}</h1>
+                {props.intro}
+              </div>
+            </div>
           )}
-        </section>
-        {view === 'table' ? (
-          <Pagination
-            meta={page.meta}
-            hrefFor={(next) => hrefFor({ page: next })}
-            label={t('pagination.label')}
+          <CatalogToolbar
+            count={t('count', { count: page.meta.total })}
+            view={view}
+            hrefFor={hrefFor}
+            filters={filters}
+            formAction={props.formAction}
+            hiddenQuery={hiddenQuery}
+            pager={
+              // Na grade, o "Ver mais" embaixo substitui a paginação (revisão da Franccino, item 11); a tabela técnica
+              // continua com as páginas.
+              <ByView
+                grid={null}
+                table={
+                  <Pagination
+                    meta={page.meta}
+                    hrefFor={(next) => hrefFor({ page: next, view: 'table' })}
+                    label={t('pagination.label')}
+                    position="top"
+                  />
+                }
+              />
+            }
           />
-        ) : page.data.length > 0 ? (
-          <LoadMore
-            key={`more-${JSON.stringify(params)}-${page.meta.current_page}`}
-            query={{ ...props.apiParams, ...params, page: undefined, per_page: undefined }}
-            page={page.meta.current_page}
-            lastPage={page.meta.last_page}
-            total={page.meta.total}
-            shown={page.data.length}
-            perPage={page.meta.per_page}
-            pageHrefs={Object.fromEntries(
-              Array.from({ length: Math.min(page.meta.last_page, 60) }, (_, index) => [
-                index + 1,
-                hrefFor({ page: index + 1 }),
-              ]),
+          {/* A chave remonta a lista a cada página e a cada filtro: as peças novas entram com a revelação. */}
+          <section
+            key={`${JSON.stringify(params)}-${page.meta.current_page}`}
+            className="catalog-results"
+            aria-label={t('resultsLabel')}
+          >
+            {page.data.length === 0 ? (
+              <div className="empty">
+                <h2>{t('emptyState.title')}</h2>
+                <p className="lead">{t('emptyState.body')}</p>
+                <Link
+                  className="btn btn--ghost"
+                  href={hrefFor({
+                    category: undefined,
+                    designer: undefined,
+                    room: undefined,
+                    collection: undefined,
+                    q: undefined,
+                  })}
+                >
+                  {t('emptyState.clear')}
+                </Link>
+              </div>
+            ) : (
+              <ByView
+                grid={<ProductGrid products={page.data} showNew priorityCount={3} />}
+                table={<TechTable rows={rows} />}
+              />
             )}
-          />
-        ) : null}
-      </div>
+          </section>
+          {page.data.length > 0 ? (
+            <ByView
+              table={
+                <Pagination
+                  meta={page.meta}
+                  hrefFor={(next) => hrefFor({ page: next, view: 'table' })}
+                  label={t('pagination.label')}
+                />
+              }
+              grid={
+                <LoadMore
+                  key={`more-${JSON.stringify(params)}-${page.meta.current_page}`}
+                  query={{ ...props.apiParams, ...params, page: undefined, per_page: undefined }}
+                  page={page.meta.current_page}
+                  lastPage={page.meta.last_page}
+                  total={page.meta.total}
+                  shown={page.data.length}
+                  perPage={page.meta.per_page}
+                  pageHrefs={Object.fromEntries(
+                    Array.from({ length: Math.min(page.meta.last_page, 60) }, (_, index) => [
+                      index + 1,
+                      hrefFor({ page: index + 1, view: 'grid' }),
+                    ]),
+                  )}
+                />
+              }
+            />
+          ) : null}
+        </div>
+      </CatalogViewProvider>
       {/* Continuidade: o fim da lista leva às peças que a pessoa já abriu (sem repetir as desta página). */}
       <RecentlyViewed excludeIds={page.data.map((product) => product.id)} />
     </main>

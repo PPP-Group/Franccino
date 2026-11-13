@@ -1,23 +1,23 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const loadPlannerProducts = vi.fn();
-vi.mock('./data', () => ({ loadPlannerProducts: (...args: unknown[]) => loadPlannerProducts(...args) }));
+const loadPlannerLibrary = vi.fn();
+vi.mock('./data', () => ({ loadPlannerLibrary: (...args: unknown[]) => loadPlannerLibrary(...args) }));
 
 const { searchPlannerPieces } = await import('./actions');
 
 describe('searchPlannerPieces', () => {
-  afterEach(() => loadPlannerProducts.mockReset());
+  afterEach(() => loadPlannerLibrary.mockReset());
 
   it('não busca sem texto válido', async () => {
     expect(await searchPlannerPieces('pt', '   ')).toEqual([]);
-    expect(loadPlannerProducts).not.toHaveBeenCalled();
+    expect(loadPlannerLibrary).not.toHaveBeenCalled();
   });
 
   it('limita a busca e troca um idioma desconhecido pelo padrão', async () => {
-    loadPlannerProducts.mockResolvedValue([]);
+    loadPlannerLibrary.mockResolvedValue([]);
 
     await searchPlannerPieces('fr', 'mesa');
 
-    expect(loadPlannerProducts).toHaveBeenCalledWith('pt', { q: 'mesa', per_page: 12 });
+    expect(loadPlannerLibrary).toHaveBeenCalledWith('pt', { q: 'mesa', per_page: 12 });
   });
 });
