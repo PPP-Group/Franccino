@@ -19,6 +19,8 @@ export type CspOptions = {
   tileUrl?: string;
   /** Google Tag Manager enabled (`NEXT_PUBLIC_GTM_ID`). */
   gtm?: boolean;
+  /** AdOpt cookie banner, loaded by Tag Manager (`NEXT_PUBLIC_CONSENT_PROVIDER=adopt`). */
+  adopt?: boolean;
   /** Cloudflare Turnstile enabled (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`). */
   turnstile?: boolean;
   /** `next dev` needs `eval` and the hot-reload socket. */
@@ -30,6 +32,7 @@ export type CspOptions = {
 const GTM = 'https://www.googletagmanager.com';
 const ANALYTICS = ['https://*.google-analytics.com', 'https://*.analytics.google.com'];
 const TURNSTILE = 'https://challenges.cloudflare.com';
+const ADOPT = 'https://*.goadopt.io';
 const MODEL_DECODERS = 'https://www.gstatic.com';
 const VIDEO_PLAYERS = ['https://www.youtube-nocookie.com', 'https://player.vimeo.com'];
 export const CSP_REPORT_PATH = '/api/csp-report';
@@ -48,6 +51,7 @@ export function originOf(url: string | undefined): string | null {
 
 export function buildCsp(options: CspOptions): string {
   const { gtm = false, turnstile = false, dev = false, reportOnly = false } = options;
+  const adopt = gtm && options.adopt === true;
   const media = unique([originOf(options.apiUrl), originOf(options.mediaUrl)]);
   const tiles = unique([originOf(options.tileUrl)]);
 
@@ -59,10 +63,19 @@ export function buildCsp(options: CspOptions): string {
       "'wasm-unsafe-eval'",
       ...(dev ? ["'unsafe-eval'"] : []),
       ...(gtm ? [GTM] : []),
+      ...(adopt ? [ADOPT] : []),
       ...(turnstile ? [TURNSTILE] : []),
     ],
-    'style-src': ["'self'", "'unsafe-inline'"],
-    'img-src': ["'self'", 'data:', 'blob:', ...media, ...tiles, ...(gtm ? [GTM, ...ANALYTICS] : [])],
+    'style-src': ["'self'", "'unsafe-inline'", ...(adopt ? [ADOPT] : [])],
+    'img-src': [
+      "'self'",
+      'data:',
+      'blob:',
+      ...media,
+      ...tiles,
+      ...(gtm ? [GTM, ...ANALYTICS] : []),
+      ...(adopt ? [ADOPT] : []),
+    ],
     'font-src': ["'self'"],
     'connect-src': [
       "'self'",
@@ -72,6 +85,7 @@ export function buildCsp(options: CspOptions): string {
       ...unique([originOf(options.downloadsUrl)]).filter((origin) => !media.includes(origin)),
       MODEL_DECODERS,
       ...(gtm ? [GTM, ...ANALYTICS] : []),
+      ...(adopt ? [ADOPT] : []),
       ...(dev ? ['ws:'] : []),
     ],
     'media-src': ["'self'", ...media],

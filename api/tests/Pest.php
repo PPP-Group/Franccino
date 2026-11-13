@@ -3,6 +3,7 @@
 use App\Models\Area;
 use App\Models\Category;
 use App\Models\Designer;
+use App\Models\DownloadLead;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
@@ -68,4 +69,20 @@ function useScratchDownloadsDisk(): string
     config(['filesystems.disks.downloads.root' => $root]);
 
     return $root;
+}
+
+/** Cadastro antes do download (item 22 da revisão de 12/11/2026): o token que o site manda no pedido do link. */
+function downloadLeadToken(): string
+{
+    $token = DownloadLead::newToken();
+    DownloadLead::create([
+        'profile' => 'professional',
+        'first_name' => 'Ana',
+        'last_name' => 'Souza',
+        'email' => 'ana@example.com',
+        'locale' => 'pt',
+        'token_hash' => DownloadLead::hashToken($token),
+    ]);
+
+    return $token;
 }

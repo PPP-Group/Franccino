@@ -2,14 +2,14 @@
 
 /*
  * Only the temporary upload settings differ from Livewire's defaults. Its default rule caps every panel upload at
- * 12 MB, below the 3D model (20 MB), technical file (50 MB) and page video limits each field sets with `maxSize`, so
- * the cap here follows the largest of them (`franccino.uploads.video_max_kb`). The PHP limits in `docker/php.ini`
- * must stay above it.
+ * 12 MB, below the 3D model (20 MB), page video (150 MB) and technical file (200 MB, SketchUp blocks) limits each
+ * field sets with `maxSize`, so the cap here follows the largest (`franccino.uploads.downloads_max_kb`). The PHP limits
+ * in `docker/php.ini` must stay above it.
  */
 return [
     'temporary_file_upload' => [
         'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK'),
-        'rules' => ['required', 'file', 'max:153600'],
+        'rules' => ['required', 'file', 'max:204800'],
         'directory' => null,
         'middleware' => null,
         'preview_mimes' => [

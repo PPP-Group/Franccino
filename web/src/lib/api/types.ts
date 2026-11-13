@@ -24,6 +24,9 @@ export type Image = {
   blur_data_url: string | null;
 };
 
+/** Vídeo da página de projeto ou coleção (MP4 do próprio site, tocado só no clique); a capa dá o formato do quadro. */
+export type PageVideo = { url: string; poster: Image | null };
+
 export type Seo = { title: string | null; description: string | null; image: Image | null };
 
 export type AreaRef = { key: 'indoor' | 'outdoor'; name: string; brand_name: string };
@@ -35,10 +38,15 @@ export type CollectionRef = { id: number; slug: string; name: string; year: numb
 export type Dimension = {
   label: string | null;
   width: number | null;
+  /** Medida flexível (revisão de 12/11/2026): de `width` a `width_max`. Ausente na API antiga. */
+  width_max?: number | null;
   depth: number | null;
+  depth_max?: number | null;
   height: number | null;
+  height_max?: number | null;
   seat_height: number | null;
   diameter: number | null;
+  diameter_max?: number | null;
 };
 
 export type MediaLink = {
@@ -74,6 +82,8 @@ export type ProductCard = {
   is_new: boolean;
 };
 
+export type ProductVariant = { id: number; slug: string; name: string; image: Image | null };
+
 export type ProductDetail = ProductCard & {
   slugs: Record<Locale, string | null>;
   sku: string | null;
@@ -90,6 +100,12 @@ export type ProductDetail = ProductCard & {
   }[];
   gallery: Image[];
   /** O GLB fica em disco privado: o visualizador pede o link na hora (`requestModelLink`). */
+  /** Vista de cima (planta) para a sala para montar; sem ela, a sala usa a capa (item 29). */
+  top_view?: Image | null;
+  /** Ambientes da peça (item 8). */
+  rooms?: string[];
+  /** Outras versões publicadas da peça (item 13). */
+  variants?: ProductVariant[];
   model_3d: { size: number | null } | null;
   files: DownloadFile[];
   media_links: MediaLink[];
@@ -126,6 +142,7 @@ export type CollectionCard = CollectionRef & {
 export type CollectionDetail = CollectionCard & {
   description: string | null;
   gallery: Image[];
+  video?: PageVideo | null;
   designers: DesignerRef[];
   products: ProductCard[];
   seo: Seo;
@@ -142,6 +159,8 @@ export type DesignerCard = DesignerRef & {
 
 export type DesignerDetail = DesignerCard & {
   bio: string | null;
+  /** Assinatura (logo) do designer, enviada no painel; `null` sem ela. */
+  signature?: Image | null;
   website_url: string | null;
   instagram_url: string | null;
   products: ProductCard[];
@@ -192,7 +211,10 @@ export type ProjectCard = {
 export type ProjectDetail = ProjectCard & {
   architect: string | null;
   description: string | null;
+  /** Peça escolhida no painel para o lado do texto (retorno de 12/11/2026); só se publicada. */
+  featured_product?: ProductCard | null;
   gallery: Image[];
+  video?: PageVideo | null;
   products: ProductCard[];
   seo: Seo;
   slugs: Record<Locale, string | null>;
@@ -321,6 +343,8 @@ export type PageContent = {
   intro: string | null;
   content: Block[];
   cover: Image | null;
+  /** Peça em destaque ao lado do título, escolhida no painel (só publicada). Ausente na API antiga. */
+  featured_product?: ProductCard | null;
   seo: Seo;
   /** Algum texto veio em português por falta da versão no idioma pedido (`docs/api.md`). */
   locale_fallback: boolean;
@@ -367,6 +391,8 @@ export type Facets = {
   collections: FacetOption[];
   lines: FacetOption[];
   finish_groups: FacetOption[];
+  /** Ambientes com peça (item 8), na ordem da API; o site traduz a chave. Ausente em respostas antigas. */
+  rooms?: { key: string; count: number }[];
 };
 
 export type SearchResult = {
@@ -433,3 +459,16 @@ export type CacheTag =
   | 'pages'
   | 'settings'
   | 'redirects';
+
+/** `GET /quote-lists/{code}`: lista de desejos compartilhada por link (retorno de 12/11/2026). */
+export type SharedList = {
+  code: string;
+  created_at: string | null;
+  expires_at: string;
+  items: {
+    product: ProductCard;
+    quantity: number;
+    finishes: { id: number; name: string; code: string | null; swatch: Image | null }[];
+    note: string | null;
+  }[];
+};

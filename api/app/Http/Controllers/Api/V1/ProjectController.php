@@ -61,6 +61,10 @@ class ProjectController extends Controller
                 'products' => fn ($query) => $query->published(),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),
+                'featuredProduct' => fn ($query) => $query->published()->with([
+                    'area', 'category', 'designer', 'media',
+                    'launches' => fn ($query) => $query->published(),
+                ]),
             ])
             ->with(['scene', ...Scene::apiRelations('scene.')])
             ->firstOrFail();

@@ -2,6 +2,8 @@
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 it('lists published categories with the contract shape and published-only product count', function () {
     $indoor = area('indoor');
@@ -55,4 +57,35 @@ it('returns 404 for an unpublished category', function () {
     Category::factory()->create(['slug' => ['pt' => 'oculta', 'en' => 'hidden'], 'is_published' => false]);
 
     $this->getJson('/api/v1/categories/oculta')->assertNotFound();
+});
+
+it('lists every category in the list shape, with its product count (retorno de 12/11/2026)', function () {
+    $indoor = area('indoor');
+    $categories = Category::factory()->count(3)->create();
+    foreach ($categories as $category) {
+        Product::factory()->for($indoor)->for($category)->create();
+    }
+
+    $data = $this->getJson('/api/v1/categories')->assertOk()->json('data');
+
+    expect($data)->toHaveCount(3);
+    foreach ($data as $item) {
+        expect($item)->toHaveKey('product_count', 1)->not->toHaveKey('seo');
+    }
+});
+
+it('uses the cover of the first listed piece when the category has no cover of its own', function () {
+    Storage::fake('media');
+    config(['media-library.queue_conversions_by_default' => false]);
+    $indoor = area('indoor');
+    $category = Category::factory()->create();
+    $fake = UploadedFile::fake();
+    $later = Product::factory()->for($indoor)->for($category)->create(['is_published' => true, 'sort_order' => 2]);
+    $later->addMedia($fake->image('depois.jpg', 400, 300))->toMediaCollection('cover');
+    $first = Product::factory()->for($indoor)->for($category)->create(['is_published' => true, 'sort_order' => 1]);
+    $cover = $first->addMedia($fake->image('primeira.jpg', 400, 300))->toMediaCollection('cover');
+
+    $payload = collect($this->getJson('/api/v1/categories')->assertOk()->json('data'))->firstWhere('id', $category->id);
+
+    expect($payload['cover']['id'])->toBe($cover->id);
 });

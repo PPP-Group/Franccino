@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { productCard, productDetail } from '@/test/fixtures';
-import { loadPlannerProducts } from './data';
+import { loadPlannerLibrary, loadPlannerProducts } from './data';
 
 const json = (body: unknown) =>
   new Response(JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
@@ -33,5 +33,12 @@ describe('loadPlannerProducts', () => {
     });
     const products = await loadPlannerProducts('pt', { q: 'aura', per_page: 12 });
     expect(products.map((product) => product.slug)).toEqual(['aura']);
+
+    // Na busca, a peça sem medida aparece marcada, para a pessoa saber que ela existe.
+    const library = await loadPlannerLibrary('pt', { q: 'aura', per_page: 12 });
+    expect(library.map((product) => [product.slug, 'unsized' in product])).toEqual([
+      ['aura', false],
+      ['painel', true],
+    ]);
   });
 });

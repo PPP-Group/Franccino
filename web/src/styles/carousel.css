@@ -17,9 +17,10 @@
 */
 .feature-carousel {
   /* Cabe com o nome embaixo numa tela de notebook: a peça do centro limita pela largura e pela altura da janela. */
-  --fc-item: clamp(240px, min(34vw, 50svh), 520px);
+  --fc-item: clamp(220px, min(26vw, 42svh), 420px);
   --fc-spread: 1;
-  --fc-stage-top: var(--space-4);
+  /* A peça alta passa até 12% do topo do quadro (pieceWidthFactor). */
+  --fc-stage-top: calc(var(--fc-item) * 0.12 + var(--space-2));
   --fc-stage-bottom: var(--space-5);
   --fc-ground: var(--paper);
   position: relative;
@@ -37,7 +38,7 @@
   afastadas, encostando sem passar uma pela outra.
 */
 .feature-carousel--packshots {
-  --fc-spread: 1.2;
+  --fc-spread: 1.05;
 }
 
 .feature-carousel__stage {
@@ -130,19 +131,49 @@
 }
 
 .feature-carousel__frame--empty {
-  background: var(--portrait-ground);
+  background: var(--sand);
 }
 
 .feature-carousel__frame img {
   display: block;
-  width: auto;
+  /*
+    Largura da foto vinda do componente (`--fc-w`, pieceWidthFactor): a foto larga passa um pouco dos lados do quadro
+    e a alta passa um pouco do topo, para todas as peças terem quase a mesma área (a do centro é sempre a maior).
+  */
+  flex: none;
+  width: calc(var(--fc-item) * var(--fc-w, 1));
   height: auto;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
   object-position: 50% 100%;
   pointer-events: none;
   -webkit-user-drag: none;
+}
+
+/*
+  Caixa do movimento da peça sem fundo até a página da peça (retorno de 12/11/2026): do tamanho que a capa teria, com o
+  recorte no meio. As margens negativas devolvem ao quadro só o tamanho do recorte, então nada muda no palco; a caixa
+  maior é só o que anda no movimento, já no tamanho da foto de lá.
+*/
+.feature-carousel__morph {
+  --fc-iw: calc(var(--fc-item) * var(--fc-w, 1));
+  position: relative;
+  display: block;
+  flex: none;
+  width: calc(var(--fc-iw) * var(--fc-k));
+  height: calc(var(--fc-iw) * var(--fc-k) * var(--fc-cover-r));
+  margin-inline: calc(var(--fc-iw) * (1 - var(--fc-k)) / 2);
+  margin-block: calc(var(--fc-iw) * (var(--fc-cut-r) - var(--fc-k) * var(--fc-cover-r)) / 2);
+  pointer-events: none;
+}
+
+.feature-carousel__frame .feature-carousel__morph img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--fc-iw);
+  height: calc(var(--fc-iw) * var(--fc-cut-r));
 }
 
 /* A peça do centro aproxima devagar no hover, como as fotos clicáveis do site (sem moldura: a peça cresce no palco). */
@@ -296,16 +327,17 @@
 .feature-carousel__cursor-dot {
   display: grid;
   place-items: center;
-  width: 88px;
-  height: 88px;
-  margin: -44px 0 0 -44px;
+  /* Revisão da Franccino (12/11/2026): menor que os 88 px de antes, só o bastante para a palavra caber. */
+  width: 68px;
+  height: 68px;
+  margin: -34px 0 0 -34px;
   border-radius: 50%;
   background: var(--ink);
   color: var(--paper);
   font-size: var(--fs-label);
   line-height: 1;
   font-weight: 500;
-  letter-spacing: var(--tracking-label);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   transform: scale(0);
   opacity: 0;

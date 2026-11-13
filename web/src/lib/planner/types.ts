@@ -23,7 +23,22 @@ export type PlannerProduct = {
   depth: number;
   shape: PieceShape;
   image: QuoteImage | null;
+  /** Vista de cima (planta) da peça: na planta, vem no lugar da foto e ocupa o contorno inteiro (item 29). */
+  topView?: QuoteImage | null;
 };
+
+/**
+ * Peça da busca da sala sem medida cadastrada (revisão de 13/11/2026: "o Sofá Noa não existe"): aparece na lista, com
+ * o aviso, mas não entra na planta, porque o tamanho dela seria inventado.
+ */
+export type UnsizedPlannerProduct = Pick<
+  PlannerProduct,
+  'id' | 'slug' | 'locale' | 'name' | 'category' | 'image'
+> & {
+  unsized: true;
+};
+
+export type PlannerLibraryItem = PlannerProduct | UnsizedPlannerProduct;
 
 /** Posição do canto superior esquerdo da caixa ocupada, em cm. */
 export type PlacedPiece = { uid: number; productId: number; x: number; y: number; r: Rotation };

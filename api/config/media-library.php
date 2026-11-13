@@ -49,7 +49,9 @@ return [
      * The maximum file size of an item in bytes.
      * Adding a larger file will result in an exception.
      */
-    'max_file_size' => 1024 * 1024 * 25, // 25MB
+    // Follows the largest upload the panel and the import take (technical files, 200 MB; page videos, 150 MB):
+    // with 25 MB, any page film failed with a 500 (FileIsTooBig). Keep in step with `franccino.uploads`.
+    'max_file_size' => 1024 * 1024 * 200,
 
     /*
      * Uploads whose file name contains any of these extensions will be rejected.

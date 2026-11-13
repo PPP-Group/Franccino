@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PEEK_PHOTO, peekBox, peekPosition } from './row-peek';
+import { naturalPhoto, PEEK_PHOTO, peekBox, peekPosition } from './row-peek';
 
 describe('peekBox', () => {
   it('grows with the photos laid side by side', () => {
@@ -25,5 +25,21 @@ describe('peekPosition', () => {
     const { y } = peekPosition(400, 850, 1440, 900, box);
     expect(y + box.height).toBeLessThan(850);
     expect(peekPosition(400, 10, 1440, 120, box).y).toBe(16);
+  });
+});
+
+describe('naturalPhoto', () => {
+  it('keeps the photo in its own proportion with the same visual weight', () => {
+    const wide = naturalPhoto(1920, 1080);
+    const tall = naturalPhoto(640, 960);
+    expect(wide.width).toBeGreaterThan(wide.height);
+    expect(tall.height).toBeGreaterThan(tall.width);
+    expect(Math.abs(wide.width * wide.height - tall.width * tall.height)).toBeLessThan(2500);
+  });
+
+  it('falls back to a portrait without the size and never grows past the limit', () => {
+    expect(naturalPhoto(null, null).height).toBeGreaterThan(naturalPhoto(null, null).width);
+    const panorama = naturalPhoto(4000, 500);
+    expect(Math.max(panorama.width, panorama.height)).toBeLessThanOrEqual(220);
   });
 });

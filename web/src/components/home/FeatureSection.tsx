@@ -32,7 +32,7 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
   };
   return (
     <section className={sectionClass(tone, 'feature')} aria-labelledby="feature-title">
-      <div className="wrap feature__grid" data-parallax="">
+      <div className="wrap feature__grid">
         {product.cover ? (
           <Link
             className="feature__media"
@@ -42,7 +42,7 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
             aria-hidden="true"
             data-reveal=""
           >
-            <span className="feature__frame" data-parallax-layer="back">
+            <span className="feature__frame">
               <MorphImage
                 name={morph}
                 image={product.cover}
@@ -52,7 +52,7 @@ export function FeatureSection({ product, tone = 'paper' }: { product: ProductDe
             </span>
           </Link>
         ) : null}
-        <div className="feature__copy" data-parallax-layer="front" data-reveal="">
+        <div className="feature__copy" data-reveal="">
           <div className="feature__head">
             <h2 id="feature-title" className="display">
               {product.name}

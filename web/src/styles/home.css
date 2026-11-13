@@ -341,6 +341,11 @@
   animation: none;
 }
 
+/* Mesmo texto do slide anterior (HeroCarousel): fica parado, sem a entrada de novo. */
+.hero-carousel.is-steady-copy .hero-carousel__slide .hero__content {
+  animation: none;
+}
+
 /* Vídeo de slide fora da tela some: o observador do vídeo vê que ele não está na tela e pausa (HeroVideo). */
 .hero-carousel__slide:not(.is-active) .hero__video {
   display: none;
@@ -528,6 +533,13 @@
 /* Duas linhas lado a lado: título de página (h1); o display fica para a peça em destaque. */
 .line-panel__title {
   font-size: var(--fs-h1);
+}
+
+/* O nome da linha (Franccino Casa, Franccino Giardini) embaixo de "Área interna" / "Área externa". */
+.line-panel__copy .line-panel__brand {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 .line-panel__copy p {
@@ -764,12 +776,6 @@
   align-items: center;
 }
 
-/* A peça é foto de estúdio (pode encostar na borda): a foto anda menos e ganha menos sobra; o texto anda o normal. */
-.feature__grid[data-parallax] {
-  --parallax-back: 5%;
-  --parallax-scale: 1.1;
-}
-
 /* O quadro interno aproxima no hover: a própria foto já tem a animação de saída de motion.css. */
 .feature__media {
   display: block;
@@ -934,7 +940,10 @@
   text-wrap: balance;
 }
 
-.mosaic--3 > :first-child .mosaic__title,
+/*
+  Todos os nomes no mesmo tamanho e à mesma distância da borda de baixo (revisão da Franccino, item 4: o nome da foto
+  grande e o da pequena ao lado ficavam desalinhados). Só o mosaico de uma foto só tem o nome maior.
+*/
 .mosaic--1 .mosaic__title {
   font-size: var(--fs-h2);
 }

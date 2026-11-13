@@ -23,9 +23,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class CategoryResource extends JsonResource
 {
-    public function __construct(Category $resource, private readonly bool $detailed = false)
+    /**
+     * Forma do detalhe. Não vai no construtor: a coleção (`CategoryResource::collection`) passa o índice do item como
+     * segundo argumento, e a partir do segundo item a lista saía na forma do detalhe, sem `product_count`
+     * (retorno de 12/11/2026).
+     */
+    private bool $detailed = false;
+
+    public static function detail(Category $category): self
     {
-        parent::__construct($resource);
+        $resource = new self($category);
+        $resource->detailed = true;
+
+        return $resource;
     }
 
     /** @return array<string, mixed> */
@@ -49,7 +59,7 @@ class CategoryResource extends JsonResource
 
         return [
             ...$ref,
-            'cover' => ImagePresenter::present($cover, $ref['name']),
+            'cover' => ImagePresenter::present($cover ?? $category->sampleCover, $ref['name']),
             'product_count' => $category->products_count ?? $category->products()->published()->count(),
         ];
     }

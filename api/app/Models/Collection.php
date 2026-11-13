@@ -42,6 +42,11 @@ class Collection extends Model implements HasMedia
     {
         $this->addMediaCollection('cover')->singleFile();
         $this->addMediaCollection('gallery');
+        // Vídeo da página (o filme do projeto, o manifesto da coleção), tocado só no clique; a capa dele é opcional.
+        $this->addMediaCollection('video')
+            ->singleFile()
+            ->acceptsMimeTypes(['video/mp4']);
+        $this->addMediaCollection('video_poster')->singleFile();
     }
 
     /** @return BelongsToMany<Product, $this> */

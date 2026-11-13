@@ -61,6 +61,14 @@ describe('buildCsp', () => {
     expect(directive(csp, 'connect-src')).toContain('https://*.google-analytics.com');
   });
 
+  it('opens AdOpt only with Tag Manager and the AdOpt banner on', () => {
+    expect(directive(buildCsp({ ...base, adopt: true }), 'script-src')).not.toContain('https://*.goadopt.io');
+    const csp = buildCsp({ ...base, gtm: true, adopt: true });
+
+    expect(directive(csp, 'script-src')).toContain('https://*.goadopt.io');
+    expect(directive(csp, 'connect-src')).toContain('https://*.goadopt.io');
+  });
+
   it('opens Turnstile script and frame only when Turnstile is on', () => {
     const csp = buildCsp({ ...base, turnstile: true });
 

@@ -24,8 +24,8 @@ export function plainText(html: string): string {
 }
 
 /**
- * O resumo a mostrar como frase de abertura, ou `null` quando o texto completo já começa com ele (aí o texto
- * completo basta).
+ * O resumo a mostrar como frase de abertura, ou `null` quando o texto completo já traz o resumo (no começo ou no meio:
+ * no Clara Arte o resumo é o terceiro parágrafo, revisão de 13/11/2026). Aí o texto completo basta.
  */
 export function distinctLead(
   lead: string | null | undefined,
@@ -37,7 +37,7 @@ export function distinctLead(
   if (!html) {
     return lead;
   }
-  // Compara só o começo: o resumo às vezes termina com reticências ou sem o ponto final do parágrafo.
+  // O resumo às vezes termina com reticências ou sem o ponto final do parágrafo.
   const start = plainText(lead).replace(/[.…\s]+$/, '');
-  return start !== '' && plainText(html).startsWith(start) ? null : lead;
+  return start !== '' && plainText(html).includes(start) ? null : lead;
 }

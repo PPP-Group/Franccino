@@ -26,9 +26,15 @@ return [
 
     // Days each personal-data log is kept (LGPD), then removed by the daily `model:prune`. Empty = kept. The periods
     // are a legal decision of the Franccino; these defaults only keep the tables from growing forever.
+    // Lista de desejos compartilhada por link: dias de validade do link.
+    'quote_lists' => [
+        'days' => env('QUOTE_LIST_DAYS', 90),
+    ],
+
     'retention' => [
         'activity_logs' => env('RETENTION_ACTIVITY_LOGS_DAYS', 365),
         'download_logs' => env('RETENTION_DOWNLOAD_LOGS_DAYS', 365),
+        'download_leads' => env('RETENTION_DOWNLOAD_LEADS_DAYS', 730),
         'consent_records' => env('RETENTION_CONSENT_RECORDS_DAYS', 1825),
     ],
 
@@ -47,7 +53,7 @@ return [
         'model_3d_max_kb' => 20480,
         // Technical files (product, designer and launch downloads). HTML, scripts and executables never get in: the
         // signed link serves the file from the API domain.
-        'downloads_max_kb' => 51200,
+        'downloads_max_kb' => 204800,
         'downloads_extensions' => ['pdf', 'dwg', 'dxf', 'skp', 'rfa', 'rvt', '3ds', 'max', 'obj', 'fbx', 'glb', 'gltf', 'stp', 'step', 'igs', 'zip', 'jpg', 'jpeg', 'png', 'webp'],
         // Page video blocks (e.g. the factory film), served by the site itself. Keep in step with `config/livewire.php`
         // and `docker/php.ini`.

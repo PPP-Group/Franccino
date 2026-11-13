@@ -27,3 +27,9 @@ it('lets the temporary upload and the PHP image take the largest panel file', fu
         ->and(kilobytes($ini['upload_max_filesize']))->toBeGreaterThan($largest)
         ->and(kilobytes($ini['post_max_size']))->toBeGreaterThan($largest);
 });
+
+it('lets the media library take the page video and the largest panel file', function () {
+    $largest = max((int) config('franccino.uploads.video_max_kb'), (int) config('franccino.uploads.model_3d_max_kb'), (int) config('franccino.uploads.downloads_max_kb'));
+
+    expect((int) config('media-library.max_file_size'))->toBeGreaterThanOrEqual($largest * 1024);
+});

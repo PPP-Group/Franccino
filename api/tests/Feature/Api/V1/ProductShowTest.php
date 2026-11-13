@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,17 @@ it('returns the product detail in portuguese by default', function () {
         ->assertJsonMissingPath('data.search_text');
 
     expect($this->getJson('/api/v1/products/cadeira-aura')->json('data.description'))->not->toContain('script');
+});
+
+it('returns flexible dimensions as a range (revisão de 12/11/2026)', function () {
+    publishedProduct(['dimensions' => [['width' => 1000, 'width_max' => 1500, 'depth' => 600, 'height' => 750]]]);
+
+    $this->getJson('/api/v1/products/cadeira-aura')
+        ->assertOk()
+        ->assertJsonPath('data.dimensions.0.width', 1000)
+        ->assertJsonPath('data.dimensions.0.width_max', 1500)
+        ->assertJsonPath('data.dimensions.0.depth_max', null)
+        ->assertJsonPath('data.dimensions.0.height', 750);
 });
 
 it('finds the product by the english slug', function () {
@@ -135,4 +147,23 @@ it('leaves out of the gallery a copy of the cover file', function () {
 
     expect($gallery)->toHaveCount(1)
         ->and($gallery[0]['id'])->toBe($side->id);
+});
+
+it('lists published variations in both directions, with rooms and top view (revisão de 12/11/2026)', function () {
+    $product = publishedProduct(['rooms' => ['living']]);
+    $armchair = Product::factory()->for(area('indoor'))->create([
+        'name' => ['pt' => 'Cadeira Aura com braço'],
+        'slug' => ['pt' => 'cadeira-aura-com-braco'],
+    ]);
+    $draft = Product::factory()->for(area('indoor'))->create(['is_published' => false]);
+    $stool = Product::factory()->for(area('indoor'))->create(['slug' => ['pt' => 'banqueta-aura']]);
+    $product->variants()->attach([$armchair->id, $draft->id]);
+    $stool->variants()->attach($product->id);
+
+    $response = $this->getJson('/api/v1/products/cadeira-aura')->assertOk();
+
+    expect($response->json('data.rooms'))->toBe(['living'])
+        ->and($response->json('data.top_view'))->toBeNull()
+        ->and(collect($response->json('data.variants'))->pluck('slug')->all())
+        ->toBe(['cadeira-aura-com-braco', 'banqueta-aura']);
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { gtmScriptSrc, loadGtm } from './gtm';
+import { denyConsentByDefault, gtmScriptSrc, loadGtm } from './gtm';
 
 function fakeDocument() {
   const scripts: { src: string; async: boolean }[] = [];
@@ -26,5 +26,14 @@ describe('gtm', () => {
     expect(scripts).toHaveLength(1);
     expect(scripts[0]).toMatchObject({ async: true, src: gtmScriptSrc('GTM-ABC') });
     expect(win.dataLayer).toHaveLength(1);
+  });
+
+  it('pushes the consent default as gtag arguments, before Tag Manager (AdOpt)', () => {
+    const win = {} as Window & { dataLayer?: unknown[] };
+    denyConsentByDefault(win);
+    const entry = win.dataLayer?.[0] as ArrayLike<unknown>;
+    expect(Array.isArray(entry)).toBe(false);
+    expect(Array.from(entry).slice(0, 2)).toEqual(['consent', 'default']);
+    expect(Array.from(entry)[2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied' });
   });
 });

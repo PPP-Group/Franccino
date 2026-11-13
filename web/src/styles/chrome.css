@@ -28,6 +28,26 @@
   color: var(--header-fg);
 }
 
+/*
+  Some ao rolar para baixo e volta ao rolar para cima (`data-header-hide`, BootScript). Com um painel aberto (menu, busca)
+  ou o foco dentro dele, fica à vista. O movimento (transição) está em motion.css.
+*/
+html[data-header-hide] .site-header:not(:has([aria-expanded='true'], :focus-within)) {
+  transform: translateY(-100%);
+}
+
+/*
+  O que fica preso embaixo do cabeçalho (a barra de filtros do catálogo, os índices laterais) sobe junto quando ele
+  some e desce junto quando ele volta (retorno de 12/11/2026: os filtros ficavam soltos no meio da tela).
+*/
+:root {
+  --header-offset: var(--header);
+}
+
+html[data-header-hide]:not(:has(.site-header :is([aria-expanded='true'], :focus-within))) {
+  --header-offset: 0px;
+}
+
 .site-header::before,
 .site-header::after {
   content: '';
@@ -273,6 +293,65 @@ body:has(.hero--full) #conteudo {
   color: var(--ink);
 }
 
+/*
+  Produtos (revisão da Franccino, 12/11/2026, item 5, exemplo 2): "Área interna | Área externa" em cima das categorias,
+  cada uma com "Ver tudo" embaixo. Clicar numa linha a deixa em negrito e mostra só as categorias dela; clicar de novo
+  volta para todas.
+*/
+.nav-panel__tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.nav-panel__tab {
+  display: grid;
+  justify-items: start;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--line);
+}
+
+.nav-panel__tab:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.nav-panel__tab > button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-muted);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+  line-height: var(--lh-h3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.nav-panel__tab > button:hover,
+.nav-panel__tab > button[aria-pressed='true'] {
+  color: var(--ink);
+}
+
+.nav-panel__tab > button[aria-pressed='true'] {
+  font-weight: 600;
+}
+
+.nav-panel__see-all {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nav-panel__see-all:hover,
+.nav-panel__see-all:focus-visible {
+  color: var(--ink);
+}
+
 .nav-panel__list {
   list-style: none;
   margin: 0;
@@ -421,7 +500,7 @@ body:has(.hero--full) #conteudo {
     align-items: stretch;
     gap: 0;
     position: absolute;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     left: 0;
     right: 0;
     padding: var(--space-3) var(--gutter) var(--space-6);
@@ -732,6 +811,10 @@ body:has(.hero--full) #conteudo {
     align-items: flex-start;
     gap: var(--space-2);
   }
+
+  .back-to-top {
+    align-self: flex-end;
+  }
 }
 
 /* Celular: nome e novidades ocupam a largura; Catálogo e Atendimento lado a lado. */
@@ -1038,4 +1121,35 @@ body:has(.hero--full) #conteudo {
 
 .site-footer .footer-vortex::after {
   display: none;
+}
+
+/*
+  "Topo": seta para cima com a palavra ao lado, no canto direito da última linha do rodapé (revisão da Franccino,
+  12/11/2026). Área de toque de 44 px.
+*/
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.back-to-top__arrow {
+  rotate: -90deg;
+}
+
+.back-to-top:hover .back-to-top__label,
+.back-to-top:focus-visible .back-to-top__label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

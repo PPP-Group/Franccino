@@ -38,6 +38,7 @@
 .gallery__stage {
   background: var(--paper);
   aspect-ratio: 4 / 3;
+  container-type: size;
   position: relative;
   overflow: hidden;
   display: grid;
@@ -56,6 +57,16 @@
   height: 100%;
   max-width: var(--stage-img-max, 100%);
   object-fit: contain;
+  transition: opacity var(--t-mid) var(--ease-out);
+}
+
+/*
+  Com a proporção da foto (ProductStage, `--stage-ratio`), a caixa da foto é a própria foto, sem a sobra branca do
+  quadro: o movimento que chega do carrossel e dos cards encaixa nela inteira (retorno de 12/11/2026).
+*/
+.gallery__stage[style*='--stage-ratio'] > img {
+  width: min(100cqw, 100cqh * var(--stage-ratio), var(--stage-img-max, 100cqw));
+  height: auto;
   transition: opacity var(--t-mid) var(--ease-out);
 }
 
@@ -335,6 +346,24 @@
 /* A última medida não fecha com fio: o fio do bloco de orçamento, logo abaixo, já separa (sem dois fios seguidos). */
 .dims dl div:last-child {
   border-bottom: 0;
+}
+
+/* Seta de cada medida antes do nome (↔ largura, ↗ profundidade, ↕ altura). */
+.dims__facts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* A seta de cada medida, do tamanho do texto (a regra `.dims svg` é a do desenho, não vale para ela). */
+.dims .dims__arrow {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  max-width: none;
+  background: none;
+  border: 0;
+  color: var(--ink-muted);
 }
 
 .dims dt {
@@ -643,4 +672,92 @@
   place-items: center;
   font-size: var(--fs-label);
   background: var(--stone);
+}
+
+/* "Integre ao seu projeto": um botão por programa e o caminho para a Área do Profissional (item 19). */
+.tech-library {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.tech-library__programs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tech-library__button {
+  gap: var(--space-2);
+  min-width: 160px;
+}
+
+/* Programa com várias versões do bloco: o nome do programa em cima, um botão por versão. */
+.tech-library__group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tech-library__program {
+  margin: 0;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* Variações da peça (item 13): miniatura e nome, em linha; a atual não aparece. */
+.variants {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.variants__title {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.variants__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.variants__item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.variants__item:hover,
+.variants__item:focus-visible {
+  border-color: var(--ink);
+}
+
+.variants__thumb {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.variants__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }

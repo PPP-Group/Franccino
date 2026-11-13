@@ -65,9 +65,19 @@
   object-fit: cover;
 }
 
-/* Retrato sempre em preto e branco: filtro não anima (só transform e opacity se mexem). */
+/*
+  Retrato em preto e branco; no hover, ganha cor, como no site antigo (revisão da Franccino, 12/11/2026). A troca é
+  suave em motion.css.
+*/
 .tile--portrait .tile__media img {
   filter: grayscale(1) contrast(1.02);
+}
+
+@media (hover: hover) {
+  .tile--portrait:hover .tile__media img,
+  .tile--portrait:focus-visible .tile__media img {
+    filter: none;
+  }
 }
 
 .tile:focus-visible {
@@ -305,29 +315,146 @@
 }
 
 .faq {
-  border-top: 1px solid var(--line);
-  max-width: var(--measure);
+  border-top: 1px solid var(--ink);
 }
 
-.faq details {
+.faq__item {
   border-bottom: 1px solid var(--line);
 }
 
-.faq summary {
+.faq__item summary {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) 28px;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-6) 0;
   cursor: pointer;
-  min-height: 44px;
-  padding: var(--space-3) 0;
-  font-weight: 500;
+  list-style: none;
 }
 
-.faq summary:focus-visible {
+.faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__item summary:focus-visible {
   outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline-offset: 4px;
 }
 
-.faq details p {
-  margin: 0 0 var(--space-4);
+.faq__num {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
   color: var(--ink-muted);
+}
+
+.faq__question {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  letter-spacing: var(--tracking-heading);
+}
+
+/* Mais e menos finos, num quadrado: abre girando o traço vertical. */
+.faq__icon {
+  position: relative;
+  align-self: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--ink);
+}
+
+.faq__icon::before,
+.faq__icon::after {
+  content: '';
+  position: absolute;
+  inset: 50% 7px auto;
+  height: 1px;
+  background: var(--ink);
+}
+
+.faq__icon::after {
+  transform: rotate(90deg);
+}
+
+.faq__item[open] .faq__icon::after {
+  transform: rotate(0deg);
+}
+
+.faq__item[open] .faq__icon {
+  background: var(--ink);
+}
+
+.faq__item[open] .faq__icon::before,
+.faq__item[open] .faq__icon::after {
+  background: var(--paper);
+}
+
+.faq__answer {
+  padding: 0 calc(28px + var(--space-4)) var(--space-6) calc(3.5rem + var(--space-4));
+}
+
+.faq__answer p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+/* Tire suas dúvidas: a ajuda presa à esquerda, as perguntas à direita. */
+.faq-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-8);
+  align-items: start;
+  margin-top: var(--space-7);
+}
+
+.faq-page__aside {
+  position: sticky;
+  top: calc(var(--header-offset, 0px) + var(--space-6));
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--sand);
+  transition: top var(--t-base) var(--ease-out);
+}
+
+.faq-page__aside h2 {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+
+.faq-page__aside p {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.faq-page__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+@media (max-width: 56.25rem) {
+  .faq-page {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-page__aside {
+    position: static;
+    order: 2;
+  }
+
+  .faq__item summary {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 28px;
+    gap: var(--space-3);
+  }
+
+  .faq__answer {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .block-quote {
@@ -811,7 +938,7 @@
 
   .page-banner__img {
     position: fixed;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     bottom: auto;
     height: var(--page-banner-h);
   }
@@ -824,7 +951,7 @@
 
   .page-banner-art--fixed img {
     position: fixed;
-    top: var(--header);
+    top: var(--header-offset, var(--header));
     left: 0;
     height: var(--art-h);
     max-height: none;
@@ -1182,7 +1309,7 @@
 .clients__item {
   display: grid;
   place-items: center;
-  height: 96px;
+  height: 112px;
 }
 
 .clients__item > a {
@@ -1600,6 +1727,25 @@
   margin-top: var(--section-y);
 }
 
+/* Vídeo do projeto ou da coleção: largo como as fotos da galeria; em pé (9:16), estreito e no centro, sem passar da
+   altura da tela. O quadro segue a proporção da capa (--video-ratio). */
+.page-video {
+  margin-top: var(--section-y);
+}
+
+.page-video .block-video {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.page-video .video__frame {
+  aspect-ratio: var(--video-ratio, 16 / 9);
+}
+
+.page-video--portrait .block-video {
+  width: min(100%, calc(80svh * var(--video-ratio, 0.5625)));
+}
+
 @media (max-width: 56.25rem) {
   .project-story {
     grid-template-columns: minmax(0, 1fr);
@@ -1817,7 +1963,13 @@
 /* No texto longo do projeto, a peça acompanha a leitura. */
 .project-story--feature .feature-piece {
   position: sticky;
-  top: calc(var(--header) + var(--space-6));
+  top: calc(var(--header-offset, var(--header)) + var(--space-6));
+}
+
+/* No projeto, a peça fica no tamanho compacto das outras páginas, encostada à direita do texto (retorno de 12/11/2026). */
+.project-story--feature .feature-piece--compact {
+  align-self: start;
+  justify-self: end;
 }
 
 /*
@@ -1864,4 +2016,180 @@
   .feature-piece--compact .feature-piece__caption {
     padding-left: var(--space-4);
   }
+}
+
+/* "Seja um parceiro": o formulário de parceria embaixo do texto da página (revisão da Franccino, 12/11/2026). */
+.partner-form {
+  max-width: 720px;
+  margin-top: var(--space-8);
+}
+
+/* Assinatura (logo) do designer ao lado do nome: pequena, em tons de cinza como as logos dos clientes. */
+.designer__meta {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-2);
+}
+
+.designer__signature {
+  width: auto;
+  max-width: 200px;
+  max-height: 56px;
+  object-fit: contain;
+  filter: grayscale(1);
+}
+
+/* ---------- galeria longa com "Ver mais" (projeto e Fábrica, revisão de 13/11/2026) ---------- */
+
+.show-more:not(.is-open) .is-extra {
+  display: none;
+}
+
+.show-more__bar {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+
+/* Aberta: o "Ver menos" fica preso ao pé da tela enquanto a galeria passa, sobre as fotos. */
+.show-more.is-open .show-more__bar {
+  position: sticky;
+  bottom: var(--space-5);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.show-more.is-open .show-more__button {
+  pointer-events: auto;
+  background: var(--paper);
+}
+
+.show-more.is-open .show-more__button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* O nome da galeria (ex.: "Peças em produção") em cima das fotos. */
+.block-gallery > figcaption:first-child {
+  margin: 0 0 var(--space-4);
+  color: var(--ink);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* ---------- miniaturas da galeria e a janela com todas (coleção) ---------- */
+
+.gallery-peek {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  margin-top: var(--space-6);
+}
+
+.gallery-peek__thumbs {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery-peek__thumbs button {
+  display: block;
+  width: 96px;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--sand);
+  cursor: zoom-in;
+}
+
+.gallery-peek__thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-mid) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .gallery-peek__thumbs button:hover img {
+    transform: scale(1.06);
+  }
+}
+
+.gallery-peek__open {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.gallery-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.gallery-dialog::backdrop {
+  background: var(--ink);
+}
+
+.gallery-dialog__bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--gutter);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.gallery-dialog__title {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.gallery-dialog__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.gallery-dialog__body {
+  width: min(100%, var(--max));
+  margin-inline: auto;
+  padding: var(--space-5) var(--gutter) var(--space-9);
+}
+
+/* Na janela, as fotos já estão todas à vista: sem a revelação ao rolar. */
+.gallery-dialog [data-reveal],
+.gallery-dialog [data-reveal] > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.gallery-dialog [data-gallery-index] {
+  scroll-margin-top: calc(44px + var(--space-6));
 }

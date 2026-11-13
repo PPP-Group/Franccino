@@ -21,6 +21,8 @@ export const SITE_MAP_PAGES = [
   { key: 'downloads', namespace: 'nav', href: '/downloads' },
   { key: 'planner', namespace: 'nav', href: '/room-planner' },
   { key: 'contact', namespace: 'nav', href: '/contact' },
+  { key: 'faq', namespace: 'nav', href: '/faq' },
+  { key: 'partner', namespace: 'nav', href: '/partner' },
   { key: 'privacy', namespace: 'footer', href: '/privacy' },
   { key: 'terms', namespace: 'footer', href: '/terms' },
   { key: 'cookies', namespace: 'footer', href: '/cookies' },
