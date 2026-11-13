@@ -9,6 +9,8 @@ use App\Models\Banner;
 use App\Models\Client;
 use App\Models\Collection;
 use App\Models\Designer;
+use App\Models\Finish;
+use App\Models\FinishGroup;
 use App\Models\Launch;
 use App\Models\Page;
 use App\Models\Product;
@@ -45,6 +47,8 @@ class ImportController extends Controller
         'scene' => ['model' => Scene::class, 'key' => 'id', 'collections' => ['image']],
         // Banners da home pela posição na ordem do carrossel (1, 2, 3...): a API pública não mostra o id.
         'banner' => ['model' => Banner::class, 'key' => 'position', 'collections' => ['image', 'image_mobile']],
+        // Acabamento pelo código (o da cartela da fábrica, ou o que `POST /import/finishes` gravou).
+        'finish' => ['model' => Finish::class, 'key' => 'code', 'collections' => ['swatch']],
     ];
 
     /** Owners of technical files (downloads), found by the slug in Portuguese (designers have one slug). */
@@ -232,6 +236,62 @@ class ImportController extends Controller
      * `downloads` disk, published unless `published=0`. A file with the same original name on the same owner is
      * replaced (the old file is deleted), so a batch can run again after the Franccino updates a block.
      */
+    /**
+     * `POST /api/import/finishes`: cria ou atualiza grupos e acabamentos pelo código e liga cada acabamento às peças
+     * da lista (sem tirar as ligações que já existem). A foto da amostra vai depois por `/media` (`target=finish`).
+     */
+    public function finishes(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'groups' => ['required', 'array', 'min:1', 'max:20'],
+            'groups.*.name.pt' => ['required', 'string', 'max:120'],
+            'groups.*.name.en' => ['nullable', 'string', 'max:120'],
+            'groups.*.finishes' => ['required', 'array', 'min:1', 'max:100'],
+            'groups.*.finishes.*.code' => ['required', 'string', 'max:60'],
+            'groups.*.finishes.*.name.pt' => ['required', 'string', 'max:120'],
+            'groups.*.finishes.*.name.en' => ['nullable', 'string', 'max:120'],
+            'groups.*.finishes.*.description.pt' => ['nullable', 'string', 'max:2000'],
+            'groups.*.finishes.*.description.en' => ['nullable', 'string', 'max:2000'],
+            'groups.*.finishes.*.products' => ['sometimes', 'array', 'max:200'],
+            'groups.*.finishes.*.products.*' => ['string', 'max:200'],
+        ]);
+
+        $finishes = 0;
+        $links = 0;
+        $missing = [];
+        foreach ($data['groups'] as $groupOrder => $groupData) {
+            $group = FinishGroup::query()->where('name->pt', $groupData['name']['pt'])->first() ?? new FinishGroup;
+            $group->setTranslations('name', array_filter($groupData['name']));
+            $group->sort_order ??= $groupOrder;
+            $group->save();
+
+            foreach ($groupData['finishes'] as $order => $item) {
+                $finish = Finish::query()->firstOrNew(['code' => $item['code']]);
+                $finish->group()->associate($group);
+                $finish->setTranslations('name', array_filter($item['name']));
+                if (filled($item['description'] ?? null)) {
+                    $finish->setTranslations('description', array_filter($item['description']));
+                }
+                $finish->is_published = true;
+                $finish->sort_order = $order;
+                $finish->save();
+                $finishes++;
+
+                foreach ($item['products'] ?? [] as $slug) {
+                    $product = Product::query()->where('slug->pt', $slug)->first();
+                    if ($product === null) {
+                        $missing[] = $slug;
+
+                        continue;
+                    }
+                    $links += count($product->finishes()->syncWithoutDetaching([$finish->id])['attached']);
+                }
+            }
+        }
+
+        return response()->json(['data' => ['finishes' => $finishes, 'linked' => $links, 'not_found' => array_values(array_unique($missing))]]);
+    }
+
     public function files(Request $request): JsonResponse
     {
         $data = $request->validate([

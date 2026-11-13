@@ -388,14 +388,15 @@ Rotas internas da equipe, fora do `/api/v1` (o site não as usa), para subir fot
 pelo repositório (2026-11-07). Só existem com `CONTENT_IMPORT_TOKEN` preenchida na API (sem ela, 404); o token vai em
 `Authorization: Bearer` (errado: 401). Limite: 240 pedidos por minuto. Exemplos em `design/recortes/LEIA-ME.md`.
 
-| Rota                            | Corpo                                                                                           | Resposta                                      |
-| ------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`       | 201 `{ data: { id, collection } }`            |
-| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                      | 200 `{ data: { removed, not_found } }`        |
-| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)     | 201 ou 200 `{ data: { id, replaced, size } }` |
-| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                            | 202 `{ data: { queued, version } }` (fila)    |
-| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)          | 202 `{ data: { queued, version } }` (fila)    |
-| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução) | 202 `{ data: { queued, version } }` (fila)    |
+| Rota                            | Corpo                                                                                                             | Resposta                                        |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `POST /api/import/media`        | multipart: `target`, `key`, `collection`, `file` (jpg, png ou webp, até 30 MB), `source?`                         | 201 `{ data: { id, collection } }`              |
+| `POST /api/import/media/remove` | JSON: `target`, `key`, `collection`, `ids` (ids das fotos)                                                        | 200 `{ data: { removed, not_found } }`          |
+| `POST /api/import/files`        | multipart: `target`, `key`, `type`, `title`, `title_en?`, `published?`, `file` (até 200 MB)                       | 201 ou 200 `{ data: { id, replaced, size } }`   |
+| `POST /api/import/finishes`     | JSON: `groups[]` com `name{pt,en}` e `finishes[]` (`code`, `name{pt,en}`, `description?`, `products?` = slugs pt) | 200 `{ data: { finishes, linked, not_found } }` |
+| `POST /api/import/covers`       | JSON no formato de `api/database/data/covers/*.json`                                                              | 202 `{ data: { queued, version } }` (fila)      |
+| `POST /api/import/content`      | JSON no formato de `api/database/data/wordpress/*.json` (só preenche o que está vazio)                            | 202 `{ data: { queued, version } }` (fila)      |
+| `POST /api/import/translations` | JSON no formato de `api/database/data/translations/*.json` (só preenche o que não tem tradução)                   | 202 `{ data: { queued, version } }` (fila)      |
 
 `target` e coleções: `product` (`cover`, `gallery`, `cutout`; `key` = slug pt), `project` (`cover`, `gallery`, `video`, `video_poster`; `key`
 = slug pt), `store` (`image`), `client` (`logo`) e `scene` (`image`), estes com `key` = id, e `banner` (`image`,
@@ -414,6 +415,10 @@ Em `product`, `collection=model_3d` grava o GLB do visualizador 3D (disco privad
 `franccino.uploads.model_3d_max_kb`), no lugar do anterior.
 `media/remove` apaga as fotos `ids` daquele registro e daquela coleção (ex.: a cópia antiga de uma foto que voltou do
 Drive); um id de outro registro ou de outra coleção não é tocado e volta em `not_found`.
+
+`/api/import/finishes` (2026-11-13) cria ou atualiza os grupos (pelo nome em português) e os acabamentos (pelo `code`),
+publicados, e liga cada acabamento às peças de `products` sem tirar as ligações que já existem. A foto da amostra vai
+por `/api/import/media` com `target=finish`, `key` = código e `collection=swatch`.
 
 `/api/import/files` (2026-11-12) grava um arquivo técnico para download (os mesmos de Arquivos no painel, no disco
 privado `downloads`): `target` = `product`, `designer` ou `launch` (`key` = slug pt; designer, o slug), `type` = um
