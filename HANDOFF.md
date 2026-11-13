@@ -1355,9 +1355,9 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
   - cerca de 2/3 dos blocos da Franccino não têm material (são brancos no próprio SketchUp);
   - onde há cor, é a do modelador, não a do acabamento real (ex.: Cadeira Arp rosa na foto e marrom no arquivo).
 - **Erro da conversão corrigido:** Sofá Noa, Antônio e Majestic estavam com o pufe (o arquivo escolhido era o módulo).
-  O 3D deles saiu do ar, e `design/3d/escolha.json` passou a apontar o sofá inteiro (INTEIRO 2 ASS). **Falta:**
-  converter os três com um token novo do Drive. O "Modelo 3D (GLB)" para baixar dessas três peças ainda é o do pufe:
-  enviar o novo por `/api/import/files` com o mesmo nome de arquivo (`<slug>.glb`) troca o antigo.
+  `design/3d/escolha.json` passou a apontar o sofá inteiro (INTEIRO 2 ASS). Convertidos de novo com um token novo do
+  Drive (o Noa quantizado, 16 MB) e enviados: o 3D e o "Modelo 3D (GLB)" para baixar (mesmo nome de arquivo, trocou o
+  do pufe). A cópia do token foi apagada; com isso, 131 peças têm 3D.
 - **Acabamentos genéricos (teste pedido pelo tech lead):** `design/3d/acabamento.py` aplica madeira, couro e trama de
   tecido da Poly Haven (CC0), mais alumínio e borracha, pelas cores do arquivo (mapas em `design/3d/acabamentos/`).
   - O acabamento vai na malha original, e as repetições (a trama da palhinha) ficam; sem isso, o arquivo passava de 150 MB.
