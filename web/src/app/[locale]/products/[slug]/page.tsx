@@ -171,7 +171,7 @@ export default async function ProductPage({ params }: Props) {
               <DimensionsBlock dimensions={product.dimensions} />
             </ProductConfigurator>
 
-            <TechnicalLibrary files={product.files} />
+            <TechnicalLibrary files={product.files} productName={product.name} />
 
             <FileDownloads
               files={product.files.filter((file) => programOf(file) === null)}

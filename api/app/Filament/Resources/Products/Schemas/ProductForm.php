@@ -173,6 +173,9 @@ class ProductForm
                     TextInput::make('diameter')
                         ->label(__('Diameter (mm)'))
                         ->numeric(),
+                    TextInput::make('diameter_max')
+                        ->label(__('Diameter up to (mm)'))
+                        ->numeric(),
                 ])
                 ->reorderable()
                 ->collapsible()

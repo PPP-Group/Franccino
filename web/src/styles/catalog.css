@@ -167,15 +167,19 @@
   object-fit: contain;
 }
 
-/* Retrato do designer na lista do filtro: em pé, preenchendo o quadro, em preto e branco como nas páginas de designer. */
-.row-peek--portrait .row-peek__photo {
-  width: 126px;
-  aspect-ratio: 4 / 5;
-  background: var(--portrait-ground);
+/*
+  Foto da opção do filtro (categoria, ambiente, coleção, designer): uma só, na proporção dela (o tamanho vem do RowPeek,
+  com a mesma área para todas), preenchendo o quadro. Retratos dos designers em preto e branco, como nas páginas deles.
+*/
+.row-peek--natural .row-peek__photo {
+  aspect-ratio: auto;
 }
 
-.row-peek--portrait .row-peek__photo img {
+.row-peek--natural .row-peek__photo img {
   object-fit: cover;
+}
+
+.row-peek--mono .row-peek__photo img {
   filter: grayscale(1) contrast(1.02);
 }
 
@@ -219,7 +223,8 @@
   flex-wrap: wrap;
 }
 
-.file-link {
+.file-link,
+.file-links__many {
   background: none;
   border: 0;
   min-height: 44px;

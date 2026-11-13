@@ -3,12 +3,13 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { Pagination } from '@/components/catalog/Pagination';
-import { DownloadsTable } from '@/components/downloads/DownloadsTable';
+import { TechTable } from '@/components/catalog/TechTable';
 import { PageHead } from '@/components/layout/PageHead';
 import { Select } from '@/components/ui/Select';
 import type { Locale } from '@/i18n/config';
 import type { DownloadFile, Paginated, ProductCard } from '@/lib/api/types';
-import { getAreas, getDownloads } from '@/lib/api/catalog';
+import { getAreas, getDownloads, getProductDetails } from '@/lib/api/catalog';
+import { toTechnicalRow } from '@/lib/catalog/technical';
 import { getPage } from '@/lib/api/content';
 import { isValidationError } from '@/lib/api/errors';
 import { firstValue, parsePositiveInteger, type RawSearchParams } from '@/lib/api/listing-params';
@@ -67,6 +68,18 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
     downloads = EMPTY_DOWNLOADS;
   }
 
+  // Mesmo layout da tabela técnica do catálogo (retorno de 13/11/2026): fotos no hover, medida, a foto que cresce até a
+  // peça e o "+" da lista de desejos. A tabela usa o detalhe de cada peça da página.
+  const rows =
+    downloads.data.length > 0
+      ? (
+          await getProductDetails(
+            locale,
+            downloads.data.map((product) => product.slug),
+          )
+        ).map(toTechnicalRow)
+      : [];
+
   const pageHref = (next: number) =>
     ({
       pathname: '/downloads',
@@ -114,15 +127,17 @@ export default async function DownloadsPage({ params, searchParams }: DownloadsP
         <EmptyNotice text={t('empty')} />
       ) : (
         <>
-          <div className="toolbar">
-            <Pagination meta={downloads.meta} label={t('pagination')} hrefFor={pageHref} position="top" />
-          </div>
+          {downloads.meta.last_page > 1 ? (
+            <div className="toolbar">
+              <Pagination meta={downloads.meta} label={t('pagination')} hrefFor={pageHref} position="top" />
+            </div>
+          ) : null}
           {/* A chave remonta a tabela a cada página: as linhas novas entram com fade, não de uma vez. */}
           <div
             key={`${area ?? ''}-${category ?? ''}-${q ?? ''}-${downloads.meta.current_page}`}
             className="catalog-results"
           >
-            <DownloadsTable rows={downloads.data} />
+            <TechTable rows={rows} />
           </div>
         </>
       )}

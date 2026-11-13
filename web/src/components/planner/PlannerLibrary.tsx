@@ -8,7 +8,7 @@ import { htmlLang, type Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { searchPlannerPieces } from '@/lib/planner/actions';
 import { parsePlannerQuery } from '@/lib/planner/query';
-import type { PlannerProduct } from '@/lib/planner/types';
+import type { PlannerLibraryItem, PlannerProduct } from '@/lib/planner/types';
 import { snapshotAsImage } from '@/lib/quote/snapshot';
 import { morphName, morphTypes } from '@/lib/ui/morph';
 
@@ -25,7 +25,7 @@ export function PlannerLibrary({
   const locale = useLocale() as Locale;
   const baseId = useId();
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<PlannerProduct[] | null>(null);
+  const [results, setResults] = useState<PlannerLibraryItem[] | null>(null);
   const [pending, startTransition] = useTransition();
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const ticket = useRef(0);
@@ -54,7 +54,7 @@ export function PlannerLibrary({
     }, DEBOUNCE_MS);
   }
 
-  const list = results ?? initial;
+  const list: PlannerLibraryItem[] = results ?? initial;
   const status = pending ? t('searching') : results !== null && results.length === 0 ? t('noResults') : '';
 
   return (
@@ -111,21 +111,25 @@ export function PlannerLibrary({
                   {product.name}
                 </Link>
                 <div className="meta num">
-                  {product.shape === 'round'
-                    ? t('sizeRound', { diameter: numberFormat.format(product.width) })
-                    : t('sizeRect', {
-                        width: numberFormat.format(product.width),
-                        depth: numberFormat.format(product.depth),
-                      })}
+                  {'unsized' in product
+                    ? t('unsized')
+                    : product.shape === 'round'
+                      ? t('sizeRound', { diameter: numberFormat.format(product.width) })
+                      : t('sizeRect', {
+                          width: numberFormat.format(product.width),
+                          depth: numberFormat.format(product.depth),
+                        })}
                 </div>
               </div>
-              <button
-                type="button"
-                aria-label={t('add', { name: product.name })}
-                onClick={() => onAdd(product)}
-              >
-                <Icon name="plus" />
-              </button>
+              {'unsized' in product ? null : (
+                <button
+                  type="button"
+                  aria-label={t('add', { name: product.name })}
+                  onClick={() => onAdd(product)}
+                >
+                  <Icon name="plus" />
+                </button>
+              )}
             </li>
           );
         })}

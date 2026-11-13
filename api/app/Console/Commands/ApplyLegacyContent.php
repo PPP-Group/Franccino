@@ -108,13 +108,22 @@ class ApplyLegacyContent extends Command
         }
     }
 
-    /** @param list<array{wp_id?: int, slug: string, tagline?: ?string, description?: ?string}> $items */
+    /**
+     * Tagline, description and measures of the old site, only where the product has none.
+     *
+     * @param  list<array{wp_id?: int, slug: string, tagline?: ?string, description?: ?string, dimensions?: list<array<string, mixed>>}>  $items
+     */
     private function products(array $items): void
     {
         foreach ($items as $item) {
             $product = (isset($item['wp_id']) ? Product::query()->where('legacy_wp_id', $item['wp_id'])->first() : null)
                 ?? Product::query()->where('slug->pt', $item['slug'])->first();
             $changed = false;
+            if ($product !== null && ($item['dimensions'] ?? []) !== [] && ($product->dimensions ?? []) === []) {
+                $product->dimensions = $item['dimensions'];
+                $changed = true;
+                $this->count('Medidas das peças', true);
+            }
             if ($product !== null) {
                 foreach (['tagline', 'description'] as $field) {
                     $value = $item[$field] ?? null;

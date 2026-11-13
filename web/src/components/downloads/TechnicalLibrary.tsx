@@ -43,7 +43,7 @@ export function blocksByProgram(files: DownloadFile[]): { program: ProgramKey; f
  * com mais de um bloco (as versões do Sofá Noa, os tampos da mesa) ganha o nome do programa em cima e um botão por
  * versão, com o título do arquivo.
  */
-export function TechnicalLibrary({ files }: { files: DownloadFile[] }) {
+export function TechnicalLibrary({ files, productName }: { files: DownloadFile[]; productName: string }) {
   const t = useTranslations('product.library');
   const groups = blocksByProgram(files);
   const single = groups.filter((group) => group.files.length === 1);
@@ -86,8 +86,9 @@ export function TechnicalLibrary({ files }: { files: DownloadFile[] }) {
       ) : (
         <p className="meta">{t('soon')}</p>
       )}
-      <Link className="link-arrow" href="/downloads">
-        <span>{t('professionals')}</span>
+      {/* Já filtrada pela peça (retorno de 13/11/2026: o link levava à lista inteira, e era preciso achar a peça de novo). */}
+      <Link className="link-arrow" href={{ pathname: '/downloads', query: { q: productName } }}>
+        <span>{files.length > 0 ? t('professionalsPiece') : t('professionals')}</span>
       </Link>
     </section>
   );

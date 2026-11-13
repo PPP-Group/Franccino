@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Blocks } from '@/components/content/Blocks';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { PageHead } from '@/components/layout/PageHead';
+import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/config';
 import { getPage } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -37,13 +38,31 @@ export default async function FaqPage({ params }: Props) {
     getPage(locale, 'faq'),
   ]);
   return (
-    <main className="wrap page-end">
-      <PageHead title={page?.title ?? t('title')} lead={page?.intro ?? t('description')} />
-      {page && page.content.length > 0 ? (
-        <Blocks blocks={page.content} />
-      ) : (
-        <EmptyNotice text={t('pending')} />
-      )}
+    <main className="page-end">
+      <div className="wrap">
+        <PageHead title={page?.title ?? t('title')} lead={page?.intro ?? t('description')} />
+        <div className="faq-page">
+          <aside className="faq-page__aside" aria-labelledby="faq-help">
+            <h2 id="faq-help">{t('helpTitle')}</h2>
+            <p>{t('helpText')}</p>
+            <div className="faq-page__links">
+              <Link className="btn" href="/contact">
+                {t('contact')}
+              </Link>
+              <Link className="link-arrow" href="/stores">
+                <span>{t('stores')}</span>
+              </Link>
+            </div>
+          </aside>
+          <div className="faq-page__list">
+            {page && page.content.length > 0 ? (
+              <Blocks blocks={page.content} />
+            ) : (
+              <EmptyNotice text={t('pending')} />
+            )}
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

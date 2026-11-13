@@ -2,6 +2,7 @@ import { ApiImage } from '@/components/media/ApiImage';
 import type { Image } from '@/lib/api/types';
 import { fixedBoxCoverSizes, type CoverSlot } from '@/lib/images/cover-sizes';
 import { editorialRhythm } from './layout';
+import { ShowMore } from './ShowMore';
 
 /**
  * Proporções e larguras da galeria (iguais a `.editorial-gallery` em `styles/pages.css`): a imagem larga ocupa a
@@ -17,28 +18,45 @@ const PAIR: { ratio: number; slots: CoverSlot[] } = {
   slots: [{ media: '(max-width: 35rem)', width: '100vw' }, { width: '50vw' }],
 };
 
+/** Linhas à vista com a galeria fechada (uma larga, um par, outra larga: 4 fotos). */
+const ROWS_SHOWN = 3;
+
 /**
  * Galeria em composição editorial (projeto e coleção, rodada 3): uma imagem na largura toda, depois duas lado a lado,
- * alternando, sem legendas. Cada linha aparece ao entrar na tela.
+ * alternando, sem legendas. Cada linha aparece ao entrar na tela. Com `collapse`, só as primeiras linhas aparecem, com
+ * "Ver mais" (revisão de 13/11/2026).
  */
-export function EditorialGallery({ images, label }: { images: Image[]; label: string }) {
+export function EditorialGallery({
+  images,
+  label,
+  collapse = false,
+}: {
+  images: Image[];
+  label: string;
+  collapse?: boolean;
+}) {
   if (images.length === 0) {
     return null;
   }
-  return (
+  const groups = editorialRhythm(images.length);
+  const shown = collapse
+    ? groups.slice(0, ROWS_SHOWN).reduce((sum, group) => sum + group.indexes.length, 0)
+    : images.length;
+  const gallery = (
     <section className="editorial-gallery" aria-label={label}>
-      {editorialRhythm(images.length).map((group) => {
+      {groups.map((group, row) => {
         const box = group.kind === 'full' ? FULL : PAIR;
+        const extra = collapse && row >= ROWS_SHOWN ? ' is-extra' : '';
         return (
           <div
             key={group.indexes[0]}
-            className={`editorial-gallery__row editorial-gallery__row--${group.kind}`}
+            className={`editorial-gallery__row editorial-gallery__row--${group.kind}${extra}`}
             data-reveal={group.kind === 'pair' ? 'stagger' : ''}
           >
             {group.indexes.map((index) => {
               const picture = images[index];
               return (
-                <figure key={picture.id} className="editorial-gallery__item">
+                <figure key={picture.id} className="editorial-gallery__item" data-gallery-index={index}>
                   <ApiImage image={picture} sizes={fixedBoxCoverSizes(picture, box.ratio, box.slots)} />
                 </figure>
               );
@@ -48,4 +66,5 @@ export function EditorialGallery({ images, label }: { images: Image[]; label: st
       })}
     </section>
   );
+  return collapse ? <ShowMore hidden={images.length - shown}>{gallery}</ShowMore> : gallery;
 }
