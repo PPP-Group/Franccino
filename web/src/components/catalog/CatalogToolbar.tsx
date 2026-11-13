@@ -1,15 +1,16 @@
-import { Fragment, type ReactNode } from 'react';
-import { FilterForm } from './FilterForm';
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import type { AppHref } from '@/i18n/navigation';
+import type { FacetMatrix, FacetName } from '@/lib/catalog/facets';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
-import { Select } from '@/components/ui/Select';
+import { FacetFilters } from './FacetFilters';
+import { FilterForm } from './FilterForm';
 import { ViewHiddenInput, ViewToggle } from './ViewToggle';
 
 /** Um filtro da barra: uma lista de opções com foto flutuando ao lado no hover (como o de designer). */
 export type ToolbarFilter = {
   /** Nome do parâmetro na URL (`category`, `room`, `collection`, `designer`). */
-  name: string;
+  name: FacetName;
   label: string;
   allLabel: string;
   options: FilterOption[];
@@ -25,6 +26,8 @@ type CatalogToolbarProps = {
   hrefFor: (patch: ListingPatch) => AppHref;
   /** Filtros com opção; o que não tem opção não aparece. */
   filters: ToolbarFilter[];
+  /** As chaves de cada peça por filtro: a contagem de cada opção cruza os outros filtros, ao vivo. */
+  matrix: FacetMatrix | null;
   /** Caminho público da listagem (form GET dos filtros, sem JS). */
   formAction: string;
   /** Demais filtros da URL, preservados no envio do form. */
@@ -56,35 +59,12 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
                 <input key={name} type="hidden" name={name} value={value} />
               ))}
             <ViewHiddenInput />
-            {filters.map((filter) => (
-              <Fragment key={filter.name}>
-                <label
-                  className="visually-hidden"
-                  id={`${filter.name}-filter-label`}
-                  htmlFor={`${filter.name}-filter`}
-                >
-                  {filter.label}
-                </label>
-                <Select
-                  id={`${filter.name}-filter`}
-                  labelId={`${filter.name}-filter-label`}
-                  name={filter.name}
-                  defaultValue={filter.active ?? ''}
-                  imageTone={filter.imageTone}
-                  options={[
-                    { value: '', label: filter.allLabel },
-                    ...filter.options.map((option) => ({
-                      value: option.value,
-                      image: option.image,
-                      label:
-                        option.count === null
-                          ? option.label
-                          : t('facetOption', { name: option.label, count: option.count }),
-                    })),
-                  ]}
-                />
-              </Fragment>
-            ))}
+            {/* Remonta quando os filtros aplicados mudam: "Limpar filtros" volta as listas para "Todas". */}
+            <FacetFilters
+              key={filters.map((filter) => filter.active ?? '').join('|')}
+              filters={filters}
+              matrix={props.matrix}
+            />
             <button type="submit" className="btn btn--ghost btn--compact">
               {t('apply')}
             </button>

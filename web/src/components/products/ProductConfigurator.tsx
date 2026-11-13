@@ -93,7 +93,19 @@ export function ProductConfigurator({
           onSelect={(group, id) => setSelection((current) => selectFinish(current, group, id))}
           note={finishesNote}
         />
-      ) : null}
+      ) : (
+        // Peça sem acabamentos cadastrados: a nota dela (quando há) e o caminho para a página Acabamentos (retorno de
+        // 13/11/2026: a página só se achava pelo endereço).
+        <section className="block" aria-labelledby={`${quoteId}-finishes`}>
+          <div className="block__title">
+            <h2 id={`${quoteId}-finishes`}>{t('finishes.title')}</h2>
+          </div>
+          <p className="meta">{finishesNote ?? t('finishes.swatchBook')}</p>
+          <Link className="link-arrow" href="/finishes">
+            <span>{t('finishes.seeAll')}</span>
+          </Link>
+        </section>
+      )}
 
       {children}
 

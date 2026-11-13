@@ -1230,3 +1230,21 @@
     gap: var(--space-7);
   }
 }
+
+/*
+  Pontos sobre uma foto do site (banner, capa, galeria; retorno de 13/11/2026): a camada cobre a caixa da foto, acima
+  dela e do link do banner; só os pontos recebem o clique, o resto passa para o que está embaixo.
+*/
+.photo-points {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Banner com outra foto no celular (`image_mobile`): os pontos são da foto do computador. */
+@media (max-width: 47.99rem) {
+  .photo-points--wide {
+    display: none;
+  }
+}

@@ -10,7 +10,13 @@ import { Icon } from './Icon';
  * `image`: foto que flutua ao lado do ponteiro quando o mouse passa pela opção (o retrato do designer no filtro, como as
  * fotos da tabela técnica; retorno de 09/11/2026).
  */
-export type SelectOption = { value: string; label: string; image?: Image | null };
+export type SelectOption = {
+  value: string;
+  label: string;
+  image?: Image | null;
+  /** Opção sem resultado com os outros filtros (contagem 0): continua escolhível, mas apagada. */
+  muted?: boolean;
+};
 
 export type SelectProps = {
   /** Id do botão: o `<label htmlFor>` do campo aponta para ele. */
@@ -284,7 +290,7 @@ export function Select({
             id={optionId(index)}
             data-row-id={option.image ? index : undefined}
             role="option"
-            className="select__option"
+            className={option.muted ? 'select__option is-muted' : 'select__option'}
             data-value={option.value}
             aria-selected={index === selectedIndex}
             data-active={(open && index === active) || undefined}

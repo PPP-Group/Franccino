@@ -21,6 +21,7 @@ import {
   getCollections,
   getDesigners,
   getHome,
+  getImagePoints,
   getPage,
   getProjects,
   getScenes,
@@ -30,6 +31,7 @@ import {
 import { emptyPage } from '@/lib/api/empty';
 import type { ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
+import { pickPoints } from '@/lib/scenes/image-points';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -60,16 +62,23 @@ export default async function HomePage({ params }: Props) {
   const locale = raw as Locale;
   setRequestLocale(locale);
 
-  const [home, areas, designers, factory, storeList, settings, scenes, projectPage] = await Promise.all([
-    getHome(locale),
-    getAreas(locale),
-    getDesigners(locale),
-    getPage(locale, 'factory'),
-    getStores(locale),
-    getSettings(locale),
-    getScenes(locale),
-    getProjects(locale, { per_page: PROJECTS }),
-  ]);
+  const [home, areas, designers, factory, storeList, settings, scenes, projectPage, imagePoints] =
+    await Promise.all([
+      getHome(locale),
+      getAreas(locale),
+      getDesigners(locale),
+      getPage(locale, 'factory'),
+      getStores(locale),
+      getSettings(locale),
+      getScenes(locale),
+      getProjects(locale, { per_page: PROJECTS }),
+      getImagePoints(locale),
+    ]);
+  // Pontos clicáveis sobre as fotos dos banners (retorno de 13/11/2026).
+  const bannerPoints = pickPoints(
+    imagePoints,
+    home.banners.map((banner) => banner.image),
+  );
   const launch = home.current_launch;
   const [launchPage, featured, allCollections] = await Promise.all([
     launch
@@ -166,6 +175,7 @@ export default async function HomePage({ params }: Props) {
             banner={banner}
             brandNames={brandNames}
             designerCount={designers.length}
+            points={banner.image ? bannerPoints[banner.image.id] : null}
           />
         ))}
       </HeroCarousel>
@@ -174,6 +184,7 @@ export default async function HomePage({ params }: Props) {
         banner={home.banners[0] ?? null}
         brandNames={brandNames}
         designerCount={designers.length}
+        points={home.banners[0]?.image ? bannerPoints[home.banners[0].image.id] : null}
       />
     );
 

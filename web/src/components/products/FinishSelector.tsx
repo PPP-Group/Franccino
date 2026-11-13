@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
 import { FinishZoom } from '@/components/catalog/FinishZoom';
+import { Link } from '@/i18n/navigation';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { FinishGroup, FinishSelection } from '@/lib/product/finish-selection';
 import { nextRovingIndex } from '@/lib/ui/roving';
@@ -143,6 +144,9 @@ export function FinishSelector({ groups, selection, onSelect, note }: FinishSele
         ) : null}
       </div>
       {note ? <p className="meta">{note}</p> : null}
+      <Link className="link-arrow" href="/finishes">
+        <span>{t('seeAll')}</span>
+      </Link>
     </section>
   );
 }
