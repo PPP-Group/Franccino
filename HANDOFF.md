@@ -1318,3 +1318,32 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
 - **Sala para montar:** o código atual acha o Sofá Noa na busca ("Medidas a confirmar"), conferido num `next dev` contra
   a API do preview. Se o preview não mostra, a aba aberta está com a versão anterior do site: recarregar a página depois
   do deploy.
+
+### 30.4 13/11/2026 (noite): 3D no ar, GLB para baixar, filtros e medidas
+
+- **Conversão feita** com o token do Drive que o tech lead mandou na conversa: o valor salvo no ambiente continuava o
+  antigo, e nem a sessão nem um subagente remoto conseguiam ler o novo. A cópia foi apagada no fim. Como o token também
+  trazia o refresh token, com acesso ao Drive inteiro, o tech lead deve revogar o acesso do OAuth Playground na conta
+  Google.
+- **3D no preview:** 126 de 154 peças têm o modelo 3D (`model_3d`), com as cores e texturas do arquivo. As peças com
+  textura (Aparador Xove, Banqueta Apruma, Cadeira Dara) pedem o Pillow no venv.
+- **Não entraram:**
+  - 7 blocos que o OpenSKP não abre, de formato antigo (Banco ARP, Banco Coda, Banqueta Júlia, Buffet Twin, Cadeira
+    Lorena, Cadeira Páglia, Mesa de centro Irene);
+  - 2 SketchUp acima de 150 MB (Balanço Pina, Poltrona Noa);
+  - 8 GLB acima de 20 MB (Banqueta Dara, Cadeira Melina sem braço, Cadeira Noa, Poltrona Caeté, Poltrona Irani, Sofá
+    Adhara, Sofá Snodo, Sofá Sol), que pedem otimização (simplificar a malha);
+  - 11 blocos cujo tamanho não bate com a peça, com objetos a mais ou outra versão (ex.: Cadeira Toé com 6,7 m, Mesa
+    Polux com 9,1 m). Esses foram pedidos à Franccino no PDF.
+- **GLB para baixar:** os 126 também viraram arquivo da peça ("Modelo 3D (GLB)", tipo `block_3d`). "Integre ao seu
+  projeto" ganhou o GLB como programa.
+- **Área do Profissional:** filtro "Tipo de arquivo" (`GET /downloads?format=`, com `meta.formats`). PR
+  [#96](https://github.com/PPP-Group/Franccino/pull/96).
+- **Filtro de categoria:** `GET /categories` manda a capa da primeira peça quando a categoria não tem capa no painel
+  (`CategorySampleCovers`, a mesma regra de `GET /areas/{key}`).
+- **Medidas a partir dos blocos:** como dado do site, não servem. Em 94 peças com medida cadastrada, só 29 batem: o
+  bloco costuma ser outra versão ou trazer objetos a mais. Das 19 peças sem medida, 6 têm bloco (Sofá Antônio, Majestic,
+  Noa e Boto, Sofá Pinot Square e Mesa de centro Noa redonda). Elas foram medidas versão por versão e entraram no PDF
+  para a Franccino confirmar. As outras 13 não têm arquivo nenhum.
+- **PDF final para a Franccino** ("O que precisamos para terminar o site", 13/11, 13 páginas), entregue ao Pedro Ivo.
+  Ele inclui as medidas para confirmar e a situação do 3D.
