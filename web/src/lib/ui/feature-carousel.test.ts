@@ -6,6 +6,7 @@ import {
   dragPosition,
   carouselPieces,
   carouselSlots,
+  coverflowXs,
   fitsFeatureCarousel,
   cutoutMorphBox,
   initialIndex,
@@ -239,5 +240,38 @@ describe('pieceWidthFactor', () => {
       return factor * ((factor * h) / w);
     };
     expect(area(2000, 1000)).toBeCloseTo(area(1000, 1000), 1);
+  });
+});
+
+describe('coverflowXs', () => {
+  it('deixa um vão entre duas peças largas lado a lado', () => {
+    const widths = [1.55, 1.55, 1.55, 1.55, 1.55, 1.55, 1.55];
+    const xs = coverflowXs(widths, 0, widths.length);
+    // Centro (escala 1) e vizinha (escala 0,56): a borda direita do centro fica antes da borda esquerda da vizinha.
+    const centerRight = 1.55 / 2;
+    const neighbourLeft = xs[1] - (1.55 * 0.56) / 2;
+    expect(neighbourLeft).toBeGreaterThan(centerRight);
+    expect(xs[0]).toBe(0);
+    expect(xs[6]).toBeLessThan(0);
+  });
+
+  it('peças estreitas ficam mais perto que as largas', () => {
+    const narrow = coverflowXs([0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], 0, 7);
+    const wide = coverflowXs([1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5], 0, 7);
+    expect(narrow[1]).toBeLessThan(wide[1]);
+  });
+
+  it('no meio do arrasto, mistura as duas posições sem atravessar o palco', () => {
+    const widths = [1, 1, 1, 1, 1, 1, 1];
+    const half = coverflowXs(widths, 0.5, 7);
+    const a = coverflowXs(widths, 0, 7);
+    const b = coverflowXs(widths, 1, 7);
+    expect(half[1]).toBeCloseTo((a[1] + b[1]) / 2);
+    // A peça que dá a volta fica num lado só.
+    for (let index = 0; index < 7; index++) {
+      expect(
+        [a[index], b[index], (a[index] + b[index]) / 2].some((x) => Math.abs(x - half[index]) < 1e-9),
+      ).toBe(true);
+    }
   });
 });

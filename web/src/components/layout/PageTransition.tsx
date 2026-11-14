@@ -22,7 +22,10 @@ export function PageTransition({ children }: { children: ReactNode }) {
 
   // A navegação da peça para a lista que a contém (`leadNavigation`) passa pelo roteador com o tipo do movimento.
   useEffect(() => {
-    setNavigator((href, types) => router.push(href, { transitionTypes: types }));
+    setNavigator(
+      (href, types) => router.push(href, { transitionTypes: types }),
+      (href) => router.prefetch(href),
+    );
     return () => setNavigator(null);
   }, [router]);
 

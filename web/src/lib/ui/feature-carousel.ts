@@ -80,6 +80,58 @@ export function coverflowPose(offset: number): CoverflowPose {
   };
 }
 
+/** Vão entre duas peças vizinhas, em larguras da peça do centro (a vizinha menor, vão menor). */
+const PIECE_GAP = 0.1;
+
+function layoutAt(widths: readonly number[], center: number, total: number): number[] {
+  const xs = new Array<number>(total).fill(0);
+  const byOffset = widths.map((_, index) => ({
+    index,
+    offset: Math.round(loopOffset(index, center, total)),
+  }));
+  const width = (index: number, step: number) => (widths[index] ?? 1) * lerpTable(STEP_SCALE, step);
+  for (const side of [1, -1] as const) {
+    const row = byOffset
+      .filter((item) => Math.sign(item.offset) === side)
+      .sort((a, b) => Math.abs(a.offset) - Math.abs(b.offset));
+    let x = 0;
+    let previous = width(wrapIndex(center, total), 0);
+    let previousScale = 1;
+    for (const item of row) {
+      const step = Math.abs(item.offset);
+      const scale = lerpTable(STEP_SCALE, step);
+      const current = width(item.index, step);
+      x += previous / 2 + (PIECE_GAP * (scale + previousScale)) / 2 + current / 2;
+      xs[item.index] = side * x;
+      previous = current;
+      previousScale = scale;
+    }
+  }
+  return xs;
+}
+
+/**
+ * Distância de cada peça ao centro, em larguras da peça do centro, pela largura real de cada uma (`widths`, a de
+ * `pieceWidthFactor`): entre duas peças sempre há um vão, mesmo com dois sofás largos lado a lado (retorno de
+ * 14/11/2026: "um sofá em cima do outro"). Fracionária durante o arrasto: mistura as duas posições inteiras vizinhas;
+ * a peça que dá a volta (troca de lado) fica na mais próxima, sem atravessar o palco.
+ */
+export function coverflowXs(widths: readonly number[], position: number, total: number): number[] {
+  if (total <= 0) return [];
+  const low = Math.floor(position);
+  const fraction = position - low;
+  const a = layoutAt(widths, low, total);
+  if (fraction < 1e-6) return a;
+  const b = layoutAt(widths, low + 1, total);
+  return a.map((x, index) => {
+    const next = b[index] ?? x;
+    if (Math.sign(x) !== Math.sign(next) && Math.abs(x) > 1 && Math.abs(next) > 1) {
+      return fraction < 0.5 ? x : next;
+    }
+    return x + (next - x) * fraction;
+  });
+}
+
 /**
  * Posição (em peças, fracionária) durante o arrasto. `dx` é o quanto o ponteiro andou (positivo = para a direita, que
  * volta uma peça) e `stepPx` quantos px valem uma peça. Além das pontas o arrasto resiste.

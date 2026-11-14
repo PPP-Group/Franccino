@@ -464,55 +464,30 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
 /*
   Peça sem fundo do carrossel (ida e volta da página da peça). No carrossel a caixa que anda já tem o tamanho que a
   capa teria, com o recorte no meio (FeatureCarousel, `.feature-carousel__morph`), e na página a foto ocupa a caixa
-  da proporção dela (product.css): as duas caixas são da mesma foto. A troca do recorte pela capa acontece logo no
-  começo, e o resto do movimento é só a foto de destino encaixando, sem fade no fim (retorno de 12/11/2026).
+  da proporção dela (product.css): as duas caixas mostram a peça no mesmo lugar e no mesmo tamanho. Só a foto de
+  chegada aparece, do começo ao fim (o controle da navegação espera ela carregar), sem troca nem fade: antes as duas se
+  misturavam no começo, e o clique parecia "piscar" antes de a peça andar (retorno de 14/11/2026). A capa da página tem
+  fundo branco: na camada multiplicada (abaixo) o branco some sobre o fundo do carrossel.
 */
 ::view-transition-group(.morph-cutout) {
   animation-duration: var(--t-slow);
   animation-timing-function: var(--ease-out);
 }
 
-/* `plus-lighter` (o padrão da troca): a soma das duas fotos fica inteira; com `normal` a peça clareava no meio da troca. */
 ::view-transition-old(.morph-cutout),
 ::view-transition-new(.morph-cutout) {
   block-size: 100%;
   object-fit: contain;
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode: normal;
+  animation: none;
 }
 
 ::view-transition-old(.morph-cutout) {
-  animation: morph-swap-out var(--t-slow) linear both;
+  opacity: 0;
 }
 
-::view-transition-new(.morph-cutout) {
-  animation: morph-swap-in var(--t-slow) linear both;
-}
-
-/* A capa da página tem fundo branco: sobre o fundo areia das seções ela também some, como as peças dos cards. */
 :root[data-morph-fit='cutout']::view-transition {
   mix-blend-mode: multiply;
-}
-
-@keyframes morph-swap-out {
-  0% {
-    opacity: 1;
-  }
-
-  25%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes morph-swap-in {
-  0% {
-    opacity: 0;
-  }
-
-  25%,
-  100% {
-    opacity: 1;
-  }
 }
 
 @keyframes morph-leave {
