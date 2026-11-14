@@ -1,5 +1,5 @@
 import type { ViewTransitionClass } from 'react';
-import type { Image } from '@/lib/api/types';
+import type { Image, ProductCard } from '@/lib/api/types';
 
 /**
  * Foto que cresce do card até a página que ele abre, e volta encolhendo (banco de ideias, ideia 10; retorno de
@@ -47,9 +47,39 @@ export function morphName(kind: MorphKind, slug: string): string {
   return `${kind}-${slug}`;
 }
 
-/** `share` do `<ViewTransition>`: anima o par só na navegação marcada com o nome dele; nas outras, nenhum nome. */
-export function morphShare(fit: MorphFit, name: string): ViewTransitionClass {
+/**
+ * `share` do `<ViewTransition>`: anima o par só na navegação marcada com o nome dele; nas outras, nenhum nome.
+ * `active`: o par é o da navegação em curso (`setActiveMorph`, posto no clique ou na volta). Aí a classe vale sem
+ * depender do tipo da transição: o React entrega os tipos ao primeiro commit de transição que vier, e às vezes era um
+ * commit qualquer antes da troca de página, que chegava sem o tipo e abria a peça sem o movimento (retorno de
+ * 13/11/2026: "às vezes tenho que tentar 2, 3 vezes").
+ */
+export function morphShare(fit: MorphFit, name: string, active = false): ViewTransitionClass {
+  if (active) {
+    return MORPH_CLASS[fit];
+  }
   return { [morphType(name)]: MORPH_CLASS[fit], default: 'none' };
+}
+
+/* ---------- par da navegação em curso ---------- */
+
+let activeMorph: string | null = null;
+const activeListeners = new Set<() => void>();
+
+/** O par que anda na navegação em curso (`null` fora dela). */
+export function setActiveMorph(name: string | null): void {
+  if (activeMorph === name) return;
+  activeMorph = name;
+  activeListeners.forEach((listener) => listener());
+}
+
+export function subscribeActiveMorph(listener: () => void): () => void {
+  activeListeners.add(listener);
+  return () => activeListeners.delete(listener);
+}
+
+export function getActiveMorph(): string | null {
+  return activeMorph;
 }
 
 /**
@@ -100,11 +130,33 @@ export function sameDocumentHref(a: string, b: string): boolean {
 
 /* ---------- estado da navegação em curso (só no navegador) ---------- */
 
+/** Nome (e encaixe) que a foto grande do topo de uma página adota: o da origem que a abriu. */
+export type HeroAdoption = { name: string; fit?: MorphFit };
+
 /**
- * Origem clicada (ou destino da volta): nome do par, caminho da página que vai abrir, a foto já pintada e, quando a
- * origem pede, o encaixe que a foto de destino adota (`data-morph-fit` no link).
+ * Peça que entra em primeiro na listagem aberta a partir da página dela (o caminho "Sofás" na página do Sofá Royale,
+ * retorno de 13/11/2026): a foto da peça encolhe até o primeiro lugar da lista, e a volta cresce dali.
  */
-export type PendingMorph = { name: string; path: string; src: string | null; fit?: MorphFit; at: number };
+export type LeadProduct = { card: ProductCard; morph: string };
+
+/**
+ * Navegação em curso: nome do par que anda (`null` quando nada anda), caminho da página que vai abrir, a foto já
+ * pintada, o encaixe que a origem pede (`data-morph-fit` no link), o nome que a foto do topo da página nova adota
+ * (`hero`) e a peça que entra em primeiro na lista (`lead`).
+ *
+ * `hero` é guardado por entrada do histórico: na volta para uma página, a foto do topo retoma o nome que tinha. Antes
+ * ela adotava o nome de qualquer movimento que chegasse (o do retrato do designer, o do ponto clicável), e a volta
+ * seguinte se perdia (retorno de 13/11/2026).
+ */
+export type PendingMorph = {
+  name: string | null;
+  path: string;
+  src: string | null;
+  fit?: MorphFit;
+  hero: HeroAdoption | null;
+  lead?: LeadProduct | null;
+  at: number;
+};
 
 const PENDING_TTL_MS = 10_000;
 let pending: PendingMorph | null = null;
@@ -130,4 +182,12 @@ export function markImageLoaded(url: string): void {
 
 export function isImageLoaded(url: string): boolean {
   return loaded.has(url);
+}
+
+/**
+ * A peça que entra em primeiro na lista que está abrindo. Não é "consumida": o React pode renderizar a página nova mais
+ * de uma vez antes de mostrá-la, e só a grade principal da lista pede (`ProductGrid lead`).
+ */
+export function leadFor(path: string): LeadProduct | null {
+  return pendingMorphFor(path)?.lead ?? null;
 }

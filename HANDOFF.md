@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.10). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.11). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1448,3 +1448,42 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
 - Com o mouse, o cartão da peça abre ao passar pelo ponto (sem precisar acertar o clique) e fecha um instante depois
   de o cursor sair, para dar tempo de chegar ao cartão; o clique com o mouse não fecha. No toque e no teclado, segue o
   toque para abrir e fechar (`ScenePoints`). Vale em todas as fotos com pontos.
+
+### 30.11 14/11/2026: animações revistas, pontos nos banners, Acabamentos e Parceiro
+
+Retorno do tech lead sobre o preview. Cada causa foi reproduzida num build de produção local contra a API do preview,
+com Playwright (rede lenta simulada, registro de cada commit do React e quadros da animação).
+
+- **A peça abria sem animar na primeira vez** (e animava nas seguintes): duas causas.
+  - Quando a resposta do servidor chegava, o navegador devolvia o foco ao link clicado e rolava a página até a barra de
+    filtros. O card saía da tela, e o React desiste do movimento quando a foto de origem não está à vista. Agora a
+    rolagem fica presa entre o clique e a troca de página (`pinScroll` em `navigation-motion.ts`); a rolagem da própria
+    pessoa solta a trava.
+  - O React entrega o tipo da transição ao primeiro commit de transição que vier, e às vezes era um commit qualquer
+    antes da troca de página. O par da navegação em curso agora é marcado no clique (`setActiveMorph`), e a classe do
+    movimento vale sem depender do tipo (`morphShare`).
+  - Resultado: 36 de 36 idas e voltas com a página da peça não pré-carregada (antes, 7 a 9 de 12).
+- **Fade no fim (carrossel, pontos, cards):** a foto de destino chegava da rede no meio do movimento e entrava com o
+  fade de carregamento. O movimento agora espera a foto de destino carregar (até 0,8 s) e ela anda inteira, sem
+  mistura no meio do caminho (motion.css).
+- **Volta em cadeia** (coleção → designer → volta → volta; projeto → ponto → peça → volta): a foto do topo de cada página
+  adotava o nome de qualquer movimento que chegasse. Agora o nome adotado fica guardado por entrada do histórico
+  (`heroes`), e a volta seguinte encontra o par. A volta de um ponto do projeto encolhe até o cartão do ponto, não mais
+  até o banner.
+- **Da peça para a lista que a contém** (caminho, menu, rodapé: área, categoria, coleção, designer, lançamentos, todas
+  as peças): a foto encolhe até o primeiro lugar da lista, que a peça ocupa nesse momento (`LeadSource`, `LeadPlate`);
+  voltar e avançar repetem o movimento.
+- **Volta com o 3D aberto:** a foto do palco volta à frente antes do movimento (`data-morph-leaving`).
+- **Pontos clicáveis:** o cartão sempre com o texto escuro (o nome sumia sobre os banners); nos banners das coleções e
+  das páginas, a regra que fixava a foto do banner também pegava a foto do cartão, e o cartão saía cortado: agora a
+  regra vale só para a foto do banner, e o cartão abre para o lado. Os pontos montam na primeira pintura (a volta
+  precisa do cartão já aberto).
+- **Carrossel:** com menos de 7 peças, a lista se repete para os dois lados ficarem iguais (com 4 eram 2 de um lado e 1
+  do outro); abaixo de 3 peças, sem carrossel (`carouselSlots`).
+- **Projetos:** o mesmo espaço entre a foto do ambiente e a galeria; 3 fotos repetidas tiradas do preview (Boa Vista
+  2314, Kûara 2315 e 2316; `design/drive/2026-11-14-remover-projetos.json`). No Clara Arte não há repetidas.
+- **Acabamentos:** a janela no meio da tela (o reset tirava a margem automática), a amostra cresce até ela e volta; sem
+  o "tamanho real" (ampliava e borrava); os grupos lado a lado.
+- **Seja um parceiro:** como Contato, os canais à esquerda e o formulário à direita.
+- **PDF para a Franccino** ("Franccino - pecas nas fotos do site (14-11).pdf", entregue ao Pedro Ivo, não está no
+  repositório): as 49 fotos com peças que não estão no catálogo ou que não sabemos qual são, com a miniatura de cada.

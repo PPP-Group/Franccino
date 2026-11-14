@@ -112,7 +112,7 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
               <section className="catalog-results" aria-label={catalog('resultsLabel')}>
                 <ByView
                   // Toda peça aqui é lançamento: o rótulo "Lançamentos" no card não diria nada (lei de Tesler).
-                  grid={<ProductGrid products={products} priorityCount={3} />}
+                  grid={<ProductGrid lead products={products} priorityCount={3} />}
                   table={<TechTable rows={rows} />}
                 />
               </section>

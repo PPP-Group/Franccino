@@ -685,10 +685,7 @@
     "zoom": {
       "detail": "See in detail",
       "open": "See {name} in detail",
-      "dialog": "{name} in detail",
-      "actual": "See at actual size",
-      "fit": "See it whole",
-      "hint": "Scroll the image to move across the texture."
+      "dialog": "{name} in detail"
     }
   },
   "storesPage": {
@@ -916,7 +913,8 @@
   "partnerPage": {
     "title": "Become a partner",
     "description": "For those who wish to open a Franccino store or resell our pieces.",
-    "formTitle": "Talk to our team"
+    "formTitle": "Talk to our team",
+    "channelsTitle": "Contact Franccino"
   },
   "sharedList": {
     "title": "Wishlist",

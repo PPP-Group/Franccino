@@ -46,7 +46,7 @@ export async function PiecesSection({
       ) : null}
       <PiecesViews
         count={t('count', { count: products.length })}
-        grid={<ProductGrid products={products} priorityCount={3} />}
+        grid={<ProductGrid lead products={products} priorityCount={3} />}
         table={<TechTable rows={details.map(toTechnicalRow)} />}
       />
     </section>

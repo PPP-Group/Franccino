@@ -19,8 +19,9 @@ describe('FeatureCarousel', () => {
   it('uses the cut-out photo when there is one, and the cover on the white background otherwise', () => {
     const html = renderWithIntl(<FeatureCarousel label="Lançamentos" products={products()} />);
     expect(html).toContain('aura-sem-fundo.webp');
-    expect(html.match(/is-cutout/g)).toHaveLength(1);
-    expect(html.match(/is-packshot/g)).toHaveLength(2);
+    // Com 3 peças a lista se repete 3 vezes, para encher os 7 lugares à vista dos dois lados por igual.
+    expect(html.match(/is-cutout/g)).toHaveLength(3);
+    expect(html.match(/is-packshot/g)).toHaveLength(6);
     expect(html).toContain('feature-carousel--packshots');
   });
 

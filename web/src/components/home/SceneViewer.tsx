@@ -1,14 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import type React from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { Scene } from '@/lib/api/types';
 import { coverPoint, placeHotspot } from '@/lib/scenes/hotspot';
-import { morphName, morphTypes } from '@/lib/ui/morph';
+import { morphName, morphTypes, pendingMorphFor } from '@/lib/ui/morph';
 
 /**
  * Ambiente com pontos clicáveis (banco de ideias, ideia 7, aprovado pela Franccino e pelo marketing em 26/10/2026):
@@ -30,9 +31,38 @@ export function SceneViewer({ scene, priority = false }: { scene: Scene; priorit
  * `frameRatio` (largura / altura do quadro): a foto aparece recortada com `object-fit: cover` nessa proporção, e os
  * pontos acompanham o recorte (os que caem fora do quadro somem).
  */
+/**
+ * O ponto guardado ao abrir a peça a partir desta página (e só dela). Só lê: o React pode renderizar a página de volta
+ * mais de uma vez antes de mostrá-la, e o ponto sai do armazenamento depois que ela aparece.
+ */
+function savedPoint(key: string, total: number): number | null {
+  try {
+    const saved = window.sessionStorage.getItem(key);
+    const [path, value] = saved?.split('|') ?? [];
+    if (path !== window.location.pathname || value === undefined) return null;
+    const index = Number(value);
+    return index >= 0 && index < total ? index : null;
+  } catch {
+    return null;
+  }
+}
+
 export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: number }) {
   const t = useTranslations('home.scenes');
-  const [open, setOpen] = useState<number | null>(null);
+  const pathname = usePathname();
+  // Volta da página da peça aberta pelo ponto: o cartão daquele ponto já nasce aberto, no mesmo quadro em que a página
+  // volta, e a foto encolhe até ele (retorno de 12 e 13/11/2026). Só numa navegação do site, nunca na hidratação.
+  const storageKey = `franccino:scene:${scene.id}`;
+  const [open, setOpen] = useState<number | null>(() =>
+    pendingMorphFor(pathname) ? savedPoint(storageKey, scene.hotspots.length) : null,
+  );
+  useEffect(() => {
+    try {
+      window.sessionStorage.removeItem(storageKey);
+    } catch {
+      // Sem armazenamento: nada guardado.
+    }
+  }, [storageKey]);
   const rootRef = useRef<HTMLUListElement | null>(null);
   // Com o mouse, o cartão abre ao passar pelo ponto (retorno de 13/11/2026: não precisa acertar o clique). Sair do
   // ponto fecha depois de um instante, para dar tempo de levar o cursor até o cartão.
@@ -61,25 +91,6 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
     }, 250);
   };
   useEffect(() => cancelClose, []);
-  // Volta da página da peça aberta pelo ponto: o cartão daquele ponto já está aberto, e a foto encolhe até ele
-  // (retorno de 12/11/2026: na volta a foto não tinha para onde ir).
-  const storageKey = `franccino:scene:${scene.id}`;
-  useLayoutEffect(() => {
-    let saved: string | null = null;
-    try {
-      saved = window.sessionStorage.getItem(storageKey);
-      window.sessionStorage.removeItem(storageKey);
-    } catch {
-      return;
-    }
-    // Só na página de onde a peça foi aberta (o mesmo ambiente aparece na home e no projeto).
-    const [path, value] = saved?.split('|') ?? [];
-    const index = path === window.location.pathname && value !== undefined ? Number(value) : -1;
-    if (index >= 0 && index < scene.hotspots.length) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza com a navegação de volta
-      setOpen(index);
-    }
-  }, [storageKey, scene.hotspots.length]);
   const imageRatio = scene.image.width && scene.image.height ? scene.image.width / scene.image.height : 0;
 
   useEffect(() => {
