@@ -20,12 +20,13 @@ import type { Image, ProductCard } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { STAGE_SIZES } from '@/lib/product/gallery';
 import { usePathname } from 'next/navigation';
-import { markImageLoaded, morphName, morphTypes } from '@/lib/ui/morph';
+import { markImageLoaded, morphName, morphTypes, pendingMorphFor } from '@/lib/ui/morph';
 import {
   AUTOPLAY_MS,
   clampIndex,
   counterNumber,
   coverflowPose,
+  coverflowXs,
   carouselSlots,
   cutoutMorphBox,
   pieceWidthFactor,
@@ -87,6 +88,11 @@ function poseStyle(pose: CoverflowPose): CSSProperties {
   } as CSSProperties;
 }
 
+/** Nome do movimento de cada lugar: a peça repetida não divide o nome com a original. */
+function slotMorph(slug: string, copy: number): string {
+  return morphName('piece', copy ? `carousel-${slug}-${copy}` : `carousel-${slug}`);
+}
+
 /** Onde o carrossel guarda a peça do centro, para a volta da página da peça cair nela (retorno de 12/11/2026). */
 function storageKey(pathname: string, label: string): string {
   return `franccino:carousel:${pathname}:${label}`;
@@ -145,6 +151,15 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   const slots = useMemo(() => carouselSlots(items), [items]);
   const products = useMemo(() => slots.map((slot) => slot.item), [slots]);
   const count = items.length;
+  // Largura de cada peça (a mesma do `--fc-w`): a distância entre as peças sai dela (`coverflowXs`).
+  const widths = useMemo(
+    () =>
+      products.map((product) => {
+        const image = product.cutout ?? product.cover;
+        return pieceWidthFactor(image?.width, image?.height);
+      }),
+    [products],
+  );
   const t = useTranslations('featureCarousel');
   // O nome curto da área, como no menu (Casa, Giardini).
   const nav = useTranslations('nav');
@@ -152,8 +167,23 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   const pathname = usePathname();
   const total = products.length;
   const looping = loops(total);
+  const key = storageKey(pathname, label);
+  // Volta da página da peça (retorno de 14/11/2026): o carrossel já nasce com a peça clicada no centro, nítida, no
+  // mesmo quadro em que a página volta, para a foto encolher até ela. Antes a peça ia para o centro num efeito, depois
+  // da foto do movimento: ela era fotografada fora do centro (meio apagada pelo véu, ou escondida) e a volta falhava.
+  const [restoredFromNavigation] = useState(() => {
+    const pending = pendingMorphFor(pathname);
+    if (!pending) return null;
+    const byName = pending.name
+      ? slots.findIndex((slot) => slotMorph(slot.item.slug, slot.copy) === pending.name)
+      : -1;
+    if (byName >= 0) return byName;
+    const saved = readSaved(key);
+    const bySaved = saved === null ? -1 : products.findIndex((product) => product.id === saved);
+    return bySaved >= 0 ? bySaved : null;
+  });
   // Posição do centro: com o carrossel dando a volta ela cresce sem limite, e a peça é `wrapIndex(active)`.
-  const [active, setActive] = useState(() => initialIndex());
+  const [active, setActive] = useState(() => restoredFromNavigation ?? initialIndex());
   const activeIndex = wrapIndex(active, total);
   // A peça cujo nome aparece embaixo: acompanha o arrasto antes de `active` mudar no fim do gesto.
   const [shown, setShown] = useState(activeIndex);
@@ -180,6 +210,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   /** Põe cada peça na pose da posição dada (fracionária durante o arrasto), direto no DOM. */
   const paint = useCallback(
     (position: number) => {
+      const xs = coverflowXs(widths, position, total);
       itemRefs.current.forEach((node, index) => {
         if (!node) return;
         const offset = loopOffset(index, position, total);
@@ -192,7 +223,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
             node.style.transition = '';
           });
         }
-        const pose = coverflowPose(offset);
+        const pose = { ...coverflowPose(offset), x: xs[index] ?? 0 };
         node.style.setProperty('--fc-x', pose.x.toFixed(4));
         node.style.setProperty('--fc-s', pose.scale.toFixed(4));
         node.style.setProperty('--fc-f', pose.fade.toFixed(4));
@@ -201,7 +232,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
         node.toggleAttribute('data-hidden', pose.hidden);
       });
     },
-    [total],
+    [total, widths],
   );
 
   const goTo = useCallback(
@@ -217,9 +248,9 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
     [paint, total],
   );
 
-  // Volta da página da peça: o centro é a peça que estava lá, não a primeira.
-  const key = storageKey(pathname, label);
+  // Recarregar a página ou voltar de outro site: o centro é a peça que estava lá, não a primeira.
   useLayoutEffect(() => {
+    if (restoredFromNavigation !== null) return;
     const saved = readSaved(key);
     const index = saved === null ? -1 : products.findIndex((product) => product.id === saved);
     if (index > 0) {
@@ -427,6 +458,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   }
 
   const current = products[shown] ?? products[activeIndex];
+  const layoutXs = coverflowXs(widths, active, total);
   // Só capas em fundo branco (ou uma parte delas): as peças ficam um pouco mais afastadas, porque a capa fundida no
   // palco não tapa a vizinha de trás (carousel.css).
   const rootClass = products.every((product) => product.cutout)
@@ -481,7 +513,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
           // Sem a foto recortada, a capa em fundo branco: o branco some no palco (multiply, carousel.css).
           const image = product.cutout ?? product.cover;
           const kind = product.cutout ? 'is-cutout' : 'is-packshot';
-          const pose = coverflowPose(loopOffset(index, active, total));
+          const pose = { ...coverflowPose(loopOffset(index, active, total)), x: layoutXs[index] ?? 0 };
           const box = product.cutout ? cutoutMorphBox(product.cover, product.cutout) : null;
           return (
             <div
