@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.9). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.10). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1438,3 +1438,13 @@ PRs [#90](https://github.com/PPP-Group/Franccino/pull/90) (para a `develop`) e [
 - Redirects do site antigo (`api/config/franccino.php`): `/projetos`, `/cases` e os projetos apontam para
   `/pt/corporativo`. **Depois do deploy, rodar `php artisan franccino:redirects:generate` no VPS** para regravar os
   destinos (até lá, os antigos passam pelo redirecionamento acima e chegam ao mesmo lugar).
+
+### 30.10 13/11/2026 (noite): pontos fora do banner da home e cartão no hover
+
+- Retorno do tech lead: os pontos no banner da home não fazem sentido, porque as fotos trocam sozinhas. Saíram do site
+  (`HeroSection`) e do preview (os ambientes das fotos 2169 e 2170 foram apagados pela importação; a 2168 não tinha
+  ponto). As mesmas peças continuam com ponto nas fotos dos projetos. Ficam 67 fotos e 77 pontos, mais o ambiente da
+  Fazenda Boa Vista.
+- Com o mouse, o cartão da peça abre ao passar pelo ponto (sem precisar acertar o clique) e fecha um instante depois
+  de o cursor sair, para dar tempo de chegar ao cartão; o clique com o mouse não fecha. No toque e no teclado, segue o
+  toque para abrir e fechar (`ScenePoints`). Vale em todas as fotos com pontos.

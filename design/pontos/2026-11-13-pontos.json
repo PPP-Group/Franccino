@@ -36,18 +36,13 @@
     {
       "media_id": 2170,
       "where": "banner 1 da home",
-      "points": [
-        {
-          "product": "chaise-coce",
-          "x": 50.0,
-          "y": 70.0
-        }
-      ],
+      "points": [],
       "not_found": [
         "Ombrelone central de mastro de madeira, lona bege",
         "Luminária de piso marrom",
         "Mesa lateral de tronco de madeira"
-      ]
+      ],
+      "note": "Sem pontos: o banner da home troca de foto (retorno de 13/11/2026). As peças desta foto têm ponto na foto do projeto."
     },
     {
       "media_id": 2168,
@@ -58,38 +53,19 @@
         "Poltrona de madeira com assento de fibra (Kûara)",
         "Sofá longo com almofadas azuis e verdes (Kûara)",
         "Mesinha lateral quadrada de fibra"
-      ]
+      ],
+      "note": "Sem pontos: o banner da home troca de foto (retorno de 13/11/2026). As peças desta foto têm ponto na foto do projeto."
     },
     {
       "media_id": 2169,
       "where": "banner 3 da home",
-      "points": [
-        {
-          "product": "chaise-madri",
-          "x": 40.0,
-          "y": 55.0
-        },
-        {
-          "product": "poltrona-frizzo",
-          "x": 11.0,
-          "y": 45.0
-        },
-        {
-          "product": "sofa-frizzo",
-          "x": 20.0,
-          "y": 39.0
-        },
-        {
-          "product": "mesa-de-centro-frizzo",
-          "x": 75.0,
-          "y": 42.0
-        }
-      ],
+      "points": [],
       "not_found": [
         "Sofá modular azul-petróleo (fundo)",
         "Poltrona de madeira de braço reto com almofadas bege (fundo)",
         "Ombrelone verde-escuro de mastro central"
-      ]
+      ],
+      "note": "Sem pontos: o banner da home troca de foto (retorno de 13/11/2026). As peças desta foto têm ponto na foto do projeto."
     },
     {
       "media_id": 69,
