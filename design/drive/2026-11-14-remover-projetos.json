@@ -1,0 +1,8 @@
+{
+  "version": "2026-11-14-remover-projetos",
+  "note": "Fotos repetidas nas galerias dos projetos (mesma foto duas vezes, uma do site antigo e outra do lote do Drive de 13/11). Fica a do site antigo, que já tinha os pontos clicáveis. Cada item vai para POST /api/import/media/remove.",
+  "items": [
+    { "target": "project", "key": "fazenda-boa-vista-jhsf", "collection": "gallery", "ids": [2314] },
+    { "target": "project", "key": "kuara-hotel", "collection": "gallery", "ids": [2315, 2316] }
+  ]
+}

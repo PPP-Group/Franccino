@@ -520,16 +520,27 @@
 
 /* ---------- acabamentos ---------- */
 
-.finish-group + .finish-group {
-  margin-top: var(--space-7);
+/*
+  Os grupos lado a lado, para a página não ficar com a direita vazia (retorno de 13/11/2026); um grupo com muitas
+  amostras ocupa a linha inteira.
+*/
+.finish-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--space-7) var(--space-6);
+  padding-bottom: var(--space-8);
+}
+
+.finish-group:has(.finish-card:nth-child(5)) {
+  grid-column: 1 / -1;
 }
 
 .finish-grid {
   list-style: none;
   margin: 0;
-  padding: 0 0 var(--space-7);
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
   gap: var(--space-5) var(--space-4);
 }
 
@@ -548,7 +559,9 @@
   border: 1px solid var(--line);
 }
 
-.finish-card__swatch img {
+.finish-card__swatch img,
+.finish-card__swatch-image {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -604,6 +617,8 @@
 }
 
 .finish-zoom {
+  /* O reset tira a margem automática da janela, que a deixava colada no canto de cima (retorno de 13/11/2026). */
+  margin: auto;
   width: min(960px, calc(100% - 2 * var(--gutter)));
   max-height: calc(100dvh - 2 * var(--gutter));
   padding: 0;
@@ -614,6 +629,13 @@
 
 .finish-zoom::backdrop {
   background: var(--hero-shade);
+  transition: background-color var(--t-mid) var(--ease-out);
+}
+
+@starting-style {
+  .finish-zoom[open]::backdrop {
+    background-color: transparent;
+  }
 }
 
 .finish-zoom__panel {
@@ -622,17 +644,11 @@
   padding: clamp(var(--space-4), 3vw, var(--space-6));
 }
 
-.finish-zoom__head,
-.finish-zoom__foot {
+.finish-zoom__head {
   display: flex;
   align-items: start;
   justify-content: space-between;
   gap: var(--space-4);
-}
-
-.finish-zoom__foot {
-  align-items: center;
-  flex-wrap: wrap;
 }
 
 .finish-zoom__title {
@@ -662,19 +678,7 @@
   object-fit: contain;
 }
 
-/* Tamanho real: a imagem passa a ter os próprios pixels e o quadro rola nos dois sentidos. */
-.finish-zoom__stage.is-actual {
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-.finish-zoom__stage.is-actual img {
-  width: auto;
-  height: auto;
-  max-width: none;
-}
-
-.finish-zoom__hint {
+.finish-zoom__description {
   margin: 0;
 }
 
@@ -937,7 +941,8 @@
   position: relative;
 }
 
-.page-banner-art img {
+/* Só a foto do banner (`>`): a foto do cartão dos pontos fica com o tamanho dela (retorno de 13/11/2026). */
+.page-banner-art > img {
   width: 100%;
   height: auto;
   max-height: 72vh;
@@ -968,7 +973,7 @@
     clip-path: inset(0);
   }
 
-  .page-banner-art--fixed img {
+  .page-banner-art--fixed > img {
     position: fixed;
     top: var(--header-offset, var(--header));
     left: 0;
@@ -988,6 +993,27 @@
   .page-banner-art--fixed .photo-points {
     height: var(--art-h);
   }
+}
+
+/*
+  Nos banners o cartão do ponto abre para o lado, na altura do ponto: o banner recorta o que passa da borda de baixo, e
+  o cartão aberto para baixo saía cortado (retorno de 13/11/2026).
+*/
+.page-banner .scene__point[data-vertical] .scene__card,
+.page-banner-art .scene__point[data-vertical] .scene__card {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.page-banner .scene__point[data-horizontal='start'] .scene__card,
+.page-banner-art .scene__point[data-horizontal='start'] .scene__card {
+  left: calc(100% + var(--space-1));
+}
+
+.page-banner .scene__point[data-horizontal='end'] .scene__card,
+.page-banner-art .scene__point[data-horizontal='end'] .scene__card {
+  right: calc(100% + var(--space-1));
 }
 
 /* ---------- coleções no modelo do site antigo (ajustes do cliente, 06/10/2026) ---------- */
@@ -1760,6 +1786,15 @@
   margin-top: var(--section-y);
 }
 
+/*
+  A galeria logo depois da foto do ambiente: o mesmo espaço que há entre as fotos da galeria (retorno de 13/11/2026: a
+  foto de cima ficava colada nas duas de baixo).
+*/
+.project-section + .editorial-gallery,
+.project-section + .show-more {
+  margin-top: var(--space-4);
+}
+
 /* Vídeo do projeto ou da coleção: largo como as fotos da galeria; em pé (9:16), estreito e no centro, sem passar da
    altura da tela. O quadro segue a proporção da capa (--video-ratio). */
 .page-video {
@@ -2052,9 +2087,10 @@
 }
 
 /* "Seja um parceiro": o formulário de parceria embaixo do texto da página (revisão da Franccino, 12/11/2026). */
-.partner-form {
-  max-width: 720px;
-  margin-top: var(--space-8);
+.partner-aside {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
 }
 
 /* Assinatura (logo) do designer ao lado do nome: pequena, em tons de cinza como as logos dos clientes. */

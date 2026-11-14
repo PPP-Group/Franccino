@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ContactChannels } from '@/components/contact/ContactChannels';
 import { Blocks } from '@/components/content/Blocks';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
-import { getPage } from '@/lib/api/content';
+import { getPage, getSettings } from '@/lib/api/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -33,20 +34,31 @@ export default async function PartnerPage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = raw as Locale;
   setRequestLocale(locale);
-  const [t, page] = await Promise.all([
+  const [t, page, settings] = await Promise.all([
     getTranslations({ locale, namespace: 'partnerPage' }),
     getPage(locale, 'partner'),
+    getSettings(locale),
   ]);
+  // Como Contato e Tire suas dúvidas: o texto e os canais à esquerda, o formulário à direita (retorno de 13/11/2026: a
+  // direita da página ficava vazia).
   return (
     <main className="wrap page-end">
       <PageHead title={page?.title ?? t('title')} lead={page?.intro ?? t('description')} />
-      {page && page.content.length > 0 ? <Blocks blocks={page.content} /> : null}
-      <section className="quote-form partner-form" aria-labelledby="partner-form-title">
-        <h2 id="partner-form-title" className="form-title">
-          {t('formTitle')}
-        </h2>
-        <ContactForm type="partnership" />
-      </section>
+      <div className="contact-layout">
+        <aside className="partner-aside" aria-labelledby="partner-channels">
+          {page && page.content.length > 0 ? <Blocks blocks={page.content} /> : null}
+          <h2 id="partner-channels" className="form-title">
+            {t('channelsTitle')}
+          </h2>
+          <ContactChannels settings={settings} />
+        </aside>
+        <section className="quote-form" aria-labelledby="partner-form-title">
+          <h2 id="partner-form-title" className="form-title">
+            {t('formTitle')}
+          </h2>
+          <ContactForm type="partnership" />
+        </section>
+      </div>
     </main>
   );
 }

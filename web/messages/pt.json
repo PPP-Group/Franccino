@@ -685,10 +685,7 @@
     "zoom": {
       "detail": "Ver em detalhe",
       "open": "Ver {name} em detalhe",
-      "dialog": "{name} em detalhe",
-      "actual": "Ver no tamanho real",
-      "fit": "Ver inteiro",
-      "hint": "Deslize a imagem para percorrer a textura."
+      "dialog": "{name} em detalhe"
     }
   },
   "storesPage": {
@@ -916,7 +913,8 @@
   "partnerPage": {
     "title": "Seja um parceiro",
     "description": "Para quem deseja abrir uma loja Franccino ou revender as nossas peças.",
-    "formTitle": "Fale com a nossa equipe"
+    "formTitle": "Fale com a nossa equipe",
+    "channelsTitle": "Fale com a Franccino"
   },
   "sharedList": {
     "title": "Lista de desejos",

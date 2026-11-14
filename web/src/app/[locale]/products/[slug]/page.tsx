@@ -18,6 +18,7 @@ import { Icon } from '@/components/ui/Icon';
 import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { programOf, TechnicalLibrary } from '@/components/downloads/TechnicalLibrary';
 import { MediaLinks } from '@/components/media/MediaLinks';
+import { LeadSource } from '@/components/products/LeadSource';
 import type { Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
 import { getAllProductSlugs, getProduct } from '@/lib/api/catalog';
@@ -31,6 +32,26 @@ import { absoluteUrl, alternateHrefs, buildMetadata, type Href } from '@/lib/seo
 import { productMorphName } from '@/components/products/ProductPlate';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+/**
+ * Endereços das listagens que contêm a peça: um link para qualquer uma delas, na página da peça, leva a foto até o
+ * primeiro lugar da lista (retorno de 13/11/2026).
+ */
+function leadPaths(product: ProductDetail, locale: Locale): string[] {
+  const hrefs: AppHref[] = [
+    areaPath(product.area.key),
+    categoryHref(product),
+    '/products',
+    ...product.collections.map(
+      (collection) => ({ pathname: '/collections/[slug]', params: { slug: collection.slug } }) as const,
+    ),
+    ...(product.designer
+      ? [{ pathname: '/designers/[slug]', params: { slug: product.designer.slug } } as const]
+      : []),
+    ...(product.is_new ? ['/launches' as const] : []),
+  ];
+  return hrefs.map((href) => getPathname({ href: href as Href, locale }));
+}
 
 /** Outras peças do designer ao lado do texto dele, na faixa do designer. */
 const DESIGNER_PIECES = 2;
@@ -115,11 +136,10 @@ export default async function ProductPage({ params }: Props) {
       <JsonLd data={breadcrumb} />
       <TrackView product={card} />
       <div className="wrap">
-        <Breadcrumbs
-          label={common('breadcrumb')}
-          items={crumbs}
-          morph={product.cover ? productMorphName(product.slug) : undefined}
-        />
+        <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
+        {product.cover ? (
+          <LeadSource card={card} morph={productMorphName(product.slug)} paths={leadPaths(product, locale)} />
+        ) : null}
         <div className="product">
           <ProductStage
             images={galleryImages(product)}

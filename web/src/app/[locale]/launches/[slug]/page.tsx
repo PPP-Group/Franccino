@@ -111,7 +111,7 @@ export default async function LaunchPage({ params, searchParams }: Props) {
           <section className="catalog-results" aria-label={t('resultsLabel')}>
             <ByView
               // Toda peça aqui é lançamento: sem o rótulo no card (lei de Tesler).
-              grid={<ProductGrid products={launch.products} priorityCount={3} />}
+              grid={<ProductGrid lead products={launch.products} priorityCount={3} />}
               table={<TechTable rows={rows} />}
             />
           </section>

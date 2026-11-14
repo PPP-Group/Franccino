@@ -11,7 +11,7 @@
  * O carrossel serve a partir de 2 peças. Com mais de 24 (coleção ou designer grande), ele mostra as 24 primeiras e a
  * grade embaixo traz todas (retorno de 09/11/2026: a Tempo, com 15 peças, ficava sem carrossel).
  */
-export const FEATURE_CAROUSEL_MIN = 2;
+export const FEATURE_CAROUSEL_MIN = 3;
 export const FEATURE_CAROUSEL_MAX = 24;
 
 /** Distância, em px, que o ponteiro anda antes de virar arrasto (abaixo disso é clique). */
@@ -97,6 +97,20 @@ export function dragPosition(start: number, dx: number, stepPx: number, total: n
 
 export function fitsFeatureCarousel(total: number): boolean {
   return total >= FEATURE_CAROUSEL_MIN;
+}
+
+/**
+ * Lugares do carrossel: as peças e, quando são menos que os lugares à vista (3 de cada lado e a do centro), a lista
+ * repetida até encher, para os dois lados ficarem iguais (retorno de 13/11/2026: com 4 peças eram 2 de um lado e 1 do
+ * outro). `copy` numera a repetição (0 = a peça original).
+ */
+export function carouselSlots<T>(items: readonly T[]): { item: T; copy: number }[] {
+  const rounds = items.length >= LOOP_MIN ? Math.ceil((VISIBLE_PER_SIDE * 2 + 1) / items.length) : 1;
+  const slots: { item: T; copy: number }[] = [];
+  for (let copy = 0; copy < rounds; copy++) {
+    for (const item of items) slots.push({ item, copy });
+  }
+  return slots;
 }
 
 /** As peças que entram no carrossel: todas, até o limite. */

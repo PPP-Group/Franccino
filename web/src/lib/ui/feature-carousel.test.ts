@@ -5,6 +5,7 @@ import {
   coverflowPose,
   dragPosition,
   carouselPieces,
+  carouselSlots,
   fitsFeatureCarousel,
   cutoutMorphBox,
   initialIndex,
@@ -18,10 +19,21 @@ import {
   wheelStep,
 } from './feature-carousel';
 
+describe('carouselSlots', () => {
+  it('repete a lista até encher os 7 lugares, para os dois lados ficarem iguais', () => {
+    expect(carouselSlots([1, 2, 3, 4]).map((slot) => slot.item)).toEqual([1, 2, 3, 4, 1, 2, 3, 4]);
+    expect(carouselSlots([1, 2, 3, 4]).map((slot) => slot.copy)).toEqual([0, 0, 0, 0, 1, 1, 1, 1]);
+    expect(carouselSlots([1, 2, 3])).toHaveLength(9);
+    expect(carouselSlots([1, 2, 3, 4, 5, 6, 7])).toHaveLength(7);
+    expect(carouselSlots([1, 2])).toHaveLength(2);
+  });
+});
+
 describe('fitsFeatureCarousel', () => {
-  it('accepts 2 or more pieces', () => {
+  it('accepts 3 or more pieces', () => {
     expect(fitsFeatureCarousel(1)).toBe(false);
-    expect(fitsFeatureCarousel(2)).toBe(true);
+    expect(fitsFeatureCarousel(2)).toBe(false);
+    expect(fitsFeatureCarousel(3)).toBe(true);
     expect(fitsFeatureCarousel(15)).toBe(true);
     expect(fitsFeatureCarousel(40)).toBe(true);
   });

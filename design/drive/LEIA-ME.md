@@ -74,3 +74,7 @@ for j in json.load(open('design/drive/2026-11-13-remover.json'))['items']:
 ```
 
 A rota só apaga as fotos daquele registro e daquela coleção; um id que não é dele volta em `not_found`.
+
+`2026-11-14-remover-projetos.json` (retorno de 13/11/2026): as fotos dos projetos que apareciam duas vezes, lado a lado,
+na galeria (Fazenda Boa Vista e Kûara: a mesma foto do site antigo e do lote do Drive). Fica a do site antigo. Mesmo
+comando acima, com o nome deste arquivo.

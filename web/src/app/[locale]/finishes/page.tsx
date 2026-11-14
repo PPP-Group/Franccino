@@ -46,36 +46,38 @@ export default async function FinishesPage({ params }: Props) {
       {groups.length === 0 ? (
         <EmptyNotice text={common('nothingYet')} />
       ) : (
-        groups.map((group) => (
-          <section key={group.id} className="finish-group" aria-labelledby={`finish-group-${group.id}`}>
-            <h2 id={`finish-group-${group.id}`} className="section-title">
-              {group.name}
-            </h2>
-            <ul className="finish-grid">
-              {group.items.map((item) => (
-                <li key={item.id} className="finish-card">
-                  {item.swatch ? (
-                    <FinishZoom
-                      name={item.name}
-                      code={item.code}
-                      description={item.description}
-                      swatch={item.swatch}
-                    />
-                  ) : (
-                    <div className="finish-card__swatch">
-                      <span className="finish-card__fallback" aria-hidden="true">
-                        {item.code ?? item.name.slice(0, 2)}
-                      </span>
-                    </div>
-                  )}
-                  <strong>{item.name}</strong>
-                  {item.code ? <span className="meta num">{item.code}</span> : null}
-                  {item.description ? <p className="meta">{item.description}</p> : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+        <div className="finish-groups">
+          {groups.map((group) => (
+            <section key={group.id} className="finish-group" aria-labelledby={`finish-group-${group.id}`}>
+              <h2 id={`finish-group-${group.id}`} className="section-title">
+                {group.name}
+              </h2>
+              <ul className="finish-grid">
+                {group.items.map((item) => (
+                  <li key={item.id} className="finish-card">
+                    {item.swatch ? (
+                      <FinishZoom
+                        name={item.name}
+                        code={item.code}
+                        description={item.description}
+                        swatch={item.swatch}
+                      />
+                    ) : (
+                      <div className="finish-card__swatch">
+                        <span className="finish-card__fallback" aria-hidden="true">
+                          {item.code ?? item.name.slice(0, 2)}
+                        </span>
+                      </div>
+                    )}
+                    <strong>{item.name}</strong>
+                    {item.code ? <span className="meta num">{item.code}</span> : null}
+                    {item.description ? <p className="meta">{item.description}</p> : null}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </main>
   );

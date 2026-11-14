@@ -1,11 +1,15 @@
 import { addTransitionType, startTransition } from 'react';
+import { flushSync } from 'react-dom';
 import {
   isImageLoaded,
   markImageLoaded,
   morphType,
   sameDocumentHref,
+  setActiveMorph,
   setPendingMorph,
   traversalMorphName,
+  type HeroAdoption,
+  type LeadProduct,
   type MorphEdge,
 } from '@/lib/ui/morph';
 
@@ -28,16 +32,30 @@ import {
 const STORE_KEY = 'franccino:navigation';
 const MAX_ENTRIES = 80;
 
-type Saved = { positions: [string, number][]; edges: [string, MorphEdge][] };
+type Saved = {
+  positions: [string, number][];
+  edges: [string, MorphEdge][];
+  heroes?: [string, HeroAdoption][];
+  leads?: [string, LeadProduct][];
+};
 
 const positions = new Map<string, number>();
 const edges = new Map<string, MorphEdge>();
+/** Nome que a foto do topo de cada entrada adotou (a origem que a abriu), para a volta encontrar o par. */
+const heroes = new Map<string, HeroAdoption>();
+/** Peça que entrou em primeiro na listagem de cada entrada (aberta a partir da página dela). */
+const leads = new Map<string, LeadProduct>();
+let pendingHero: HeroAdoption | null = null;
+let pendingLead: LeadProduct | null = null;
 let lastKey = '';
 let lastPath = '';
 let restoring = false;
 let replaying = false;
 let pendingEdge: MorphEdge | null = null;
 let installed = false;
+/** Rolagem presa entre o clique num link e a troca de página (ver `pinScroll`). */
+let pinned: { y: number; until: number } | null = null;
+const PIN_MS = 8000;
 
 type NavigationLike = { currentEntry?: { key?: string } | null };
 
@@ -62,6 +80,8 @@ function load() {
     const saved = JSON.parse(raw) as Saved;
     saved.positions?.forEach(([key, y]) => positions.set(key, y));
     saved.edges?.forEach(([key, edge]) => edges.set(key, edge));
+    saved.heroes?.forEach(([key, hero]) => heroes.set(key, hero));
+    saved.leads?.forEach(([key, lead]) => leads.set(key, lead));
   } catch {
     // Sem sessionStorage (aba privada, bloqueado): fica só na memória.
   }
@@ -71,7 +91,14 @@ function persist() {
   try {
     trim(positions);
     trim(edges);
-    const saved: Saved = { positions: [...positions], edges: [...edges] };
+    trim(heroes);
+    trim(leads);
+    const saved: Saved = {
+      positions: [...positions],
+      edges: [...edges],
+      heroes: [...heroes],
+      leads: [...leads],
+    };
     sessionStorage.setItem(STORE_KEY, JSON.stringify(saved));
   } catch {
     // Idem.
@@ -163,6 +190,45 @@ function decodeVisibleImages(): Promise<unknown> {
   ]);
 }
 
+/**
+ * Foto de destino do movimento (a que tem a classe `morph-*`): espera ela chegar e decodificar, até `MORPH_WAIT_MS`,
+ * mesmo que venha da rede. Sem isso a camada nova do movimento saía em branco (a página da peça aberta pelo carrossel
+ * pela primeira vez) e a foto só aparecia no fim, com um fade (retorno de 13/11/2026). A página antiga fica parada na
+ * tela enquanto espera.
+ */
+const MORPH_WAIT_MS = 800;
+
+function morphTargetImages(): HTMLImageElement[] {
+  const images: HTMLImageElement[] = [];
+  document.querySelectorAll<HTMLElement>('[style*="view-transition-class"]').forEach((element) => {
+    if (!/morph-/.test(element.style.getPropertyValue('view-transition-class'))) return;
+    const image = element instanceof HTMLImageElement ? element : element.querySelector('img');
+    if (image) images.push(image);
+  });
+  return images;
+}
+
+function waitForMorphTargets(): Promise<unknown> {
+  const pending = morphTargetImages().map((image) => {
+    if (image.loading === 'lazy') image.loading = 'eager';
+    // A foto do movimento entra pronta, sem o fade de quem chega da rede (motion.css, 12g): é o movimento que a traz.
+    const settle = () => {
+      if (image.naturalWidth > 0) image.setAttribute('data-loaded', 'instant');
+      return image.decode().catch(() => undefined);
+    };
+    if (image.complete) return settle();
+    return new Promise<void>((resolve) => {
+      image.addEventListener('load', () => resolve(), { once: true });
+      image.addEventListener('error', () => resolve(), { once: true });
+    }).then(settle);
+  });
+  if (pending.length === 0) return Promise.resolve();
+  return Promise.race([
+    Promise.all(pending),
+    new Promise((resolve) => window.setTimeout(resolve, MORPH_WAIT_MS)),
+  ]);
+}
+
 type StartViewTransition = (options?: unknown) => ViewTransition;
 
 /**
@@ -195,7 +261,7 @@ function guardViewTransitions() {
           const result = await update();
           dedupeNames();
           markFit();
-          await decodeVisibleImages();
+          await Promise.all([decodeVisibleImages(), waitForMorphTargets()]);
           return result;
         },
       });
@@ -204,13 +270,97 @@ function guardViewTransitions() {
     }
     void transition.finished.finally(() => {
       delete document.documentElement.dataset.morphFit;
+      setActiveMorph(null);
     });
     return transition;
   };
 }
 
+/*
+  Entre o clique e a página nova, a página de origem não rola. Quando a resposta do servidor chega, o navegador devolve
+  o foco ao link clicado e rola até a barra de filtros (fixa) ou o leva para outro lugar; o card clicado saía da tela e
+  o React desiste do movimento quando a foto de origem não está à vista: a peça abria sem animar na primeira vez e
+  animava nas seguintes, com a página já no cache (retorno de 13/11/2026). A rolagem da própria pessoa solta a trava.
+*/
+function pinScroll() {
+  pinned = { y: window.scrollY, until: Date.now() + PIN_MS };
+}
+
+function unpinScroll() {
+  pinned = null;
+}
+
 function onScroll() {
+  if (pinned) {
+    if (Date.now() > pinned.until) {
+      pinned = null;
+    } else if (Math.abs(window.scrollY - pinned.y) > 1) {
+      window.scrollTo({ top: pinned.y, left: 0, behavior: 'instant' });
+      return;
+    }
+  }
   if (!restoring) positions.set(entryKey(), window.scrollY);
+}
+
+/**
+ * Marca o par da navegação que começa: a foto de origem passa a ter a classe do movimento já agora, antes da troca de
+ * página (`morphShare`). `flushSync`: a origem precisa estar marcada antes do commit da navegação.
+ */
+function activate(name: string | null) {
+  try {
+    flushSync(() => setActiveMorph(name));
+  } catch {
+    setActiveMorph(name);
+  }
+}
+
+/* ---------- peça que vai em primeiro na listagem (retorno de 13/11/2026) ---------- */
+
+/** A página da peça aberta: a peça e os endereços das listagens que a contêm (categoria, área, coleção, designer...). */
+export type LeadSource = { card: LeadProduct['card']; morph: string; paths: string[] };
+
+let leadSource: LeadSource | null = null;
+let heroName: { path: string; name: string } | null = null;
+let navigateWithTypes: ((href: string, types: string[]) => void) | null = null;
+
+/** A página da peça avisa que está aberta (e some ao sair). */
+export function setLeadSource(source: LeadSource | null): void {
+  leadSource = source;
+}
+
+/** A foto do topo avisa o nome que está usando (a da peça pode ter vindo do carrossel ou de um ponto clicável). */
+export function setHeroName(path: string, name: string | null): void {
+  heroName = name ? { path, name } : null;
+}
+
+/** O `PageTransition` entrega a navegação do Next com os tipos da transição. */
+export function setNavigator(navigate: ((href: string, types: string[]) => void) | null): void {
+  navigateWithTypes = navigate;
+}
+
+function samePath(a: string, b: string): boolean {
+  return a.replace(/\/$/, '') === b.replace(/\/$/, '');
+}
+
+/**
+ * Link da página da peça para uma listagem que a contém (caminho, menu, rodapé): a navegação vira o movimento da foto
+ * da peça até o primeiro lugar da lista, que ela ocupa nesse momento.
+ */
+function leadNavigation(url: URL): boolean {
+  const source = leadSource;
+  if (!source || !navigateWithTypes || url.hash || reducedMotion()) return false;
+  if (!source.paths.some((path) => samePath(path, url.pathname))) return false;
+  const name = heroName && samePath(heroName.path, location.pathname) ? heroName.name : source.morph;
+  const stage = document.querySelector<HTMLImageElement>('.gallery__stage img');
+  const lead: LeadProduct = { card: source.card, morph: name };
+  document.documentElement.setAttribute('data-reveal-instant', '');
+  setPendingMorph({ name, path: url.pathname, src: stage?.currentSrc || null, hero: null, lead });
+  pendingEdge = { from: entryKey(), fromHref: location.href, name };
+  pendingHero = null;
+  pendingLead = lead;
+  activate(name);
+  navigateWithTypes(url.pathname + url.search, [morphType(name)]);
+  return true;
 }
 
 function onClick(event: MouseEvent) {
@@ -233,9 +383,12 @@ function onClick(event: MouseEvent) {
   if (link.hasAttribute('data-no-motion')) {
     setPendingMorph(null);
     pendingEdge = null;
+    pendingHero = null;
+    pendingLead = null;
     return;
   }
   positions.set(entryKey(), window.scrollY);
+  if (!sameDocumentHref(url.href, location.href)) pinScroll();
 
   // Caminho ou logo que leva à página de onde a peça foi aberta: é um "voltar".
   const incoming = edges.get(entryKey());
@@ -247,26 +400,34 @@ function onClick(event: MouseEvent) {
   }
 
   const name = link.getAttribute('data-morph-link');
+  if (!name && !sameDocumentHref(url.href, location.href) && leadNavigation(url)) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
   if (name && !sameDocumentHref(url.href, location.href)) {
     const source =
       link.querySelector('img') ??
       document.querySelector<HTMLImageElement>(`a[data-morph-link="${CSS.escape(name)}"] img`);
-    const fit = link.getAttribute('data-morph-fit');
-    setPendingMorph({
-      name,
-      path: url.pathname,
-      src: source?.currentSrc || null,
-      fit: fit === 'cutout' || fit === 'contain' || fit === 'cover' ? fit : undefined,
-    });
+    const attr = link.getAttribute('data-morph-fit');
+    const fit = attr === 'cutout' || attr === 'contain' || attr === 'cover' ? attr : undefined;
+    pendingHero = { name, fit };
+    pendingLead = null;
+    activate(name);
+    setPendingMorph({ name, path: url.pathname, src: source?.currentSrc || null, fit, hero: pendingHero });
     pendingEdge = { from: entryKey(), fromHref: location.href, name };
   } else {
     setPendingMorph(null);
+    setActiveMorph(null);
     pendingEdge = null;
+    pendingHero = null;
+    pendingLead = null;
   }
 }
 
 function onPopState(event: PopStateEvent) {
   if (replaying) return;
+  unpinScroll();
   const toKey = entryKey();
   const name = traversalMorphName(edges, lastKey, toKey);
   if (location.pathname === lastPath) {
@@ -282,13 +443,21 @@ function onPopState(event: PopStateEvent) {
   document.documentElement.setAttribute('data-reveal-instant', '');
   const visualTransition = (event as PopStateEvent & { hasUAVisualTransition?: boolean })
     .hasUAVisualTransition;
+  // A foto do topo da página de volta retoma o nome que tinha, e a lista volta com a mesma peça em primeiro: a volta
+  // seguinte ainda encontra o par.
+  const hero = heroes.get(toKey) ?? null;
+  const lead = leads.get(toKey) ?? null;
   if (!name || visualTransition || reducedMotion()) {
-    setPendingMorph(null);
+    setActiveMorph(null);
+    setPendingMorph({ name: null, path: location.pathname, src: null, hero, lead });
     return;
   }
   // Fora do evento, o roteador do Next faz a volta numa transição comum, que o React anima.
   event.stopImmediatePropagation();
-  setPendingMorph({ name, path: location.pathname, src: null });
+  // O 3D aberto na página da peça dá lugar à foto, para ela encolher até o card (motion.css).
+  document.documentElement.setAttribute('data-morph-leaving', '');
+  setPendingMorph({ name, path: location.pathname, src: null, hero, lead });
+  activate(name);
   const state: unknown = event.state;
   window.setTimeout(() => {
     replaying = true;
@@ -320,6 +489,10 @@ export function installNavigationMotion(): void {
   });
   document.addEventListener('load', onImageLoad, true);
   window.addEventListener('scroll', onScroll, { passive: true });
+  // A pessoa rolou de propósito: a trava sai.
+  for (const type of ['wheel', 'touchmove', 'keydown'] as const) {
+    window.addEventListener(type, unpinScroll, { passive: true, capture: true });
+  }
   window.addEventListener('click', onClick, true);
   window.addEventListener('popstate', onPopState, true);
   window.addEventListener('pagehide', persist);
@@ -341,18 +514,55 @@ export function installNavigationMotion(): void {
  * movimento: devolve a rolagem da entrada (na volta) ou registra de onde a peça foi aberta (no clique).
  */
 export function onRouteCommit(): void {
+  unpinScroll();
+  onMorphSettled();
   const key = entryKey();
   if (restoring) {
     revealInstantly();
     scrollInstantly(positions.get(key) ?? 0);
     restoring = false;
-  } else if (pendingEdge) {
-    edges.set(key, pendingEdge);
   } else {
-    edges.delete(key);
+    if (pendingEdge) edges.set(key, pendingEdge);
+    else edges.delete(key);
+    if (pendingHero) heroes.set(key, pendingHero);
+    else heroes.delete(key);
+    if (pendingLead) {
+      leads.set(key, pendingLead);
+      revealInstantly();
+      scrollToLead();
+    } else {
+      leads.delete(key);
+    }
   }
   pendingEdge = null;
+  pendingHero = null;
+  pendingLead = null;
   setPendingMorph(null);
   lastKey = key;
   lastPath = location.pathname;
+  // Sem movimento (nenhum par na tela), a marca do par sai logo depois da troca.
+  window.setTimeout(() => {
+    let running = false;
+    try {
+      running = document.documentElement.matches(':active-view-transition');
+    } catch {
+      // Navegador sem o seletor: a transição já terminou há tempo.
+    }
+    if (!running) setActiveMorph(null);
+  }, 1500);
+}
+
+/** A lista aberta pela peça rola até a grade, onde a peça ocupa o primeiro lugar (a foto encolhe até ali). */
+function scrollToLead() {
+  const lead = document.querySelector<HTMLElement>('.plate--lead');
+  if (!lead) return;
+  const header = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
+  const rect = lead.getBoundingClientRect();
+  if (rect.top >= header && rect.bottom <= window.innerHeight) return;
+  scrollInstantly(Math.max(0, window.scrollY + rect.top - header - 24));
+}
+
+/** A página de volta já entrou: a marca que trocava o 3D pela foto sai. */
+function onMorphSettled(): void {
+  document.documentElement.removeAttribute('data-morph-leaving');
 }

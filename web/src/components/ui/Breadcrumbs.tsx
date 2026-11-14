@@ -1,22 +1,12 @@
 import { Link, type AppHref } from '@/i18n/navigation';
-import { morphTypes } from '@/lib/ui/morph';
 
 export type BreadcrumbItem = { label: string; href?: AppHref };
 
 /**
- * Caminho da página. `morph` (nome do movimento da foto, `lib/ui/morph.ts`): na página da peça, voltar pela categoria,
- * pela área ou pelo início faz a foto encolher até o card da peça na listagem (retorno de 07/11/2026), quando o card
- * está lá.
+ * Caminho da página. Na página da peça, a categoria e a área levam a foto até o primeiro lugar da lista (`LeadSource`,
+ * controle da navegação), e o caminho até a página de onde a peça foi aberta vira um "voltar".
  */
-export function Breadcrumbs({
-  label,
-  items,
-  morph,
-}: {
-  label: string;
-  items: BreadcrumbItem[];
-  morph?: string;
-}) {
+export function Breadcrumbs({ label, items }: { label: string; items: BreadcrumbItem[] }) {
   return (
     <nav className="crumbs" aria-label={label}>
       <ol className="crumbs__list">
@@ -25,13 +15,7 @@ export function Breadcrumbs({
           return (
             <li key={`${index}-${item.label}`}>
               {item.href && !last ? (
-                <Link
-                  href={item.href}
-                  transitionTypes={morph ? morphTypes(morph) : undefined}
-                  data-morph-link={morph}
-                >
-                  {item.label}
-                </Link>
+                <Link href={item.href}>{item.label}</Link>
               ) : (
                 <span aria-current={last ? 'page' : undefined}>{item.label}</span>
               )}
