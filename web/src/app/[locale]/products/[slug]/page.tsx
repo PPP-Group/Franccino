@@ -50,7 +50,10 @@ function leadPaths(product: ProductDetail, locale: Locale): string[] {
       : []),
     ...(product.is_new ? ['/launches' as const] : []),
   ];
-  return hrefs.map((href) => getPathname({ href: href as Href, locale }));
+  const all = getPathname({ href: '/products', locale });
+  // A lista de todas as peças filtrada pela categoria da peça (o menu Produtos do topo leva para ela).
+  const byCategory = `${all}?category=${encodeURIComponent(product.category.slug)}`;
+  return [...hrefs.map((href) => getPathname({ href: href as Href, locale })), byCategory];
 }
 
 /** Outras peças do designer ao lado do texto dele, na faixa do designer. */

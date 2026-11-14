@@ -196,7 +196,7 @@ function decodeVisibleImages(): Promise<unknown> {
  * pela primeira vez) e a foto só aparecia no fim, com um fade (retorno de 13/11/2026). A página antiga fica parada na
  * tela enquanto espera.
  */
-const MORPH_WAIT_MS = 800;
+const MORPH_WAIT_MS = 500;
 
 function morphTargetImages(): HTMLImageElement[] {
   const images: HTMLImageElement[] = [];
@@ -322,6 +322,8 @@ export type LeadSource = { card: LeadProduct['card']; morph: string; paths: stri
 let leadSource: LeadSource | null = null;
 let heroName: { path: string; name: string } | null = null;
 let navigateWithTypes: ((href: string, types: string[]) => void) | null = null;
+let prefetchRoute: ((href: string) => void) | null = null;
+const prefetched = new Set<string>();
 
 /** A página da peça avisa que está aberta (e some ao sair). */
 export function setLeadSource(source: LeadSource | null): void {
@@ -333,13 +335,52 @@ export function setHeroName(path: string, name: string | null): void {
   heroName = name ? { path, name } : null;
 }
 
-/** O `PageTransition` entrega a navegação do Next com os tipos da transição. */
-export function setNavigator(navigate: ((href: string, types: string[]) => void) | null): void {
+/** O `PageTransition` entrega a navegação do Next com os tipos da transição, e o pré-carregamento de página. */
+export function setNavigator(
+  navigate: ((href: string, types: string[]) => void) | null,
+  prefetch: ((href: string) => void) | null = null,
+): void {
   navigateWithTypes = navigate;
+  prefetchRoute = prefetch;
+}
+
+/*
+  Com o ponteiro sobre uma foto que anima (card, peça do carrossel, ponto) ou sobre um link da página da peça para a
+  lista dela, a página de destino já começa a carregar: no clique ela chega na hora, sem a espera de alguns segundos em
+  que a peça ficava parada (retorno de 14/11/2026). O Next só pré-carrega os links que aparecem na tela, e as peças do
+  carrossel entram e saem dela o tempo todo.
+*/
+function onPointerOver(event: PointerEvent) {
+  if (!prefetchRoute || event.pointerType === 'touch') return;
+  const link = (event.target as Element | null)?.closest?.('a[href]');
+  if (!(link instanceof HTMLAnchorElement)) return;
+  const url = new URL(link.href);
+  if (url.origin !== location.origin || prefetched.has(url.pathname)) return;
+  const lead = leadSource ? isLeadTarget(leadSource.paths, url) : false;
+  if (!link.hasAttribute('data-morph-link') && !lead) return;
+  prefetched.add(url.pathname);
+  prefetchRoute(url.pathname + url.search);
 }
 
 function samePath(a: string, b: string): boolean {
   return a.replace(/\/$/, '') === b.replace(/\/$/, '');
+}
+
+/**
+ * O link leva a uma das listas da peça: mesmo caminho e o mesmo filtro (`/pt/produtos?category=poltronas` é a lista
+ * das poltronas, não a de todas as peças). Parâmetros de página e de vista não contam.
+ */
+function isLeadTarget(paths: string[], url: URL): boolean {
+  const query = new URLSearchParams(url.search);
+  query.delete('page');
+  query.delete('view');
+  query.sort();
+  const wanted = `${url.pathname.replace(/\/$/, '')}?${query.toString()}`;
+  return paths.some((path) => {
+    const target = new URL(path, location.origin);
+    target.searchParams.sort();
+    return `${target.pathname.replace(/\/$/, '')}?${target.searchParams.toString()}` === wanted;
+  });
 }
 
 /**
@@ -349,7 +390,7 @@ function samePath(a: string, b: string): boolean {
 function leadNavigation(url: URL): boolean {
   const source = leadSource;
   if (!source || !navigateWithTypes || url.hash || reducedMotion()) return false;
-  if (!source.paths.some((path) => samePath(path, url.pathname))) return false;
+  if (!isLeadTarget(source.paths, url)) return false;
   const name = heroName && samePath(heroName.path, location.pathname) ? heroName.name : source.morph;
   const stage = document.querySelector<HTMLImageElement>('.gallery__stage img');
   const lead: LeadProduct = { card: source.card, morph: name };
@@ -494,6 +535,7 @@ export function installNavigationMotion(): void {
     window.addEventListener(type, unpinScroll, { passive: true, capture: true });
   }
   window.addEventListener('click', onClick, true);
+  document.addEventListener('pointerover', onPointerOver, { passive: true });
   window.addEventListener('popstate', onPopState, true);
   window.addEventListener('pagehide', persist);
   document.addEventListener('visibilitychange', () => {

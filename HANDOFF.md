@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.11). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.12). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1487,3 +1487,24 @@ com Playwright (rede lenta simulada, registro de cada commit do React e quadros 
 - **Seja um parceiro:** como Contato, os canais à esquerda e o formulário à direita.
 - **PDF para a Franccino** ("Franccino - pecas nas fotos do site (14-11).pdf", entregue ao Pedro Ivo, não está no
   repositório): as 49 fotos com peças que não estão no catálogo ou que não sabemos qual são, com a miniatura de cada.
+
+### 30.12 14/11/2026 (tarde): carrossel, de novo
+
+Retorno do tech lead: nos carrosséis a ida ainda fazia um fade no clique, a volta não funcionava na home e voltava meio
+transparente nas coleções, os sofás se encostavam, o clique às vezes demorava segundos e, da peça aberta pelo carrossel,
+o menu do topo nem sempre levava a foto até a lista. O teste anterior clicava sempre na primeira peça; agora o teste
+espera o carrossel andar sozinho antes do clique, como na vida real.
+
+- **Volta:** o carrossel montava com a primeira peça no centro e só num efeito depois punha a peça clicada no centro; a
+  foto do movimento fotografava a peça fora do centro (meio apagada pelo véu, ou escondida). Agora o carrossel já nasce
+  com a peça clicada no centro (pelo nome do movimento, também na peça repetida "-1"). Home e coleções: 12 de 12 idas e
+  12 de 12 voltas com a rede lenta simulada.
+- **Ida sem fade:** o recorte e a capa se misturavam no começo. Agora só a foto de destino anda, do começo ao fim (a
+  caixa do carrossel já tem a geometria da capa).
+- **Espaço entre as peças:** a distância sai da largura real de cada peça e da vizinha, com um vão fixo
+  (`coverflowXs`); dois sofás lado a lado não se encostam mais.
+- **Espera no clique:** a página de destino começa a carregar quando o ponteiro passa sobre a foto (carrossel, cards,
+  pontos) ou sobre um link da peça para a lista dela; a espera da foto de destino caiu para 0,5 s no máximo. Medido:
+  ~100 ms do clique ao início da animação, com 700 ms de atraso na resposta do servidor.
+- **Menu do topo:** "Produtos → Poltronas" leva a `/pt/produtos?category=poltronas`; a peça agora reconhece essa lista
+  pelo filtro (antes, qualquer filtro de `/pt/produtos` contava). 4 de 4 a partir de peças abertas pelo carrossel.
