@@ -717,6 +717,8 @@
   position: absolute;
   width: 200px;
   background: var(--paper);
+  /* Sobre os banners o texto da página é claro: o cartão tem sempre o texto escuro (o nome sumia em alguns pontos). */
+  color: var(--ink);
 }
 
 .scene__point[data-horizontal='start'] .scene__card {

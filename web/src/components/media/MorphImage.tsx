@@ -1,10 +1,19 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, ViewTransition, type CSSProperties } from 'react';
+import { useEffect, useState, useSyncExternalStore, ViewTransition, type CSSProperties } from 'react';
 import type { Image } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
-import { isImageLoaded, morphShare, pendingMorphFor, pickLoadedSource, type MorphFit } from '@/lib/ui/morph';
+import { setHeroName } from '@/components/layout/navigation-motion';
+import {
+  getActiveMorph,
+  isImageLoaded,
+  morphShare,
+  pendingMorphFor,
+  pickLoadedSource,
+  subscribeActiveMorph,
+  type MorphFit,
+} from '@/lib/ui/morph';
 import { ApiImage } from './ApiImage';
 
 type MorphImageProps = {
@@ -23,6 +32,8 @@ type MorphImageProps = {
    * capa teria): o quadro já sai do carrossel no tamanho da foto da página da peça (retorno de 12/11/2026).
    */
   box?: { className: string; style: CSSProperties };
+  /** O card da peça que entra em primeiro na lista (`LeadPlate`): só ele fica com o nome do par. */
+  lead?: boolean;
 };
 
 type Start = { name: string; src: string | null; fit: MorphFit };
@@ -66,23 +77,49 @@ export function MorphImage({
   priority = false,
   className,
   box,
+  lead = false,
 }: MorphImageProps) {
   const pathname = usePathname();
   const [start] = useState<Start>(() => {
     const pending = pendingMorphFor(pathname);
-    if (!pending || (!hero && pending.name !== name)) {
+    if (!pending) {
       return { name, src: null, fit };
     }
+    // A foto do topo adota o nome guardado para esta entrada (a origem que abriu a página); as outras ficam com o seu.
+    const adopted = hero ? pending.hero : null;
+    // A peça que entra em primeiro na lista: o card dela no lugar de sempre (escondido) cede o nome ao primeiro lugar.
+    if (!hero && !lead && pending.lead?.morph === name) {
+      return { name: `${name}--lead-origin`, src: null, fit };
+    }
+    const own = adopted?.name ?? name;
+    const ownFit = adopted?.fit ?? fit;
+    if (pending.name !== own) {
+      return { name: own, src: null, fit: ownFit };
+    }
     return {
-      name: hero ? pending.name : name,
+      name: own,
       // A peça sem fundo (carrossel) não serve de foto provisória na página da peça: ela ocupa o quadro inteiro e a foto
       // da página tem margem branca; a troca no fim era o "tranco" (retorno de 09/11/2026). Ali a foto é a própria.
-      src: pickLoadedSource(image, isImageLoaded) ?? (hero && pending.fit !== 'cutout' ? pending.src : null),
-      // A foto de destino adota o encaixe que a origem pediu (a peça sem fundo do carrossel).
-      fit: hero ? (pending.fit ?? fit) : fit,
+      src:
+        pickLoadedSource(image, isImageLoaded) ?? (adopted && pending.fit !== 'cutout' ? pending.src : null),
+      fit: ownFit,
     };
   });
   const [src, setSrc] = useState(start.src);
+  // O par da navegação em curso anima mesmo que o tipo da transição tenha se perdido no caminho (`morphShare`).
+  // Só a foto do par re-renderiza quando a marca muda (o valor lido é "sou eu ou não").
+  const active = useSyncExternalStore(
+    subscribeActiveMorph,
+    () => getActiveMorph() === start.name,
+    () => false,
+  );
+
+  // A foto do topo diz o nome que usa: a navegação da peça para a lista que a contém anda com ele.
+  useEffect(() => {
+    if (!hero) return undefined;
+    setHeroName(pathname, start.name);
+    return () => setHeroName(pathname, null);
+  }, [hero, pathname, start.name]);
   // Foto grande aberta sem movimento de foto (menu, link de texto, endereço digitado): sobe e encaixa de leve
   // (retorno de 09/11/2026: "não abrir de uma vez"). Com movimento, quem anima é a transição.
   const [arriving] = useState(() => hero && pendingMorphFor(pathname) === null);
@@ -121,7 +158,7 @@ export function MorphImage({
     />
   );
   return (
-    <ViewTransition name={start.name} share={morphShare(start.fit, start.name)} default="none">
+    <ViewTransition name={start.name} share={morphShare(start.fit, start.name, active)} default="none">
       {box ? (
         <span className={box.className} style={box.style}>
           {picture}

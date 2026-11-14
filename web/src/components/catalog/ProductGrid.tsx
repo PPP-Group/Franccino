@@ -6,6 +6,7 @@
  */
 
 import { useTranslations } from 'next-intl';
+import { LeadPlate } from '@/components/products/LeadPlate';
 import { ProductPlate } from '@/components/products/ProductPlate';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
@@ -19,12 +20,21 @@ type ProductGridProps = {
   priorityCount?: number;
   /** Completa a última linha com o bloco de ajuda (grade sempre completa, rodada 3). */
   fill?: boolean;
+  /** Grade principal da lista: recebe em primeiro a peça de onde a lista foi aberta (`LeadPlate`). */
+  lead?: boolean;
 };
 
-export function ProductGrid({ products, showNew = false, priorityCount = 0, fill = true }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  showNew = false,
+  priorityCount = 0,
+  fill = true,
+  lead = false,
+}: ProductGridProps) {
   const fillClass = fill ? gridFillClass(products.length) : null;
   return (
     <div className="grid-plates" data-reveal="stagger">
+      {lead ? <LeadPlate /> : null}
       {products.map((product, index) => (
         <ProductPlate key={product.id} product={product} showNew={showNew} priority={index < priorityCount} />
       ))}

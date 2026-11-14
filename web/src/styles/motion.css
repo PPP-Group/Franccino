@@ -406,9 +406,14 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
   mix-blend-mode: normal;
 }
 
+/*
+  A foto de chegada já está pronta quando o movimento começa (o controle da navegação espera ela carregar): ela anda
+  inteira do começo ao fim, por cima da de saída, sem o fade no meio do caminho (retorno de 13/11/2026: "dá um fade e
+  aparece o produto no lugar certo"). A de saída fica por baixo, para nunca haver quadro vazio.
+*/
 ::view-transition-new(.morph-contain),
 ::view-transition-new(.morph-cover) {
-  animation: morph-arrive var(--t-slow) linear both;
+  animation: none;
   mix-blend-mode: normal;
 }
 
@@ -522,15 +527,17 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
   }
 }
 
-@keyframes morph-arrive {
-  0%,
-  30% {
-    opacity: 0;
-  }
+/*
+  Voltar da página da peça com o 3D aberto: a foto do palco volta à frente antes do movimento, para encolher até o card
+  (retorno de 13/11/2026: a volta com o 3D aberto não animava). `data-morph-leaving` é posto pelo controle da navegação.
+*/
+:root[data-morph-leaving] .gallery__stage.is-3d > img {
+  opacity: 1;
+  transition: none;
+}
 
-  70% {
-    opacity: 1;
-  }
+:root[data-morph-leaving] .gallery__stage.is-3d .stage-3d {
+  display: none;
 }
 
 /*
@@ -814,4 +821,29 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
       transform var(--t-base) var(--ease-out),
       background-color var(--t-base) var(--ease-out);
   }
+}
+
+/* ---------- amostra do acabamento que cresce até a janela (retorno de 13/11/2026) ---------- */
+
+::view-transition-group(finish-zoom) {
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(finish-zoom),
+::view-transition-new(finish-zoom) {
+  block-size: 100%;
+  object-fit: cover;
+}
+
+::view-transition-group(finish-zoom-panel) {
+  animation-duration: var(--t-mid);
+}
+
+::view-transition-new(finish-zoom-panel) {
+  animation: morph-enter var(--t-mid) var(--ease-out) both;
+}
+
+::view-transition-old(finish-zoom-panel) {
+  animation: morph-leave var(--t-mid) var(--ease-out) both;
 }

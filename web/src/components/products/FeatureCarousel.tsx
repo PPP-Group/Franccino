@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -25,6 +26,7 @@ import {
   clampIndex,
   counterNumber,
   coverflowPose,
+  carouselSlots,
   cutoutMorphBox,
   pieceWidthFactor,
   DRAG_THRESHOLD_PX,
@@ -138,7 +140,11 @@ function preloadStage(image: Image | null) {
  * Arrasta com o dedo e com o mouse (com o cursor redondo "Arraste" da ideia 12), anda com as setas do teclado, com os
  * botões e com a rolagem lateral do trackpad. Com movimento reduzido as peças trocam sem animar.
  */
-export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
+export function FeatureCarousel({ label, products: items }: FeatureCarouselProps) {
+  // Com poucas peças, a lista se repete para encher os dois lados (`carouselSlots`); contagem e rótulos são das peças.
+  const slots = useMemo(() => carouselSlots(items), [items]);
+  const products = useMemo(() => slots.map((slot) => slot.item), [slots]);
+  const count = items.length;
   const t = useTranslations('featureCarousel');
   // O nome curto da área, como no menu (Casa, Giardini).
   const nav = useTranslations('nav');
@@ -466,6 +472,12 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
       >
         {products.map((product, index) => {
           const isActive = index === activeIndex;
+          const copy = slots[index]?.copy ?? 0;
+          // Cada lugar tem o próprio nome de movimento: a peça repetida não divide o nome com a original.
+          const morph = morphName(
+            'piece',
+            copy ? `carousel-${product.slug}-${copy}` : `carousel-${product.slug}`,
+          );
           // Sem a foto recortada, a capa em fundo branco: o branco some no palco (multiply, carousel.css).
           const image = product.cutout ?? product.cover;
           const kind = product.cutout ? 'is-cutout' : 'is-packshot';
@@ -473,7 +485,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
           const box = product.cutout ? cutoutMorphBox(product.cover, product.cutout) : null;
           return (
             <div
-              key={product.id}
+              key={`${product.id}-${copy}`}
               ref={(node) => {
                 itemRefs.current[index] = node;
               }}
@@ -489,7 +501,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
               data-hidden={pose.hidden ? '' : undefined}
               role="group"
               aria-roledescription={t('slideRoleDescription')}
-              aria-label={t('slide', { current: index + 1, total, name: product.name })}
+              aria-label={t('slide', { current: (index % count) + 1, total: count, name: product.name })}
             >
               <Link
                 ref={(node) => {
@@ -497,10 +509,8 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 }}
                 className="feature-carousel__link"
                 href={{ pathname: '/products/[slug]', params: { slug: product.slug } }}
-                transitionTypes={
-                  image ? morphTypes(morphName('piece', `carousel-${product.slug}`)) : undefined
-                }
-                data-morph-link={image ? morphName('piece', `carousel-${product.slug}`) : undefined}
+                transitionTypes={image ? morphTypes(morph) : undefined}
+                data-morph-link={image ? morph : undefined}
                 data-morph-fit={product.cutout ? 'cutout' : undefined}
                 tabIndex={isActive ? 0 : -1}
                 draggable={false}
@@ -518,7 +528,7 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
                 >
                   {image ? (
                     <MorphImage
-                      name={morphName('piece', `carousel-${product.slug}`)}
+                      name={morph}
                       image={image}
                       sizes={ITEM_SIZES}
                       fit={product.cutout ? 'cutout' : 'contain'}
@@ -573,14 +583,21 @@ export function FeatureCarousel({ label, products }: FeatureCarouselProps) {
           </p>
           {total > 1 ? (
             <p className="feature-carousel__counter num">
-              {t('counter', { current: counterNumber(shown + 1), total: counterNumber(total) })}
+              {t('counter', {
+                current: counterNumber((shown % count) + 1),
+                total: counterNumber(count),
+              })}
             </p>
           ) : null}
         </div>
       ) : null}
       <p className="visually-hidden" aria-live="polite" aria-atomic="true">
         {products[activeIndex]
-          ? t('status', { current: activeIndex + 1, total, name: products[activeIndex].name })
+          ? t('status', {
+              current: (activeIndex % count) + 1,
+              total: count,
+              name: products[activeIndex].name,
+            })
           : null}
       </p>
       <span ref={cursorRef} className="feature-carousel__cursor" aria-hidden="true">

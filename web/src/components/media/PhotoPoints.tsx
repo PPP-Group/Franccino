@@ -46,11 +46,15 @@ export function PhotoPoints({
   }
   return (
     <div ref={box} className={className ? `photo-points ${className}` : 'photo-points'}>
-      {fit === 'fill' ? (
-        <ScenePoints scene={asScene(points, image)} />
-      ) : ratio ? (
-        <ScenePoints scene={asScene(points, image)} frameRatio={ratio} />
-      ) : null}
+      {/*
+        Os pontos montam já na primeira pintura (a medida do recorte chega no mesmo quadro, pelo efeito de layout): na
+        volta da peça aberta por um ponto, o cartão dele precisa existir no commit da volta para a foto encolher até ele
+        (retorno de 13/11/2026).
+      */}
+      <ScenePoints
+        scene={asScene(points, image)}
+        frameRatio={fit === 'cover' ? (ratio ?? undefined) : undefined}
+      />
     </div>
   );
 }

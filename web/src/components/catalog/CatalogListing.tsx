@@ -251,7 +251,7 @@ export async function CatalogListing(props: CatalogListingProps) {
               </div>
             ) : (
               <ByView
-                grid={<ProductGrid products={page.data} showNew priorityCount={3} />}
+                grid={<ProductGrid lead products={page.data} showNew priorityCount={3} />}
                 table={<TechTable rows={rows} />}
               />
             )}
