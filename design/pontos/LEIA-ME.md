@@ -1,7 +1,8 @@
 # Pontos clicáveis nas fotos do site (13/11/2026)
 
-Cada foto do site (banner da home, capa de área, coleção, página ou projeto, foto de galeria) pode ter pontos que
-levam à peça. Os pontos ficam num ambiente ligado à foto (`scenes.photo_media_id`) e saem em `GET /image-points`; o site
+Cada foto do site (capa de área, coleção, página ou projeto, foto de galeria) pode ter pontos que levam à peça. O
+banner da home fica sem pontos, porque troca de foto (retorno de 13/11/2026); com o mouse, o cartão da peça abre ao
+passar pelo ponto. Os pontos ficam num ambiente ligado à foto (`scenes.photo_media_id`) e saem em `GET /image-points`; o site
 desenha os pontos sobre a foto onde ela aparecer, acompanhando o recorte (`PhotoPoints`). Contrato em `docs/api.md`.
 
 - `2026-11-13-pontos.json`: os pontos de cada foto (`media_id` = `Image.id` na API do preview; `scene_id` para o

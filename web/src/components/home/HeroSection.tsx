@@ -1,9 +1,8 @@
 import { useTranslations } from 'next-intl';
 import { ApiImage } from '@/components/media/ApiImage';
-import { PhotoPoints } from '@/components/media/PhotoPoints';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
-import type { Banner, ImagePoints } from '@/lib/api/types';
+import type { Banner } from '@/lib/api/types';
 import { heroSizes } from '@/lib/images/cover';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { HeroVideo } from './HeroVideo';
@@ -14,8 +13,6 @@ type HeroSectionProps = {
   designerCount: number;
   /** Posição no carrossel: só o primeiro slide tem `h1` e imagem com prioridade (LCP). */
   index?: number;
-  /** Pontos clicáveis sobre a foto do banner (retorno de 13/11/2026). */
-  points?: ImagePoints | null;
 };
 
 /**
@@ -29,13 +26,7 @@ type HeroSectionProps = {
  *   um slide seguinte (`index` 1) e fica com o cabeçalho de sempre. O resto da home rola por cima do banner (home.css).
  * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
  */
-export function HeroSection({
-  banner,
-  brandNames,
-  designerCount,
-  index = 0,
-  points = null,
-}: HeroSectionProps) {
+export function HeroSection({ banner, brandNames, designerCount, index = 0 }: HeroSectionProps) {
   const t = useTranslations('home.hero');
   const photo = banner?.image ?? null;
   const first = index === 0;
@@ -89,11 +80,6 @@ export function HeroSection({
       {cta ? (
         <a className="hero__link" href={cta.url} aria-label={cta.label ?? (photo.alt || t('open'))} />
       ) : null}
-      <PhotoPoints
-        points={points}
-        image={photo}
-        className={banner.image_mobile ? 'photo-points--wide' : undefined}
-      />
     </section>
   );
 }

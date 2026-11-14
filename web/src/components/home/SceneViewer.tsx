@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type React from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
@@ -12,7 +13,7 @@ import { morphName, morphTypes } from '@/lib/ui/morph';
 /**
  * Ambiente com pontos clicáveis (banco de ideias, ideia 7, aprovado pela Franccino e pelo marketing em 26/10/2026):
  * a foto do ambiente e um ponto em cada peça. O ponto abre um cartão só com a foto e o nome da peça, que leva à página
- * dela (sem botões a mais, como na esteira). Teclado: Tab passa pelos pontos na ordem do painel, Enter abre, Esc
+ * dela (sem botões a mais, como na esteira). Com o mouse, o cartão abre ao passar pelo ponto. Teclado: Tab passa pelos pontos na ordem do painel, Enter abre, Esc
  * fecha; o clique fora também fecha.
  */
 export function SceneViewer({ scene, priority = false }: { scene: Scene; priority?: boolean }) {
@@ -33,6 +34,33 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
   const t = useTranslations('home.scenes');
   const [open, setOpen] = useState<number | null>(null);
   const rootRef = useRef<HTMLUListElement | null>(null);
+  // Com o mouse, o cartão abre ao passar pelo ponto (retorno de 13/11/2026: não precisa acertar o clique). Sair do
+  // ponto fecha depois de um instante, para dar tempo de levar o cursor até o cartão.
+  const closeTimer = useRef<number | null>(null);
+  const cancelClose = () => {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+  const hoverOpen = (event: React.PointerEvent, index: number) => {
+    if (event.pointerType !== 'mouse') {
+      return;
+    }
+    cancelClose();
+    setOpen(index);
+  };
+  const hoverClose = (event: React.PointerEvent, index: number) => {
+    if (event.pointerType !== 'mouse') {
+      return;
+    }
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      setOpen((current) => (current === index ? null : current));
+    }, 250);
+  };
+  useEffect(() => cancelClose, []);
   // Volta da página da peça aberta pelo ponto: o cartão daquele ponto já está aberto, e a foto encolhe até ele
   // (retorno de 12/11/2026: na volta a foto não tinha para onde ir).
   const storageKey = `franccino:scene:${scene.id}`;
@@ -95,6 +123,8 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
             style={{ left: place.left, top: place.top }}
             data-horizontal={place.horizontal}
             data-vertical={place.vertical}
+            onPointerEnter={(event) => hoverOpen(event, index)}
+            onPointerLeave={(event) => hoverClose(event, index)}
           >
             <button
               type="button"
@@ -102,7 +132,11 @@ export function ScenePoints({ scene, frameRatio }: { scene: Scene; frameRatio?: 
               aria-expanded={isOpen}
               aria-controls={cardId}
               aria-label={t('point', { name: hotspot.product.name })}
-              onClick={() => setOpen(isOpen ? null : index)}
+              onClick={(event) => {
+                // Com o mouse o cartão já abriu ao passar: o clique não pode fechá-lo. Toque e teclado alternam.
+                const pointerType = (event.nativeEvent as PointerEvent).pointerType;
+                setOpen(pointerType === 'mouse' ? index : isOpen ? null : index);
+              }}
             >
               <span aria-hidden="true" className="scene__dot-core" />
             </button>
