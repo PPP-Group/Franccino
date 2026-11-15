@@ -28,6 +28,7 @@ class Product extends Model implements HasMedia
     /** @var list<string> */
     public $translatable = [
         'name', 'slug', 'tagline', 'description', 'materials', 'finishes_note', 'seo_title', 'seo_description',
+        'color_name',
     ];
 
     /**
@@ -146,6 +147,63 @@ class Product extends Model implements HasMedia
     public function variantOf(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_variants', 'variant_id', 'product_id');
+    }
+
+    /**
+     * A mesma peça nas outras cores (retorno de 16/11/2026): as peças com o mesmo `color_group`. A própria peça vem
+     * junto (a relação também serve à carga antecipada); quem mostra tira ela. Cada uma continua sendo uma peça
+     * separada nas listas.
+     *
+     * @return HasMany<Product, $this>
+     */
+    public function colors(): HasMany
+    {
+        return $this->hasMany(Product::class, 'color_group', 'color_group')->orderBy('id');
+    }
+
+    /**
+     * Carga antecipada das outras cores publicadas (com as capas), para `ProductCardResource` não fazer uma consulta
+     * por card.
+     *
+     * @return array<string, \Closure>
+     */
+    public static function withColors(): array
+    {
+        return ['colors' => fn ($query) => $query->published()->with('media')];
+    }
+
+    /**
+     * Liga esta peça às outras cores dela (`$ids`: as outras peças, sem esta). O grupo passa a ser exatamente esta
+     * peça e as escolhidas: quem estava no grupo e saiu fica sem cor ligada, e um grupo que sobra com uma peça só
+     * se desfaz.
+     *
+     * @param  array<int, int|string>  $ids
+     */
+    public function syncColors(array $ids): void
+    {
+        $ids = collect($ids)->map(fn ($id) => (int) $id)->reject(fn (int $id) => $id === $this->id)->unique()->values();
+        // O grupo gravado no banco (outra peça pode ter mudado o grupo desta depois de ela ser carregada).
+        $old = static::query()->whereKey($this->id)->value('color_group');
+        $touched = static::query()->whereIn('id', $ids)->whereNotNull('color_group')->pluck('color_group')
+            ->push($old)->filter()->unique();
+
+        if ($ids->isEmpty()) {
+            static::query()->whereKey($this->id)->update(['color_group' => null]);
+        } else {
+            $group = $old ?? (string) Str::uuid();
+            $members = $ids->concat([$this->id]);
+            static::query()->whereIn('id', $members)->update(['color_group' => $group]);
+            static::query()->where('color_group', $group)->whereNotIn('id', $members)->update(['color_group' => null]);
+            $this->color_group = $group;
+        }
+
+        // Grupos que ficaram com uma peça só (as outras saíram) se desfazem.
+        foreach ($touched as $group) {
+            if (static::query()->where('color_group', $group)->count() < 2) {
+                static::query()->where('color_group', $group)->update(['color_group' => null]);
+            }
+        }
+        $this->color_group = static::query()->whereKey($this->id)->value('color_group');
     }
 
     /** @return BelongsToMany<Launch, $this> */

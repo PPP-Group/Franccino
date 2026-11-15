@@ -41,19 +41,40 @@ describe('technical rows', () => {
       product: toProductCard(detail),
       dimension: detail.dimensions[0],
       files: [file],
-      preview: [detail.cover, ...detail.gallery].filter(Boolean).slice(0, 4),
+      preview: [detail.cover, ...detail.gallery].filter(Boolean).slice(0, 5),
+      colors: [],
     });
   });
 
-  it('previews at most four photos, cover first, without repeating it', () => {
+  it('previews four photos and keeps one more for the stack, cover first, without repeating it', () => {
     const detail = productDetail();
     const cover = detail.cover;
     if (!cover) {
       throw new Error('fixture sem capa');
     }
     const extra = (id: number) => ({ ...cover, id, src: `/foto-${id}.jpg` });
-    const row = toTechnicalRow({ ...detail, gallery: [cover, extra(2), extra(3), extra(4), extra(5)] });
-    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3, 4]);
+    const row = toTechnicalRow({
+      ...detail,
+      gallery: [cover, extra(2), extra(3), extra(4), extra(5), extra(6)],
+    });
+    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3, 4, 5]);
+  });
+
+  it('puts the covers of the other colours in the preview, skipping colours without a cover', () => {
+    const detail = productDetail();
+    const cover = detail.cover;
+    if (!cover) {
+      throw new Error('fixture sem capa');
+    }
+    const color = (id: number, withCover = true) => ({
+      id,
+      slug: `cor-${id}`,
+      name: `Cor ${id}`,
+      color: null,
+      cover: withCover ? { ...cover, id: id * 10 } : null,
+    });
+    const row = toTechnicalRow({ ...detail, colors: [color(1), color(2, false), color(3)] });
+    expect(row.colors?.map((image) => image.id)).toEqual([10, 30]);
   });
 });
 

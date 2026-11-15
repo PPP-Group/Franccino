@@ -12,8 +12,21 @@ export function primaryDimension(dimensions: Dimension[]): Dimension | null {
   );
 }
 
-/** Quantas fotos saem da linha da tabela no hover (capa e as primeiras da galeria), abertas lado a lado. */
+/**
+ * Quantas fotos saem da linha da tabela no hover (capa e as primeiras da galeria), abertas lado a lado. Com mais
+ * fotos, a última vira uma pilha (retorno de 16/11/2026), por isso a prévia guarda uma a mais.
+ */
 export const PREVIEW_COUNT = 4;
+
+/** As fotos da prévia: as que aparecem e uma a mais, para saber se a última vira pilha. */
+export function previewImages(images: Image[]): Image[] {
+  return images.slice(0, PREVIEW_COUNT + 1);
+}
+
+/** As capas das outras cores da peça, para a linha de cima da prévia. */
+export function colorCovers(product: Pick<ProductCard, 'colors'>): Image[] {
+  return previewImages((product.colors ?? []).flatMap((color) => (color.cover ? [color.cover] : [])));
+}
 
 export type TechnicalRow = {
   product: ProductCard;
@@ -21,6 +34,8 @@ export type TechnicalRow = {
   files: DownloadFile[];
   /** Fotos que flutuam perto do ponteiro no hover da linha (só desktop); sem elas, a linha não mostra prévia. */
   preview?: Image[];
+  /** Capas das outras cores da peça (linha de cima da prévia). */
+  colors?: Image[];
 };
 
 export function toTechnicalRow(detail: ProductDetail): TechnicalRow {
@@ -28,7 +43,8 @@ export function toTechnicalRow(detail: ProductDetail): TechnicalRow {
     product: toProductCard(detail),
     dimension: primaryDimension(detail.dimensions),
     files: detail.files,
-    preview: galleryImages(detail).slice(0, PREVIEW_COUNT),
+    preview: previewImages(galleryImages(detail)),
+    colors: colorCovers(detail),
   };
 }
 

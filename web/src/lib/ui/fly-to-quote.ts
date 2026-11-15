@@ -24,19 +24,40 @@ export function flyPath(from: Box, to: Box) {
   };
 }
 
+/** Tamanho do quadradinho quando o voo sai do botão (a foto saiu da tela), em px. */
+const ORIGIN_SIZE = 72;
+
+/** Metade ou mais da foto à vista. */
+export function mostlyVisible(box: Box, viewport = window.innerHeight): boolean {
+  const visible = Math.min(box.top + box.height, viewport) - Math.max(box.top, 0);
+  return visible >= box.height / 2;
+}
+
+/** Quadrado de `ORIGIN_SIZE` centrado em cima do botão. */
+export function originBox(button: Box): Box {
+  return {
+    left: button.left + button.width / 2 - ORIGIN_SIZE / 2,
+    top: button.top - ORIGIN_SIZE,
+    width: ORIGIN_SIZE,
+    height: ORIGIN_SIZE,
+  };
+}
+
 /**
  * Peça adicionada à lista de orçamento (retorno de 09/11/2026): a foto vira um quadradinho que encolhe e voa até o
  * ícone da lista no cabeçalho (`[data-quote-target]`); o ícone pulsa quando ele chega (`data-quote-incoming` atrasa o
  * pulso do contador até o pouso, motion.css). Sem a foto, sem o ícone à vista, ou com movimento reduzido, não faz nada.
  */
-export function flyToQuote(source: HTMLImageElement | null | undefined): void {
+export function flyToQuote(source: HTMLImageElement | null | undefined, origin?: Element | null): void {
   if (!source || typeof window === 'undefined' || typeof source.animate !== 'function') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const target = document.querySelector<HTMLElement>('[data-quote-target]');
   if (!target) return;
-  const from = source.getBoundingClientRect();
+  const photo = source.getBoundingClientRect();
   const to = target.getBoundingClientRect();
-  if (from.width === 0 || to.width === 0 || to.bottom < 0 || to.top > window.innerHeight) return;
+  if (photo.width === 0 || to.width === 0 || to.bottom < 0 || to.top > window.innerHeight) return;
+  // Foto fora da tela (na página da peça, rolada até o botão): o quadradinho sai de cima do botão (16/11/2026).
+  const from = origin && !mostlyVisible(photo) ? originBox(origin.getBoundingClientRect()) : photo;
 
   const path = flyPath(from, to);
   const ghost = document.createElement('div');

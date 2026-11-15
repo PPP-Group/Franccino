@@ -1,5 +1,5 @@
 import type { AreaRef, Dimension, Image, ProductDetail, SearchResult } from '@/lib/api/types';
-import { primaryDimension, PREVIEW_COUNT } from '@/lib/catalog/technical';
+import { colorCovers, previewImages, primaryDimension } from '@/lib/catalog/technical';
 import { galleryImages } from '@/lib/product/gallery';
 
 /** O que a linha de uma peça mostra, como na tabela técnica (retorno de 09/11/2026). */
@@ -20,6 +20,8 @@ export type Suggestion = {
   /** Só peças: categoria, linha, designer e medida, e as fotos que se abrem no hover. */
   facts?: SuggestionFacts;
   preview?: Image[];
+  /** Capas das outras cores da peça. */
+  colors?: Image[];
 };
 
 export const MIN_QUERY_LENGTH = 2;
@@ -61,7 +63,8 @@ export function toSuggestions(result: SearchResult, details: ProductDetail[] = [
                 designer: detail.designer?.name ?? null,
                 dimension: primaryDimension(detail.dimensions),
               },
-              preview: galleryImages(detail).slice(0, PREVIEW_COUNT),
+              preview: previewImages(galleryImages(detail)),
+              colors: colorCovers(detail),
             }
           : {}),
       };

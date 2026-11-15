@@ -53,6 +53,7 @@ class ProductController extends Controller
                 'launches' => fn ($query) => $query->published(),
                 'variants' => fn ($query) => $query->published()->with('media'),
                 'variantOf' => fn ($query) => $query->published()->with('media'),
+                ...Product::withColors(),
             ])
             ->firstOrFail();
 
