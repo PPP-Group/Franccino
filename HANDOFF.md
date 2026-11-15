@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (30, de 13/11/2026, até o complemento 30.12). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (31, de 15/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1508,3 +1508,36 @@ espera o carrossel andar sozinho antes do clique, como na vida real.
   ~100 ms do clique ao início da animação, com 700 ms de atraso na resposta do servidor.
 - **Menu do topo:** "Produtos → Poltronas" leva a `/pt/produtos?category=poltronas`; a peça agora reconhece essa lista
   pelo filtro (antes, qualquer filtro de `/pt/produtos` contava). 4 de 4 a partir de peças abertas pelo carrossel.
+
+---
+
+## 31. 15/11/2026: revisão geral do preview (desktop) e relatório de outro revisor
+
+Revisão página por página do preview no desktop, cruzada com o relatório "Sugestões de alteração" de um segundo
+revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
+
+- **Busca:** a página `/pt/busca` mostrava só as 12 primeiras peças do `GET /search` ("mesa": 12 de 92). Agora as peças
+  vêm de `GET /products?q=` com paginação (24 por página) e a contagem; designers e coleções seguem do `/search`, só na
+  1ª página. A sugestão do cabeçalho continua com 12 e o "Ver todos os resultados".
+- **3D:** cerca de 2/3 dos blocos não têm material e o modelo saía branco no fundo branco. O palco do 3D ganhou um
+  fundo areia que escurece para o "chão" (`--stage-3d-sky`, `--stage-3d-floor`).
+- **Relatório do segundo revisor:**
+  - 01: mais respiro entre os botões de "Integre ao seu projeto" e o link da Área do Profissional;
+  - 02: loja sem foto da fachada mostra a marca sobre areia (`store__image--placeholder`), na página Lojas e na home;
+  - 03: "X" no topo da janela "Antes de baixar" (preso ao rolar; Esc continua valendo);
+  - 04: as esteiras de peças mostram só cards inteiros no desktop (3 ou 4 por vez); no celular fica a ponta do próximo;
+  - 07: na Sala para montar, peça pequena (até 70 cm) ganha o nome logo abaixo do contorno (antes ficava sem nome);
+  - 08: Instagram e Facebook apontavam para "franccino" (no Instagram é o perfil de outra pessoa; no Facebook não
+    existe). A migration de configurações `2026_11_15_100000` troca para `instagram.com/franccino.oficial` e
+    `facebook.com/Franccinooficial` (os do site atual e do Google), só se o valor ainda for o inicial;
+  - 09: "Ver no mapa" busca pelo nome e endereço da loja (abre a ficha do Google quando existe), não mais pelas
+    coordenadas. O link exato da ficha (Place ID) pediria um campo por loja no painel;
+  - 05 (rolagem suave no "Voltar ao topo"): fica como está, a pedido do cliente (12/11: "de uma vez");
+  - 06 (pontos clicáveis em mais fotos): já feito em 13/11 (seção 30.8).
+- **Poltrona Tatu:** a migration `2026_11_15_110000` corrige a descrição em português ("te sua", "animas", "Sergio") e
+  preenche o inglês (nome "Tatu Armchair", endereço `tatu-armchair`, frase e descrição), só onde o inglês está vazio.
+  As outras 10 peças sem inglês (Sofá Tokio, Tenda Tokio, Poltrona Tagli e outras) ficaram para depois.
+- **Mantidos de propósito (decisão do Pedro):** Acabamentos com os 6 de exemplo, lista de desejos sem escolha de
+  acabamento, linha do tempo da Fábrica e o título "Blocos 3D e fichas técnicas" da Área do Profissional.
+- **Teste local que já falhava no Windows:** `MaintenanceTest` (backup semanal) falha igual na `develop`; não é desta
+  mudança.
