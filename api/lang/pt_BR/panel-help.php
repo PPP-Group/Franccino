@@ -26,7 +26,7 @@ return [
     'video_poster' => 'Imagem que aparece antes do play. Use um quadro do próprio vídeo, no mesmo formato (deitado ou em pé).',
     'url' => 'Endereço completo, começando com https://',
     'website_url' => 'Endereço completo, começando com https://',
-    'instagram_url' => 'Endereço do perfil, ex.: https://instagram.com/franccino',
+    'instagram_url' => 'Endereço do perfil, ex.: https://www.instagram.com/franccino.oficial/',
     'location' => 'Cidade e estado, ex.: Belo Horizonte, MG.',
     'og_image' => 'Imagem que aparece quando alguém compartilha a página no WhatsApp ou nas redes. Ideal: 1200 × 630 px.',
 
