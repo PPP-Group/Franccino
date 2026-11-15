@@ -33,7 +33,11 @@ export function DownloadLeadDialog({
   // `close` desmontaria a janela recém-aberta; ao sair da página, o elemento some da camada do topo sozinho.
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (dialog && !dialog.open) dialog.showModal();
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+      // O foco vai para o primeiro campo, como antes do "X" (o navegador escolheria o "X", o primeiro da janela).
+      dialog.querySelector<HTMLInputElement>('.lead-dialog__form input')?.focus();
+    }
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
