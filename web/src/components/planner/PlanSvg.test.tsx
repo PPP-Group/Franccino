@@ -82,4 +82,21 @@ describe('PlanSvg', () => {
     expect(html).toContain('clip-path="url(#piece-clip-2)"');
     expect(html).not.toContain('url(#piece-clip-1)');
   });
+
+  it('writes the name below a small piece, where it does not fit inside', () => {
+    const chair: PlannerProduct = { ...sofa, id: 9, name: 'Cadeira Aura', width: 60, depth: 60 };
+    const html = renderToStaticMarkup(
+      <PlanSvg
+        room={{ w: 500, d: 400 }}
+        pieces={[{ piece: { uid: 1, productId: 9, x: 100, y: 100, r: 0 }, product: chair }]}
+        label="Planta"
+        widthLabel="5,00 m"
+        depthLabel="4,00 m"
+        pieceText={(entry) => ({ name: entry.product.name, size: '60 × 60 cm' })}
+      />,
+    );
+    expect(html).toContain('class="piece__label piece__label--below"');
+    expect(html).toContain('<text x="30" y="74" text-anchor="middle">Cadeira Aura</text>');
+    expect(html).not.toContain('60 × 60 cm');
+  });
 });

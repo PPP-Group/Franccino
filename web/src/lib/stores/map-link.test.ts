@@ -6,20 +6,20 @@ const base = {
   address: 'Rua Marília de Dirceu, 204',
   city: 'Belo Horizonte',
   state: 'MG',
-  country: 'BR',
 };
 
 describe('mapSearchUrl', () => {
-  it('uses the coordinates when both exist', () => {
-    expect(mapSearchUrl({ ...base, latitude: -19.93, longitude: -43.94 })).toBe(
-      'https://www.google.com/maps/search/?api=1&query=-19.93%2C-43.94',
+  it('searches by the store name and address, which opens its Google listing', () => {
+    expect(mapSearchUrl(base)).toBe(
+      'https://www.google.com/maps/search/?api=1&query=' +
+        encodeURIComponent('Franccino Lourdes, Rua Marília de Dirceu, 204, Belo Horizonte, MG'),
     );
   });
 
-  it('falls back to the full address', () => {
-    expect(mapSearchUrl({ ...base, latitude: null, longitude: -43.94 })).toBe(
+  it('skips empty parts of the address', () => {
+    expect(mapSearchUrl({ ...base, address: '' })).toBe(
       'https://www.google.com/maps/search/?api=1&query=' +
-        encodeURIComponent('Franccino Lourdes, Rua Marília de Dirceu, 204, Belo Horizonte, MG, BR'),
+        encodeURIComponent('Franccino Lourdes, Belo Horizonte, MG'),
     );
   });
 });

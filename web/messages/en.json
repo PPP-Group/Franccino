@@ -716,7 +716,8 @@
     "title": "Search",
     "products": "Pieces",
     "designers": "Designers",
-    "collections": "Collections"
+    "collections": "Collections",
+    "pagination": "Result pages"
   },
   "siteMap": {
     "title": "Site map",

@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import { registerDownloadLead } from '@/lib/api/forms';
 
@@ -20,6 +21,7 @@ export function DownloadLeadDialog({
 }) {
   const t = useTranslations('downloads.lead');
   const form = useTranslations('contactForm');
+  const common = useTranslations('common');
   const locale = useLocale();
   const id = useId();
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -90,6 +92,15 @@ export function DownloadLeadDialog({
 
   return (
     <dialog ref={dialogRef} className="lead-dialog" aria-labelledby={`${id}-title`} onClose={onClose}>
+      {/* Fechar sem rolar até o "Cancelar" do fim (revisão geral de 14/11/2026, item 03); Esc continua valendo. */}
+      <button
+        type="button"
+        className="lead-dialog__close"
+        aria-label={common('close')}
+        onClick={() => dialogRef.current?.close()}
+      >
+        <Icon name="close" />
+      </button>
       <form className="lead-dialog__form" onSubmit={handleSubmit} noValidate>
         <h2 id={`${id}-title`}>{t('title')}</h2>
         <p className="meta">{t('intro')}</p>

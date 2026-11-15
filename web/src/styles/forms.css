@@ -405,6 +405,26 @@ input[type='radio']:disabled {
   background: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 
+/*
+  "X" no canto (revisão geral de 14/11/2026, item 03): preso ao topo enquanto o formulário rola, sem empurrar o título
+  (a margem negativa devolve a altura do botão; o espaço é o do padding de cima do formulário).
+*/
+.lead-dialog__close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 0 -44px auto;
+  padding: 0;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+
 .lead-dialog__form {
   display: grid;
   gap: var(--space-4);

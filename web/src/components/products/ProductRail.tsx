@@ -1,8 +1,8 @@
 import { Rail } from '@/components/ui/Rail';
 import { ProductPlate, type PlateProduct } from './ProductPlate';
 
-/** Largura do card na esteira (`clamp(250px, 24vw, 340px)` em plates.css), com folga para o aumento do hover. */
-const RAIL_SIZES = '(max-width: 65rem) 260px, (max-width: 88.5rem) 25vw, 354px';
+/** Largura do card na esteira (plates.css: 3 por vez a partir de 65rem, 4 a partir de 88.5rem), com folga para o zoom. */
+const RAIL_SIZES = '(max-width: 65rem) 260px, (max-width: 88.5rem) 33vw, 354px';
 
 /**
  * Esteira de peças (banco de ideias, ideia 1, retorno de 26/10/2026): só a foto e o nome, sem etiqueta, sem botão de

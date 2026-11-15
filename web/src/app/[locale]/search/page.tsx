@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Pagination } from '@/components/catalog/Pagination';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { Tile } from '@/components/content/Tile';
 import { PageHead } from '@/components/layout/PageHead';
 import type { Locale } from '@/i18n/config';
-import { search } from '@/lib/api/catalog';
+import { getProducts, search } from '@/lib/api/catalog';
+import { emptyPage } from '@/lib/api/empty';
 import { isValidationError } from '@/lib/api/errors';
-import { firstValue, type RawSearchParams } from '@/lib/api/listing-params';
-import type { SearchResult } from '@/lib/api/types';
+import { firstValue, parsePositiveInteger, type RawSearchParams } from '@/lib/api/listing-params';
+import type { Paginated, ProductCard, SearchResult } from '@/lib/api/types';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 const EMPTY_RESULT: SearchResult = { products: [], designers: [], collections: [] };
+
+/** Peças por página na busca, como no catálogo (3 colunas). */
+const PER_PAGE = 24;
 
 type SearchPageProps = {
   params: Promise<{ locale: string }>;
@@ -30,16 +35,26 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
   const locale = raw as Locale;
   setRequestLocale(locale);
 
-  const [t, tSearch] = await Promise.all([
+  const [t, tSearch, catalog] = await Promise.all([
     getTranslations({ locale, namespace: 'searchPage' }),
     getTranslations({ locale, namespace: 'search' }),
+    getTranslations({ locale, namespace: 'catalog' }),
   ]);
-  const query = (firstValue((await searchParams).q) ?? '').trim();
+  const input = await searchParams;
+  const query = (firstValue(input.q) ?? '').trim();
+  const page = parsePositiveInteger(firstValue(input.page)) ?? 1;
 
+  // A sugestão do cabeçalho e o `GET /search` trazem só as 12 primeiras peças; a página da busca lista todas, com
+  // paginação, pela mesma listagem do catálogo (`GET /products?q=`). Designers e coleções vêm do `/search`, só na
+  // primeira página (revisão geral de 14/11/2026: "mesa" mostrava 12 de 92 peças).
   let results: SearchResult | null = null;
+  let products: Paginated<ProductCard> = emptyPage<ProductCard>();
   if (query.length >= 2) {
     try {
-      results = await search(locale, query);
+      [results, products] = await Promise.all([
+        page === 1 ? search(locale, query) : Promise.resolve(EMPTY_RESULT),
+        getProducts(locale, { q: query, page, per_page: PER_PAGE }),
+      ]);
     } catch (error) {
       if (!isValidationError(error)) {
         throw error;
@@ -47,7 +62,12 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
       results = EMPTY_RESULT;
     }
   }
-  const total = results ? results.products.length + results.designers.length + results.collections.length : 0;
+  const productTotal = products.meta.total;
+  const total = results ? productTotal + results.designers.length + results.collections.length : 0;
+  const pageHref = (next: number) => ({
+    pathname: '/search' as const,
+    query: next > 1 ? { q: query, page: String(next) } : { q: query },
+  });
 
   return (
     <main className="wrap page-end">
@@ -79,12 +99,16 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
             <EmptyNotice text={tSearch('noResults')} />
           ) : (
             <>
-              {results.products.length > 0 ? (
-                <section className="result-group" aria-labelledby="results-products">
-                  <h2 id="results-products" className="section-title">
-                    {t('products')}
-                  </h2>
-                  <ProductGrid products={results.products} />
+              {productTotal > 0 ? (
+                <section className="result-group" aria-labelledby="results-products" data-page-anchor>
+                  <div className="result-group__head">
+                    <h2 id="results-products" className="section-title">
+                      {t('products')}
+                    </h2>
+                    <p className="meta num">{catalog('count', { count: productTotal })}</p>
+                  </div>
+                  <ProductGrid products={products.data} />
+                  <Pagination meta={products.meta} hrefFor={pageHref} label={t('pagination')} />
                 </section>
               ) : null}
               {results.designers.length > 0 ? (

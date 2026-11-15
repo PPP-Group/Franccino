@@ -111,7 +111,12 @@
   position: absolute;
   inset: 0;
   display: none;
-  background: var(--paper);
+  background: linear-gradient(
+    180deg,
+    var(--stage-3d-sky) 0%,
+    var(--stage-3d-sky) 45%,
+    var(--stage-3d-floor) 100%
+  );
 }
 
 .stage-3d model-viewer {
@@ -684,6 +689,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+}
+
+/* Respiro entre os botões de download e o caminho para a Área do Profissional (revisão geral de 14/11/2026, item 01). */
+.tech-library > .link-arrow {
+  margin-top: var(--space-4);
 }
 
 .tech-library__button {
