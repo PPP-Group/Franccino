@@ -6,6 +6,8 @@ import type { Room } from '@/lib/planner/types';
 const MARGIN = 60;
 const GRID_CM = 50;
 const LABEL_MIN_CM = 70;
+/** Distância do nome abaixo da peça pequena até o contorno (linha de base do texto), em cm do desenho. */
+const LABEL_BELOW_GAP_CM = 14;
 /** Folga entre a borda da peça e a foto, em cm do desenho. */
 const PHOTO_INSET_CM = 3;
 
@@ -182,6 +184,14 @@ export function PlanSvg({
                   </text>
                 </g>
               )
+            ) : text ? (
+              // Peça pequena (cadeira, mesa lateral): o nome não cabe dentro, e ia sem rótulo. Vai logo abaixo do
+              // contorno, com o mesmo fundo branco nas letras (revisão geral de 14/11/2026, item 07).
+              <g aria-hidden="true" className="piece__label piece__label--below">
+                <text x={box.w / 2} y={box.d + LABEL_BELOW_GAP_CM} textAnchor="middle">
+                  {text.name}
+                </text>
+              </g>
             ) : null}
           </g>
         );

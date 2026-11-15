@@ -19,6 +19,23 @@
 }
 
 /*
+  No desktop, só cards inteiros na tela (revisão geral de 14/11/2026, item 04): o último saía cortado na borda, com o
+  "+" pela metade. A largura sai da faixa (3 ou 4 por vez, descontados os vãos); as setas levam aos seguintes. No
+  celular fica a ponta do próximo card, que mostra que a faixa rola.
+*/
+@media (min-width: 65rem) {
+  .product-rail .scroll-rail__track > ul > li {
+    width: calc((100% - 2 * var(--space-6)) / 3);
+  }
+}
+
+@media (min-width: 88.5rem) {
+  .product-rail .scroll-rail__track > ul > li {
+    width: calc((100% - 3 * var(--space-6)) / 4);
+  }
+}
+
+/*
   Produtos soltos sobre o fundo branco, sem caixa, borda nem sombra (ajustes do cliente, 06/10/2026, referências Saccaro
   e Jader Almeida): 3 por linha no desktop, só foto e nome. No celular, 2 por linha (revisão de 06/11/2026): o catálogo
   tem perto de 200 peças, e uma por tela obrigava a rolar demais para comparar. Hover (retorno de 06/11/2026): só o

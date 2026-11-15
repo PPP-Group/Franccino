@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Logo } from '@/components/layout/Logo';
 import { ApiImage } from '@/components/media/ApiImage';
 import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Icon } from '@/components/ui/Icon';
@@ -52,7 +53,13 @@ function StoreCard({ store, detailed, active = false, flash = null, onHover }: S
         <div className="store__image">
           <ApiImage image={store.image} sizes="(max-width: 35rem) 100vw, (max-width: 56.25rem) 50vw, 33vw" />
         </div>
-      ) : null}
+      ) : (
+        // Loja sem foto da fachada no painel: a marca no lugar, para todos os cards terem a mesma forma (revisão geral
+        // de 14/11/2026, item 02). Some sozinha quando a foto for cadastrada.
+        <div className="store__image store__image--placeholder" aria-hidden="true">
+          <Logo />
+        </div>
+      )}
       <h3>{store.name}</h3>
       <address>
         {store.address}

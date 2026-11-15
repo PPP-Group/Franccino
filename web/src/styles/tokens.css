@@ -25,6 +25,12 @@
   --footer-muted: #a6a49b;
   --footer-rule: #34342f;
   --hero-ground: #d9d3c7;
+  /*
+    Fundo do 3D (revisão geral de 14/11/2026): areia que escurece para o "chão", para a peça sem material (branca no
+    próprio SketchUp, cerca de 2/3 dos blocos) não sumir no branco da página.
+  */
+  --stage-3d-sky: #efe9de;
+  --stage-3d-floor: #d3cbbc;
   /* Texto claro direto sobre a foto do banner (versão do Marcelo, ajustes 06/10/2026). */
   --hero-shade: rgba(12, 11, 10, 0.62);
   --hero-shade-clear: rgba(12, 11, 10, 0);
