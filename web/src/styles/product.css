@@ -691,9 +691,18 @@
   gap: var(--space-3);
 }
 
-/* Respiro entre os botões de download e o caminho para a Área do Profissional (revisão geral de 14/11/2026, item 01). */
-.tech-library > .link-arrow {
+/*
+  Respiro entre as partes (revisão geral de 14/11/2026, item 01). A seção também tem a classe `block`, que é o nome de
+  um utilitário do Tailwind (`display: block`, camada de utilitários, que vence esta): o `grid` e o `gap` acima não
+  valem, e os botões encostavam no título de cada programa e no link da Área do Profissional. Margens valem nos dois
+  casos.
+*/
+.tech-library > * + * {
   margin-top: var(--space-4);
+}
+
+.tech-library > .link-arrow {
+  margin-top: var(--space-6);
 }
 
 .tech-library__button {

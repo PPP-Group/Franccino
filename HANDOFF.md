@@ -1522,7 +1522,10 @@ revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
 - **3D:** cerca de 2/3 dos blocos não têm material e o modelo saía branco no fundo branco. O palco do 3D ganhou um
   fundo areia que escurece para o "chão" (`--stage-3d-sky`, `--stage-3d-floor`).
 - **Relatório do segundo revisor:**
-  - 01: mais respiro entre os botões de "Integre ao seu projeto" e o link da Área do Profissional;
+  - 01: mais respiro entre os botões de "Integre ao seu projeto" e o link da Área do Profissional. A causa: a seção
+    tem a classe `block`, que é também um utilitário do Tailwind (`display: block`, camada de utilitários, que vence a
+    de componentes), e o `grid`/`gap` de `.tech-library` e `.block` não valiam. A seção usa margens agora. As outras
+    seções `.block` da página da peça têm o mesmo choque (ficam sem o `gap`); não foram mexidas;
   - 02: loja sem foto da fachada mostra a marca sobre areia (`store__image--placeholder`), na página Lojas e na home;
   - 03: "X" no topo da janela "Antes de baixar" (preso ao rolar; Esc continua valendo);
   - 04: as esteiras de peças mostram só cards inteiros no desktop (3 ou 4 por vez); no celular fica a ponta do próximo;
