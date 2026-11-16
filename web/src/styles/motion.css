@@ -832,3 +832,31 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
 ::view-transition-old(finish-zoom-panel) {
   animation: morph-leave var(--t-mid) var(--ease-out) both;
 }
+
+/* ---------- foto da peça que cresce até a tela cheia e volta (retorno de 16/11/2026) ---------- */
+
+/* Como a amostra dos acabamentos: a foto passa por cima da janela, que entra e sai com um fade. */
+::view-transition-group(photo-viewer) {
+  z-index: 2;
+  animation-duration: var(--t-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(photo-viewer),
+::view-transition-new(photo-viewer) {
+  block-size: 100%;
+  object-fit: contain;
+}
+
+::view-transition-group(photo-viewer-panel) {
+  z-index: 1;
+  animation-duration: var(--t-mid);
+}
+
+::view-transition-new(photo-viewer-panel) {
+  animation: morph-enter var(--t-mid) var(--ease-out) both;
+}
+
+::view-transition-old(photo-viewer-panel) {
+  animation: morph-leave var(--t-mid) var(--ease-out) both;
+}

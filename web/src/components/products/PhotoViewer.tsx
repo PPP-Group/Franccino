@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, type PointerEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, type PointerEvent } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import type { Image } from '@/lib/api/types';
@@ -31,7 +31,9 @@ export function PhotoViewer({ images, index, open, title, onIndexChange, onClose
   const current = images[index] ?? null;
   const many = images.length > 1;
 
-  useEffect(() => {
+  // Antes da pintura: o movimento de abrir e fechar (ProductStage) troca o estado num `flushSync` e já procura a foto da
+  // janela aberta logo depois.
+  useLayoutEffect(() => {
     const element = dialog.current;
     if (!element) return;
     if (open && !element.open) element.showModal();
@@ -66,6 +68,11 @@ export function PhotoViewer({ images, index, open, title, onIndexChange, onClose
       className="gallery-dialog photo-viewer"
       aria-label={title}
       onClose={onClose}
+      onCancel={(event) => {
+        // Esc: fecha com o movimento de volta.
+        event.preventDefault();
+        onClose();
+      }}
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}

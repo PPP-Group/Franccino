@@ -7,7 +7,12 @@ import type { Image } from '@/lib/api/types';
 import { PREVIEW_COUNT } from '@/lib/catalog/technical';
 import { PEEK_CAPTION, peekBox, PEEK_PHOTO, PEEK_ROW_STEP } from '@/lib/catalog/row-peek';
 
-type PeekContent = { images: Image[]; colors?: Image[] };
+type PeekContent = {
+  images: Image[];
+  colors?: Image[];
+  /** Fotos retas, sem a inclinação alternada (card da grade, retorno de 16/11/2026). */
+  straight?: boolean;
+};
 
 /** Caixa da prévia: até `PREVIEW_COUNT` fotos por linha, e a linha das outras cores (com a etiqueta) embaixo. */
 export function peekSize({ images, colors = [] }: PeekContent): { width: number; height: number } {
@@ -21,7 +26,7 @@ export function peekSize({ images, colors = [] }: PeekContent): { width: number;
  * com outras cores: primeiro as fotos da peça; embaixo, com a etiqueta "Também em outras cores", as capas das outras
  * cores (atrás das fotos da peça, nunca na frente).
  */
-export function PeekPhotos({ images, colors = [] }: PeekContent) {
+export function PeekPhotos({ images, colors = [], straight = false }: PeekContent) {
   const t = useTranslations('product.colors');
   const colorRow = images.length > 0 ? 1 : 0;
   const captionTop = 12 + colorRow * PEEK_ROW_STEP;
@@ -45,7 +50,7 @@ export function PeekPhotos({ images, colors = [] }: PeekContent) {
                 '--i': index,
                 '--row': row,
                 '--cap': caption ? `${PEEK_CAPTION}px` : '0px',
-                '--peek-rotate': (index + row) % 2 ? '1.5deg' : '-1.5deg',
+                '--peek-rotate': straight ? '0deg' : (index + row) % 2 ? '1.5deg' : '-1.5deg',
                 // As fotos da peça ficam por cima das outras cores quando a inclinação as encosta.
                 zIndex: (caption ? 0 : 10) + shown.length - index,
               } as CSSProperties
