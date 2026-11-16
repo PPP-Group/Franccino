@@ -6,6 +6,7 @@ import {
   getCategories,
   getProduct,
   getProductDetails,
+  mapLimit,
   getProducts,
 } from './catalog';
 
@@ -129,5 +130,25 @@ describe('getAllProductSlugs', () => {
       });
     });
     await expect(getAllProductSlugs('pt')).resolves.toEqual(['p1', 'p2', 'p3']);
+  });
+});
+
+describe('mapLimit', () => {
+  it('keeps the order and never runs more than the limit at once', async () => {
+    let running = 0;
+    let peak = 0;
+    const result = await mapLimit([5, 1, 4, 2, 3, 0, 6], 3, async (value) => {
+      running++;
+      peak = Math.max(peak, running);
+      await new Promise((resolve) => setTimeout(resolve, value));
+      running--;
+      return value * 10;
+    });
+    expect(result).toEqual([50, 10, 40, 20, 30, 0, 60]);
+    expect(peak).toBe(3);
+  });
+
+  it('handles an empty list', async () => {
+    expect(await mapLimit([], 4, async () => 1)).toEqual([]);
   });
 });
