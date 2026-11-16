@@ -6,6 +6,8 @@
  */
 import { createLocalStore } from '@/lib/ui/local-store';
 import { addItem, parseStoredItems, quoteItemKey, removeItem, setItemQuantity, type AddStatus } from './list';
+import type { Image } from '@/lib/api/types';
+import { refreshQuoteImages } from './snapshot';
 import { QUOTE_STORAGE_KEY, type QuoteItem, type QuoteItemInput } from './types';
 
 const EMPTY: QuoteItem[] = [];
@@ -50,6 +52,12 @@ export const quoteActions = {
   },
   clear(): void {
     store.set([]);
+  },
+  /** Miniaturas com as capas atuais do catálogo (`refreshQuoteImages`). */
+  refreshImages(covers: Record<number, Image | null>): void {
+    const items = store.get();
+    const next = refreshQuoteImages(items, covers);
+    if (next !== items) store.set(next);
   },
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
@@ -11,6 +11,7 @@ import { htmlLang, type Locale } from '@/i18n/config';
 import { getPathname, Link } from '@/i18n/navigation';
 import { createSharedList } from '@/lib/api/forms';
 import { whatsappUrl } from '@/lib/contact-links';
+import { refreshQuoteCovers } from '@/lib/covers/fresh';
 import { useQuoteItems } from '@/lib/quote/hooks';
 import { quoteItemKey, totalQuantity } from '@/lib/quote/list';
 import { formatFinishes, toContactItems } from '@/lib/quote/message';
@@ -145,6 +146,10 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const locale = useLocale() as Locale;
   const shareLink = useShareLink(items, locale);
+  // As miniaturas guardadas são da hora em que cada peça entrou: a capa pode ter mudado (retorno de 16/11/2026).
+  useEffect(() => {
+    void refreshQuoteCovers();
+  }, []);
 
   if (!isClient) {
     return <QuoteListSkeleton label={common('loading')} />;
