@@ -1654,3 +1654,9 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   a lista aparece (e depois de cada "Ver mais"), com as capas já baixadas; "Ver as próximas peças" e "Ver as peças
   anteriores" são pré-carregados. Medido: o grupo aparece em cerca de 0,2 s, com as 24 fotos prontas. O site expira o
   cache depois do deploy só duas vezes (1 e 10 minutos), porque cada expiração deixa as páginas seguintes mais lentas.
+- **Log do deploy de 16/11 (tarde):** o build caiu uma vez por tempo esgotado na página do Estúdio Franccino (a segunda
+  tentativa do `start.sh` passou). A página pedia o detalhe de mais de cem peças de uma vez, e a API atende quatro por vez;
+  `getProductDetails` agora pede no máximo seis ao mesmo tempo (`mapLimit`). E robôs testando endereços com ponto
+  (`/wp-login.php`, `/.env`), que passam fora do proxy, caíam na rota de idioma e a página inicial pedia `/home` à API
+  com esse "idioma" (422 no log); `dynamicParams = false` no layout de `[locale]` responde 404 sem renderizar. Os avisos
+  `[csp]` com `kaspersky-labs.com` vêm do antivírus de quem navega (injeta scripts na página) e não são do site.
