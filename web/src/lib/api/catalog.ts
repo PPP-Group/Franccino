@@ -174,13 +174,34 @@ export async function getDownloads(
   });
 }
 
+/** Detalhes pedidos à API ao mesmo tempo (a API do preview atende 4 por vez). */
+const DETAIL_CONCURRENCY = 6;
+
 /**
  * Detalhe de várias peças (tabela técnica e sala: o `ProductCard` não traz medidas nem
  * arquivos — proposta A4 do plano P4). Cada busca usa o cache por tag de `getProduct`.
+ *
+ * No máximo `DETAIL_CONCURRENCY` de cada vez (log do deploy de 16/11/2026): a página do Estúdio Franccino pedia mais de
+ * cem detalhes de uma vez, a API atendia quatro por vez e os últimos da fila passavam do limite de 15 s, derrubando o
+ * build. Na fila do site, cada chamada só começa quando há vaga, e o tempo de cada uma fica curto.
  */
 export async function getProductDetails(locale: Locale, slugs: string[]): Promise<ProductDetail[]> {
-  const details = await Promise.all(slugs.map((slug) => getProduct(locale, slug)));
+  const details = await mapLimit(slugs, DETAIL_CONCURRENCY, (slug) => getProduct(locale, slug));
   return details.filter((detail): detail is ProductDetail => detail !== null);
+}
+
+/** `Promise.all` com no máximo `limit` tarefas ao mesmo tempo, na ordem da entrada. */
+export async function mapLimit<T, R>(items: T[], limit: number, task: (item: T) => Promise<R>): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  async function worker() {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await task(items[index]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
 }
 
 const SLUGS_PER_PAGE = 48;

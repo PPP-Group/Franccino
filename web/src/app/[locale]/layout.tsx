@@ -26,6 +26,11 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+// Só `pt` e `en`: qualquer outro primeiro trecho (robôs testando `/wp-login.php`, `/.env`, que passam fora do proxy por
+// terem ponto) responde 404 sem renderizar. Antes, a página inicial pedia `/home` à API com esse "idioma" e a API
+// respondia 422 (log do site de 16/11/2026).
+export const dynamicParams = false;
+
 export function generateMetadata(): Metadata {
   return {
     metadataBase: new URL(serverEnv().SITE_URL),
