@@ -1,28 +1,10 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
+import { NotFoundBody } from '@/components/content/NotFoundBody';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('errors.notFound');
-  return { title: t('title'), robots: { index: false } };
-}
+// Sem título traduzido aqui: ler o idioma no servidor tornaria dinâmica a página estática que chamou `notFound()`
+// (ver `NotFoundBody`). O título fica o padrão do layout, e a página não é indexada.
+export const metadata: Metadata = { robots: { index: false } };
 
-export default async function LocaleNotFound() {
-  const t = await getTranslations('errors.notFound');
-  return (
-    <main className="wrap error-page">
-      <div className="empty">
-        <h1>{t('title')}</h1>
-        <p className="lead">{t('description')}</p>
-        <div className="empty__actions">
-          <Link className="btn" href="/">
-            {t('backHome')}
-          </Link>
-          <Link className="btn btn--ghost" href="/products">
-            {t('catalog')}
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+export default function LocaleNotFound() {
+  return <NotFoundBody />;
 }
