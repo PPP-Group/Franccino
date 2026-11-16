@@ -317,6 +317,7 @@
       "allVersions": "Ver todas as {count} versões"
     },
     "colors": {
+      "peek": "Também em outras cores",
       "title": "Cores",
       "current": "Cor atual: {color}",
       "other": "Ver na cor {color}"

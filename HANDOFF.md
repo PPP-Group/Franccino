@@ -1602,3 +1602,7 @@ do botão quando a foto está fora da tela (seção 32) e, com o cabeçalho esco
 - **Verificação:** lint, typecheck e testes do site; `next dev` local contra a API do preview, com Playwright: setas e
   foto ampliada (desktop e celular), voo com o cabeçalho escondido, página seguinte da tabela técnica abrindo no começo
   da lista, "Peças que você viu" no `/en`, acabamento em detalhe em câmera lenta (abrir e fechar) e o idioma por país.
+- **Ajustes do mesmo dia (retorno do Pedro):** no hover, as fotos da peça vêm primeiro e as outras cores ficam numa linha
+  embaixo, com a etiqueta "Também em outras cores" (`product.colors.peek`). As 12 fotos sem fundo novas foram enviadas
+  pelo painel; na Cadeira Arp, a descrição de SEO (186 caracteres, do site antigo) foi encurtada para 121 nas duas
+  línguas, porque o painel não salvava a peça. A foto da Pitá azul saiu da galeria da Pitá sem braço laranja.
