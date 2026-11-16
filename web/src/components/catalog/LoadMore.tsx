@@ -22,10 +22,46 @@ type LoadMoreProps = {
   pageHrefs: Record<number, AppHref>;
 };
 
-type Saved = LoadMoreState & { items: ProductCard[] };
+type Saved = LoadMoreState & { items: ProductCard[]; entry?: string | null };
 
 function storageKey() {
   return `franccino:more:${window.location.pathname}${window.location.search}`;
+}
+
+/** Entrada do histórico em que a pessoa está (API Navigation), quando o navegador a tem. */
+function historyEntry(): string | null {
+  const navigation = (window as Window & { navigation?: { currentEntry?: { key?: string } | null } })
+    .navigation;
+  return navigation?.currentEntry?.key ?? null;
+}
+
+// Hora do último "voltar"/"avançar" do navegador, para quem não tem a API Navigation.
+let lastTraversal = 0;
+if (typeof window !== 'undefined') {
+  window.addEventListener('popstate', () => {
+    lastTraversal = Date.now();
+  });
+}
+const TRAVERSAL_MS = 10000;
+
+/**
+ * As peças somadas só voltam quando a pessoa volta a esta mesma entrada do histórico (o "voltar" da página de uma peça).
+ * Abrir a lista de novo por um link começa do zero (retorno de 16/11/2026: a página seguinte abria com as quatro somas
+ * de uma visita antiga, sem "Ver mais").
+ */
+function canRestore(saved: Saved): boolean {
+  const entry = historyEntry();
+  if (entry && saved.entry) return entry === saved.entry;
+  return Date.now() - lastTraversal < TRAVERSAL_MS;
+}
+
+/** Rola suave até o elemento, abaixo do cabeçalho fixo. */
+function scrollToStart(element: HTMLElement | null) {
+  if (!element) return;
+  const header = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
+  const top = element.getBoundingClientRect().top - header - 16;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: window.scrollY + top, behavior: reduce ? 'auto' : 'smooth' });
 }
 
 /**
@@ -42,13 +78,14 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   const [pending, startTransition] = useTransition();
   const [failed, setFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
+  const groups = useRef<HTMLDivElement>(null);
 
   // Antes da primeira pintura, para a rolagem guardada da volta encontrar a lista inteira.
   useLayoutEffect(() => {
     try {
       const raw = sessionStorage.getItem(storageKey());
       const saved = raw ? (JSON.parse(raw) as Saved) : null;
-      if (saved && saved.page > page && Array.isArray(saved.items)) {
+      if (saved && saved.page > page && Array.isArray(saved.items) && canRestore(saved)) {
         // Restaura uma vez, antes da pintura; ler a aba no primeiro render daria outra lista no servidor e no navegador.
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setState(saved);
@@ -79,7 +116,7 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
 
   function save(next: Saved) {
     try {
-      sessionStorage.setItem(storageKey(), JSON.stringify(next));
+      sessionStorage.setItem(storageKey(), JSON.stringify({ ...next, entry: historyEntry() }));
     } catch {
       // Sem sessionStorage: só não volta inteira depois.
     }
@@ -90,8 +127,14 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
     setState(updated);
     save(updated);
     setFailed(false);
-    // A grade encolhe: a barra sobe junto, e a pessoa continua vendo os botões.
-    window.requestAnimationFrame(() => bar.current?.scrollIntoView({ block: 'center' }));
+    // Volta ao começo do grupo de peças que ficou por último (o primeiro, com só as da página, é o começo da lista).
+    window.requestAnimationFrame(() => {
+      const target =
+        updated.loads > 0
+          ? groups.current?.querySelector<HTMLElement>(`[data-load-group="${updated.loads - 1}"]`)
+          : document.querySelector<HTMLElement>('.catalog-results');
+      scrollToStart(target ?? null);
+    });
   }
 
   const action = loadMoreAction(state, lastPage);
@@ -103,9 +146,14 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   return (
     <>
       {state.items.length > 0 ? (
-        <div className="grid-plates load-more__grid">
-          {state.items.map((product) => (
-            <ProductPlate key={product.id} product={product} showNew />
+        // Um grupo por "Ver mais", para o "Ver menos" voltar ao começo do grupo certo.
+        <div ref={groups}>
+          {Array.from({ length: Math.ceil(state.items.length / perPage) }, (_, group) => (
+            <div key={group} className="grid-plates load-more__grid" data-load-group={group}>
+              {state.items.slice(group * perPage, (group + 1) * perPage).map((product) => (
+                <ProductPlate key={product.id} product={product} showNew />
+              ))}
+            </div>
           ))}
         </div>
       ) : null}

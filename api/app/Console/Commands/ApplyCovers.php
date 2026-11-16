@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Product;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -13,6 +14,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * gallery (it is the cover now) and the old cover is replaced. Runs once per list: the container entrypoint calls it
  * on every start, and the marker in storage/ makes the next starts skip it. A photo that is no longer in the gallery
  * (edited in the panel, other environment) is skipped: the panel always wins.
+ *
+ * The photos only change collection, in place (16/11/2026): same id, same files, same resized versions. Copying them
+ * (the old way) gave new ids and deleted the old files, so the pages the site had already built kept pointing at
+ * files that no longer existed, and the covers stayed broken until the site cache expired.
  */
 class ApplyCovers extends Command
 {
@@ -61,18 +66,7 @@ class ApplyCovers extends Command
             }
 
             if (! $dryRun) {
-                // The old cover stays as a gallery photo (09/11/2026), unless the gallery already has the same file.
-                $old = $product->getFirstMedia('cover');
-                if ($old !== null) {
-                    $known = $product->getMedia('gallery')->contains(
-                        fn (Media $photo) => $photo->size === $old->size && $photo->mime_type === $old->mime_type,
-                    );
-                    if (! $known) {
-                        $old->copy($product, 'gallery');
-                    }
-                }
-                // Copy into the single-file cover collection (the old cover goes) and remove it from the gallery.
-                $media->move($product, 'cover');
+                DB::transaction(fn () => self::swap($product, $media));
             }
             $applied++;
         }
@@ -86,6 +80,30 @@ class ApplyCovers extends Command
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * The gallery photo becomes the cover and the old cover goes to the end of the gallery (09/11/2026), unless the
+     * gallery already has the same file: then the old cover is a duplicate and is deleted.
+     */
+    private static function swap(Product $product, Media $photo): void
+    {
+        $old = $product->getFirstMedia('cover');
+        if ($old !== null) {
+            $duplicate = $product->getMedia('gallery')->contains(
+                fn (Media $item) => $item->isNot($photo) && $item->size === $old->size && $item->mime_type === $old->mime_type,
+            );
+            if ($duplicate) {
+                $old->delete();
+            } else {
+                $old->collection_name = 'gallery';
+                $old->order_column = (int) $product->media()->where('collection_name', 'gallery')->max('order_column') + 1;
+                $old->save();
+            }
+        }
+
+        $photo->collection_name = 'cover';
+        $photo->save();
     }
 
     public static function marker(string $version): string

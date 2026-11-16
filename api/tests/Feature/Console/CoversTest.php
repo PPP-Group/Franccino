@@ -58,6 +58,22 @@ it('keeps the old cover as a gallery photo', function () {
         ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente.jpg']);
 });
 
+it('swaps the photos in place, keeping their ids and files, so built pages never point at a deleted file', function () {
+    $product = publishedProduct(['slug' => ['pt' => 'cadeira-aura']]);
+    $cover = $product->addMedia(UploadedFile::fake()->image('frente.jpg', 800, 600))->toMediaCollection('cover');
+    $diagonal = $product->addMedia(UploadedFile::fake()->image('diagonal.jpg', 640, 480))->toMediaCollection('gallery');
+    $coverPath = $cover->getPathRelativeToRoot();
+    $diagonalPath = $diagonal->getPathRelativeToRoot();
+    writeCoverList($this->list, [['product' => 'cadeira-aura', 'media' => $diagonal->id]]);
+
+    $this->artisan('franccino:covers:apply', ['file' => $this->list])->assertSuccessful();
+
+    $product->refresh();
+    expect($product->getFirstMedia('cover')->id)->toBe($diagonal->id)
+        ->and($product->getMedia('gallery')->pluck('id')->all())->toBe([$cover->id]);
+    Storage::disk('media')->assertExists([$coverPath, $diagonalPath]);
+});
+
 it('skips a photo that is not in that product gallery and changes nothing on a dry run', function () {
     $product = publishedProduct(['slug' => ['pt' => 'cadeira-aura']]);
     $other = Product::factory()->create(['slug' => ['pt' => 'poltrona-maria', 'en' => 'maria-armchair']]);
