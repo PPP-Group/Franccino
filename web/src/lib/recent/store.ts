@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import type { Locale } from '@/i18n/config';
-import type { ProductCard } from '@/lib/api/types';
+import type { Image, ProductCard } from '@/lib/api/types';
 import { createLocalStore } from '@/lib/ui/local-store';
 
 /**
@@ -86,6 +86,25 @@ export function localizeRecent(list: RecentProduct[], locale: Locale): RecentPro
     const name = item.names?.[locale] ?? item.name;
     return [{ ...item, slug, name }];
   });
+}
+
+/**
+ * Troca a capa guardada de cada peça pela atual do catálogo (`covers`, pelo id; retorno de 16/11/2026: a troca de capa
+ * deixava "Peças que você viu" sem foto). Sem mudança, devolve a mesma lista.
+ */
+export function refreshRecentCovers(
+  list: RecentProduct[],
+  covers: Record<number, Image | null>,
+): RecentProduct[] {
+  let changed = false;
+  const next = list.map((item) => {
+    if (!(item.id in covers)) return item;
+    const cover = covers[item.id];
+    if ((cover?.src ?? null) === (item.cover?.src ?? null)) return item;
+    changed = true;
+    return { ...item, cover };
+  });
+  return changed ? next : list;
 }
 
 export function recordRecent(

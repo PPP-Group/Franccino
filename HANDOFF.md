@@ -1615,7 +1615,7 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   Pinot Square continuam sem foto). A causa estava na ordem do deploy. O site compila com a API antiga ainda no ar; a
   API nova, ao subir, troca capas e recortes (`covers:apply`, `content:apply`) e apaga os arquivos antigos. O aviso de
   revalidação vai para o container antigo do site, e o novo subia com os endereços velhos até o cache de 1 hora vencer.
-  Agora o `web/docker/start.sh` expira todo o cache do site 30 s depois de subir, e de novo em 5 e 20 minutos
+  Agora o `web/docker/start.sh` expira todo o cache do site 1 minuto depois de subir, e de novo 10 minutos depois
   (`REVALIDATE_AFTER_START`; precisa do `REVALIDATE_SECRET`, que o site já tem).
 - **Tabela técnica, "Próxima" no meio da página:** quem trocava para a tabela pelo botão (sem recarregar) e clicava em
   "Próxima" embaixo recebia a lista remontada: a vista do endereço mudava de grade para tabela, e o `PageScroll` nascia
@@ -1646,3 +1646,11 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   "Ver mais"). As peças somadas só voltam no "voltar" do navegador, pela mesma entrada do histórico (API Navigation, ou
   um "voltar" de até 10 s sem ela). "Ver menos" rola até o começo do grupo de 24 que ficou por último (ou do começo da
   lista), cada soma num grupo próprio (`data-load-group`).
+- **Lista de desejos e "Peças que você viu" sem foto depois da troca de capa:** as duas guardam no navegador a
+  miniatura de quando a peça entrou. Agora, ao abrir a página da lista (e, no máximo a cada 10 minutos, onde "Peças que
+  você viu" aparece), o site pede a capa atual de cada peça (`currentCovers`, server action em `lib/covers/`) e troca a
+  guardada (`refreshQuoteImages`, `refreshRecentCovers`).
+- **"Ver mais" lento no preview (2 a 3 s):** o clique esperava a API e as fotos. Agora o próximo grupo é pedido assim que
+  a lista aparece (e depois de cada "Ver mais"), com as capas já baixadas; "Ver as próximas peças" e "Ver as peças
+  anteriores" são pré-carregados. Medido: o grupo aparece em cerca de 0,2 s, com as 24 fotos prontas. O site expira o
+  cache depois do deploy só duas vezes (1 e 10 minutos), porque cada expiração deixa as páginas seguintes mais lentas.

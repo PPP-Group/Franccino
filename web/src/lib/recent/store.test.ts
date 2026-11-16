@@ -4,6 +4,7 @@ import {
   localizeRecent,
   parseRecent,
   RECENT_LIMIT,
+  refreshRecentCovers,
   seenProduct,
   type RecentProduct,
 } from './store';
@@ -61,5 +62,25 @@ describe('recent products in each language', () => {
     const old = item(3);
     expect(localizeRecent([old], 'en')).toEqual([]);
     expect(localizeRecent([old], 'pt')).toEqual([old]);
+  });
+});
+
+describe('refreshRecentCovers', () => {
+  const cover = (src: string) => ({
+    id: 1,
+    alt: '',
+    width: 480,
+    height: 360,
+    src,
+    srcset: [],
+    blur_data_url: null,
+  });
+
+  it('puts the current cover on the saved pieces and keeps the list when nothing changed', () => {
+    const list = [{ ...item(1), cover: cover('https://api/old.webp') }, item(2)];
+    const next = refreshRecentCovers(list, { 1: cover('https://api/new.webp') });
+    expect(next[0].cover?.src).toBe('https://api/new.webp');
+    expect(next[1]).toBe(list[1]);
+    expect(refreshRecentCovers(next, { 1: cover('https://api/new.webp') })).toBe(next);
   });
 });

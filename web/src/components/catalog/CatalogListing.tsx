@@ -227,6 +227,7 @@ export async function CatalogListing(props: CatalogListingProps) {
                         className="pagination__step is-prev"
                         href={hrefFor({ page: previousGrid, view: 'grid' })}
                         rel="prev"
+                        prefetch
                       >
                         <Icon name="arrow" />
                         <span>{t('loadMore.previousPage')}</span>

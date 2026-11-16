@@ -1,11 +1,12 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useLayoutEffect, useRef, useState, useTransition } from 'react';
-import { ProductPlate } from '@/components/products/ProductPlate';
+import { useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
+import { PLATE_SIZES, ProductPlate } from '@/components/products/ProductPlate';
 import { type AppHref, Link } from '@/i18n/navigation';
 import type { ProductListParams } from '@/lib/api/catalog';
-import type { ProductCard } from '@/lib/api/types';
+import type { Paginated, ProductCard } from '@/lib/api/types';
+import { buildSrcSet } from '@/lib/images/srcset';
 import { loadMorePieces } from '@/lib/catalog/actions';
 import { loadMoreAction, type LoadMoreState, previousStart, undoLoad } from '@/lib/catalog/load-more';
 
@@ -55,6 +56,17 @@ function canRestore(saved: Saved): boolean {
   return Date.now() - lastTraversal < TRAVERSAL_MS;
 }
 
+/** Baixa de antemão as capas das peças (na largura que o card vai pedir), para elas entrarem já prontas. */
+function warmCovers(products: ProductCard[]) {
+  for (const product of products) {
+    if (!product.cover) continue;
+    const image = new window.Image();
+    image.sizes = PLATE_SIZES;
+    image.srcset = buildSrcSet(product.cover);
+    image.src = product.cover.src;
+  }
+}
+
 /** Rola suave até o elemento, abaixo do cabeçalho fixo. */
 function scrollToStart(element: HTMLElement | null) {
   if (!element) return;
@@ -79,6 +91,9 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   const [failed, setFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   const groups = useRef<HTMLDivElement>(null);
+  // Páginas da API já pedidas (ou a caminho), para o "Ver mais" mostrar as peças na hora (retorno de 16/11/2026: o
+  // clique esperava a API e as fotos, 2 a 3 s no preview).
+  const ahead = useRef(new Map<number, Promise<Paginated<ProductCard> | null>>());
 
   // Antes da primeira pintura, para a rolagem guardada da volta encontrar a lista inteira.
   useLayoutEffect(() => {
@@ -95,11 +110,23 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
     }
   }, [page]);
 
+  function fetchPage(next: number): Promise<Paginated<ProductCard> | null> {
+    const known = ahead.current.get(next);
+    if (known) return known;
+    const request = loadMorePieces(locale, query, next).then((result) => {
+      if (result) warmCovers(result.data);
+      else ahead.current.delete(next);
+      return result;
+    });
+    ahead.current.set(next, request);
+    return request;
+  }
+
   function loadNext() {
     const next = state.page + 1;
     setFailed(false);
     startTransition(async () => {
-      const result = await loadMorePieces(locale, query, next);
+      const result = await fetchPage(next);
       if (!result) {
         setFailed(true);
         return;
@@ -138,6 +165,15 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   }
 
   const action = loadMoreAction(state, lastPage);
+  const nextApiPage = state.page + 1;
+  // O próximo grupo começa a vir assim que a lista está na tela, e de novo depois de cada "Ver mais".
+  useEffect(() => {
+    if (action !== 'button') return undefined;
+    const idle = window.setTimeout(() => void fetchPage(nextApiPage), 300);
+    return () => window.clearTimeout(idle);
+    // `fetchPage` lê o idioma e os filtros desta lista, que não mudam sem remontar o componente.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [action, nextApiPage]);
   const previous = previousStart(page);
   const previousHref = previous ? pageHrefs[previous] : undefined;
   // Peças até aqui na lista inteira (quem abriu a página 5 já passou pelas 4 primeiras).
@@ -178,13 +214,13 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
               </button>
             ) : null}
             {action === 'next-page' && nextHref ? (
-              <Link className="btn btn--ghost" href={nextHref}>
+              <Link className="btn btn--ghost" href={nextHref} prefetch>
                 {t('nextPage')}
               </Link>
             ) : null}
           </div>
           {previousHref ? (
-            <Link className="link-arrow" href={previousHref}>
+            <Link className="link-arrow" href={previousHref} prefetch>
               {t('previousPage')}
             </Link>
           ) : null}

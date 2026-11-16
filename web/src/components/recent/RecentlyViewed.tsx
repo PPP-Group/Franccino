@@ -1,8 +1,10 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import type { Locale } from '@/i18n/config';
 import { ProductRail } from '@/components/products/ProductRail';
+import { refreshRecentProductCovers } from '@/lib/covers/fresh';
 import { localizeRecent, useRecentProducts } from '@/lib/recent/store';
 
 /**
@@ -12,6 +14,10 @@ import { localizeRecent, useRecentProducts } from '@/lib/recent/store';
 export function RecentlyViewed({ excludeIds = [] }: { excludeIds?: number[] }) {
   const t = useTranslations('recent');
   const locale = useLocale() as Locale;
+  // A capa guardada pode ter sido trocada no catálogo (e o arquivo antigo, apagado).
+  useEffect(() => {
+    void refreshRecentProductCovers();
+  }, []);
   // O endereço e o nome de cada peça no idioma da página (no `/en`, o link em português dava erro).
   const products = localizeRecent(useRecentProducts(), locale).filter(
     (item) => !excludeIds.includes(item.id),
