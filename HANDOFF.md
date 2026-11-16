@@ -1638,3 +1638,11 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   certo). A página 404 de `/pt` e `/en` lia o idioma pelos cabeçalhos da requisição, e a página estática que chamava
   `notFound()` virava dinâmica no meio da resposta. O conteúdo da 404 passou para o navegador
   (`components/content/NotFoundBody.tsx`); no build de produção, essas páginas voltam a responder 404.
+- **Capas quebradas depois da troca de capa (de novo, lista `npd25e93`):** a API servia as capas, mas o `covers:apply`
+  copiava as fotos (ids novos) e apagava os arquivos antigos, e as páginas que o site já tinha montado apontavam para
+  arquivos apagados. Agora a troca só muda a coleção da foto, no lugar (galeria ↔ capa): mesmo id, mesmos arquivos e
+  mesmos tamanhos, sem esperar a fila. Teste novo em `CoversTest`.
+- **"Ver mais" na grade, de novo:** a página seguinte abria com as quatro somas guardadas de uma visita antiga (sem
+  "Ver mais"). As peças somadas só voltam no "voltar" do navegador, pela mesma entrada do histórico (API Navigation, ou
+  um "voltar" de até 10 s sem ela). "Ver menos" rola até o começo do grupo de 24 que ficou por último (ou do começo da
+  lista), cada soma num grupo próprio (`data-load-group`).
