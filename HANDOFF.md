@@ -1628,3 +1628,5 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   etiqueta "Também em outras cores" ficam retas; as fotos da própria peça continuam com a inclinação leve. Trocar de cor
   na página da peça troca a entrada do histórico: o "voltar" sai da peça para a página anterior, sem passar por cada cor
   vista.
+- **Cadeira Austria:** a capa era a vista de costas. Lista `api/database/data/covers/2026-11-16-diagonal-esquerda-7.json`
+  (foto 332, a diagonal virada para a esquerda), aplicada no deploy; a foto de costas vai para a galeria.
