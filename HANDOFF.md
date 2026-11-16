@@ -1630,3 +1630,11 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   vista.
 - **Cadeira Austria:** a capa era a vista de costas. Lista `api/database/data/covers/2026-11-16-diagonal-esquerda-7.json`
   (foto 332, a diagonal virada para a esquerda), aplicada no deploy; a foto de costas vai para a galeria.
+- **Grade, voltar sem a seta do navegador:** embaixo da grade, "Ver menos" desfaz o último "Ver mais", e "Ver as peças
+  anteriores" (embaixo e na barra de cima) abre o trecho de antes depois de "Ver as próximas peças" (`previousStart` e
+  `undoLoad` em `lib/catalog/load-more.ts`).
+- **Erro 500 no lugar da página 404:** o log do deploy do site mostrava "Page changed from static to dynamic at runtime"
+  em endereços de peça que não existem (ou com o endereço do outro idioma, quando a API ainda não tinha o do idioma
+  certo). A página 404 de `/pt` e `/en` lia o idioma pelos cabeçalhos da requisição, e a página estática que chamava
+  `notFound()` virava dinâmica no meio da resposta. O conteúdo da 404 passou para o navegador
+  (`components/content/NotFoundBody.tsx`); no build de produção, essas páginas voltam a responder 404.

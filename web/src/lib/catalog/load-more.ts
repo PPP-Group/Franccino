@@ -44,3 +44,29 @@ export function loadMoreAction(state: LoadMoreState, lastPage: number): 'button'
   if (state.page >= lastPage) return 'none';
   return state.loads >= MAX_LOADS ? 'next-page' : 'button';
 }
+
+/**
+ * Página onde começa o trecho anterior da grade (retorno de 16/11/2026: não havia como voltar sem a seta do navegador).
+ * Cada trecho é uma página aberta mais `MAX_LOADS` somadas pelo "Ver mais" (1, 5, 9…), então o anterior começa
+ * `MAX_LOADS + 1` páginas antes. Sem trecho anterior, `null`.
+ */
+export function previousStart(page: number): number | null {
+  if (page <= 1) return null;
+  return Math.max(1, page - (MAX_LOADS + 1));
+}
+
+/**
+ * "Ver menos": desfaz o último "Ver mais", tirando as peças que ele somou (cada soma traz uma página inteira, menos
+ * talvez a última da lista, que fica no fim). Sem soma, nada muda.
+ */
+export function undoLoad<T>(
+  state: LoadMoreState & { items: T[] },
+  perPage: number,
+): LoadMoreState & { items: T[] } {
+  if (state.loads === 0) return state;
+  return {
+    page: state.page - 1,
+    loads: state.loads - 1,
+    items: state.items.slice(0, (state.loads - 1) * perPage),
+  };
+}

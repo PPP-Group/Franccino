@@ -1,13 +1,13 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useLayoutEffect, useState, useTransition } from 'react';
+import { useLayoutEffect, useRef, useState, useTransition } from 'react';
 import { ProductPlate } from '@/components/products/ProductPlate';
 import { type AppHref, Link } from '@/i18n/navigation';
 import type { ProductListParams } from '@/lib/api/catalog';
 import type { ProductCard } from '@/lib/api/types';
 import { loadMorePieces } from '@/lib/catalog/actions';
-import { loadMoreAction, type LoadMoreState } from '@/lib/catalog/load-more';
+import { loadMoreAction, type LoadMoreState, previousStart, undoLoad } from '@/lib/catalog/load-more';
 
 type LoadMoreProps = {
   /** Filtros da listagem (os mesmos da primeira página). */
@@ -32,7 +32,8 @@ function storageKey() {
  * "Ver mais" das listagens (revisão da Franccino, 12/11/2026, item 11): no lugar de "Próxima", o botão soma as peças da
  * página seguinte embaixo das que já estão na tela, com a contagem ("24 de 213 peças"). Depois de três vezes, vira o
  * link da página seguinte, para a página não crescer sem fim. As peças somadas ficam guardadas na aba: ao voltar de uma
- * peça, a lista volta inteira e a rolagem cai no mesmo lugar.
+ * peça, a lista volta inteira e a rolagem cai no mesmo lugar. Para voltar (retorno de 16/11/2026): "Ver menos" tira as
+ * peças da última soma e "Ver as peças anteriores" abre o trecho de antes, sem depender da seta do navegador.
  */
 export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHrefs }: LoadMoreProps) {
   const t = useTranslations('catalog.loadMore');
@@ -40,6 +41,7 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   const [state, setState] = useState<Saved>({ page, loads: 0, items: [] });
   const [pending, startTransition] = useTransition();
   const [failed, setFailed] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
 
   // Antes da primeira pintura, para a rolagem guardada da volta encontrar a lista inteira.
   useLayoutEffect(() => {
@@ -71,15 +73,30 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
         items: [...state.items, ...result.data],
       };
       setState(updated);
-      try {
-        sessionStorage.setItem(storageKey(), JSON.stringify(updated));
-      } catch {
-        // Sem sessionStorage: só não volta inteira depois.
-      }
+      save(updated);
     });
   }
 
+  function save(next: Saved) {
+    try {
+      sessionStorage.setItem(storageKey(), JSON.stringify(next));
+    } catch {
+      // Sem sessionStorage: só não volta inteira depois.
+    }
+  }
+
+  function showLess() {
+    const updated = undoLoad(state, perPage);
+    setState(updated);
+    save(updated);
+    setFailed(false);
+    // A grade encolhe: a barra sobe junto, e a pessoa continua vendo os botões.
+    window.requestAnimationFrame(() => bar.current?.scrollIntoView({ block: 'center' }));
+  }
+
   const action = loadMoreAction(state, lastPage);
+  const previous = previousStart(page);
+  const previousHref = previous ? pageHrefs[previous] : undefined;
   // Peças até aqui na lista inteira (quem abriu a página 5 já passou pelas 4 primeiras).
   const visible = (page - 1) * perPage + shown + state.items.length;
   const nextHref = pageHrefs[state.page + 1];
@@ -93,22 +110,34 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
         </div>
       ) : null}
       {total > 0 ? (
-        <div className="load-more" aria-live="polite">
+        <div ref={bar} className="load-more" aria-live="polite">
           <p className="meta num">{t('count', { shown: visible, total })}</p>
-          {action === 'button' ? (
-            <button
-              type="button"
-              className="btn btn--ghost"
-              onClick={loadNext}
-              disabled={pending}
-              aria-busy={pending}
-            >
-              {pending ? t('loading') : t('button')}
-            </button>
-          ) : null}
-          {action === 'next-page' && nextHref ? (
-            <Link className="btn btn--ghost" href={nextHref}>
-              {t('nextPage')}
+          <div className="load-more__actions">
+            {state.loads > 0 ? (
+              <button type="button" className="btn btn--ghost" onClick={showLess} disabled={pending}>
+                {t('less')}
+              </button>
+            ) : null}
+            {action === 'button' ? (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={loadNext}
+                disabled={pending}
+                aria-busy={pending}
+              >
+                {pending ? t('loading') : t('button')}
+              </button>
+            ) : null}
+            {action === 'next-page' && nextHref ? (
+              <Link className="btn btn--ghost" href={nextHref}>
+                {t('nextPage')}
+              </Link>
+            ) : null}
+          </div>
+          {previousHref ? (
+            <Link className="link-arrow" href={previousHref}>
+              {t('previousPage')}
             </Link>
           ) : null}
           {failed ? <p className="meta">{t('error')}</p> : null}
