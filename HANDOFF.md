@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (33, de 16/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (34, de 16/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1606,3 +1606,27 @@ do botão quando a foto está fora da tela (seção 32) e, com o cabeçalho esco
   embaixo, com a etiqueta "Também em outras cores" (`product.colors.peek`). As 12 fotos sem fundo novas foram enviadas
   pelo painel; na Cadeira Arp, a descrição de SEO (186 caracteres, do site antigo) foi encurtada para 121 nas duas
   línguas, porque o painel não salvava a peça. A foto da Pitá azul saiu da galeria da Pitá sem braço laranja.
+
+## 34. 16/11/2026 (noite): capas depois do deploy, tabela técnica, foto ampliada e cores
+
+Branch `claude/paginacao-e-zoom`, saída da `develop`.
+
+- **Capas sumindo depois do deploy:** a API serve todas as capas (conferidas as 399 peças: só Estante Bloco e Sofá
+  Pinot Square continuam sem foto). A causa estava na ordem do deploy. O site compila com a API antiga ainda no ar; a
+  API nova, ao subir, troca capas e recortes (`covers:apply`, `content:apply`) e apaga os arquivos antigos. O aviso de
+  revalidação vai para o container antigo do site, e o novo subia com os endereços velhos até o cache de 1 hora vencer.
+  Agora o `web/docker/start.sh` expira todo o cache do site 30 s depois de subir, e de novo em 5 e 20 minutos
+  (`REVALIDATE_AFTER_START`; precisa do `REVALIDATE_SECRET`, que o site já tem).
+- **Tabela técnica, "Próxima" no meio da página:** quem trocava para a tabela pelo botão (sem recarregar) e clicava em
+  "Próxima" embaixo recebia a lista remontada: a vista do endereço mudava de grade para tabela, e o `PageScroll` nascia
+  já com a página nova. Agora o clique na paginação de baixo marca a espera fora do componente, e a lista nova rola até
+  o começo mesmo remontada.
+- **Foto ampliada da peça:** abre com a foto do palco crescendo até a tela cheia e fecha encolhendo de volta (também
+  pelo Esc), como a amostra dos acabamentos (`toggleViewer` no `ProductStage`, `motion.css`). `waitForImage` passou para
+  `lib/ui/wait-for-image.ts`.
+- **Outras cores:** em toda prévia que flutua (card da grade, tabela técnica, busca), as fotos das outras cores e a
+  etiqueta "Também em outras cores" ficam retas; as fotos da própria peça continuam com a inclinação leve. Trocar de cor
+  na página da peça troca a entrada do histórico: o "voltar" sai da peça para a página anterior, sem passar por cada cor
+  vista.
+- **Cadeira Austria:** a capa era a vista de costas. Lista `api/database/data/covers/2026-11-16-diagonal-esquerda-7.json`
+  (foto 332, a diagonal virada para a esquerda), aplicada no deploy; a foto de costas vai para a galeria.
