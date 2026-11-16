@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { PageBanner } from '@/components/layout/PageBanner';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/ui/Breadcrumbs';
+import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link, type AppHref } from '@/i18n/navigation';
 import {
@@ -20,6 +21,7 @@ import { isValidationError } from '@/lib/api/errors';
 import type { Facets, Image, Paginated, ProductCard } from '@/lib/api/types';
 import { toTechnicalRow } from '@/lib/catalog/technical';
 import { buildFacetMatrix } from '@/lib/catalog/facets';
+import { previousStart } from '@/lib/catalog/load-more';
 import { isWideArt } from '@/lib/images/cover';
 import { listingQuery, toFilterOption, type CatalogView, type ListingPatch } from '@/lib/catalog/view';
 import { CatalogToolbar, type ToolbarFilter } from './CatalogToolbar';
@@ -179,6 +181,8 @@ export async function CatalogListing(props: CatalogListingProps) {
     ? (await getImagePointsFor(locale, [banner.image]))[banner.image.id]
     : null;
 
+  const previousGrid = previousStart(page.meta.current_page);
+
   return (
     <main>
       {/* A chave segue a vista do endereço: a navegação de volta (ou um link com outra vista) recomeça dela. */}
@@ -214,7 +218,22 @@ export async function CatalogListing(props: CatalogListingProps) {
               // Na grade, o "Ver mais" embaixo substitui a paginação (revisão da Franccino, item 11); a tabela técnica
               // continua com as páginas.
               <ByView
-                grid={null}
+                grid={
+                  // Na grade aberta num trecho seguinte (depois de "Ver as próximas peças"), o caminho de volta também
+                  // fica em cima (retorno de 16/11/2026).
+                  previousGrid ? (
+                    <nav className="pagination pagination--top" aria-label={t('pagination.label')}>
+                      <Link
+                        className="pagination__step is-prev"
+                        href={hrefFor({ page: previousGrid, view: 'grid' })}
+                        rel="prev"
+                      >
+                        <Icon name="arrow" />
+                        <span>{t('loadMore.previousPage')}</span>
+                      </Link>
+                    </nav>
+                  ) : null
+                }
                 table={
                   <Pagination
                     meta={page.meta}

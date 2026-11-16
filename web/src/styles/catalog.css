@@ -543,3 +543,11 @@ a.pagination__step:hover span {
 .load-more .btn {
   min-width: 220px;
 }
+
+/* "Ver menos" ao lado de "Ver mais" (retorno de 16/11/2026); no celular, um embaixo do outro. */
+.load-more__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
