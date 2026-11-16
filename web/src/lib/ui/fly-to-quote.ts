@@ -1,6 +1,8 @@
 /** Tamanho final do quadradinho que entra no ícone da lista, em px. */
 const LANDING_SIZE = 14;
 const FLY_MS = 760;
+/** Tempo do cabeçalho voltar à tela (motion.css, `--t-mid`), com folga para o quadro do fim. */
+const HEADER_REVEAL_MS = 340;
 
 type Box = { left: number; top: number; width: number; height: number };
 
@@ -25,9 +27,20 @@ export function flyPath(from: Box, to: Box) {
 }
 
 /**
+ * Cabeçalho escondido pela rolagem (`data-header-hide`, BootScript): volta à tela para o voo ter onde pousar (retorno de
+ * 16/11/2026). Devolve quanto esperar até ele chegar; ele só some de novo na próxima rolagem para baixo.
+ */
+export function revealHeader(root: HTMLElement = document.documentElement): number {
+  if (!root.hasAttribute('data-header-hide')) return 0;
+  root.removeAttribute('data-header-hide');
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : HEADER_REVEAL_MS;
+}
+
+/**
  * Peça adicionada à lista de orçamento (retorno de 09/11/2026): a foto vira um quadradinho que encolhe e voa até o
  * ícone da lista no cabeçalho (`[data-quote-target]`); o ícone pulsa quando ele chega (`data-quote-incoming` atrasa o
- * pulso do contador até o pouso, motion.css). Sem a foto, sem o ícone à vista, ou com movimento reduzido, não faz nada.
+ * pulso do contador até o pouso, motion.css). Com o cabeçalho escondido, ele volta antes e o voo sai quando ele chega.
+ * Sem a foto, sem o ícone, ou com movimento reduzido, não faz nada.
  */
 export function flyToQuote(source: HTMLImageElement | null | undefined): void {
   if (!source || typeof window === 'undefined' || typeof source.animate !== 'function') return;
@@ -35,8 +48,17 @@ export function flyToQuote(source: HTMLImageElement | null | undefined): void {
   const target = document.querySelector<HTMLElement>('[data-quote-target]');
   if (!target) return;
   const from = source.getBoundingClientRect();
+  if (from.width === 0) return;
+  const wait = revealHeader();
+  // O ícone é procurado de novo depois da espera: o contador da lista o desenha outra vez quando a peça entra.
+  if (wait > 0)
+    window.setTimeout(() => fly(source, document.querySelector('[data-quote-target]') ?? target, from), wait);
+  else fly(source, target, from);
+}
+
+function fly(source: HTMLImageElement, target: HTMLElement, from: DOMRect): void {
   const to = target.getBoundingClientRect();
-  if (from.width === 0 || to.width === 0 || to.bottom < 0 || to.top > window.innerHeight) return;
+  if (to.width === 0 || to.bottom < 0 || to.top > window.innerHeight) return;
 
   const path = flyPath(from, to);
   const ghost = document.createElement('div');

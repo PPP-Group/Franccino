@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import type { Locale } from '@/i18n/config';
 import type { ProductCard } from '@/lib/api/types';
 import { createLocalStore } from '@/lib/ui/local-store';
 
@@ -7,7 +8,16 @@ import { createLocalStore } from '@/lib/ui/local-store';
  * você viu"). Guarda só o necessário para o card (foto e nome), as mais recentes primeiro.
  */
 
-export type RecentProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>;
+/**
+ * `slug` e `name` são os do idioma em que a peça foi vista (`locale`). `slugs` e `names` guardam os de cada idioma: o
+ * endereço da peça muda com o idioma, e o link salvo em português abria uma página de erro no `/en` (retorno de
+ * 16/11/2026). Peças salvas antes disso não têm os três campos.
+ */
+export type RecentProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'> & {
+  locale?: Locale;
+  slugs?: Partial<Record<Locale, string>>;
+  names?: Partial<Record<Locale, string>>;
+};
 
 export const RECENT_LIMIT = 12;
 
@@ -40,9 +50,52 @@ export const recentStore = createLocalStore<RecentProduct[]>({
   empty: EMPTY,
 });
 
-export function recordRecent(product: ProductCard): void {
+/** A peça como foi vista agora, somando os nomes já guardados dela em outros idiomas. */
+export function seenProduct(
+  product: Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>,
+  locale: Locale,
+  slugs: Partial<Record<Locale, string | null>>,
+  previous?: RecentProduct,
+): RecentProduct {
   const { id, slug, name, cover, is_new } = product;
-  recentStore.set(addRecent(recentStore.get(), { id, slug, name, cover, is_new }));
+  const known: Partial<Record<Locale, string>> = {};
+  for (const [key, value] of Object.entries(slugs) as [Locale, string | null][]) {
+    if (value) known[key] = value;
+  }
+  known[locale] = slug;
+  return {
+    id,
+    slug,
+    name,
+    cover,
+    is_new,
+    locale,
+    slugs: known,
+    names: { ...previous?.names, [locale]: name },
+  };
+}
+
+/**
+ * As peças com o endereço e o nome do idioma da página. Sem o endereço desse idioma (peça salva antes de 16/11/2026, em
+ * outro idioma), a peça fica de fora: o link levaria a uma página que não existe. As salvas sem idioma eram do português.
+ */
+export function localizeRecent(list: RecentProduct[], locale: Locale): RecentProduct[] {
+  return list.flatMap((item) => {
+    const slug = item.slugs?.[locale] ?? ((item.locale ?? 'pt') === locale ? item.slug : undefined);
+    if (!slug) return [];
+    const name = item.names?.[locale] ?? item.name;
+    return [{ ...item, slug, name }];
+  });
+}
+
+export function recordRecent(
+  product: ProductCard,
+  locale: Locale,
+  slugs: Partial<Record<Locale, string | null>> = {},
+): void {
+  const list = recentStore.get();
+  const previous = list.find((item) => item.id === product.id);
+  recentStore.set(addRecent(list, seenProduct(product, locale, slugs, previous)));
 }
 
 export function useRecentProducts(): RecentProduct[] {

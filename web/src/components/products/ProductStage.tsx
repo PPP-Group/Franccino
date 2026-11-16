@@ -4,10 +4,11 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
-import { STAGE_SIZES } from '@/lib/product/gallery';
+import { STAGE_SIZES, stepIndex } from '@/lib/product/gallery';
 import { Icon } from '@/components/ui/Icon';
 import type { Image, ProductDetail } from '@/lib/api/types';
 import { ModelViewer } from './ModelViewer';
+import { PhotoViewer } from './PhotoViewer';
 import { productMorphName } from './ProductPlate';
 
 type Mode = 'photo' | '3d';
@@ -52,6 +53,8 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
   // uma vez). A foto de baixo é sempre a mesma `MorphImage`, a da transição de abrir e voltar.
   const [leaving, setLeaving] = useState<{ image: Image; fading: boolean } | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  // A foto em tela cheia (retorno de 16/11/2026), aberta pelo clique na foto do palco.
+  const [viewer, setViewer] = useState(false);
   const mode: Mode = chosen ?? (model && wants3d ? '3d' : 'photo');
   const current = images[index] ?? images[0] ?? null;
   const natural = current ? naturalWidth(current) : null;
@@ -69,6 +72,11 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
       setLeaving({ image: current, fading: false });
     }
     setIndex(next);
+  }
+
+  function step(direction: 1 | -1) {
+    showImage(stepIndex(index, direction, images.length));
+    setChosen('photo');
   }
 
   // Espera a foto nova carregar (até 800 ms) e então apaga a de cima; tira a de cima quando o fade termina.
@@ -93,10 +101,14 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
 
   return (
     <div className="gallery">
+      {/* Clicar na foto (fora dos botões) abre a foto em tela cheia; o botão do canto faz o mesmo pelo teclado. */}
       <div
         ref={stageRef}
-        className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage'}
+        className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage is-zoomable'}
         style={stageStyle}
+        onClick={(event) => {
+          if (mode === 'photo' && current && (event.target as Element).tagName === 'IMG') setViewer(true);
+        }}
       >
         {current ? (
           // A foto do palco é sempre a da transição (ideia 10): chega como a foto do card clicado e, na volta, encolhe
@@ -123,6 +135,31 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
           <div className="stage-3d">
             <ModelViewer slug={slug} alt={t('modelAlt', { name })} />
           </div>
+        ) : null}
+        {mode === 'photo' && current ? (
+          <button type="button" className="stage-zoom" aria-label={t('zoom')} onClick={() => setViewer(true)}>
+            <Icon name="expand" />
+          </button>
+        ) : null}
+        {mode === 'photo' && images.length > 1 ? (
+          <>
+            <button
+              type="button"
+              className="photo-arrow is-prev"
+              aria-label={t('previousImage')}
+              onClick={() => step(-1)}
+            >
+              <Icon name="arrow" />
+            </button>
+            <button
+              type="button"
+              className="photo-arrow is-next"
+              aria-label={t('nextImage')}
+              onClick={() => step(1)}
+            >
+              <Icon name="arrow" />
+            </button>
+          </>
         ) : null}
         {model ? (
           <div className="stage-toggle" role="group" aria-label={t('viewLabel')}>
@@ -155,6 +192,14 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
           ))}
         </div>
       ) : null}
+      <PhotoViewer
+        images={images}
+        index={index}
+        open={viewer}
+        title={name}
+        onIndexChange={(next) => showImage(next)}
+        onClose={() => setViewer(false)}
+      />
     </div>
   );
 }

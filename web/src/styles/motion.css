@@ -800,9 +800,19 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
 
 /* ---------- amostra do acabamento que cresce até a janela (retorno de 13/11/2026) ---------- */
 
+/*
+  A amostra que cresce passa por cima da janela. O navegador empilha as camadas na ordem em que encontra os nomes: a
+  amostra já estava na página antes de abrir, e a janela só aparece depois, então a janela ficava por cima e a amostra
+  crescia por trás dela, aparecendo de uma vez no fim (retorno de 16/11/2026).
+*/
 ::view-transition-group(finish-zoom) {
+  z-index: 2;
   animation-duration: var(--t-slow);
   animation-timing-function: var(--ease-out);
+}
+
+::view-transition-group(finish-zoom-panel) {
+  z-index: 1;
 }
 
 ::view-transition-old(finish-zoom),

@@ -286,7 +286,12 @@
       "modelError": "The 3D model could not be loaded at this time. Please see the photos or try again.",
       "modelRetry": "Try again",
       "thumbsLabel": "Photos of the piece",
-      "showImage": "Photo {index} of {total}"
+      "showImage": "Photo {index} of {total}",
+      "zoom": "Enlarge photo",
+      "previousImage": "Previous photo",
+      "nextImage": "Next photo",
+      "closeViewer": "Close the enlarged photo",
+      "count": "{index} of {total}"
     },
     "downloads": {
       "title": "Technical files",

@@ -286,7 +286,12 @@
       "modelError": "Não foi possível carregar o modelo 3D no momento. Consulte as fotos ou tente novamente.",
       "modelRetry": "Tentar novamente",
       "thumbsLabel": "Fotos da peça",
-      "showImage": "Foto {index} de {total}"
+      "showImage": "Foto {index} de {total}",
+      "zoom": "Ampliar a foto",
+      "previousImage": "Foto anterior",
+      "nextImage": "Próxima foto",
+      "closeViewer": "Fechar a foto ampliada",
+      "count": "{index} de {total}"
     },
     "downloads": {
       "title": "Arquivos técnicos",

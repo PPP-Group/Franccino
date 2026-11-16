@@ -1544,3 +1544,35 @@ revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
   acabamento, linha do tempo da Fábrica e o título "Blocos 3D e fichas técnicas" da Área do Profissional.
 - **Teste local que já falhava no Windows:** `MaintenanceTest` (backup semanal) falha igual na `develop`; não é desta
   mudança.
+
+## 33. 16/11/2026 (sessão paralela à da seção 32): animações, galeria da peça, idioma e deploy
+
+Branch `claude/ajustes-16-11`, saída da `develop`, ao mesmo tempo que a `claude/capas-lista-e-cores` (seção 32). As duas
+mexem em `web/src/lib/ui/fly-to-quote.ts`: quem fizer o segundo merge junta as duas mudanças (a desta seção é a volta do
+cabeçalho antes do voo; a da 32 é o voo saindo do botão quando a foto está fora da tela).
+
+- **Voo até a lista de desejos com o cabeçalho escondido:** o cabeçalho volta à tela (`revealHeader`) e o voo sai quando
+  ele chega. O ícone da lista é procurado de novo nessa hora, porque o contador o redesenha quando a peça entra.
+- **Tabela técnica, "Próxima" no fim da lista:** a página nova abria no fim. A trava da rolagem do clique
+  (`pinScroll`, `navigation-motion.ts`) só é solta quando o caminho muda, e a troca de página só muda a consulta; a
+  trava desfazia a rolagem do `PageScroll`. Agora a trava só vale quando o caminho muda. Vale também para busca e
+  downloads.
+- **Foto da peça ampliada e setas:** clicar na foto do palco (ou no botão do canto) abre a foto em tela cheia
+  (`PhotoViewer`), com setas, setas do teclado, arrastar no celular e contador. O palco ganhou setas dos lados.
+- **"Peças que você viu" no `/en`:** a lista guardava só o endereço em português, e o `/en` abria uma página de erro. A
+  lista guarda o endereço e o nome de cada idioma (`seenProduct`, `localizeRecent`). A página da peça que recebe o
+  endereço do outro idioma redireciona para o certo, o que cobre links antigos salvos no navegador.
+- **Idioma pelo país do IP:** `src/i18n/geo.ts` e `proxy.ts`. Brasil e países de língua portuguesa em português, os
+  outros em inglês, pelo `cf-ipcountry` da Cloudflare (produção). O preview, sem Cloudflare, segue o navegador. O
+  idioma no endereço e a escolha salva no seletor (cookie) valem antes do país.
+- **Acabamento em detalhe:** a amostra crescia por trás da janela e aparecia de uma vez no fim. O navegador empilha as
+  camadas do movimento na ordem em que encontra os nomes, e a janela vinha por cima. A amostra ficou acima
+  (`z-index` em `motion.css`) e cresce até a própria foto da janela, que agora tem o tamanho dela.
+- **Deploy lento e versões misturadas:** o Next grava o `BUILD_ID` antes de gerar as páginas. Com a API trocando de
+  container no meio do build do site, o build falhava com o `BUILD_ID` gravado; o container reiniciava e subia o site
+  pela metade até um "Forçar rebuild". O `web/docker/start.sh` agora espera a API responder 6 vezes seguidas, refaz o
+  build que falha (até 4 vezes) e só sobe o site com a marca própria de build pronto. Testado com uma API de mentira que
+  cai e um build que falha uma vez.
+- **Verificação:** lint, typecheck e testes do site; `next dev` local contra a API do preview, com Playwright: setas e
+  foto ampliada (desktop e celular), voo com o cabeçalho escondido, página seguinte da tabela técnica abrindo no começo
+  da lista, "Peças que você viu" no `/en`, acabamento em detalhe em câmera lenta (abrir e fechar) e o idioma por país.

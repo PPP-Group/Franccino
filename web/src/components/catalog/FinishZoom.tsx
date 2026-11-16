@@ -56,27 +56,32 @@ export function FinishZoom({ name, code, description, swatch, variant = 'swatch'
   /** Troca com a amostra crescendo até a janela (ou voltando), quando o navegador tem o movimento entre estados. */
   function morph(update: () => void, opening: boolean) {
     const doc = document as Document & { startViewTransition?: StartViewTransition };
-    const from = opening ? swatchRef.current : stageRef.current;
-    const to = opening ? stageRef.current : swatchRef.current;
+    // Na janela, o par é a própria foto (não a área dela, mais larga): a amostra quadrada cresce até a foto quadrada,
+    // sem a faixa clara da área aparecendo no meio do movimento (retorno de 16/11/2026).
+    const stagePhoto = () => stageRef.current?.querySelector<HTMLElement>('img') ?? stageRef.current;
+    const from = opening ? swatchRef.current : stagePhoto();
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!doc.startViewTransition || reduce || !from || !to || variant !== 'swatch') {
+    if (!doc.startViewTransition || reduce || !from || !swatchRef.current || variant !== 'swatch') {
       update();
       return;
     }
     const panel = dialogRef.current;
+    let to: HTMLElement | null = null;
     from.style.viewTransitionName = MORPH;
     if (panel && !opening) panel.style.viewTransitionName = PANEL;
     const transition = doc.startViewTransition(async () => {
       from.style.viewTransitionName = '';
       if (panel) panel.style.viewTransitionName = '';
       flushSync(update);
-      to.style.viewTransitionName = MORPH;
+      // A foto da janela só existe depois de abrir.
+      to = opening ? (stagePhoto() ?? null) : swatchRef.current;
+      if (to) to.style.viewTransitionName = MORPH;
       if (panel && opening) panel.style.viewTransitionName = PANEL;
-      if (opening) await waitForImage(to.querySelector('img'));
+      if (opening) await waitForImage(stageRef.current?.querySelector('img'));
     });
     void transition.finished.finally(() => {
       from.style.viewTransitionName = '';
-      to.style.viewTransitionName = '';
+      if (to) to.style.viewTransitionName = '';
       if (panel) panel.style.viewTransitionName = '';
     });
   }
