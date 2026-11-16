@@ -69,8 +69,9 @@ fi
 # Capas sumindo depois do deploy (retorno de 16/11/2026): o site compila com a API antiga ainda no ar, e a API nova, ao
 # subir, troca capas e recortes (`covers:apply`, `content:apply`) e apaga os arquivos antigos. O aviso de revalidação
 # que ela manda chega ao container antigo do site, e o novo subia com os endereços velhos (fotos quebradas) até o cache
-# de 1 hora vencer. Agora o próprio site expira todo o cache depois de subir, e de novo alguns minutos depois (a API
-# nova pode terminar depois do site).
+# de 1 hora vencer. Agora o próprio site expira todo o cache depois de subir, e de novo 10 minutos depois (a API nova
+# pode terminar depois do site). Cada expiração deixa as páginas seguintes mais lentas até o cache encher de novo
+# (retorno de 16/11/2026), por isso só duas.
 revalidate_all() {
     node -e "
 const port = process.env.PORT || '3000';
@@ -85,7 +86,7 @@ fetch('http://127.0.0.1:' + port + '/api/revalidate', {
 }
 if [ -n "${REVALIDATE_SECRET:-}" ]; then
     (
-        for delay in ${REVALIDATE_AFTER_START:-30 300 900}; do
+        for delay in ${REVALIDATE_AFTER_START:-60 540}; do
             sleep "$delay"
             revalidate_all
         done
