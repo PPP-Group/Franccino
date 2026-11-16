@@ -407,7 +407,9 @@
       "loading": "Loading…",
       "nextPage": "See the next pieces",
       "count": "{shown} of {total} pieces",
-      "error": "We could not load more pieces. Please try again."
+      "error": "We could not load more pieces. Please try again.",
+      "less": "View less",
+      "previousPage": "See the previous pieces"
     },
     "rooms": {
       "balcony": "Balcony and garden",

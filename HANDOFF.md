@@ -1630,3 +1630,6 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   vista.
 - **Cadeira Austria:** a capa era a vista de costas. Lista `api/database/data/covers/2026-11-16-diagonal-esquerda-7.json`
   (foto 332, a diagonal virada para a esquerda), aplicada no deploy; a foto de costas vai para a galeria.
+- **Grade, voltar sem a seta do navegador:** embaixo da grade, "Ver menos" desfaz o último "Ver mais", e "Ver as peças
+  anteriores" (embaixo e na barra de cima) abre o trecho de antes depois de "Ver as próximas peças" (`previousStart` e
+  `undoLoad` em `lib/catalog/load-more.ts`).

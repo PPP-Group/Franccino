@@ -407,7 +407,9 @@
       "loading": "Carregando…",
       "nextPage": "Ver as próximas peças",
       "count": "{shown} de {total} peças",
-      "error": "Não foi possível carregar mais peças. Por favor, tente novamente."
+      "error": "Não foi possível carregar mais peças. Por favor, tente novamente.",
+      "less": "Ver menos",
+      "previousPage": "Ver as peças anteriores"
     },
     "rooms": {
       "balcony": "Varanda e jardim",
