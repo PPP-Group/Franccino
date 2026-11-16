@@ -1567,6 +1567,6 @@ revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
   `colors` no `ProductCard` (carga antecipada `Product::withColors()` em todas as consultas de cards). Site: seção
   "Cores" na página da peça (`ProductColors`), capas das outras cores flutuando no hover do card da grade (`PlatePeek`)
   e, na tabela técnica e nas sugestões da busca, uma linha de cima com as outras cores (`PeekPhotos`). Prévia com no
-  máximo 4 fotos por linha; com mais, a última vira pilha. Nenhuma peça foi ligada ainda: os grupos são feitos no painel.
+  máximo 4 fotos por linha; com mais, a última vira pilha. Grupos ligados (migração `2026_11_16_110000_link_pita_colors`, conferidos pelas fotos das 399 peças): Cadeira Pitá com braço (cinza e verde) e Pitá sem braço (azul e laranja). As versões Indoor e Outdoor (Marcela, Dara, Alba, Dome, Málaga) e a Poltrona Sô com corda mudam de material ou desenho e ficaram de fora. A Pitá sem braço 2 (laranja) tem na galeria uma foto da azul (id 2327).
 - **Cache local:** depois de mudar dados na API local, o `next dev` serve a resposta antiga até apagar
   `web/.next/dev/cache/fetch-cache` com o servidor parado.
