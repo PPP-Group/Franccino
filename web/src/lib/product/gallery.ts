@@ -15,3 +15,9 @@ export function galleryImages(product: Pick<ProductDetail, 'cover' | 'gallery'>)
 
 /** Largura real da foto grande da página da peça (palco da galeria); também serve ao carrossel, que a baixa antes. */
 export const STAGE_SIZES = '(max-width: 61.25rem) 92vw, (min-width: 97.5rem) 810px, 52vw';
+
+/** Foto seguinte (`step` 1) ou anterior (-1) da galeria, dando a volta nas pontas. */
+export function stepIndex(index: number, step: 1 | -1, total: number): number {
+  if (total <= 0) return 0;
+  return (((index + step) % total) + total) % total;
+}

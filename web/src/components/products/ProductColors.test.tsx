@@ -1,4 +1,3 @@
-import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { PeekPhotos } from '@/components/catalog/PeekPhotos';
 import type { Image } from '@/lib/api/types';
@@ -57,16 +56,17 @@ describe('ProductColors', () => {
 
 describe('PeekPhotos', () => {
   it('shows four photos per row and stacks the last one when there are more', () => {
-    const html = renderToStaticMarkup(<PeekPhotos images={[1, 2, 3, 4, 5].map(image)} />);
+    const html = renderWithIntl(<PeekPhotos images={[1, 2, 3, 4, 5].map(image)} />);
     expect(html.match(/row-peek__photo"/g)?.length ?? 0).toBe(3);
     expect(html.match(/row-peek__photo--more/g)?.length).toBe(1);
     expect(html).not.toContain('foto-5');
   });
 
-  it('puts the other colours on a row above the photos of the piece', () => {
-    const html = renderToStaticMarkup(<PeekPhotos images={[image(1), image(2)]} colors={[image(9)]} />);
-    expect(html.indexOf('foto-9')).toBeLessThan(html.indexOf('foto-1'));
-    expect(html).toContain('--row:1');
+  it('puts the photos of the piece first and the other colours on a labelled row below', () => {
+    const html = renderWithIntl(<PeekPhotos images={[image(1), image(2)]} colors={[image(9)]} />);
+    expect(html.indexOf('foto-1')).toBeLessThan(html.indexOf('foto-9'));
+    expect(html).toMatch(/--row:1[^"]*--cap:26px[^"]*"[^>]*>(?:(?!row-peek__photo).)*foto-9/);
+    expect(html).toContain('Também em outras cores');
     expect(html).not.toContain('row-peek__photo--more');
   });
 });

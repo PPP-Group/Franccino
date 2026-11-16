@@ -1,8 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import type { Locale } from '@/i18n/config';
 import { ProductRail } from '@/components/products/ProductRail';
-import { useRecentProducts } from '@/lib/recent/store';
+import { localizeRecent, useRecentProducts } from '@/lib/recent/store';
 
 /**
  * "Peças que você viu", no fim das páginas, para a navegação continuar sem voltar à home. Some quando há menos de duas
@@ -10,7 +11,11 @@ import { useRecentProducts } from '@/lib/recent/store';
  */
 export function RecentlyViewed({ excludeIds = [] }: { excludeIds?: number[] }) {
   const t = useTranslations('recent');
-  const products = useRecentProducts().filter((item) => !excludeIds.includes(item.id));
+  const locale = useLocale() as Locale;
+  // O endereço e o nome de cada peça no idioma da página (no `/en`, o link em português dava erro).
+  const products = localizeRecent(useRecentProducts(), locale).filter(
+    (item) => !excludeIds.includes(item.id),
+  );
   if (products.length < 2) {
     return null;
   }

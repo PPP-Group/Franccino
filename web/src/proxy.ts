@@ -1,6 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { locales } from '@/i18n/config';
+import { countryFromHeaders, localeForCountry } from '@/i18n/geo';
 import { routing } from '@/i18n/routing';
 import { serverEnv } from '@/lib/env';
 import { findRedirect, isLegacyCandidate } from '@/lib/redirects/match';
@@ -8,6 +9,19 @@ import { loadRedirectIndex } from '@/lib/redirects/store';
 import { checkBasicAuth } from '@/lib/security/basic-auth';
 
 const handleI18nRouting = createMiddleware(routing);
+
+/**
+ * Primeira visita sem o idioma no endereço (`/`, `/produtos`): o país do IP escolhe o idioma (retorno de 16/11/2026).
+ * O next-intl lê o cookie do idioma antes do `accept-language`: quem já trocou de idioma continua no que escolheu, e
+ * quem tem o idioma no endereço (`/pt/...`, `/en/...`) não é redirecionado. Sem o país no cabeçalho, vale o navegador.
+ */
+function withCountryLocale(request: NextRequest): NextRequest {
+  const locale = localeForCountry(countryFromHeaders(request.headers), locales);
+  if (!locale) return request;
+  const headers = new Headers(request.headers);
+  headers.set('accept-language', locale === 'pt' ? 'pt-BR,pt' : 'en');
+  return new NextRequest(request, { headers });
+}
 
 const ROBOTS_HEADER = 'X-Robots-Tag';
 const ROBOTS_VALUE = 'noindex, nofollow';
@@ -59,7 +73,7 @@ export async function proxy(request: NextRequest) {
     return legacy;
   }
 
-  const response = handleI18nRouting(request);
+  const response = handleI18nRouting(withCountryLocale(request));
 
   if (env.SITE_ENV === 'staging') {
     response.headers.set(ROBOTS_HEADER, ROBOTS_VALUE);
