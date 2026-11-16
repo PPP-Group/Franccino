@@ -645,6 +645,15 @@
   .gallery {
     position: static;
   }
+
+  /*
+    Uma coluna (tablet e celular deitado): o quadro 4:3 na largura toda passava da altura da tela (675 px num tablet de
+    900; em 740 × 360 a foto começava abaixo da primeira tela). A altura para em 62% da tela, e a largura continua inteira.
+  */
+  .gallery__stage {
+    width: 100%;
+    max-height: max(15rem, 62svh);
+  }
 }
 
 @media (max-width: 560px) {

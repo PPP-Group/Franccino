@@ -527,6 +527,7 @@
       "unsized": "Medidas a confirmar: ainda não entra na planta"
     },
     "hint": "Arraste para mover. Com a peça selecionada, use as setas para deslocá-la (com Shift, de 1 em 1 cm), R para girar e Delete para remover.",
+    "hintTouch": "Arraste a peça com o dedo para mover. Toque nela para selecionar e use Girar ou Remover.",
     "rotate": "Girar",
     "remove": "Remover",
     "canvasLabel": "Planta do ambiente, {width} por {depth} metros",

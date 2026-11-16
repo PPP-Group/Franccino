@@ -26,6 +26,15 @@ body {
   overflow-x: clip;
 }
 
+/*
+  Com o `html` em `visible`, o `overflow` do `body` passa para a janela e o body deixa de cortar: no celular, a janela
+  crescia até a largura das peças das pontas do carrossel (1036 px na home em 375 px) e a página abria afastada, com
+  rolagem para o lado. Com o `html` também em `clip`, o corte fica no próprio body.
+*/
+html {
+  overflow-x: clip;
+}
+
 img {
   display: block;
   max-width: 100%;

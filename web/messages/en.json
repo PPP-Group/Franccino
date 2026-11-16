@@ -527,6 +527,7 @@
       "unsized": "Dimensions to be confirmed: not available for the plan yet"
     },
     "hint": "Drag to move. With a piece selected, use the arrow keys to move it (with Shift, 1 cm at a time), R to rotate and Delete to remove.",
+    "hintTouch": "Drag a piece with your finger to move it. Tap it to select, then use Rotate or Remove.",
     "rotate": "Rotate",
     "remove": "Remove",
     "canvasLabel": "Room plan, {width} by {depth} metres",

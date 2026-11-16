@@ -248,7 +248,11 @@ export function RoomPlanner({ initialLibrary }: { initialLibrary: PlannerProduct
 
       <div className="planner__canvas" ref={canvasRef} tabIndex={-1}>
         <div className="canvas-bar">
-          <span id={`${baseId}-hint`}>{t('hint')}</span>
+          {/* Teclado e mouse leem o primeiro; no toque (sem teclado), o CSS troca pelo segundo. */}
+          <span id={`${baseId}-hint`} className="canvas-bar__hint">
+            {t('hint')}
+          </span>
+          <span className="canvas-bar__hint canvas-bar__hint--touch">{t('hintTouch')}</span>
           <span className="canvas-bar__actions">
             <button
               type="button"

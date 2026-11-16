@@ -386,6 +386,10 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
             </div>
           );
         })}
+        {/* No celular o PT/EN some da barra (não cabe); ele aparece no fim do menu aberto. */}
+        <div className="nav__lang">
+          <LanguageSwitcher />
+        </div>
       </nav>
       <div className="tools">
         <HeaderSearch />
