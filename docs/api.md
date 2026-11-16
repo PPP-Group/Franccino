@@ -93,6 +93,8 @@ type ProductCard = {
   cover: Image | null;
   cutout: Image | null; // foto sem fundo (PNG/WebP transparente) do carrossel de lançamentos e coleções; null sem ela
   is_new: boolean;
+  color: string | null; // nome da cor desta peça, quando ela está num grupo de cores (16/11/2026)
+  colors: Array<{ id: number; slug: string; name: string; color: string | null; cover: Image | null }>; // a mesma peça nas outras cores publicadas, sem esta; [] fora de grupo
 };
 
 type ProductDetail = ProductCard & {
