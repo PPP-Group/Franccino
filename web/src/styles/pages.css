@@ -667,14 +667,23 @@
 }
 
 .finish-zoom__stage {
-  height: min(62dvh, 640px);
+  --finish-stage-h: min(62dvh, 640px);
+  display: grid;
+  place-items: center;
+  height: var(--finish-stage-h);
   overflow: hidden;
   background: var(--stone);
 }
 
+/*
+  A foto tem o tamanho dela, centrada na área (e não a área inteira com faixas vazias dos lados): a amostra cresce até a
+  foto, e não até um retângulo mais largo que ela (retorno de 16/11/2026).
+*/
 .finish-zoom__stage img {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--finish-stage-h);
   object-fit: contain;
 }
 
@@ -2297,4 +2306,110 @@
 
 .gallery-dialog [data-gallery-index] {
   scroll-margin-top: calc(44px + var(--space-6));
+}
+
+/*
+  Foto da peça ampliada e setas da galeria (retorno de 16/11/2026). As setas servem ao palco da página da peça
+  (`ProductStage`) e à foto em tela cheia (`PhotoViewer`): quadradas, brancas, com a borda de controle (R17).
+*/
+.photo-arrow,
+.stage-zoom {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line-field);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.photo-arrow:hover,
+.stage-zoom:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.photo-arrow {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.photo-arrow.is-prev {
+  left: var(--space-4);
+}
+
+.photo-arrow.is-next {
+  right: var(--space-4);
+}
+
+.photo-arrow.is-prev .icon {
+  transform: rotate(180deg);
+}
+
+.stage-zoom {
+  top: var(--space-4);
+  right: var(--space-4);
+}
+
+.gallery__stage.is-zoomable > img {
+  cursor: zoom-in;
+}
+
+.photo-viewer {
+  display: none;
+  overflow: hidden;
+}
+
+.photo-viewer[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-viewer__count {
+  margin-left: var(--space-4);
+  color: var(--ink-muted);
+}
+
+/* A foto cabe inteira na área abaixo da barra, sem passar do tamanho que tem de verdade (posição absoluta, como o palco). */
+.photo-viewer__stage {
+  --viewer-inset: var(--space-4) calc(var(--gutter) + 56px);
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  touch-action: pan-y;
+}
+
+.photo-viewer__img {
+  position: absolute;
+  inset: var(--viewer-inset);
+  margin: auto;
+  width: auto;
+  height: auto;
+  max-width: calc(100% - 2 * (var(--gutter) + 56px));
+  max-height: calc(100% - 2 * var(--space-4));
+  object-fit: contain;
+}
+
+@media (max-width: 35rem) {
+  .photo-viewer__stage {
+    --viewer-inset: var(--space-2) var(--space-2) calc(44px + 2 * var(--space-4));
+  }
+
+  .photo-viewer__img {
+    max-width: calc(100% - 2 * var(--space-2));
+    max-height: calc(100% - 44px - 2 * var(--space-4) - var(--space-2));
+  }
+
+  .photo-viewer .photo-arrow {
+    top: auto;
+    bottom: var(--space-4);
+    translate: none;
+  }
 }

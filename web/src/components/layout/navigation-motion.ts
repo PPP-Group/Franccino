@@ -429,7 +429,10 @@ function onClick(event: MouseEvent) {
     return;
   }
   positions.set(entryKey(), window.scrollY);
-  if (!sameDocumentHref(url.href, location.href)) pinScroll();
+  // Só trava a rolagem quando muda de página. A troca de página da lista ou um filtro (o mesmo caminho, outra consulta)
+  // não passa pelo `onRouteCommit`, e a trava desfazia a rolagem até o começo da lista (`PageScroll`; retorno de
+  // 16/11/2026: na tabela técnica, a página seguinte abria no fim).
+  if (!sameDocumentHref(url.href, location.href) && url.pathname !== location.pathname) pinScroll();
 
   // Caminho ou logo que leva à página de onde a peça foi aberta: é um "voltar".
   const incoming = edges.get(entryKey());

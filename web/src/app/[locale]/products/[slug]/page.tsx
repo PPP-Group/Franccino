@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { RichText } from '@/components/content/RichText';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { DesignerStrip } from '@/components/products/DesignerStrip';
@@ -20,7 +20,7 @@ import { FileDownloads } from '@/components/downloads/FileDownloads';
 import { programOf, TechnicalLibrary } from '@/components/downloads/TechnicalLibrary';
 import { MediaLinks } from '@/components/media/MediaLinks';
 import { LeadSource } from '@/components/products/LeadSource';
-import type { Locale } from '@/i18n/config';
+import { locales, type Locale } from '@/i18n/config';
 import { getPathname, Link, type AppHref } from '@/i18n/navigation';
 import { getAllProductSlugs, getProduct } from '@/lib/api/catalog';
 import { getDesigner, getSettings } from '@/lib/api/content';
@@ -62,6 +62,19 @@ const DESIGNER_PIECES = 2;
 
 const productHref = (slug: string) => ({ pathname: '/products/[slug]', params: { slug } }) as const;
 
+/**
+ * O endereço da peça neste idioma quando `slug` é o endereço dela em outro idioma (o `/en` recebia o link em português
+ * de "Peças que você viu" e abria uma página de erro; retorno de 16/11/2026).
+ */
+async function localizedSlug(slug: string, locale: Locale): Promise<string | null> {
+  for (const other of locales.filter((item) => item !== locale)) {
+    const found = await getProduct(other, slug);
+    const target = found?.slugs[locale];
+    if (target && target !== slug) return target;
+  }
+  return null;
+}
+
 function categoryHref(product: ProductDetail): AppHref {
   const params = { category: product.category.slug };
   return product.area.key === 'outdoor'
@@ -96,6 +109,9 @@ export default async function ProductPage({ params }: Props) {
   setRequestLocale(locale);
   const product = await getProduct(locale, slug);
   if (!product) {
+    // Endereço da peça no outro idioma (um link salvo antes da troca de idioma): leva ao endereço deste idioma.
+    const localized = await localizedSlug(slug, locale);
+    if (localized) redirect(getPathname({ href: productHref(localized), locale }));
     notFound();
   }
   const designerRef = product.designer;
@@ -138,7 +154,7 @@ export default async function ProductPage({ params }: Props) {
     <main>
       <JsonLd data={productJsonLd(product, url)} />
       <JsonLd data={breadcrumb} />
-      <TrackView product={card} />
+      <TrackView product={card} locale={locale} slugs={product.slugs} />
       <div className="wrap">
         <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
         {product.cover ? (

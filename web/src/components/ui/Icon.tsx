@@ -93,6 +93,8 @@ const PATHS = {
     </>
   ),
   chevron: <path d="m6 9 6 6 6-6" />,
+  // Ampliar a foto da peça (Tabler Icons, arrows-maximize, MIT).
+  expand: <path d="M16 4h4v4M14 10l6 -6M8 20h-4v-4M4 20l6 -6M16 20h4v-4M14 14l6 6M8 4h-4v4M4 4l6 6" />,
   pause: <path d="M9 5v14M15 5v14" />,
   play: <path d="M7 5v14l11-7Z" />,
 } satisfies Record<string, ReactNode>;
