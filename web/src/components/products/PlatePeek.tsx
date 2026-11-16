@@ -14,7 +14,8 @@ const FOLLOW = 0.2;
 /**
  * Capas das outras cores da peça que flutuam ao lado do ponteiro no hover do card da grade (retorno de 16/11/2026),
  * como as fotos da tabela técnica (`RowPeek`): só as outras cores, nunca a que já está no card. Fica no `body` (um
- * card dentro de uma esteira com `transform` prenderia a camada fixa), só desktop com mouse, decorativa.
+ * card dentro de uma esteira com `transform` prenderia a camada fixa), só desktop com mouse, decorativa. As outras cores e
+ * a etiqueta ficam retas (`PeekPhotos`).
  */
 export function PlatePeek({ colors }: { colors: Image[] }) {
   const anchorRef = useRef<HTMLSpanElement | null>(null);

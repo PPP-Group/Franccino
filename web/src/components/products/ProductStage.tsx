@@ -2,10 +2,12 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { flushSync } from 'react-dom';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
 import { STAGE_SIZES, stepIndex } from '@/lib/product/gallery';
 import { Icon } from '@/components/ui/Icon';
+import { waitForImage } from '@/lib/ui/wait-for-image';
 import type { Image, ProductDetail } from '@/lib/api/types';
 import { ModelViewer } from './ModelViewer';
 import { PhotoViewer } from './PhotoViewer';
@@ -40,6 +42,12 @@ type ProductStageProps = {
   model: ProductDetail['model_3d'];
 };
 
+type StartViewTransition = (update: () => Promise<void> | void) => ViewTransition;
+
+/** Nomes do movimento da foto em tela cheia (`motion.css`). */
+const VIEWER_MORPH = 'photo-viewer';
+const VIEWER_PANEL = 'photo-viewer-panel';
+
 /**
  * Galeria com alternância Fotos/3D. `?view=3d` é lido no cliente (useSyncExternalStore)
  * para a página de produto continuar estática.
@@ -66,6 +74,42 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
           ...(ratio ? { '--stage-ratio': ratio.toFixed(4) } : {}),
         } as CSSProperties)
       : undefined;
+
+  /**
+   * Abre ou fecha a foto em tela cheia com a foto do palco crescendo até ela e encolhendo de volta (retorno de
+   * 16/11/2026), como a amostra dos acabamentos. Sem o movimento entre estados (ou com movimento reduzido), troca direto.
+   */
+  function toggleViewer(opening: boolean) {
+    const doc = document as Document & { startViewTransition?: StartViewTransition };
+    const stagePhoto = () =>
+      stageRef.current?.querySelector<HTMLImageElement>('img:not(.gallery__leaving)') ?? null;
+    const viewerPhoto = () =>
+      document.querySelector<HTMLImageElement>('dialog.photo-viewer[open] .photo-viewer__img');
+    const from = opening ? stagePhoto() : viewerPhoto();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!doc.startViewTransition || reduce || !from) {
+      setViewer(opening);
+      return;
+    }
+    const panel = document.querySelector<HTMLElement>('dialog.photo-viewer');
+    let to: HTMLElement | null = null;
+    from.style.viewTransitionName = VIEWER_MORPH;
+    if (panel && !opening) panel.style.viewTransitionName = VIEWER_PANEL;
+    const transition = doc.startViewTransition(async () => {
+      from.style.viewTransitionName = '';
+      if (panel) panel.style.viewTransitionName = '';
+      flushSync(() => setViewer(opening));
+      to = opening ? viewerPhoto() : stagePhoto();
+      if (to) to.style.viewTransitionName = VIEWER_MORPH;
+      if (panel && opening) panel.style.viewTransitionName = VIEWER_PANEL;
+      await waitForImage(to as HTMLImageElement | null);
+    });
+    void transition.finished.finally(() => {
+      from.style.viewTransitionName = '';
+      if (to) to.style.viewTransitionName = '';
+      if (panel) panel.style.viewTransitionName = '';
+    });
+  }
 
   function showImage(next: number) {
     if (next !== index && current) {
@@ -107,7 +151,7 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
         className={mode === '3d' ? 'gallery__stage is-3d' : 'gallery__stage is-zoomable'}
         style={stageStyle}
         onClick={(event) => {
-          if (mode === 'photo' && current && (event.target as Element).tagName === 'IMG') setViewer(true);
+          if (mode === 'photo' && current && (event.target as Element).tagName === 'IMG') toggleViewer(true);
         }}
       >
         {current ? (
@@ -137,7 +181,12 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
           </div>
         ) : null}
         {mode === 'photo' && current ? (
-          <button type="button" className="stage-zoom" aria-label={t('zoom')} onClick={() => setViewer(true)}>
+          <button
+            type="button"
+            className="stage-zoom"
+            aria-label={t('zoom')}
+            onClick={() => toggleViewer(true)}
+          >
             <Icon name="expand" />
           </button>
         ) : null}
@@ -198,7 +247,7 @@ export function ProductStage({ images, name, slug, model }: ProductStageProps) {
         open={viewer}
         title={name}
         onIndexChange={(next) => showImage(next)}
-        onClose={() => setViewer(false)}
+        onClose={() => toggleViewer(false)}
       />
     </div>
   );

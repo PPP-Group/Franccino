@@ -66,5 +66,31 @@ if [ ! -f "$READY_MARK" ]; then
     done
 fi
 
+# Capas sumindo depois do deploy (retorno de 16/11/2026): o site compila com a API antiga ainda no ar, e a API nova, ao
+# subir, troca capas e recortes (`covers:apply`, `content:apply`) e apaga os arquivos antigos. O aviso de revalidação
+# que ela manda chega ao container antigo do site, e o novo subia com os endereços velhos (fotos quebradas) até o cache
+# de 1 hora vencer. Agora o próprio site expira todo o cache depois de subir, e de novo alguns minutos depois (a API
+# nova pode terminar depois do site).
+revalidate_all() {
+    node -e "
+const port = process.env.PORT || '3000';
+const tags = ['home','areas','categories','products','lines','designers','collections','launches','projects','clients','stores','finishes','banners','scenes','pages','settings','redirects'];
+fetch('http://127.0.0.1:' + port + '/api/revalidate', {
+  method: 'POST',
+  headers: { 'content-type': 'application/json', 'x-revalidate-secret': process.env.REVALIDATE_SECRET },
+  body: JSON.stringify({ tags }),
+  signal: AbortSignal.timeout(15000),
+}).then((r) => { console.log('Cache do site expirado (' + r.status + ').'); }).catch(() => {});
+"
+}
+if [ -n "${REVALIDATE_SECRET:-}" ]; then
+    (
+        for delay in ${REVALIDATE_AFTER_START:-30 300 900}; do
+            sleep "$delay"
+            revalidate_all
+        done
+    ) &
+fi
+
 cd web
 exec node_modules/.bin/next start -H 0.0.0.0 -p "${PORT:-3000}"

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { waitForImage } from '@/lib/ui/wait-for-image';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import type { Image } from '@/lib/api/types';
@@ -23,20 +24,6 @@ type StartViewTransition = (update: () => Promise<void> | void) => ViewTransitio
 
 const MORPH = 'finish-zoom';
 const PANEL = 'finish-zoom-panel';
-const IMAGE_WAIT_MS = 600;
-
-function waitForImage(image: HTMLImageElement | null | undefined): Promise<unknown> {
-  if (!image || (image.complete && image.naturalWidth > 0)) {
-    return image ? image.decode().catch(() => undefined) : Promise.resolve();
-  }
-  return Promise.race([
-    new Promise((resolve) => {
-      image.addEventListener('load', resolve, { once: true });
-      image.addEventListener('error', resolve, { once: true });
-    }),
-    new Promise((resolve) => window.setTimeout(resolve, IMAGE_WAIT_MS)),
-  ]);
-}
 
 /**
  * Amostra do acabamento que abre em detalhe (banco de ideias, ideia 9). A janela fica no meio da tela, e a amostra

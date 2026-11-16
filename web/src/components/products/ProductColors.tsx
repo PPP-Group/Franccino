@@ -56,6 +56,9 @@ export function ProductColors({
                 <Link
                   className="colors__item"
                   href={{ pathname: '/products/[slug]', params: { slug: choice.slug } }}
+                  // Troca a entrada do histórico: o "voltar" sai da peça e vai para a página anterior, sem passar por
+                  // cada cor vista (retorno de 16/11/2026).
+                  replace
                   title={label}
                 >
                   <ApiImage image={choice.cover} sizes="72px" />
