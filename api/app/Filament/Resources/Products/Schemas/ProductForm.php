@@ -6,6 +6,7 @@ use App\Enums\ProductRoom;
 use App\Filament\Support\CommonFields;
 use App\Filament\Support\Translatable;
 use App\Models\Line;
+use App\Models\Product;
 use App\Support\Locales;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Repeater;
@@ -64,6 +65,9 @@ class ProductForm
                 TextInput::make("tagline.{$locale}")
                     ->label(__('Tagline'))
                     ->maxLength(255),
+                TextInput::make("color_name.{$locale}")
+                    ->label(__('Color name'))
+                    ->maxLength(60),
             ]),
             TextInput::make('sku')
                 ->label(__('SKU'))
@@ -114,6 +118,25 @@ class ProductForm
                 ->multiple()
                 ->searchable(['name', 'sku'])
                 ->preload(),
+            // A mesma peça em outras cores (16/11/2026): não é relação do Eloquent, é o grupo `color_group`, que
+            // `Product::syncColors` grava nas peças escolhidas e nesta.
+            Select::make('color_ids')
+                ->label(__('Same piece in other colors'))
+                ->multiple()
+                ->searchable()
+                ->options(fn (?Product $record): array => Product::query()
+                    ->when($record, fn ($query) => $query->whereKeyNot($record->getKey()))
+                    ->orderBy('name->pt')
+                    ->get()
+                    ->mapWithKeys(fn (Product $product) => [
+                        $product->id => (string) $product->getTranslation('name', 'pt', false),
+                    ])
+                    ->all())
+                ->afterStateHydrated(fn (Select $component, ?Product $record) => $component->state(
+                    $record?->colors()->whereKeyNot($record->getKey())->pluck('id')->all() ?? [],
+                ))
+                ->dehydrated(false)
+                ->saveRelationshipsUsing(fn (Product $record, ?array $state) => $record->syncColors($state ?? [])),
             ...CommonFields::publication(),
         ];
     }

@@ -4,10 +4,13 @@ import { MorphImage } from '@/components/media/MorphImage';
 import { Link } from '@/i18n/navigation';
 import type { ProductCard } from '@/lib/api/types';
 import { morphName, morphTypes } from '@/lib/ui/morph';
+import { colorCovers } from '@/lib/catalog/technical';
+import { PlatePeek } from './PlatePeek';
 import { QuickAddButton } from './QuickAddButton';
 
 /** O que o card usa: foto, nome e o sinal de lançamento (também serve às peças guardadas em "Peças que você viu"). */
-export type PlateProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'>;
+export type PlateProduct = Pick<ProductCard, 'id' | 'slug' | 'name' | 'cover' | 'is_new'> &
+  Partial<Pick<ProductCard, 'colors'>>;
 
 /**
  * Nome da transição que leva a foto do card até a foto grande da página da peça e de volta (banco de ideias, ideia
@@ -59,6 +62,7 @@ export function ProductPlate({
   const cover = product.cover;
   // A foto nunca passa da própria largura: as originais do catálogo são pequenas, e ampliar borra.
   const mediaStyle = cover?.width ? ({ '--plate-img-max': `${cover.width}px` } as CSSProperties) : undefined;
+  const colors = colorCovers(product);
   return (
     <article className={className ? `plate ${className}` : 'plate'} data-slug={product.slug}>
       <Link
@@ -89,6 +93,8 @@ export function ProductPlate({
       </Link>
       {/* "+" no canto da foto, no hover: põe a peça na lista sem abrir a página (retorno de 09/11/2026). */}
       <QuickAddButton product={product} variant="plate" />
+      {/* Peça em outras cores: as capas delas flutuam ao lado do ponteiro no hover (16/11/2026). */}
+      {colors.length > 0 ? <PlatePeek colors={colors} /> : null}
     </article>
   );
 }

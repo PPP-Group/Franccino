@@ -35,12 +35,18 @@ export function naturalBox(width: number | null, height: number | null): { width
   return { width: photo.width + PAD * 2, height: photo.height + PAD * 2 };
 }
 
-/** Caixa da prévia aberta, para `count` fotos (de 1 a `PREVIEW_COUNT`). */
-export function peekBox(count: number): { width: number; height: number } {
+/** Distância entre a linha das outras cores e a das fotos da peça (a altura da foto e o respiro). */
+export const PEEK_ROW_STEP = PEEK_PHOTO.height + (PEEK_PHOTO.step - PEEK_PHOTO.width);
+
+/**
+ * Caixa da prévia aberta, para `count` fotos (de 1 a `PREVIEW_COUNT`) em `rows` linhas (2 quando a peça tem outras
+ * cores: as capas delas em cima, as fotos da peça embaixo).
+ */
+export function peekBox(count: number, rows = 1): { width: number; height: number } {
   const photos = Math.max(1, count);
   return {
     width: PEEK_PHOTO.width + (photos - 1) * PEEK_PHOTO.step + PAD * 2,
-    height: PEEK_PHOTO.height + PAD * 2,
+    height: PEEK_PHOTO.height + (Math.max(1, rows) - 1) * PEEK_ROW_STEP + PAD * 2,
   };
 }
 

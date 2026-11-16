@@ -80,6 +80,18 @@ export type ProductCard = {
    */
   cutout?: Image | null;
   is_new: boolean;
+  /** Nome da cor desta peça, quando ela faz parte de um grupo de cores (16/11/2026). */
+  color?: string | null;
+  /** A mesma peça nas outras cores (peças separadas, ligadas no painel), sem esta. */
+  colors?: ProductColor[];
+};
+
+export type ProductColor = {
+  id: number;
+  slug: string;
+  name: string;
+  color: string | null;
+  cover: Image | null;
 };
 
 export type ProductVariant = { id: number; slug: string; name: string; image: Image | null };
