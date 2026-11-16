@@ -38,7 +38,8 @@ class HomeController extends Controller
 
         $featuredProducts = Product::published()
             ->where('is_featured', true)
-            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published(), ...Product::withColors()])
+            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published()])
+            ->with(Product::withColors())
             ->ordered()
             ->limit(12)
             ->get();

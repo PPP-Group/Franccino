@@ -12,6 +12,7 @@ const image = (id: number): Image => ({
   height: 600,
   src: `/foto-${id}.webp`,
   srcset: [],
+  blur_data_url: null,
 });
 
 describe('ProductColors', () => {

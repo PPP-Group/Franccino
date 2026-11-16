@@ -29,8 +29,8 @@ final class ProductQuery
             ->with([
                 'area', 'category', 'designer', 'media',
                 'launches' => fn ($query) => $query->published(),
-                ...Product::withColors(),
-            ]);
+            ])
+            ->with(Product::withColors());
 
         if (filled($filters['area'] ?? null)) {
             $area = $filters['area'];

@@ -53,8 +53,8 @@ class ProductController extends Controller
                 'launches' => fn ($query) => $query->published(),
                 'variants' => fn ($query) => $query->published()->with('media'),
                 'variantOf' => fn ($query) => $query->published()->with('media'),
-                ...Product::withColors(),
             ])
+            ->with(Product::withColors())
             ->firstOrFail();
 
         return response()->json(['data' => (new ProductDetailResource($product))->resolve()]);

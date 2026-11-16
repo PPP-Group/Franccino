@@ -38,7 +38,8 @@ class QuoteListController extends Controller
 
         $products = Product::published()
             ->whereIn('id', $items->pluck('product_id'))
-            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published(), ...Product::withColors()])
+            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published()])
+            ->with(Product::withColors())
             ->get()
             ->keyBy('id');
         $finishes = Finish::query()

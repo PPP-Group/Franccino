@@ -169,7 +169,18 @@ class Product extends Model implements HasMedia
      */
     public static function withColors(): array
     {
-        return ['colors' => fn ($query) => $query->published()->with('media')];
+        return ['colors' => self::publishedColors(...)];
+    }
+
+    /**
+     * As outras cores que aparecem no site: só as publicadas, com as fotos.
+     *
+     * @param  HasMany<Product, Product>  $query
+     * @return HasMany<Product, Product>
+     */
+    private static function publishedColors(HasMany $query): HasMany
+    {
+        return $query->published()->with('media');
     }
 
     /**

@@ -36,7 +36,8 @@ class DesignerController extends Controller
 
         $products = $designer->products()
             ->published()
-            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published(), ...Product::withColors()])
+            ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published()])
+            ->with(Product::withColors())
             ->ordered()
             ->get();
 
