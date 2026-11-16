@@ -238,6 +238,7 @@
     "pendingHint": "Acabamento a definir: {groups}. Selecione agora ou defina posteriormente com nossa equipe.",
     "quantity": "Quantidade",
     "addToList": "Adicionar à lista de desejos",
+    "updateList": "Atualizar a lista",
     "inList": "Na lista",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Onde comprar",
@@ -309,6 +310,11 @@
       },
       "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional",
       "allVersions": "Ver todas as {count} versões"
+    },
+    "colors": {
+      "title": "Cores",
+      "current": "Cor atual: {color}",
+      "other": "Ver na cor {color}"
     },
     "variants": {
       "title": "Variações"

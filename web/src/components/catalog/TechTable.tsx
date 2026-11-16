@@ -41,7 +41,7 @@ export function TechTable({ rows: unsorted }: { rows: TechnicalRow[] }) {
   };
   const peeks = rows
     .filter((row) => row.preview && row.preview.length > 0)
-    .map((row) => ({ id: row.product.id, images: row.preview ?? [] }));
+    .map((row) => ({ id: row.product.id, images: row.preview ?? [], colors: row.colors }));
   const withPeek = new Set(peeks.map((item) => item.id));
   return (
     <div className="tech-table-wrap">

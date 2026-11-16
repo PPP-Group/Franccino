@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Icon } from '@/components/ui/Icon';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
@@ -16,7 +16,8 @@ import {
   selectFinish,
   type FinishSelection,
 } from '@/lib/product/finish-selection';
-import { useQuoteCount } from '@/lib/quote/hooks';
+import { useQuoteCount, useQuoteItems } from '@/lib/quote/hooks';
+import { quoteItemKey } from '@/lib/quote/list';
 import { formatFinishes } from '@/lib/quote/message';
 import { toQuoteSnapshot } from '@/lib/quote/snapshot';
 import { quoteActions } from '@/lib/quote/store';
@@ -35,10 +36,11 @@ type ProductConfiguratorProps = {
   quoteForm?: ReactNode;
 };
 
-/** Quanto tempo o botão principal fica em "Na lista" com o visto depois de adicionar. */
-const ADDED_MS = 1500;
-
 type Feedback = { kind: 'added' | 'full'; text: string };
+
+type AddState = 'add' | 'added' | 'update';
+
+const ADD_LABEL = { add: 'addToList', added: 'addedToList', update: 'updateList' } as const;
 
 export function ProductConfigurator({
   product,
@@ -55,14 +57,24 @@ export function ProductConfigurator({
   const [selection, setSelection] = useState<FinishSelection>(() => initialSelection(product.finishes));
   const [quantity, setQuantity] = useState(1);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const [justAdded, setJustAdded] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const quoteId = useId();
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  useEffect(() => () => clearTimeout(timer.current), []);
-
+  const items = useQuoteItems();
   const finishes = selectedFinishes(product.finishes, selection);
+  // A peça com estes acabamentos já na lista (retorno de 16/11/2026): o botão fica verde em "Adicionada à lista"
+  // enquanto a quantidade escolhida é a da lista; mudou a quantidade, ele volta a preto e o clique só atualiza a lista.
+  const key = quoteItemKey({ productId: product.id, finishes });
+  const inList = items.find((item) => quoteItemKey(item) === key) ?? null;
+  const state: AddState = !inList ? 'add' : inList.quantity === quantity ? 'added' : 'update';
+  // Ao abrir a página (ou trocar o acabamento) com a peça já na lista, a quantidade começa na da lista.
+  const synced = useRef<string | null>(null);
+  useEffect(() => {
+    if (inList && synced.current !== key) {
+      synced.current = key;
+      setQuantity(inList.quantity);
+    }
+  }, [inList, key]);
+
   const pending = pendingGroups(product.finishes, selection);
   const summary = formatFinishes(finishes, q('pendingFinish'));
   const whatsappHref = whatsappUrl(
@@ -70,18 +82,21 @@ export function ProductConfigurator({
     t('whatsappText', { quantity, name: product.name, finishes: summary }),
   );
 
-  function handleAdd() {
-    const status = quoteActions.add({ ...toQuoteSnapshot(product, locale, finishes), quantity });
-    if (status === 'full') {
-      setFeedback({ kind: 'full', text: q('listFull') });
-      return;
+  function handleAdd(event: MouseEvent<HTMLButtonElement>) {
+    if (state === 'added') return;
+    if (state === 'update') {
+      quoteActions.setQuantity(key, quantity);
+    } else {
+      const status = quoteActions.add({ ...toQuoteSnapshot(product, locale, finishes), quantity });
+      if (status === 'full') {
+        setFeedback({ kind: 'full', text: q('listFull') });
+        return;
+      }
     }
-    // A foto do palco da peça voa até a lista no cabeçalho.
-    flyToQuote(document.querySelector<HTMLImageElement>('.gallery__stage img'));
+    synced.current = key;
+    // A foto do palco da peça voa até a lista no cabeçalho; rolada para fora da tela, o voo sai do botão.
+    flyToQuote(document.querySelector<HTMLImageElement>('.gallery__stage img'), event.currentTarget);
     setFeedback({ kind: 'added', text: t('added', { quantity, name: product.name, finishes: summary }) });
-    setJustAdded(true);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setJustAdded(false), ADDED_MS);
   }
 
   return (
@@ -112,8 +127,9 @@ export function ProductConfigurator({
       {/*
         Orçamento em dois níveis (retorno de 06/11/2026): a ação principal (quantidade e "Adicionar à lista de
         orçamento", os dois com 48 px) e, separada por um fio, a linha das outras formas de pedir, com o mesmo espaço
-        entre elas e um divisor. O botão principal confirma com o visto e "Adicionada à lista" por 1,5 s; o ícone e o
-        contador da lista no cabeçalho pulsam uma vez (microinteração 12d, motion.css).
+        entre elas e um divisor. O botão principal fica verde com o visto e "Adicionada à lista" enquanto a peça está na
+        lista com a quantidade escolhida; o ícone e o contador da lista no cabeçalho pulsam uma vez (microinteração 12d,
+        motion.css).
       */}
       <section className="buy block" aria-label={t('buyLabel')}>
         {pending.length > 0 ? (
@@ -123,13 +139,14 @@ export function ProductConfigurator({
           <QuantityStepper value={quantity} onChange={setQuantity} label={t('quantity')} />
           <button
             type="button"
-            className={justAdded ? 'btn buy__add is-added' : 'btn buy__add'}
+            className={state === 'added' ? 'btn buy__add is-added' : 'btn buy__add'}
+            aria-disabled={state === 'added' ? true : undefined}
             onClick={handleAdd}
           >
-            <span className="buy__add-icon add-icon" key={justAdded ? 'check' : 'list'}>
-              <Icon name={justAdded ? 'check' : 'list'} />
+            <span className="buy__add-icon add-icon" key={state === 'added' ? 'check' : 'list'}>
+              <Icon name={state === 'added' ? 'check' : 'list'} />
             </span>
-            <span>{justAdded ? t('addedToList') : t('addToList')}</span>
+            <span>{t(ADD_LABEL[state])}</span>
           </button>
         </div>
         <p className={feedback?.kind === 'full' ? 'feedback feedback--alert' : 'feedback'} role="status">

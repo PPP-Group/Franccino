@@ -7,6 +7,7 @@ use App\Http\Resources\V1\DesignerCardResource;
 use App\Http\Resources\V1\DesignerResource;
 use App\Models\Collection as CollectionModel;
 use App\Models\Designer;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -36,6 +37,7 @@ class DesignerController extends Controller
         $products = $designer->products()
             ->published()
             ->with(['area', 'category', 'designer', 'media', 'launches' => fn ($query) => $query->published()])
+            ->with(Product::withColors())
             ->ordered()
             ->get();
 

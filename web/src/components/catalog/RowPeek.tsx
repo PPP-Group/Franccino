@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApiImage } from '@/components/media/ApiImage';
 import type { Image } from '@/lib/api/types';
 import { PREVIEW_COUNT } from '@/lib/catalog/technical';
-import { naturalBox, naturalPhoto, peekBox, peekPosition, PEEK_PHOTO } from '@/lib/catalog/row-peek';
+import { naturalBox, naturalPhoto, peekBox, peekPosition } from '@/lib/catalog/row-peek';
+import { PeekPhotos, peekSize } from './PeekPhotos';
 import { REDUCED_MOTION } from '@/lib/ui/use-reduced-motion';
 
 /** Só com mouse de verdade: no toque não há "passar por cima", e a prévia cobriria a tabela. */
@@ -13,7 +14,8 @@ const FINE_POINTER = '(hover: hover) and (pointer: fine)';
 /** Quanto a prévia anda por quadro em direção ao ponteiro (segue suave, sem atraso que pareça lento). */
 const FOLLOW = 0.2;
 
-export type RowPeekItem = { id: number; images: Image[] };
+/** `colors`: capas das outras cores da peça, na linha de cima (16/11/2026). */
+export type RowPeekItem = { id: number; images: Image[]; colors?: Image[] };
 
 /** Ao lado da lista (`beside`), centrada na altura do ponteiro e presa dentro da janela. */
 function besidePosition(list: DOMRect, pointerY: number, box: { width: number; height: number }) {
@@ -61,9 +63,7 @@ export function RowPeek({
     boxes.current = new Map(
       items.map((item) => [
         item.id,
-        natural
-          ? naturalBox(item.images[0]?.width ?? null, item.images[0]?.height ?? null)
-          : peekBox(Math.min(item.images.length, PREVIEW_COUNT)),
+        natural ? naturalBox(item.images[0]?.width ?? null, item.images[0]?.height ?? null) : peekSize(item),
       ]),
     );
   }, [items, natural]);
@@ -143,7 +143,7 @@ export function RowPeek({
   const shown = items.find((item) => item.id === shownId);
   const photos = shown ? shown.images.slice(0, natural ? 1 : PREVIEW_COUNT) : [];
   const photo = natural && photos[0] ? naturalPhoto(photos[0].width, photos[0].height) : null;
-  const box = photo ? naturalBox(photos[0].width, photos[0].height) : peekBox(photos.length);
+  const box = photo ? naturalBox(photos[0].width, photos[0].height) : shown ? peekSize(shown) : peekBox(1);
   return (
     <div
       ref={layerRef}
@@ -155,24 +155,15 @@ export function RowPeek({
     >
       {shown ? (
         // A chave troca o grupo a cada linha: as fotos da peça nova saem de novo da pilha e se abrem.
-        <div key={shown.id} className="row-peek__group">
-          {photos.map((image, index) => (
-            <div
-              key={image.id}
-              className="row-peek__photo"
-              style={
-                {
-                  '--i': index,
-                  '--peek-rotate': index % 2 ? '1.5deg' : '-1.5deg',
-                  zIndex: photos.length - index,
-                  ...(photo ? { width: photo.width, height: photo.height } : {}),
-                } as CSSProperties
-              }
-            >
-              <ApiImage image={image} sizes={`${photo ? photo.width : PEEK_PHOTO.width}px`} />
+        natural && photo ? (
+          <div key={shown.id} className="row-peek__group">
+            <div className="row-peek__photo" style={{ width: photo.width, height: photo.height }}>
+              <ApiImage image={photos[0]} sizes={`${photo.width}px`} />
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <PeekPhotos key={shown.id} images={shown.images} colors={shown.colors} />
+        )
       ) : null}
     </div>
   );

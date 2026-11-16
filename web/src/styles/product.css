@@ -785,3 +785,65 @@
   height: 100%;
   object-fit: contain;
 }
+
+/*
+  A mesma peça em outras cores (retorno de 16/11/2026): as capas lado a lado, a cor desta com a borda cheia. Cada
+  quadro tem 64 px (alvo de toque folgado) e a foto inteira dentro, sem corte.
+*/
+.colors {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.colors__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.colors__current {
+  color: var(--ink-muted);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.colors__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.colors__item {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.colors__item img {
+  position: absolute;
+  inset: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  object-fit: contain;
+}
+
+a.colors__item:hover,
+a.colors__item:focus-visible {
+  border-color: var(--ink);
+}
+
+.colors__item.is-current {
+  border: 2px solid var(--ink);
+}

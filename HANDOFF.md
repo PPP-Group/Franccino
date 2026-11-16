@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (31, de 15/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (32, de 16/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1544,3 +1544,29 @@ revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
   acabamento, linha do tempo da Fábrica e o título "Blocos 3D e fichas técnicas" da Área do Profissional.
 - **Teste local que já falhava no Windows:** `MaintenanceTest` (backup semanal) falha igual na `develop`; não é desta
   mudança.
+
+## 32. 16/11/2026: capas das listas do Pedro, botão da lista de desejos e peças ligadas por cor
+
+- **Capas:** as 49 peças das listas `/pt/lista/n9gkagf7` e `/pt/lista/49hfnn49` do preview, conferidas a olho em
+  tamanho grande. Leitura do retorno: a capa é a diagonal **mais de frente que de lado**, com a frente da peça virada para
+  a esquerda (nas peças compridas, a ponta direita mais perto). As capas eram a vista de lado (perfil ou 3/4 de lado), de
+  frente ou a diagonal para a direita. Sem a diagonal para a esquerda, a de frente. Lista
+  `api/database/data/covers/2026-11-16-diagonal-esquerda-6.json`, aplicada no deploy. A confirmar com o Pedro: Mesa de
+  centro Luz (escolhida uma de duas fotos de frente) e Sofá Armani (diagonal leve). A Cadeira Pitá sem braço 2 (laranja)
+  tem na galeria uma foto de outra cor (cinza e azul, id 2327).
+- **Recortes do carrossel:** 12 dessas peças têm foto sem fundo feita da capa antiga (Cadeira Arp, Gama, Pitá com braço,
+  Pitá com braço 2, Pitá sem braço 2, Sirius, Penteadeira Lenyr, Poltrona Arp, Poltrona Iris, Sofá Dara, Sofá Mares e
+  Sofá Tasca). Os novos foram gerados com `design/recortes/recortar.py` a partir das capas novas, na área temporária da
+  sessão; falta enviar como `cutout` (painel ou `/api/import/media`).
+- **Botão "Adicionar à lista de desejos" da página da peça:** fica verde em "Adicionada à lista" enquanto a peça (com os
+  acabamentos escolhidos) está na lista com a quantidade do seletor, também depois de recarregar (a quantidade começa na
+  da lista). Mudou a quantidade: volta a preto, "Atualizar a lista", e o clique troca a quantidade na lista (não soma).
+  O voo da miniatura sai de cima do botão quando a foto do palco está fora da tela (no celular ela fica lá em cima).
+- **Peças ligadas por cor:** `products.color_group` (uuid) e `products.color_name` (traduzível). Painel, aba Geral: "A
+  mesma peça em outras cores" (`color_ids`, grava o grupo pelo `Product::syncColors`) e "Nome da cor". API: `color` e
+  `colors` no `ProductCard` (carga antecipada `Product::withColors()` em todas as consultas de cards). Site: seção
+  "Cores" na página da peça (`ProductColors`), capas das outras cores flutuando no hover do card da grade (`PlatePeek`)
+  e, na tabela técnica e nas sugestões da busca, uma linha de cima com as outras cores (`PeekPhotos`). Prévia com no
+  máximo 4 fotos por linha; com mais, a última vira pilha. Nenhuma peça foi ligada ainda: os grupos são feitos no painel.
+- **Cache local:** depois de mudar dados na API local, o `next dev` serve a resposta antiga até apagar
+  `web/.next/dev/cache/fetch-cache` com o servidor parado.
