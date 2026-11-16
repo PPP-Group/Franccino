@@ -1624,6 +1624,7 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
 - **Foto ampliada da peça:** abre com a foto do palco crescendo até a tela cheia e fecha encolhendo de volta (também
   pelo Esc), como a amostra dos acabamentos (`toggleViewer` no `ProductStage`, `motion.css`). `waitForImage` passou para
   `lib/ui/wait-for-image.ts`.
-- **Outras cores:** no hover do card da grade, as fotos e a etiqueta ficam retas (a inclinação continua só na tabela
-  técnica e na busca). Trocar de cor na página da peça troca a entrada do histórico: o "voltar" sai da peça para a
-  página anterior, sem passar por cada cor vista.
+- **Outras cores:** em toda prévia que flutua (card da grade, tabela técnica, busca), as fotos das outras cores e a
+  etiqueta "Também em outras cores" ficam retas; as fotos da própria peça continuam com a inclinação leve. Trocar de cor
+  na página da peça troca a entrada do histórico: o "voltar" sai da peça para a página anterior, sem passar por cada cor
+  vista.
