@@ -238,6 +238,7 @@
     "pendingHint": "Finish to be defined: {groups}. Select it now or define it later with our team.",
     "quantity": "Quantity",
     "addToList": "Add to wishlist",
+    "updateList": "Update the list",
     "inList": "On the list",
     "whatsapp": "WhatsApp",
     "whereToBuy": "Where to buy",
@@ -314,6 +315,11 @@
       },
       "professionalsPiece": "See this piece's files in the Professionals area",
       "allVersions": "See all {count} versions"
+    },
+    "colors": {
+      "title": "Colours",
+      "current": "Current colour: {color}",
+      "other": "See it in {color}"
     },
     "variants": {
       "title": "Variations"

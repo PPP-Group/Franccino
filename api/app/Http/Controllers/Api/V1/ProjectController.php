@@ -6,6 +6,7 @@ use App\Enums\ProjectType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\ProjectCardResource;
 use App\Http\Resources\V1\ProjectResource;
+use App\Models\Product;
 use App\Models\Project;
 use App\Models\Scene;
 use App\Support\ContentLocale;
@@ -61,10 +62,11 @@ class ProjectController extends Controller
                 'products' => fn ($query) => $query->published(),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),
+                'products.colors' => Product::withColors()['colors'],
                 'featuredProduct' => fn ($query) => $query->published()->with([
                     'area', 'category', 'designer', 'media',
                     'launches' => fn ($query) => $query->published(),
-                ]),
+                ])->with(Product::withColors()),
             ])
             ->with(['scene', ...Scene::apiRelations('scene.')])
             ->firstOrFail();

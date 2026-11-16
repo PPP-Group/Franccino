@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { flyPath, revealHeader } from './fly-to-quote';
+import { flyPath, mostlyVisible, originBox, revealHeader } from './fly-to-quote';
 
 describe('flyPath', () => {
   it('sai do centro da foto, num quadrado do menor lado, e termina no centro do ícone', () => {
@@ -38,5 +38,23 @@ describe('revealHeader', () => {
   it('não espera nada com o cabeçalho à vista', () => {
     vi.stubGlobal('window', { matchMedia: () => ({ matches: false }) });
     expect(revealHeader(root(false) as unknown as HTMLElement)).toBe(0);
+  });
+});
+
+describe('saída do voo', () => {
+  it('considera a foto à vista com metade ou mais dentro da tela', () => {
+    expect(mostlyVisible({ left: 0, top: 100, width: 300, height: 200 }, 800)).toBe(true);
+    expect(mostlyVisible({ left: 0, top: -90, width: 300, height: 200 }, 800)).toBe(true);
+    expect(mostlyVisible({ left: 0, top: -150, width: 300, height: 200 }, 800)).toBe(false);
+    expect(mostlyVisible({ left: 0, top: 720, width: 300, height: 200 }, 800)).toBe(false);
+  });
+
+  it('sem a foto à vista, sai de um quadrado logo acima do centro do botão', () => {
+    expect(originBox({ left: 500, top: 600, width: 300, height: 48 })).toEqual({
+      left: 614,
+      top: 528,
+      width: 72,
+      height: 72,
+    });
   });
 });

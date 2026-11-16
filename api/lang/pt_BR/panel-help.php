@@ -47,6 +47,8 @@ return [
     'product.gallery' => 'Outras fotos da peça (detalhes, ambientes). Arraste para mudar a ordem.',
     'project.featured_product_id' => 'A peça que aparece ao lado do texto do projeto. Escolha uma peça do projeto (de preferência uma dos pontos do ambiente). Sem escolha, aparece a primeira peça dos pontos do ambiente ou, sem ambiente, a primeira peça do projeto.',
     'product.rooms' => 'Ambientes em que a peça fica bem. São as opções do filtro "Ambientes" do catálogo; a peça aparece em cada ambiente marcado.',
+    'product.color_ids' => 'As outras peças que são esta mesma peça em outra cor. Elas continuam aparecendo separadas nas listas, mas ficam ligadas: na página da peça dá para trocar de cor, e no hover das listas aparecem as capas das outras cores. Basta ligar em uma delas; todas do grupo ficam ligadas entre si.',
+    'product.color_name' => 'Nome da cor desta peça (por exemplo, Laranja), mostrado na troca de cor da página. Opcional: sem ele, a troca mostra só a foto.',
     'product.variants' => 'Outras versões desta peça (por exemplo, com e sem braço, ou em outra medida). Aparecem na página da peça como "Variações", nas duas peças: basta ligar em uma delas.',
     'product.top_view' => 'Opcional. O desenho da peça vista de cima (planta), em PNG ou WebP com fundo transparente, cortado rente à peça. Na sala para montar, ele substitui a foto; sem ele, a sala mostra a capa.',
     'product.cutout' => 'Opcional. A mesma peça da capa, recortada: PNG ou WebP com fundo transparente, só a peça, cortada rente a ela e sem sombra, na diagonal virada para a esquerda, com pelo menos 2000 px. É a foto do carrossel de lançamentos e coleções; sem ela, o carrossel usa a capa.',

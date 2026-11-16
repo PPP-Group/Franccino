@@ -8,6 +8,7 @@ import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
+import { ProductColors } from '@/components/products/ProductColors';
 import { ProductVariants } from '@/components/products/ProductVariants';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
 import { TrackView } from '@/components/recent/TrackView';
@@ -198,6 +199,8 @@ export default async function ProductPage({ params }: Props) {
               </div>
               {contentLang ? <p className="meta">{t('fallbackNotice')}</p> : null}
             </div>
+
+            <ProductColors product={card} />
 
             <ProductVariants variants={product.variants ?? []} />
 

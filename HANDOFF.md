@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (31, de 15/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (33, de 16/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1545,11 +1545,37 @@ revisor (9 itens). O Pedro aprovou o que entra; o resto fica como está.
 - **Teste local que já falhava no Windows:** `MaintenanceTest` (backup semanal) falha igual na `develop`; não é desta
   mudança.
 
+## 32. 16/11/2026: capas das listas do Pedro, botão da lista de desejos e peças ligadas por cor
+
+- **Capas:** as 49 peças das listas `/pt/lista/n9gkagf7` e `/pt/lista/49hfnn49` do preview, conferidas a olho em
+  tamanho grande. Leitura do retorno: a capa é a diagonal **mais de frente que de lado**, com a frente da peça virada para
+  a esquerda (nas peças compridas, a ponta direita mais perto). As capas eram a vista de lado (perfil ou 3/4 de lado), de
+  frente ou a diagonal para a direita. Sem a diagonal para a esquerda, a de frente. Lista
+  `api/database/data/covers/2026-11-16-diagonal-esquerda-6.json`, aplicada no deploy. A confirmar com o Pedro: Mesa de
+  centro Luz (escolhida uma de duas fotos de frente) e Sofá Armani (diagonal leve). A Cadeira Pitá sem braço 2 (laranja)
+  tem na galeria uma foto de outra cor (cinza e azul, id 2327).
+- **Recortes do carrossel:** 12 dessas peças têm foto sem fundo feita da capa antiga (Cadeira Arp, Gama, Pitá com braço,
+  Pitá com braço 2, Pitá sem braço 2, Sirius, Penteadeira Lenyr, Poltrona Arp, Poltrona Iris, Sofá Dara, Sofá Mares e
+  Sofá Tasca). Os novos foram gerados com `design/recortes/recortar.py` a partir das capas novas, na área temporária da
+  sessão; falta enviar como `cutout` (painel ou `/api/import/media`).
+- **Botão "Adicionar à lista de desejos" da página da peça:** fica verde em "Adicionada à lista" enquanto a peça (com os
+  acabamentos escolhidos) está na lista com a quantidade do seletor, também depois de recarregar (a quantidade começa na
+  da lista). Mudou a quantidade: volta a preto, "Atualizar a lista", e o clique troca a quantidade na lista (não soma).
+  O voo da miniatura sai de cima do botão quando a foto do palco está fora da tela (no celular ela fica lá em cima).
+- **Peças ligadas por cor:** `products.color_group` (uuid) e `products.color_name` (traduzível). Painel, aba Geral: "A
+  mesma peça em outras cores" (`color_ids`, grava o grupo pelo `Product::syncColors`) e "Nome da cor". API: `color` e
+  `colors` no `ProductCard` (carga antecipada `Product::withColors()` em todas as consultas de cards). Site: seção
+  "Cores" na página da peça (`ProductColors`), capas das outras cores flutuando no hover do card da grade (`PlatePeek`)
+  e, na tabela técnica e nas sugestões da busca, uma linha de cima com as outras cores (`PeekPhotos`). Prévia com no
+  máximo 4 fotos por linha; com mais, a última vira pilha. Grupos ligados (migração `2026_11_16_110000_link_pita_colors`, conferidos pelas fotos das 399 peças): Cadeira Pitá com braço (cinza e verde) e Pitá sem braço (azul e laranja). As versões Indoor e Outdoor (Marcela, Dara, Alba, Dome, Málaga) e a Poltrona Sô com corda mudam de material ou desenho e ficaram de fora. A Pitá sem braço 2 (laranja) tem na galeria uma foto da azul (id 2327).
+- **Cache local:** depois de mudar dados na API local, o `next dev` serve a resposta antiga até apagar
+  `web/.next/dev/cache/fetch-cache` com o servidor parado.
+
 ## 33. 16/11/2026 (sessão paralela à da seção 32): animações, galeria da peça, idioma e deploy
 
-Branch `claude/ajustes-16-11`, saída da `develop`, ao mesmo tempo que a `claude/capas-lista-e-cores` (seção 32). As duas
-mexem em `web/src/lib/ui/fly-to-quote.ts`: quem fizer o segundo merge junta as duas mudanças (a desta seção é a volta do
-cabeçalho antes do voo; a da 32 é o voo saindo do botão quando a foto está fora da tela).
+Branch `claude/ajustes-16-11`, saída da `develop`, ao mesmo tempo que a `claude/capas-lista-e-cores` (seção 32, já
+mergeada). As duas mexeram em `web/src/lib/ui/fly-to-quote.ts`; no merge ficaram as duas mudanças: o voo sai de cima
+do botão quando a foto está fora da tela (seção 32) e, com o cabeçalho escondido, ele volta antes do voo (esta seção).
 
 - **Voo até a lista de desejos com o cabeçalho escondido:** o cabeçalho volta à tela (`revealHeader`) e o voo sai quando
   ele chega. O ícone da lista é procurado de novo nessa hora, porque o contador o redesenha quando a peça entra.

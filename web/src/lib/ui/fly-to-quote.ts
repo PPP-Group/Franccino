@@ -26,6 +26,25 @@ export function flyPath(from: Box, to: Box) {
   };
 }
 
+/** Tamanho do quadradinho quando o voo sai do botão (a foto saiu da tela), em px. */
+const ORIGIN_SIZE = 72;
+
+/** Metade ou mais da foto à vista. */
+export function mostlyVisible(box: Box, viewport = window.innerHeight): boolean {
+  const visible = Math.min(box.top + box.height, viewport) - Math.max(box.top, 0);
+  return visible >= box.height / 2;
+}
+
+/** Quadrado de `ORIGIN_SIZE` centrado em cima do botão. */
+export function originBox(button: Box): Box {
+  return {
+    left: button.left + button.width / 2 - ORIGIN_SIZE / 2,
+    top: button.top - ORIGIN_SIZE,
+    width: ORIGIN_SIZE,
+    height: ORIGIN_SIZE,
+  };
+}
+
 /**
  * Cabeçalho escondido pela rolagem (`data-header-hide`, BootScript): volta à tela para o voo ter onde pousar (retorno de
  * 16/11/2026). Devolve quanto esperar até ele chegar; ele só some de novo na próxima rolagem para baixo.
@@ -42,13 +61,15 @@ export function revealHeader(root: HTMLElement = document.documentElement): numb
  * pulso do contador até o pouso, motion.css). Com o cabeçalho escondido, ele volta antes e o voo sai quando ele chega.
  * Sem a foto, sem o ícone, ou com movimento reduzido, não faz nada.
  */
-export function flyToQuote(source: HTMLImageElement | null | undefined): void {
+export function flyToQuote(source: HTMLImageElement | null | undefined, origin?: Element | null): void {
   if (!source || typeof window === 'undefined' || typeof source.animate !== 'function') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const target = document.querySelector<HTMLElement>('[data-quote-target]');
   if (!target) return;
-  const from = source.getBoundingClientRect();
-  if (from.width === 0) return;
+  const photo = source.getBoundingClientRect();
+  if (photo.width === 0) return;
+  // Foto fora da tela (na página da peça, rolada até o botão): o quadradinho sai de cima do botão (16/11/2026).
+  const from = origin && !mostlyVisible(photo) ? originBox(origin.getBoundingClientRect()) : photo;
   const wait = revealHeader();
   // O ícone é procurado de novo depois da espera: o contador da lista o desenha outra vez quando a peça entra.
   if (wait > 0)
@@ -56,7 +77,7 @@ export function flyToQuote(source: HTMLImageElement | null | undefined): void {
   else fly(source, target, from);
 }
 
-function fly(source: HTMLImageElement, target: HTMLElement, from: DOMRect): void {
+function fly(source: HTMLImageElement, target: HTMLElement, from: Box): void {
   const to = target.getBoundingClientRect();
   if (to.width === 0 || to.bottom < 0 || to.top > window.innerHeight) return;
 

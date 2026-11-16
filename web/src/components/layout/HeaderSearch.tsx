@@ -127,7 +127,7 @@ export function HeaderSearch() {
   const searched = fresh;
   // Fotos que se abrem ao passar o mouse numa peça, como na tabela técnica.
   const peeks = items.flatMap((item, index) =>
-    item.preview && item.preview.length > 0 ? [{ id: index, images: item.preview }] : [],
+    item.preview && item.preview.length > 0 ? [{ id: index, images: item.preview, colors: item.colors }] : [],
   );
 
   function onSubmit(event: FormEvent) {

@@ -111,3 +111,21 @@ it('filters products by collection and by missing cover', function () {
         ->filterTable('cover', false)
         ->assertCanSeeTableRecords([$inCollection, $other]);
 });
+
+it('links the same piece in other colors from the panel and shows the link on every piece of the group', function () {
+    $orange = Product::factory()->create();
+    $green = Product::factory()->create();
+    $grey = Product::factory()->create();
+
+    livewire(EditProduct::class, ['record' => $orange->getRouteKey()])
+        ->fillForm(['color_ids' => [$green->id, $grey->id], 'color_name' => ['pt' => 'Laranja', 'en' => 'Orange']])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($orange->fresh()->color_name)->toBe('Laranja')
+        ->and($green->fresh()->color_group)->toBe($orange->fresh()->color_group)
+        ->and($grey->fresh()->color_group)->toBe($orange->fresh()->color_group);
+
+    livewire(EditProduct::class, ['record' => $green->getRouteKey()])
+        ->assertFormSet(['color_ids' => [$orange->id, $grey->id]]);
+});
