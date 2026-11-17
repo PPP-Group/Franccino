@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
@@ -40,6 +41,12 @@ class UserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);
+    }
+
+    /** As contas internas das chaves e conexões da API ("API · nome") não são pessoas: ficam fora da lista. */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereNull('api_credential_id');
     }
 
     public static function table(Table $table): Table

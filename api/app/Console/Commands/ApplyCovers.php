@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Support\CoverFromGallery;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -66,7 +67,7 @@ class ApplyCovers extends Command
             }
 
             if (! $dryRun) {
-                DB::transaction(fn () => self::swap($product, $media));
+                DB::transaction(fn () => CoverFromGallery::apply($product, $media));
             }
             $applied++;
         }
@@ -80,30 +81,6 @@ class ApplyCovers extends Command
         }
 
         return self::SUCCESS;
-    }
-
-    /**
-     * The gallery photo becomes the cover and the old cover goes to the end of the gallery (09/11/2026), unless the
-     * gallery already has the same file: then the old cover is a duplicate and is deleted.
-     */
-    private static function swap(Product $product, Media $photo): void
-    {
-        $old = $product->getFirstMedia('cover');
-        if ($old !== null) {
-            $duplicate = $product->getMedia('gallery')->contains(
-                fn (Media $item) => $item->isNot($photo) && $item->size === $old->size && $item->mime_type === $old->mime_type,
-            );
-            if ($duplicate) {
-                $old->delete();
-            } else {
-                $old->collection_name = 'gallery';
-                $old->order_column = (int) $product->media()->where('collection_name', 'gallery')->max('order_column') + 1;
-                $old->save();
-            }
-        }
-
-        $photo->collection_name = 'cover';
-        $photo->save();
     }
 
     public static function marker(string $version): string
