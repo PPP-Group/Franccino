@@ -26,15 +26,16 @@ Dois diferenciais:
 
 Leia o documento certo antes de mexer na area correspondente:
 
-| Documento                   | Conteudo                                                                |
-| --------------------------- | ----------------------------------------------------------------------- |
-| `docs/specs/`               | Specs de design aprovadas (decisoes, arquitetura, escopo)               |
-| `docs/data-model.md`        | Modelo de dados: tabelas, colunas, relacoes, midia                      |
-| `docs/api.md`               | Contrato da API publica `/api/v1` (back e front implementam contra ele) |
-| `docs/content-inventory.md` | Inventario do site WordPress atual (volume, campos, URLs)               |
-| `docs/decisions/`           | ADRs: por que cada decisao tecnica foi tomada                           |
-| `docs/runbook-deploy.md`    | Ambientes, variaveis e passos de deploy                                 |
-| `docs/plans/`               | Planos de implementacao executados                                      |
+| Documento                   | Conteudo                                                                 |
+| --------------------------- | ------------------------------------------------------------------------ |
+| `docs/specs/`               | Specs de design aprovadas (decisoes, arquitetura, escopo)                |
+| `docs/data-model.md`        | Modelo de dados: tabelas, colunas, relacoes, midia                       |
+| `docs/api.md`               | Contrato da API publica `/api/v1` (back e front implementam contra ele)  |
+| `docs/api-gestao.md`        | API de gestao, conector do Claude/ChatGPT (MCP) e OAuth: desenho e regra |
+| `docs/content-inventory.md` | Inventario do site WordPress atual (volume, campos, URLs)                |
+| `docs/decisions/`           | ADRs: por que cada decisao tecnica foi tomada                            |
+| `docs/runbook-deploy.md`    | Ambientes, variaveis e passos de deploy                                  |
+| `docs/plans/`               | Planos de implementacao executados                                       |
 
 ---
 
@@ -94,6 +95,8 @@ Estas regras nao sao sugestoes. Codigo que as viola nao passa em review.
 - A API publica segue `docs/api.md`. Mudou forma de resposta, rota ou parametro? Atualize o documento
   no mesmo PR — o front e implementado contra ele.
 - O front nunca fala com banco nem com o painel: so com `/api/v1`.
+- API de gestao sempre em dia (`docs/api-gestao.md`): campo, regra, foto ou tela nova no painel entra em
+  `api/app/Manage/Resources.php` no mesmo PR (o teste `ManageCatalogCoverageTest` reprova se faltar).
 
 ### Internacionalizacao
 

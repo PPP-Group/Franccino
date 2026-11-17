@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (34, de 16/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (36, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1661,7 +1661,28 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   com esse "idioma" (422 no log); `dynamicParams = false` no layout de `[locale]` responde 404 sem renderizar. Os avisos
   `[csp]` com `kaspersky-labs.com` vêm do antivírus de quem navega (injeta scripts na página) e não são do site.
 
-## 35. 16/11/2026 (noite): responsividade em todas as telas
+## 35. 17/11/2026: API de gestão e conector do Claude e do ChatGPT
+
+- **O que é:** o desenho da API do VTX Tap (outro projeto do Pedro) adaptado à Franccino. Uma API com tudo o que o
+  painel faz, um conector MCP para o Claude e o ChatGPT e o OAuth 2.1 para conectar, tudo saindo de um catálogo só.
+  Nota de quem mantém: `docs/api-gestao.md`; guia de quem usa: `{API}/api/manage/docs`.
+- **Decisões do Pedro (17/11):** OAuth e MCP feitos à mão, sem biblioteca nova (desenho já testado no VTX Tap); só o
+  administrador cria chaves e aprova conexões; fica de fora: usuários e permissões, registro de atividade,
+  consentimentos, apagar peças em definitivo e as chaves. Mensagens, newsletter, listas e downloads só leitura.
+- **Como funciona:** 142 operações (15 telas do painel, as áreas fixas, as páginas, as configurações, as fotos, os
+  arquivos técnicos, os vídeos e links e a caixa de entrada). Quem chama age como a conta interna "API · nome"
+  (administradora, ativa, fora do painel, de Usuários e dos e-mails): valem as políticas, as regras dos formulários,
+  a atualização do site e o registro de atividade. A capa por foto da galeria usa a mesma rotina das listas de capas
+  (`App\Support\CoverFromGallery`, que o `franccino:covers:apply` passou a usar).
+- **Painel:** Sistema › API e conectores (chaves, aplicativos conectados, últimas chamadas e o passo a passo do Claude
+  e do ChatGPT) e a janela de aprovar (`/admin/connect-app`).
+- **Testes:** `tests/Feature/Manage/` (REST, MCP, OAuth com PKCE como o Claude faz, painel e cobertura campo a campo
+  contra os formulários do painel). A suíte toda passa, menos o `MaintenanceTest` do backup semanal, que já falhava no
+  Windows.
+- **Depois do deploy:** conferir que o `APP_URL` da API é o endereço público com https; conectar o Claude pela URL
+  `{API}/mcp` e rodar alguns pedidos reais.
+
+## 36. 17/11/2026: responsividade em todas as telas
 
 Branch `fix/responsividade`, saída da `develop`. Varredura com Playwright em 28 páginas × 8 larguras (320 a 1920 px),
 mais celular deitado (740 × 360) e as janelas (foto ampliada, busca do cabeçalho, lista de desejos), com emulação de
