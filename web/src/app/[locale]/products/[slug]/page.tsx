@@ -191,21 +191,43 @@ export default async function ProductPage({ params }: Props) {
                 ) : null}
                 {product.sku ? <li className="num">{t('sku', { sku: product.sku })}</li> : null}
               </ul>
-              <div className="panel__copy" lang={contentLang}>
-                {product.tagline ? <p className="lead">{product.tagline}</p> : null}
-                {product.description ? (
-                  <ClampedText lines={3}>
-                    <RichText html={product.description} className="prose" />
-                  </ClampedText>
-                ) : null}
-                {product.materials ? (
-                  <ClampedText lines={2} className="meta">
-                    <p>{t('materials', { materials: product.materials })}</p>
-                  </ClampedText>
-                ) : null}
-              </div>
+              {product.tagline ? (
+                <p className="lead" lang={contentLang}>
+                  {product.tagline}
+                </p>
+              ) : null}
               {contentLang ? <p className="meta">{t('fallbackNotice')}</p> : null}
             </div>
+
+            {/*
+              Descrição e materiais em seções com título, como Acabamentos e Medidas (retorno de 17/11/2026: só o "Ver
+              mais" não dizia do que era o texto). No celular elas vêm depois do botão da lista (product.css).
+            */}
+            {product.description ? (
+              <section className="product-about block" aria-labelledby="product-about-title">
+                <div className="block__title">
+                  <h2 id="product-about-title">{t('about')}</h2>
+                </div>
+                <div lang={contentLang}>
+                  <ClampedText lines={4}>
+                    <RichText html={product.description} className="prose" />
+                  </ClampedText>
+                </div>
+              </section>
+            ) : null}
+
+            {product.materials ? (
+              <section className="product-about block" aria-labelledby="product-materials-title">
+                <div className="block__title">
+                  <h2 id="product-materials-title">{t('materials')}</h2>
+                </div>
+                <div lang={contentLang}>
+                  <ClampedText lines={3} className="meta">
+                    <p>{product.materials}</p>
+                  </ClampedText>
+                </div>
+              </section>
+            ) : null}
 
             <ProductColors product={card} />
 

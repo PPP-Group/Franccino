@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (36, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (38, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1744,3 +1744,16 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
 - **Acabamentos na página da peça:** "Ver em detalhe" abre a janela crescendo da amostra escolhida e volta para ela,
   como na página Acabamentos (`FinishZoom` com `origin`). Testado no local com acabamentos de teste (o preview não tem
   peça com acabamento ligado).
+
+## 38. 17/11/2026 (noite): a página da peça no celular
+
+- **Foto:** no celular (até 560 px) o palco vai de uma borda à outra, quadrado, até 58% da altura da tela (em 375 px, a
+  foto passou de cerca de 165 para 309 px de largura). As miniaturas viram uma faixa menor (64 px) que rola para o lado.
+- **Ordem em uma coluna (até 980 px):** foto, nome e metadados, cores, variações, acabamento a escolher (quando a peça
+  tem), o botão da lista com a quantidade; depois o texto, os materiais, os acabamentos, as medidas e os arquivos. É só
+  CSS (`order` em `.panel`); acima de 980 px, a ordem continua a do código.
+- **Texto em seções com título:** "Sobre a peça" (4 linhas e "Ver mais") e "Materiais" (3 linhas), no formato de
+  Acabamentos e Medidas. Vale também no computador, no mesmo lugar onde o texto já ficava.
+- **Quantidade e botão da lista na mesma linha** no celular (pedido do Pedro): o número da quantidade ficou mais estreito
+  e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
+  de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.

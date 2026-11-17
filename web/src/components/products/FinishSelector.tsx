@@ -62,7 +62,7 @@ export function FinishSelector({ groups, selection, onSelect, note }: FinishSele
   }
 
   return (
-    <section className="block" aria-labelledby={`${baseId}-title`}>
+    <section className="finish-picker block" aria-labelledby={`${baseId}-title`}>
       <div className="block__title">
         <h2 id={`${baseId}-title`}>{t('title')}</h2>
         {tabbed ? (
