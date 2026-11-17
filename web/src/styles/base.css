@@ -32,6 +32,8 @@ body {
   rolagem para o lado. Com o `html` também em `clip`, o corte fica no próprio body.
 */
 html {
+  /* Safari antes do 16 não conhece `clip`: fica com `hidden`, que no html vai para a janela e não quebra o sticky. */
+  overflow-x: hidden;
   overflow-x: clip;
 }
 

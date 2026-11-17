@@ -1712,3 +1712,20 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   outra pasta, sobe.
 - **Pontos de quebra:** o CSS usa 14 larguras diferentes; a consolidação em faixas fixas ficou para depois (mudaria
   muitos arquivos sem ganho visível agora).
+
+### 36.1 Retorno do Pedro (17/11): conflito, rolagem lateral, foto da peça e "Ver mais"
+
+- **Conflito com a `develop`:** só o `HANDOFF.md` (as duas seções de 17/11). Ficaram as duas, a da API de gestão como 35
+  e esta como 36.
+- **Rolagem lateral:** o `html` também em `overflow-x: hidden` antes do `clip`, para o Safari anterior ao 16. Conferido
+  nas 28 páginas, em 8 larguras de 320 a 1920 px, rolando até o fim e tentando arrastar para o lado.
+- **Foto da peça maior:**
+  - a coluna da foto passou a ter dois terços da largura, e o texto ficou com no mínimo 20rem (em 1440 px, a foto foi
+    de 735 para 840 px de largura);
+  - o palco para na altura da tela (as miniaturas continuam à vista);
+  - as setas e o botão de ampliar no palco são mais discretos: 32 px, sem borda, papel translúcido. A área de toque
+    continua com 44 px;
+  - no celular, Fotos/3D fica mais junto do canto.
+- **"Ver mais":** a descrição da peça mostra 3 linhas e os materiais 2, com "Ver mais" e "Ver menos"
+  (`components/ui/ClampedText.tsx`). O botão só aparece quando o texto passa do limite; sem JavaScript, o texto
+  aparece inteiro.

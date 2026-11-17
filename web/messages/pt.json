@@ -248,6 +248,8 @@
     "sku": "Ref. {sku}",
     "materials": "Materiais: {materials}",
     "fallbackNotice": "Conteúdo disponível apenas em português.",
+    "readMore": "Ver mais",
+    "readLess": "Ver menos",
     "quoteOnlyThis": "Solicitar orçamento desta peça",
     "sendQuote": "Enviar pedido de orçamento",
     "sameLine": "Da linha {line}",

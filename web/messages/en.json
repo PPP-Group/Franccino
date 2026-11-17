@@ -248,6 +248,8 @@
     "sku": "Ref. {sku}",
     "materials": "Materials: {materials}",
     "fallbackNotice": "This content is only available in Portuguese.",
+    "readMore": "Read more",
+    "readLess": "Read less",
     "quoteOnlyThis": "Request a quote for this piece",
     "sendQuote": "Send quote request",
     "sameLine": "From the {line} line",

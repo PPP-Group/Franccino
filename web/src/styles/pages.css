@@ -2358,6 +2358,36 @@
   right: var(--space-4);
 }
 
+/*
+  No palco da peça, setas e ampliar ficam discretas (retorno de 17/11/2026: competiam com a foto): 32 px de desenho, sem
+  borda, papel translúcido. A área de toque continua com 44 px (R17) pelo ::after.
+*/
+.gallery__stage .photo-arrow,
+.gallery__stage .stage-zoom {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.gallery__stage .photo-arrow .icon,
+.gallery__stage .stage-zoom .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.gallery__stage .photo-arrow::after,
+.gallery__stage .stage-zoom::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.gallery__stage .photo-arrow:hover,
+.gallery__stage .stage-zoom:hover {
+  background: var(--ink);
+}
+
 .gallery__stage.is-zoomable > img {
   cursor: zoom-in;
 }
