@@ -76,7 +76,11 @@ final class ResourceHandler
         $limit = max(1, min(200, (int) ($input['limit'] ?? 50)));
         $after = $this->decodeCursor($input['cursor'] ?? null);
 
-        $query = $this->query()->with('media')->orderByDesc('id');
+        $query = $this->query()->orderByDesc('id');
+        if (is_subclass_of($this->resource['model'], HasMedia::class)) {
+            // Linhas, grupos de acabamentos e redirecionamentos não têm fotos.
+            $query->with('media');
+        }
         if (array_key_exists('published', $input) && isset($this->resource['fields']['is_published'])) {
             $query->where('is_published', filter_var($input['published'], FILTER_VALIDATE_BOOLEAN));
         }
@@ -239,7 +243,9 @@ final class ResourceHandler
     /** @param  array<string, mixed>  $input */
     private function validate(array $input, ?Model $record): void
     {
-        $validator = Validator::make($input, Schema::rules($this->resource, $record));
+        $validator = Validator::make($input, Schema::rules($this->resource, $record), [], Schema::attributes(
+            $this->resource['fields'] + ($this->resource['relations'] ?? []),
+        ));
 
         if ($this->key === 'redirects') {
             // As mesmas regras do painel: o destino é obrigatório (menos no 410) e não pode ser o próprio caminho.
@@ -641,7 +647,7 @@ final class ResourceHandler
     private function validateMeta(array $input, array $rules): void
     {
         try {
-            Validator::make($input, $rules)->validate();
+            Validator::make($input, $rules, [], Schema::metaAttributes())->validate();
         } catch (ValidationException $e) {
             throw ApiProblem::invalid('Os dados não passaram nas regras do painel: '.collect($e->errors())->flatten()->first(), $e->errors());
         }

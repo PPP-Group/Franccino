@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (36, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (38, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1730,7 +1730,22 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   (`components/ui/ClampedText.tsx`). O botão só aparece quando o texto passa do limite; sem JavaScript, o texto
   aparece inteiro.
 
-### 36.2 Retorno do Pedro (17/11, noite): a página da peça no celular
+## 37. 17/11/2026 (noite): bateria do conector e voltar para a tabela técnica
+
+- **Conector (PRs #141 e #143, já no preview):** as mensagens de erro usam o nome do campo do painel ("caminho
+  antigo", não "from path"); as listas de linhas, grupos de acabamentos e redirecionamentos davam erro 500 (a lista
+  carregava fotos que esses três não têm). O `ManageEveryOperationTest` chama pelo conector cada uma das 142 operações
+  e reprova se alguma ficar sem chamada. Bateria no preview: 14 telas criadas, mudadas, com fotos, arquivos e links,
+  e apagadas; a peça de teste ficou na lixeira do painel.
+- **Voltar da peça para a tabela técnica:** a troca Grade/Tabela reescreve o endereço sem ir ao servidor, e na volta a
+  lista remontava com a vista do carregamento (grade). O `CatalogViewProvider` passou a ler a vista do endereço atual
+  (`useSearchParams`): a volta fica na tabela, na mesma altura, e a foto encolhe até a linha da peça. Grade → peça →
+  volta continua na grade; o caminho ("Cadeiras") continua indo para a grade com a peça em primeiro.
+- **Acabamentos na página da peça:** "Ver em detalhe" abre a janela crescendo da amostra escolhida e volta para ela,
+  como na página Acabamentos (`FinishZoom` com `origin`). Testado no local com acabamentos de teste (o preview não tem
+  peça com acabamento ligado).
+
+## 38. 17/11/2026 (noite): a página da peça no celular
 
 - **Foto:** no celular (até 560 px) o palco vai de uma borda à outra, quadrado, até 58% da altura da tela (em 375 px, a
   foto passou de cerca de 165 para 309 px de largura). As miniaturas viram uma faixa menor (64 px) que rola para o lado.
