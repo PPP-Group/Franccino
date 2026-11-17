@@ -51,19 +51,19 @@ final class Resources
                     'name' => self::i18n(160, required: true, description: 'Nome da peça, como aparece no site.'),
                     'slug' => self::slug(i18n: true),
                     'tagline' => self::i18n(255, description: 'Frase curta embaixo do nome.'),
-                    'color_name' => self::i18n(60, description: 'Nome da cor desta peça, quando ela faz parte de um grupo de cores.'),
+                    'color_name' => self::i18n(60, description: 'Nome da cor desta peça, quando ela faz parte de um grupo de cores.') + ['attribute' => 'nome da cor'],
                     'sku' => self::string(255, description: 'Referência da peça.'),
                     'area_id' => self::ref(Area::class, required: true, description: 'Área (interna ou externa): id de `GET /areas`.'),
                     'category_id' => self::ref(Category::class, required: true, description: 'Categoria: id de `GET /categories`.'),
                     'line_id' => self::ref(Line::class, description: 'Linha: id de `GET /lines`.'),
                     'designer_id' => self::ref(Designer::class, description: 'Designer: id de `GET /designers`.'),
                     'is_featured' => self::boolean('Em destaque: aparece primeiro nas listas.'),
-                    'rooms' => ['kind' => 'list', 'items' => self::enum(array_column(ProductRoom::cases(), 'value')), 'description' => 'Ambientes da casa em que a peça aparece no filtro.'],
+                    'rooms' => ['kind' => 'list', 'items' => self::enum(array_column(ProductRoom::cases(), 'value')), 'description' => 'Ambientes da casa em que a peça aparece no filtro.', 'attribute' => 'ambientes'],
                     'is_published' => self::boolean('Publicada no site.'),
                     'description' => self::i18n(html: true, description: 'Texto da peça (HTML simples: parágrafos, negrito, itálico, listas e links).'),
                     'materials' => self::i18n(description: 'Materiais.'),
                     'finishes_note' => self::i18n(description: 'Nota sobre os acabamentos.'),
-                    'dimensions' => ['kind' => 'objects', 'description' => 'Medidas em milímetros, uma linha por versão (ex.: "Módulo I").', 'fields' => [
+                    'dimensions' => ['kind' => 'objects', 'description' => 'Medidas em milímetros, uma linha por versão (ex.: "Módulo I").', 'attribute' => 'medidas', 'fields' => [
                         'label' => self::i18n(description: 'Rótulo da linha de medidas.'),
                         'width' => self::number('Largura (mm).'),
                         'width_max' => self::number('Largura até (mm), quando varia.'),
@@ -80,8 +80,8 @@ final class Resources
                 ],
                 'relations' => [
                     'variants' => ['kind' => 'ids', 'model' => Product::class, 'relation' => 'variants', 'description' => 'Outras versões desta peça (com e sem braço, outra medida): ids das peças.'],
-                    'color_ids' => ['kind' => 'ids', 'model' => Product::class, 'sync' => 'colors', 'description' => 'A mesma peça em outras cores: ids das outras peças do grupo (o grupo fica exatamente esta peça e as escolhidas).'],
-                    'finish_ids' => ['kind' => 'ids', 'model' => Finish::class, 'relation' => 'finishes', 'ordered' => true, 'description' => 'Acabamentos disponíveis, na ordem em que aparecem: ids de `GET /finishes`.'],
+                    'color_ids' => ['kind' => 'ids', 'model' => Product::class, 'sync' => 'colors', 'description' => 'A mesma peça em outras cores: ids das outras peças do grupo (o grupo fica exatamente esta peça e as escolhidas).', 'attribute' => 'outras cores'],
+                    'finish_ids' => ['kind' => 'ids', 'model' => Finish::class, 'relation' => 'finishes', 'ordered' => true, 'description' => 'Acabamentos disponíveis, na ordem em que aparecem: ids de `GET /finishes`.', 'attribute' => 'acabamentos'],
                 ],
                 'media' => [
                     'cover' => ['kind' => 'image', 'single' => true, 'description' => 'Capa: a peça na diagonal virada para a esquerda, fundo branco.'],
@@ -257,7 +257,7 @@ final class Resources
                 'plural' => 'projetos',
                 'title' => 'title',
                 'fields' => [
-                    'type' => self::enum(array_column(ProjectType::cases(), 'value'), required: true, description: 'Residencial ou corporativo.'),
+                    'type' => self::enum(array_column(ProjectType::cases(), 'value'), required: true, description: 'Residencial ou corporativo.') + ['attribute' => 'tipo'],
                     'title' => self::i18n(160, required: true, description: 'Título.'),
                     'slug' => self::slug(i18n: true),
                     'summary' => self::i18n(description: 'Resumo.'),
@@ -311,7 +311,7 @@ final class Resources
                 'title' => 'name',
                 'fields' => [
                     'name' => self::string(160, required: true, description: 'Nome.'),
-                    'type' => self::enum(array_column(StoreType::cases(), 'value'), required: true, description: 'Loja exclusiva ou revenda.'),
+                    'type' => self::enum(array_column(StoreType::cases(), 'value'), required: true, description: 'Loja exclusiva ou revenda.') + ['attribute' => 'tipo'],
                     'address' => self::string(255, required: true, description: 'Endereço.'),
                     'address_complement' => self::string(255, description: 'Complemento.'),
                     'district' => self::string(160, description: 'Bairro.'),
@@ -399,8 +399,8 @@ final class Resources
                 'title' => 'from_path',
                 'fields' => [
                     'from_path' => self::string(512, required: true, description: 'Caminho antigo (começa com /).', unique: true, startsWith: '/'),
-                    'status_code' => self::enum(array_column(RedirectStatus::cases(), 'value'), required: true, description: '301 (mudou de vez), 302 (temporário) ou 410 (não existe mais).', integer: true),
-                    'to_path' => self::string(2048, description: 'Para onde vai (obrigatório, menos no 410; diferente do caminho antigo).'),
+                    'status_code' => self::enum(array_column(RedirectStatus::cases(), 'value'), required: true, description: '301 (mudou de vez), 302 (temporário) ou 410 (não existe mais).', integer: true) + ['attribute' => 'tipo'],
+                    'to_path' => self::string(2048, description: 'Para onde vai (obrigatório, menos no 410; diferente do caminho antigo).') + ['attribute' => 'destino'],
                     'is_active' => self::boolean('Ativo.'),
                     'notes' => self::string(null, description: 'Anotações.'),
                 ],

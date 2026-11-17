@@ -98,10 +98,11 @@ it('refuses what the panel refuses: too long, unknown field, duplicate slug', fu
     $product = publishedProduct();
     $secret = manageKey();
 
-    $this->patchJson("/api/manage/v1/products/{$product->id}", ['seo_description' => ['pt' => str_repeat('a', 161)]], manage($secret))
+    $tooLong = $this->patchJson("/api/manage/v1/products/{$product->id}", ['seo_description' => ['pt' => str_repeat('a', 161)]], manage($secret))
         ->assertStatus(422)
         ->assertJsonPath('codigo', 'regra')
         ->assertJsonStructure(['erros' => ['seo_description.pt']]);
+    expect($tooLong->json('erros')['seo_description.pt'][0])->toContain('descrição para o Google (português)');
 
     $this->patchJson("/api/manage/v1/products/{$product->id}", ['nome' => 'x'], manage($secret))
         ->assertStatus(400)
@@ -218,6 +219,9 @@ it('keeps the redirect rules of the panel', function () {
         ->assertJsonStructure(['erros' => ['to_path']]);
     $this->postJson('/api/manage/v1/redirects', ['from_path' => '/antigo', 'status_code' => 410], manage($secret))
         ->assertCreated();
+    $this->postJson('/api/manage/v1/redirects', ['from_path' => '/antigo', 'status_code' => 410], manage($secret))
+        ->assertStatus(422)
+        ->assertJsonPath('detail', fn (string $detail) => str_contains($detail, 'caminho antigo') && ! str_contains($detail, 'from path'));
 
     expect(Redirect::query()->where('from_path', '/antigo')->exists())->toBeTrue();
 });

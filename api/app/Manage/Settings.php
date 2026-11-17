@@ -53,6 +53,23 @@ final class Settings
         return $schema;
     }
 
+    /** @return array<string, string> */
+    public static function attributes(): array
+    {
+        return Schema::attributes(self::FIELDS) + [
+            'contact_recipients' => 'e-mails que recebem as mensagens',
+            'contact_recipients.*' => 'e-mail que recebe as mensagens',
+            'footer_documents' => 'documentos do rodapé',
+            'footer_documents.*.label' => 'documentos do rodapé › rótulo',
+            'footer_documents.*.label.pt' => 'documentos do rodapé › rótulo (português)',
+            'footer_documents.*.label.en' => 'documentos do rodapé › rótulo (inglês)',
+            'footer_documents.*.path' => 'documentos do rodapé › caminho do PDF',
+            'tutorial_videos' => 'vídeos da central de ajuda',
+            'tutorial_videos.*.guide' => 'vídeos da central de ajuda › guia',
+            'tutorial_videos.*.url' => 'vídeos da central de ajuda › link',
+        ];
+    }
+
     /** @return array<string, mixed> */
     public static function rules(): array
     {

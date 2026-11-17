@@ -4,6 +4,7 @@ use App\Filament\Resources;
 use App\Manage\Areas;
 use App\Manage\Catalog;
 use App\Manage\Resources as ManageResources;
+use App\Manage\Schema;
 use App\Models\Manage\ApiCredential;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -118,6 +119,17 @@ it('gives every field of every tool a type (the Claude refuses fields without on
 
     expect($missing)->toBe([]);
 });
+
+it('names every field in portuguese in the error messages, never by its internal name', function (string $key) {
+    $resource = ManageResources::get($key);
+    $names = Schema::attributes($resource['fields'] + ($resource['relations'] ?? []));
+
+    $rules = array_keys(Schema::rules($resource, null));
+    expect(array_diff($rules, array_keys($names)))->toBe([], "{$key}: campo sem nome nas mensagens de erro");
+    foreach ($names as $attribute => $name) {
+        expect($name)->not->toContain('_', "{$key}.{$attribute}: nome interno na mensagem");
+    }
+})->with(fn () => array_keys(ManageResources::all()));
 
 it('creates every resource through the API with only the required fields', function (string $key) {
     RateLimiter::clear('manage:all');

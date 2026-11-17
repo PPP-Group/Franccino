@@ -65,6 +65,8 @@ credencial, um usuário "API · nome" ligado por `users.api_credential_id`:
 Toda mudança no painel que mexe em dados entra na API no mesmo PR:
 
 - [ ] campo novo, regra nova ou coleção de foto nova: em `Resources.php` (o teste de cobertura reprova se faltar);
+- [ ] o nome do campo nas mensagens de erro sai do começo da descrição ("Caminho antigo (começa com /)." vira
+      "caminho antigo"); quando o começo não serve, ponha `'attribute' => 'nome'` no campo;
 - [ ] tela nova do painel: um recurso em `Resources.php` ou o nome na lista do que fica de fora
       (`MANAGE_EXCLUDED_RESOURCES`, no teste de cobertura);
 - [ ] área nova: em `Areas::LIST` (os escopos, o OAuth, o OpenAPI, a documentação e o painel saem dela);
