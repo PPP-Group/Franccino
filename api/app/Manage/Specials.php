@@ -107,7 +107,7 @@ final class Specials
             throw new ApiProblem(412, 'versao', 'Versão vencida', 'As configurações mudaram depois da sua leitura. Leia de novo e refaça a mudança.');
         }
         try {
-            Validator::make($input, Settings::rules())->validate();
+            Validator::make($input, Settings::rules(), [], Settings::attributes())->validate();
         } catch (ValidationException $e) {
             throw ApiProblem::invalid('Os dados não passaram nas regras do painel: '.collect($e->errors())->flatten()->first(), $e->errors());
         }
