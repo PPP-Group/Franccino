@@ -18,7 +18,11 @@
 
 .product {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  /*
+    A foto é o centro da página (retorno de 17/11/2026): a coluna dela fica com dois terços da largura, e o painel de
+    texto nunca fica abaixo de 20rem (acabamentos, medidas e o botão da lista cabem ali).
+  */
+  grid-template-columns: minmax(0, 2fr) minmax(20rem, 1fr);
   gap: clamp(var(--space-6), 4vw, var(--space-8));
   align-items: start;
   padding-bottom: var(--section-y-tight);
@@ -38,6 +42,9 @@
 .gallery__stage {
   background: var(--paper);
   aspect-ratio: 4 / 3;
+  /* Com a coluna maior, o 4:3 passaria da tela: o palco para onde as miniaturas ainda aparecem embaixo. */
+  max-height: calc(100svh - var(--header) - 10rem);
+  min-height: 15rem;
   container-type: size;
   position: relative;
   overflow: hidden;
@@ -645,9 +652,28 @@
   .gallery {
     position: static;
   }
+
+  /*
+    Uma coluna (tablet e celular deitado): o quadro 4:3 na largura toda passava da altura da tela (675 px num tablet de
+    900; em 740 × 360 a foto começava abaixo da primeira tela). A altura para em 62% da tela, e a largura continua inteira.
+  */
+  .gallery__stage {
+    width: 100%;
+    max-height: max(15rem, 62svh);
+  }
 }
 
 @media (max-width: 560px) {
+  /* Fotos/3D cobria o alto da peça no celular: mais junto do canto e mais estreito (a altura de toque continua 44 px). */
+  .stage-toggle {
+    top: var(--space-2);
+    left: var(--space-2);
+  }
+
+  .stage-toggle button {
+    padding-inline: var(--space-3);
+  }
+
   .thumbs {
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-2);
@@ -846,4 +872,52 @@ a.colors__item:focus-visible {
 
 .colors__item.is-current {
   border: 2px solid var(--ink);
+}
+
+/*
+  Descrição e materiais da peça recolhidos (retorno de 17/11/2026): poucas linhas e "Ver mais". O corte vale desde o
+  servidor; a última linha some num degradê enquanto há mais texto. Sem JavaScript, o texto fica inteiro.
+*/
+.clamped {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+.clamped__body {
+  max-height: calc(var(--clamp-lines) * 1lh);
+  overflow: hidden;
+}
+
+.clamped__body[data-overflows='true'] {
+  mask-image: linear-gradient(to bottom, black calc(100% - 1lh), transparent);
+}
+
+.clamped__body[data-open='true'] {
+  max-height: none;
+  mask-image: none;
+}
+
+@media (scripting: none) {
+  .clamped__body {
+    max-height: none;
+  }
+}
+
+.clamped__toggle {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.clamped__toggle:hover {
+  text-decoration-thickness: 2px;
 }

@@ -384,3 +384,18 @@
     order: -1;
   }
 }
+
+/* Instrução da barra da planta: a de teclado e mouse; no toque, a do dedo (a outra fala de setas, Shift e Delete). */
+.canvas-bar__hint--touch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .canvas-bar__hint:not(.canvas-bar__hint--touch) {
+    display: none;
+  }
+
+  .canvas-bar__hint--touch {
+    display: inline;
+  }
+}

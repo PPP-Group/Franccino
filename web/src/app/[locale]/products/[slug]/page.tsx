@@ -8,6 +8,7 @@ import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
 import { ProductRail } from '@/components/products/ProductRail';
 import { ProductStage } from '@/components/products/ProductStage';
+import { ClampedText } from '@/components/ui/ClampedText';
 import { ProductColors } from '@/components/products/ProductColors';
 import { ProductVariants } from '@/components/products/ProductVariants';
 import { RecentlyViewed } from '@/components/recent/RecentlyViewed';
@@ -192,9 +193,15 @@ export default async function ProductPage({ params }: Props) {
               </ul>
               <div className="panel__copy" lang={contentLang}>
                 {product.tagline ? <p className="lead">{product.tagline}</p> : null}
-                {product.description ? <RichText html={product.description} className="prose" /> : null}
+                {product.description ? (
+                  <ClampedText lines={3}>
+                    <RichText html={product.description} className="prose" />
+                  </ClampedText>
+                ) : null}
                 {product.materials ? (
-                  <p className="meta">{t('materials', { materials: product.materials })}</p>
+                  <ClampedText lines={2} className="meta">
+                    <p>{t('materials', { materials: product.materials })}</p>
+                  </ClampedText>
                 ) : null}
               </div>
               {contentLang ? <p className="meta">{t('fallbackNotice')}</p> : null}

@@ -289,3 +289,27 @@
     opacity: 1;
   }
 }
+
+/*
+  Celular estreito: o quadrado de 44 px cobria um terço da foto do card. O desenho fica com 36 px e o alvo de toque
+  continua com 44 px (a sobra invisível do ::after).
+*/
+@media (max-width: 35rem) {
+  .quick-add {
+    top: var(--space-1);
+    right: var(--space-1);
+    width: 36px;
+    height: 36px;
+  }
+
+  .quick-add::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  .quick-add .icon {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -373,11 +373,6 @@ input[type='radio']:disabled {
 }
 
 @media (max-width: 35rem) {
-  .filter-form .select {
-    flex: 1;
-    min-width: 0;
-  }
-
   .filter-form .select__list {
     left: 0;
     width: auto;

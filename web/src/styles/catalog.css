@@ -431,12 +431,12 @@
   color: var(--paper);
 }
 
-@media (max-width: 35rem) {
-  .toolbar {
-    position: static;
-  }
-
-  /* Celular: contagem e Grade/Tabela na primeira linha; o filtro de designer ocupa a segunda inteira. */
+/*
+  Tablet e notebook pequeno (até 1180 px, onde o menu também recolhe): contagem e Grade/Tabela na primeira linha; os
+  filtros na segunda, dividindo a largura e quebrando de linha quando não cabem (antes, numa linha só, saíam da tela
+  em 768 px e empurravam Grade/Tabela para baixo em 1024 px).
+*/
+@media (max-width: 73.75rem) {
   .toolbar--catalog {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -449,11 +449,52 @@
   .toolbar--catalog .filter-form {
     grid-column: 1 / -1;
     grid-row: 2;
+    flex-wrap: wrap;
   }
 
   .toolbar--catalog .filter-form .select {
-    flex: 1;
+    flex: 1 1 10rem;
+    width: auto;
     min-width: 0;
+  }
+}
+
+/*
+  Celular: uma coluna. Contagem (e Anterior/Próxima da tabela), depois Grade/Tabela dividindo a largura, depois cada
+  filtro na linha inteira, para o nome da opção caber ("Todas as categorias" virava "T…").
+*/
+@media (max-width: 35rem) {
+  .toolbar {
+    position: static;
+  }
+
+  .toolbar--catalog {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toolbar--catalog .toolbar__start {
+    justify-content: space-between;
+  }
+
+  .toolbar--catalog .view-toggle {
+    grid-row: 2;
+    display: flex;
+  }
+
+  .toolbar--catalog .view-toggle > * {
+    flex: 1;
+    justify-content: center;
+    padding-inline: var(--space-3);
+    white-space: nowrap;
+  }
+
+  .toolbar--catalog .filter-form {
+    grid-row: 3;
+  }
+
+  .toolbar--catalog .filter-form .select,
+  .toolbar--catalog .filter-form .btn {
+    flex: 1 1 100%;
   }
 }
 
@@ -482,6 +523,11 @@
   align-items: center;
   gap: var(--space-4);
   padding-top: 0;
+}
+
+/* "1 / 3" numa linha só (no celular quebrava em três). */
+.pagination--top .meta {
+  white-space: nowrap;
 }
 
 .pagination__step {
