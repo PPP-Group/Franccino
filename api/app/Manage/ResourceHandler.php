@@ -76,7 +76,11 @@ final class ResourceHandler
         $limit = max(1, min(200, (int) ($input['limit'] ?? 50)));
         $after = $this->decodeCursor($input['cursor'] ?? null);
 
-        $query = $this->query()->with('media')->orderByDesc('id');
+        $query = $this->query()->orderByDesc('id');
+        if (is_subclass_of($this->resource['model'], HasMedia::class)) {
+            // Linhas, grupos de acabamentos e redirecionamentos não têm fotos.
+            $query->with('media');
+        }
         if (array_key_exists('published', $input) && isset($this->resource['fields']['is_published'])) {
             $query->where('is_published', filter_var($input['published'], FILTER_VALIDATE_BOOLEAN));
         }
