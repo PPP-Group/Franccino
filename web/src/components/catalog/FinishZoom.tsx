@@ -18,6 +18,11 @@ type FinishZoomProps = {
    * acabamento escolhido, na página da peça, onde a amostra pequena já é o botão de escolha.
    */
   variant?: 'swatch' | 'link';
+  /**
+   * No `link`, a amostra de onde a foto cresce e para onde ela volta (a amostra escolhida no seletor da página da
+   * peça). Sem ela, a janela abre sem o movimento.
+   */
+  origin?: () => HTMLElement | null;
 };
 
 type StartViewTransition = (update: () => Promise<void> | void) => ViewTransition;
@@ -31,7 +36,7 @@ const PANEL = 'finish-zoom-panel';
  * de cima e aparecia de uma vez; o "tamanho real" ampliava a foto e a deixava borrada, e saiu). A imagem grande só é
  * pedida ao abrir.
  */
-export function FinishZoom({ name, code, description, swatch, variant = 'swatch' }: FinishZoomProps) {
+export function FinishZoom({ name, code, description, swatch, variant = 'swatch', origin }: FinishZoomProps) {
   const t = useTranslations('finishes.zoom');
   const common = useTranslations('common');
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -46,9 +51,12 @@ export function FinishZoom({ name, code, description, swatch, variant = 'swatch'
     // Na janela, o par é a própria foto (não a área dela, mais larga): a amostra quadrada cresce até a foto quadrada,
     // sem a faixa clara da área aparecendo no meio do movimento (retorno de 16/11/2026).
     const stagePhoto = () => stageRef.current?.querySelector<HTMLElement>('img') ?? stageRef.current;
-    const from = opening ? swatchRef.current : stagePhoto();
+    // A amostra do par: a do cartão (página Acabamentos) ou a escolhida no seletor (página da peça, retorno de
+    // 17/11/2026: lá a janela abria de uma vez, sem crescer da amostra).
+    const thumb = () => (variant === 'swatch' ? swatchRef.current : (origin?.() ?? null));
+    const from = opening ? thumb() : stagePhoto();
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!doc.startViewTransition || reduce || !from || !swatchRef.current || variant !== 'swatch') {
+    if (!doc.startViewTransition || reduce || !from || !thumb()) {
       update();
       return;
     }
@@ -61,7 +69,7 @@ export function FinishZoom({ name, code, description, swatch, variant = 'swatch'
       if (panel) panel.style.viewTransitionName = '';
       flushSync(update);
       // A foto da janela só existe depois de abrir.
-      to = opening ? (stagePhoto() ?? null) : swatchRef.current;
+      to = opening ? (stagePhoto() ?? null) : thumb();
       if (to) to.style.viewTransitionName = MORPH;
       if (panel && opening) panel.style.viewTransitionName = PANEL;
       if (opening) await waitForImage(stageRef.current?.querySelector('img'));

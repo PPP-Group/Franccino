@@ -1729,3 +1729,18 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
 - **"Ver mais":** a descrição da peça mostra 3 linhas e os materiais 2, com "Ver mais" e "Ver menos"
   (`components/ui/ClampedText.tsx`). O botão só aparece quando o texto passa do limite; sem JavaScript, o texto
   aparece inteiro.
+
+## 37. 17/11/2026 (noite): bateria do conector e voltar para a tabela técnica
+
+- **Conector (PRs #141 e #143, já no preview):** as mensagens de erro usam o nome do campo do painel ("caminho
+  antigo", não "from path"); as listas de linhas, grupos de acabamentos e redirecionamentos davam erro 500 (a lista
+  carregava fotos que esses três não têm). O `ManageEveryOperationTest` chama pelo conector cada uma das 142 operações
+  e reprova se alguma ficar sem chamada. Bateria no preview: 14 telas criadas, mudadas, com fotos, arquivos e links,
+  e apagadas; a peça de teste ficou na lixeira do painel.
+- **Voltar da peça para a tabela técnica:** a troca Grade/Tabela reescreve o endereço sem ir ao servidor, e na volta a
+  lista remontava com a vista do carregamento (grade). O `CatalogViewProvider` passou a ler a vista do endereço atual
+  (`useSearchParams`): a volta fica na tabela, na mesma altura, e a foto encolhe até a linha da peça. Grade → peça →
+  volta continua na grade; o caminho ("Cadeiras") continua indo para a grade com a peça em primeiro.
+- **Acabamentos na página da peça:** "Ver em detalhe" abre a janela crescendo da amostra escolhida e volta para ela,
+  como na página Acabamentos (`FinishZoom` com `origin`). Testado no local com acabamentos de teste (o preview não tem
+  peça com acabamento ligado).
