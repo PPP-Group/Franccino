@@ -140,6 +140,10 @@ export function FinishSelector({ groups, selection, onSelect, note }: FinishSele
             description={null}
             swatch={selectedItem.swatch}
             variant="link"
+            // A foto cresce da amostra escolhida e volta para ela, como na página Acabamentos.
+            origin={() =>
+              swatchRefs.current[focusIndex]?.querySelector('img') ?? swatchRefs.current[focusIndex] ?? null
+            }
           />
         ) : null}
       </div>
