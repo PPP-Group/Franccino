@@ -50,7 +50,14 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_active;
+        // A conta interna de uma credencial da API ("API · nome") nunca entra no painel.
+        return $this->is_active && $this->api_credential_id === null;
+    }
+
+    /** A conta interna de uma chave ou conexão da API de gestão (docs/api-gestao.md). */
+    public function isApiAccount(): bool
+    {
+        return $this->api_credential_id !== null;
     }
 
     public function isAdmin(): bool
@@ -64,7 +71,8 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
         return $this->exists
             && $this->getOriginal('role') === UserRole::Admin
             && (bool) $this->getOriginal('is_active')
-            && ! static::query()->whereKeyNot($this->getKey())->where('role', UserRole::Admin)->where('is_active', true)->exists();
+            && ! static::query()->whereKeyNot($this->getKey())->where('role', UserRole::Admin)->where('is_active', true)
+                ->whereNull('api_credential_id')->exists();
     }
 
     /** Admins and editors manage the catalog and editorial content; customer service only reads the inbox. */

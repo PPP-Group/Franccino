@@ -23,7 +23,7 @@ class NotifyAdminsOfFailedJob
             return;
         }
 
-        $admins = User::query()->where('role', UserRole::Admin)->where('is_active', true)->get();
+        $admins = User::query()->where('role', UserRole::Admin)->where('is_active', true)->whereNull('api_credential_id')->get();
 
         Notification::make()
             ->title(__('guides.dashboard.stat.job_failed_title'))
