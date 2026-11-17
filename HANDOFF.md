@@ -1729,3 +1729,13 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
 - **"Ver mais":** a descrição da peça mostra 3 linhas e os materiais 2, com "Ver mais" e "Ver menos"
   (`components/ui/ClampedText.tsx`). O botão só aparece quando o texto passa do limite; sem JavaScript, o texto
   aparece inteiro.
+
+### 36.2 Retorno do Pedro (17/11, noite): a página da peça no celular
+
+- **Foto:** no celular (até 560 px) o palco vai de uma borda à outra, quadrado, até 58% da altura da tela (em 375 px, a
+  foto passou de cerca de 165 para 309 px de largura). As miniaturas viram uma faixa menor (64 px) que rola para o lado.
+- **Ordem em uma coluna (até 980 px):** foto, nome e metadados, cores, variações, acabamento a escolher (quando a peça
+  tem), o botão da lista com a quantidade; depois o texto, os materiais, os acabamentos, as medidas e os arquivos. É só
+  CSS (`order` em `.panel`); acima de 980 px, a ordem continua a do código.
+- **Texto em seções com título:** "Sobre a peça" (4 linhas e "Ver mais") e "Materiais" (3 linhas), no formato de
+  Acabamentos e Medidas. Vale também no computador, no mesmo lugar onde o texto já ficava.

@@ -203,11 +203,6 @@
   color: var(--ink);
 }
 
-.panel__copy {
-  display: grid;
-  gap: var(--space-4);
-}
-
 .block {
   border-top: 1px solid var(--line);
   padding-top: var(--space-5);
@@ -661,9 +656,72 @@
     width: 100%;
     max-height: max(15rem, 62svh);
   }
+
+  /*
+    Uma coluna, na ordem do que a pessoa faz ao abrir a peça (retorno de 17/11/2026): a foto, o nome, as cores e o
+    acabamento a escolher, o botão da lista; depois o texto, os materiais, as medidas e os arquivos. Ao lado da foto
+    (acima de 980 px) a ordem continua a do código.
+  */
+  .panel > * {
+    order: 10;
+  }
+
+  .panel > .panel__head {
+    order: 1;
+  }
+
+  .panel > .colors {
+    order: 2;
+  }
+
+  .panel > .variants {
+    order: 3;
+  }
+
+  .panel > .finish-picker {
+    order: 4;
+  }
+
+  .panel > .buy {
+    order: 5;
+  }
+
+  .panel > .product-about {
+    order: 6;
+  }
 }
 
 @media (max-width: 560px) {
+  /*
+    A foto é o assunto da página (retorno de 17/11/2026: no celular ela ficava com um terço da tela): o palco vai de
+    uma borda à outra, quadrado, até 58% da altura da tela, e as miniaturas ficam numa faixa menor que rola para o lado.
+  */
+  .gallery {
+    margin-inline: calc(-1 * var(--gutter));
+    gap: var(--space-2);
+  }
+
+  .gallery__stage {
+    aspect-ratio: 1;
+    max-height: 58svh;
+  }
+
+  .thumbs {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 4rem;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .thumbs button {
+    scroll-snap-align: start;
+  }
+
   /* Fotos/3D cobria o alto da peça no celular: mais junto do canto e mais estreito (a altura de toque continua 44 px). */
   .stage-toggle {
     top: var(--space-2);
@@ -672,11 +730,6 @@
 
   .stage-toggle button {
     padding-inline: var(--space-3);
-  }
-
-  .thumbs {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-2);
   }
 
   /* A frase do botão principal não cabe ao lado da quantidade em 390 px: cada um na sua linha. */
