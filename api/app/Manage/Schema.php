@@ -245,4 +245,83 @@ final class Schema
 
         throw new \InvalidArgumentException('Tipo de campo desconhecido: '.$spec['kind']);
     }
+
+    /** Os nomes que aparecem nas mensagens de erro: o mesmo de cada campo no painel, nunca o nome interno. */
+    private const META_ATTRIBUTES = [
+        'type' => 'tipo',
+        'kind' => 'tipo',
+        'title' => 'título',
+        'title.pt' => 'título (português)',
+        'title.en' => 'título (inglês)',
+        'format' => 'formato',
+        'is_published' => 'publicado no site',
+        'url' => 'link',
+    ];
+
+    /**
+     * Os nomes em português dos campos para as mensagens de erro do Laravel ("o campo caminho antigo...", não
+     * "o campo from path..."), com as línguas e os itens das listas.
+     *
+     * @param  array<string, array<string, mixed>>  $fields
+     * @return array<string, string>
+     */
+    public static function attributes(array $fields, string $prefix = '', string $parent = ''): array
+    {
+        $names = [];
+        foreach ($fields as $name => $spec) {
+            $key = $prefix.$name;
+            $label = $parent === '' ? self::label($spec, $name) : $parent.' › '.self::label($spec, $name);
+            $names[$key] = $label;
+            switch ($spec['kind']) {
+                case 'i18n':
+                    $names["{$key}.pt"] = "{$label} (português)";
+                    $names["{$key}.en"] = "{$label} (inglês)";
+                    break;
+                case 'list':
+                case 'ids':
+                    $names["{$key}.*"] = $label;
+                    break;
+                case 'objects':
+                case 'children':
+                    $names["{$key}.*"] = $label;
+                    $names += self::attributes($spec['fields'], "{$key}.*.", $label);
+                    break;
+                case 'json':
+                    $names["{$key}.*"] = $label;
+                    $names["{$key}.*.type"] = "{$label} › tipo";
+                    $names["{$key}.*.data"] = "{$label} › dados";
+                    break;
+            }
+        }
+
+        return $names;
+    }
+
+    /** @return array<string, string> */
+    public static function metaAttributes(): array
+    {
+        return self::META_ATTRIBUTES;
+    }
+
+    /**
+     * O nome do campo: o `attribute` da descrição do campo, ou o começo da descrição ("Caminho antigo (começa com /)."
+     * vira "caminho antigo").
+     *
+     * @param  array<string, mixed>  $spec
+     */
+    private static function label(array $spec, string $name): string
+    {
+        if (isset($spec['attribute'])) {
+            return (string) $spec['attribute'];
+        }
+        $first = trim((string) preg_split('/ \(|\.(?:\s|$)|[,;:]/u', (string) ($spec['description'] ?? ''))[0]);
+        if ($first === '') {
+            return str_replace('_', ' ', $name);
+        }
+        $word = (string) strtok($first, ' ');
+        // Siglas e marcas ficam como estão (CEP, UF, WhatsApp, Instagram, Google).
+        $keep = preg_match('/^\p{Lu}.*\p{Lu}/u', $word) === 1 || in_array($word, ['Instagram', 'Facebook', 'Pinterest', 'Google'], true);
+
+        return $keep ? $first : mb_strtolower(mb_substr($first, 0, 1)).mb_substr($first, 1);
+    }
 }
