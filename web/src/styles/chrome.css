@@ -414,6 +414,14 @@ body:has(.hero--full) #conteudo {
 
 .tools > a .label-optional {
   position: relative;
+  white-space: nowrap;
+}
+
+/* Menu completo na barra (1181 a 1360 px): o "Lista de desejos" quebrava em duas linhas; fica só o ícone e o contador. */
+@media (min-width: 1181px) and (max-width: 85rem) {
+  .tools .label-optional {
+    display: none;
+  }
 }
 
 .lang {
@@ -571,6 +579,17 @@ body:has(.hero--full) #conteudo {
     column-gap: var(--space-4);
     font-size: var(--fs-ui);
   }
+
+  /* Área interna, Área externa e Acabamentos quebram de linha em vez de sair da tela. */
+  .nav-panel__tabs {
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+}
+
+/* O PT/EN do menu aberto só existe no celular (no resto, ele fica na barra). */
+.nav__lang {
+  display: none;
 }
 
 @media (max-width: 560px) {
@@ -579,6 +598,27 @@ body:has(.hero--full) #conteudo {
     display: none;
   }
 
+  .nav.is-open .nav__lang {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav__lang .lang a,
+  .nav__lang .lang strong {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .nav-panel__tab > button,
+  .nav-panel__tab-link {
+    font-size: var(--fs-lead);
+  }
   .site-header__bar {
     gap: var(--space-3);
   }

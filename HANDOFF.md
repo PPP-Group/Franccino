@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (34, de 16/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (36, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1661,7 +1661,7 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   com esse "idioma" (422 no log); `dynamicParams = false` no layout de `[locale]` responde 404 sem renderizar. Os avisos
   `[csp]` com `kaspersky-labs.com` vêm do antivírus de quem navega (injeta scripts na página) e não são do site.
 
-## 33. 17/11/2026: API de gestão e conector do Claude e do ChatGPT
+## 35. 17/11/2026: API de gestão e conector do Claude e do ChatGPT
 
 - **O que é:** o desenho da API do VTX Tap (outro projeto do Pedro) adaptado à Franccino. Uma API com tudo o que o
   painel faz, um conector MCP para o Claude e o ChatGPT e o OAuth 2.1 para conectar, tudo saindo de um catálogo só.
@@ -1681,3 +1681,51 @@ Branch `claude/paginacao-e-zoom`, saída da `develop`.
   Windows.
 - **Depois do deploy:** conferir que o `APP_URL` da API é o endereço público com https; conectar o Claude pela URL
   `{API}/mcp` e rodar alguns pedidos reais.
+
+## 36. 17/11/2026: responsividade em todas as telas
+
+Branch `fix/responsividade`, saída da `develop`. Varredura com Playwright em 28 páginas × 8 larguras (320 a 1920 px),
+mais celular deitado (740 × 360) e as janelas (foto ampliada, busca do cabeçalho, lista de desejos), com emulação de
+celular (toque e janela móvel).
+
+- **Página afastada no celular (o mais grave):** na home e nas coleções, a janela do celular crescia até a largura das
+  peças das pontas do carrossel (1036 px em 375 px) e a página abria afastada, com rolagem para o lado. O `overflow-x:
+clip` do `body` passava para a janela, e o navegador móvel não corta por ela. O `html` também ganhou `overflow-x:
+clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo continuam funcionando.
+- **Filtros do catálogo** (Casa, Giardini, categorias, Produtos e tabela técnica): no celular os seletores mostravam só
+  "T…" (e "1" em 320 px); em 768 px o terceiro saía da tela. Até 1180 px: contagem e Grade/Tabela em cima, filtros
+  embaixo dividindo a largura; no celular, uma coluna, cada filtro na linha inteira (`catalog.css`).
+- **Tabela técnica no celular:** "Anterior 1 / 3 Próxima" ficava espremido em cima do Grade/Tabela; agora tem linha
+  própria.
+- **Menu do celular:** as abas Área interna/Área externa/Acabamentos saíam da tela (quebram de linha); e o PT/EN, que
+  some da barra abaixo de 560 px, aparece no fim do menu aberto (`HeaderNav`, `.nav__lang`).
+- **Página da peça em uma coluna (até 980 px):** o quadro 4:3 passava da altura da tela; a altura para em 62% da tela.
+- **Botão "+" dos cards no celular:** 36 px de desenho (cobria um terço da foto), alvo de toque continua com 44 px.
+- **Sala para montar no toque:** a instrução falava de setas, Shift e Delete; no toque aparece a do dedo
+  (`planner.hintTouch`). O arraste por toque já existia.
+- **Cabeçalho de 1181 a 1360 px:** "Lista de desejos" quebrava em duas linhas; nessa faixa fica só o ícone e o contador.
+- **Sem mudança:** nenhuma página com texto abaixo de 12 px; Lojas, Busca, rodapé e as janelas sem transbordo.
+- **Não conferido aqui:** o banco local tem só as 50 peças de demonstração (fotos convertidas estreitas no local);
+  Fábrica e Corporativo com o conteúdo do preview, a janela "Antes de baixar" (sem arquivo no local) e o 3D.
+- **Ambiente local (Windows):** o `next dev` não subia ("Failed to load native binding"): a pasta de cache do SWC em
+  `%LOCALAPPDATA%\swc` tinha uma permissão que a versão nova recusa. Com `SWC_NATIVE_BINDING_CACHE` apontando para
+  outra pasta, sobe.
+- **Pontos de quebra:** o CSS usa 14 larguras diferentes; a consolidação em faixas fixas ficou para depois (mudaria
+  muitos arquivos sem ganho visível agora).
+
+### 36.1 Retorno do Pedro (17/11): conflito, rolagem lateral, foto da peça e "Ver mais"
+
+- **Conflito com a `develop`:** só o `HANDOFF.md` (as duas seções de 17/11). Ficaram as duas, a da API de gestão como 35
+  e esta como 36.
+- **Rolagem lateral:** o `html` também em `overflow-x: hidden` antes do `clip`, para o Safari anterior ao 16. Conferido
+  nas 28 páginas, em 8 larguras de 320 a 1920 px, rolando até o fim e tentando arrastar para o lado.
+- **Foto da peça maior:**
+  - a coluna da foto passou a ter dois terços da largura, e o texto ficou com no mínimo 20rem (em 1440 px, a foto foi
+    de 735 para 840 px de largura);
+  - o palco para na altura da tela (as miniaturas continuam à vista);
+  - as setas e o botão de ampliar no palco são mais discretos: 32 px, sem borda, papel translúcido. A área de toque
+    continua com 44 px;
+  - no celular, Fotos/3D fica mais junto do canto.
+- **"Ver mais":** a descrição da peça mostra 3 linhas e os materiais 2, com "Ver mais" e "Ver menos"
+  (`components/ui/ClampedText.tsx`). O botão só aparece quando o texto passa do limite; sem JavaScript, o texto
+  aparece inteiro.
