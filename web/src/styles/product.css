@@ -732,13 +732,23 @@
     padding-inline: var(--space-3);
   }
 
-  /* A frase do botão principal não cabe ao lado da quantidade em 390 px: cada um na sua linha. */
-  .buy__row {
-    grid-template-columns: 1fr;
+  /*
+    Quantidade e botão na mesma linha (retorno de 17/11/2026), os dois um pouco menores: o número da quantidade mais
+    estreito, e o botão com menos respiro e texto em --fs-caption. Os botões de - e + continuam com 44 px de toque.
+  */
+  .buy__row .stepper {
+    grid-template-columns: 44px minmax(24px, auto) 44px;
   }
 
-  .buy__row .stepper {
-    justify-self: start;
+  .buy__add {
+    padding-inline: var(--space-2);
+    font-size: var(--fs-caption);
+    gap: var(--space-1);
+  }
+
+  .buy__add .icon {
+    width: 16px;
+    height: 16px;
   }
 
   .designer-strip {
@@ -748,6 +758,13 @@
 
   .designer-strip img {
     max-width: 120px;
+  }
+}
+
+/* Em telas estreitas (até 389 px: 360 e 375 px), sem o ícone o texto do botão ainda cabe em uma linha. */
+@media (max-width: 389px) {
+  .buy__add .buy__add-icon {
+    display: none;
   }
 }
 

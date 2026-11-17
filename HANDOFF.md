@@ -1739,3 +1739,6 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   CSS (`order` em `.panel`); acima de 980 px, a ordem continua a do código.
 - **Texto em seções com título:** "Sobre a peça" (4 linhas e "Ver mais") e "Materiais" (3 linhas), no formato de
   Acabamentos e Medidas. Vale também no computador, no mesmo lugar onde o texto já ficava.
+- **Quantidade e botão da lista na mesma linha** no celular (pedido do Pedro): o número da quantidade ficou mais estreito
+  e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
+  de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
