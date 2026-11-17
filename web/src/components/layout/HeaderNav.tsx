@@ -181,10 +181,14 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
     if (!open) {
       return;
     }
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    // Trava a rolagem no `html`, não no `body`: com `overflow: hidden` o `body` vira o contêiner de rolagem, o
+    // cabeçalho `sticky` passa a grudar nele e volta ao topo do documento; no meio da página, abrir o menu levava a
+    // pessoa lá para cima (retorno de 17/11/2026).
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = previousOverflow;
+      root.style.overflow = previousOverflow;
     };
   }, [open]);
 

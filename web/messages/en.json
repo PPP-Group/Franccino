@@ -344,7 +344,9 @@
       "room": "Room",
       "allRooms": "All rooms",
       "allCategories": "All categories",
-      "allCollections": "All collections"
+      "allCollections": "All collections",
+      "toggle": "Filters",
+      "toggleActive": "Filters ({count})"
     },
     "sort": {
       "featured": "Featured",

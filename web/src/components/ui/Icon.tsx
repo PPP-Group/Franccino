@@ -95,6 +95,15 @@ const PATHS = {
   chevron: <path d="m6 9 6 6 6-6" />,
   // Ampliar a foto da peça (Tabler Icons, arrows-maximize, MIT).
   expand: <path d="M16 4h4v4M14 10l6 -6M8 20h-4v-4M4 20l6 -6M16 20h4v-4M14 14l6 6M8 4h-4v4M4 4l6 6" />,
+  // Botão "Filtros" do catálogo no celular (Tabler Icons, adjustments-horizontal, MIT).
+  filters: (
+    <>
+      <circle cx="14" cy="6" r="2" />
+      <circle cx="8" cy="12" r="2" />
+      <circle cx="17" cy="18" r="2" />
+      <path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h11M19 18h1" />
+    </>
+  ),
   pause: <path d="M9 5v14M15 5v14" />,
   play: <path d="M7 5v14l11-7Z" />,
 } satisfies Record<string, ReactNode>;
