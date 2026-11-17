@@ -4,3 +4,8 @@ allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
   unrs-resolver: true
+# GHSA-fc5q-39xc-vjpf (picomatch <=4.0.7, ReDoS): entra por next-intl > @parcel/watcher, usado no build, nao no
+# atendimento das paginas. Ainda sem versao corrigida no npm (17/11/2026). Tirar quando o picomatch 4.0.8 sair.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-fc5q-39xc-vjpf
