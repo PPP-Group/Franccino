@@ -91,7 +91,7 @@ final class PanelGuides
     ];
 
     /**
-     * The guides by group, in the help center order; a key missing from GROUPS goes to the last group.
+     * The guides by group, in the help center order; a guide missing from GROUPS goes to the last group.
      *
      * @return list<array{key: string, title: string, guides: list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string, icon: string}>}>
      */
@@ -100,7 +100,6 @@ final class PanelGuides
         $grouped = [];
         $placed = [];
         foreach (self::GROUPS as $group => $keys) {
-            $keys = array_values(array_filter($keys, fn (string $key): bool => array_key_exists($key, self::GUIDES)));
             $placed = [...$placed, ...$keys];
             $grouped[$group] = $keys;
         }
@@ -109,15 +108,15 @@ final class PanelGuides
             $grouped[array_key_last($grouped)] = [...$grouped[array_key_last($grouped)], ...$rest];
         }
 
-        return array_values(array_map(
+        return array_map(
             fn (string $group, array $keys): array => [
                 'key' => $group,
-                'title' => trans("guides.center.groups.{$group}"),
+                'title' => (string) trans("guides.center.groups.{$group}"),
                 'guides' => array_map(self::guide(...), $keys),
             ],
             array_keys($grouped),
             $grouped,
-        ));
+        );
     }
 
     /** @return list<string> */

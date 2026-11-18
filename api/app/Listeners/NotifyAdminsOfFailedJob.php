@@ -2,11 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Enums\UserRole;
-use App\Models\User;
-use Filament\Notifications\Notification;
+use App\Support\PanelAlerts;
 use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 /**
@@ -19,19 +16,13 @@ class NotifyAdminsOfFailedJob
     {
         $job = class_basename($event->job->resolveName());
 
-        if (! Cache::add("failed-job-warning:{$job}", true, now()->addHour())) {
-            return;
-        }
-
-        $admins = User::query()->where('role', UserRole::Admin)->where('is_active', true)->whereNull('api_credential_id')->get();
-
-        Notification::make()
-            ->title(__('guides.dashboard.stat.job_failed_title'))
-            ->body(__('guides.dashboard.stat.job_failed_body', [
+        PanelAlerts::send(
+            "failed-job:{$job}",
+            __('guides.dashboard.stat.job_failed_title'),
+            __('guides.dashboard.stat.job_failed_body', [
                 'job' => $job,
                 'message' => Str::limit($event->exception->getMessage(), 160),
-            ]))
-            ->danger()
-            ->sendToDatabase($admins);
+            ]),
+        );
     }
 }

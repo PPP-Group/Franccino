@@ -177,12 +177,12 @@ class ApiConnections extends Page implements HasTable
                 TextColumn::make('kind')->label('Tipo')->badge()
                     ->formatStateUsing(fn (string $state): string => $state === ApiCredential::KEY ? 'Chave' : 'Conector')
                     ->color(fn (string $state): string => $state === ApiCredential::KEY ? 'gray' : 'info'),
-                TextColumn::make('prefix')->label('Início')->fontFamily('mono')
+                TextColumn::make('prefix')->label('Início')
                     ->formatStateUsing(fn (string $state, ApiCredential $record): string => $record->kind === ApiCredential::KEY ? $state.'…' : '—'),
-                TextColumn::make('scopes')->label('Permissões')->wrap()
-                    ->formatStateUsing(fn ($state, ApiCredential $record): string => count($record->scopes) >= count(Areas::LIST)
-                        ? 'Todas as áreas'
-                        : implode(' · ', array_map(fn (string $s) => Areas::describe($s), $record->scopes))),
+                // `state()` and not `formatStateUsing()`: on an array column the format runs once per item, and the whole
+                // sentence came out repeated for every area (revisão de 17/11/2026).
+                TextColumn::make('permissions')->label('Permissões')->wrap()
+                    ->state(fn (ApiCredential $record): string => Areas::summarize($record->scopes)),
                 TextColumn::make('expires_at')->label('Validade')->date('d/m/Y')->placeholder('Sem validade'),
                 TextColumn::make('last_used_at')->label('Último uso')->since()->placeholder('Nunca'),
                 TextColumn::make('status')->label('Situação')->badge()

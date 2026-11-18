@@ -103,6 +103,18 @@
     .fr-upload .filepond--panel-root { border-radius: 0; background: #fff; border: 1px dashed var(--fr-line); }
     .fr-upload .filepond--drop-label { min-height: 4rem; }
 
+    /* API e conectores (revisão de 17/11/2026: espaçamento, texto amontoado e fontes diferentes). */
+    .fr-api { display: grid; gap: 1.25rem; }
+    .fr-api .fi-tabs { justify-self: start; margin-inline: 0; }
+    .fr-api__address, .fr-api__docs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    .fr-api__label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fr-muted); }
+    .fr-api__url { padding: 0.375rem 0.75rem; background: var(--fr-sand); border: 1px solid var(--fr-line); font-size: 0.875rem; word-break: break-all; }
+    .fr-api__steps { margin: 0; padding: 0; list-style: none; counter-reset: fr-step; display: grid; gap: 0.875rem; }
+    .fr-api__steps li { counter-increment: fr-step; position: relative; min-height: 1.75rem; padding: 0.125rem 0 0 2.5rem; line-height: 1.6; font-size: 0.9375rem; }
+    .fr-api__steps li::before { content: counter(fr-step); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; background: var(--fr-ink); color: #fff; font-size: 0.8125rem; font-weight: 500; }
+    .fr-api__steps strong, .fr-api__tips strong { font-weight: 500; }
+    .fr-api__tips { margin: 0; padding-left: 1.125rem; list-style: disc; display: grid; gap: 0.5rem; line-height: 1.6; font-size: 0.9375rem; }
+
     .fr-help { display: grid; gap: 2.5rem; }
     .fr-help__index { display: grid; gap: 2.5rem; }
     .fr-help__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }

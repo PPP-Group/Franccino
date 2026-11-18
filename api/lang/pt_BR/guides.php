@@ -349,6 +349,12 @@ return [
             'job_failed_title' => 'Uma tarefa automática falhou',
             'job_failed_body' => ':job: :message. As próximas falhas iguais na próxima hora não geram aviso.',
         ],
+        'alerts' => [
+            'exception_title' => 'Erro no servidor do site',
+            'exception_body' => 'Em :path: :message (:where). Avise a equipe técnica. O mesmo erro na próxima hora não gera outro aviso.',
+            'site_down_title' => 'O site está fora do ar',
+            'site_down_body' => ':url não respondeu nas duas últimas checagens (10 minutos). Avise a equipe técnica.',
+        ],
         'status' => [
             'heading' => 'Saúde do site',
             'description' => 'Conferido a cada 5 minutos.',
