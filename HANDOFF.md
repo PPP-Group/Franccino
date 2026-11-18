@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (40, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (41, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1786,3 +1786,15 @@ toda largura.
   navegador do app não aceita a senha. Depois do deploy, digitar na busca do celular e tocar numa sugestão.
 - **Faixa do designer na peça:** retrato pequeno ao lado do nome; o texto, o link e as peças ficam na largura inteira.
 - **Pontos clicáveis:** saíram dos banners do topo no celular. Nas outras fotos continuam.
+
+## 41. 17/11/2026 (noite): toque nas sugestões da busca e vão do carrossel no celular
+
+- **Sugestões da busca no celular:** depois da seção 40 elas apareciam, mas o toque não abria nada. Com mouse, a
+  sugestão abre também num build de produção local. O que falhava era o toque com o teclado aberto: ele fecha o
+  teclado, a tela muda de altura e o navegador pode não mandar o clique. Agora o toque curto, sem arrastar a lista,
+  navega já no `pointerup`; o clique que chegar depois é ignorado e não arma a foto que cresce. Testado no navegador com
+  um toque sem clique, que abre a peça, e com um arrasto, que não abre. **Falta conferir num celular de verdade** depois
+  do deploy.
+- **Carrossel (Lançamentos, coleções, designers):** no celular, a peça do centro fica mais afastada das duas vizinhas
+  (`coverflowXs` com `centerGap`; `MOBILE_CENTER_GAP` = 0,12 da largura da peça). O vão entre as outras peças não mudou,
+  e no computador nada muda.
