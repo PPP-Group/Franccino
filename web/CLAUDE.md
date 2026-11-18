@@ -38,7 +38,7 @@ src/
   app/
     [locale]/layout.tsx, not-found.tsx, error.tsx, page.tsx
     [locale]/(rotas internas em inglês)/.../page.tsx
-    api/revalidate/route.ts, api/csp-report/route.ts
+    api/revalidate/route.ts, api/csp-report/route.ts, api/suggest/route.ts
     sitemap.ts, robots.ts, not-found.tsx (global)
     fonts.ts, globals.css
   components/
@@ -72,7 +72,7 @@ src/
     consent/{store,gtm}.ts
     projects/type.ts
     stores/{filter,map-link,map-view}.ts
-    search/{suggest,actions}.ts
+    search/{suggest,server}.ts
     redirects/{match,store}.ts
     contact-links.ts, settings.ts, env.ts
     format/{dimensions,file-size}.ts
