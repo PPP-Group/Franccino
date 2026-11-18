@@ -24,12 +24,12 @@ class ClientResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Client');
+        return __('Client logo');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Clients');
+        return __('Client logos');
     }
 
     public static function getNavigationGroup(): ?string

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pages\Schemas;
 
+use App\Filament\Support\PanelUploads;
 use App\Filament\Support\Translatable;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
@@ -55,11 +56,10 @@ class PageBlocks
         return Block::make('image')
             ->label(__('Image'))
             ->schema([
-                FileUpload::make('image')
+                PanelUploads::photo(FileUpload::make('image'))
                     ->label(__('Image'))
                     ->disk('media')
                     ->directory('pages')
-                    ->image()
                     ->required(),
                 Translatable::tabs(fn (string $locale): array => [
                     TextInput::make("caption.{$locale}")
@@ -73,11 +73,10 @@ class PageBlocks
         return Block::make('image_text')
             ->label(__('Image and text'))
             ->schema([
-                FileUpload::make('image')
+                PanelUploads::photo(FileUpload::make('image'))
                     ->label(__('Image'))
                     ->disk('media')
                     ->directory('pages')
-                    ->image()
                     ->required(),
                 Radio::make('image_position')
                     ->label(__('Image position'))
@@ -196,11 +195,10 @@ class PageBlocks
         return Block::make('gallery')
             ->label(__('Gallery'))
             ->schema([
-                FileUpload::make('images')
+                PanelUploads::photo(FileUpload::make('images'))
                     ->label(__('Images'))
                     ->disk('media')
                     ->directory('pages')
-                    ->image()
                     ->multiple()
                     ->reorderable(),
                 Translatable::tabs(fn (string $locale): array => [
@@ -225,6 +223,7 @@ class PageBlocks
                     ->disk('media')
                     ->directory('videos')
                     ->acceptedFileTypes(['video/mp4'])
+                    ->extraAttributes(['class' => 'fr-upload fr-upload--file'])
                     ->maxSize(config('franccino.uploads.video_max_kb'))
                     ->requiredWithout('url'),
                 TextInput::make('url')
@@ -232,11 +231,10 @@ class PageBlocks
                     ->helperText(__('Only if there is no file above.'))
                     ->url()
                     ->requiredWithout('file'),
-                FileUpload::make('poster')
+                PanelUploads::photo(FileUpload::make('poster'))
                     ->label(__('Cover'))
                     ->disk('media')
-                    ->directory('pages')
-                    ->image(),
+                    ->directory('pages'),
                 Translatable::tabs(fn (string $locale): array => [
                     TextInput::make("title.{$locale}")
                         ->label(__('Title')),

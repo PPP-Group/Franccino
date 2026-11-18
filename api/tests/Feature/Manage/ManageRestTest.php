@@ -211,6 +211,24 @@ it('reads and changes the settings with the version and the panel rules', functi
     expect(app(GeneralSettings::class)->instagram_url)->toBe('https://www.instagram.com/franccino.oficial/');
 });
 
+it('edits the texts of the cookie notice, as the panel does', function () {
+    $secret = manageKey(['configuracoes:escrever']);
+
+    $this->patchJson('/api/manage/v1/settings', ['cookie_banner' => ['outro' => ['pt' => 'x']]], manage($secret))->assertStatus(422);
+    $this->patchJson('/api/manage/v1/settings', ['cookie_banner' => [
+        'title' => ['pt' => 'Sua privacidade', 'en' => 'Your privacy'],
+        'body' => ['pt' => 'Usamos cookies.'],
+    ]], manage($secret))
+        ->assertOk()
+        ->assertJsonPath('data.cookie_banner.title.en', 'Your privacy');
+
+    $this->getJson('/api/v1/settings?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.cookie_banner.title', 'Your privacy')
+        ->assertJsonPath('data.cookie_banner.body', 'Usamos cookies.')
+        ->assertJsonPath('data.cookie_banner.analytics', null);
+});
+
 it('keeps the redirect rules of the panel', function () {
     $secret = manageKey(['redirecionamentos:escrever']);
 

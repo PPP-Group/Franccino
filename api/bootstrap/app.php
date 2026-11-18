@@ -4,6 +4,7 @@ use App\Http\Middleware\NoStoreCache;
 use App\Http\Middleware\RequireImportToken;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetContentLocale;
+use App\Support\PanelAlerts;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -52,6 +53,8 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // A server error also goes to the panel bell (App\Support\PanelAlerts); 4xx and validation are not reported.
+        $exceptions->report(fn (Throwable $exception) => PanelAlerts::exception($exception));
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*', 'mcp', 'oauth/*') || $request->expectsJson(),
         );

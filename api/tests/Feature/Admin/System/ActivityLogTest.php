@@ -91,6 +91,11 @@ it('shows the activity log only to admins', function () {
     $this->actingAs(User::factory()->editor()->create())->get('/admin/activity-logs')->assertForbidden();
 });
 
-it('registers each listener once (no automatic discovery on top of the explicit ones)', function (string $event) {
-    expect(Event::getListeners($event))->toHaveCount(1);
-})->with([Login::class, MediaHasBeenAddedEvent::class, ConversionHasBeenCompletedEvent::class]);
+it('registers each listener once (no automatic discovery on top of the explicit ones)', function (string $event, int $count) {
+    expect(Event::getListeners($event))->toHaveCount($count);
+})->with([
+    [Login::class, 1],
+    // WebP conversion, then the photo size.
+    [MediaHasBeenAddedEvent::class, 2],
+    [ConversionHasBeenCompletedEvent::class, 1],
+]);

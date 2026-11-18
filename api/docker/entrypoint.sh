@@ -33,6 +33,10 @@ php artisan storage:link --force > /dev/null
 # tempo no mesmo SQLite (erro "table already exists").
 flock storage/.migrate.lock php artisan migrate --force
 
+# Data deste deploy (e o commit, quando o EasyPanel ou o build passarem GIT_SHA), para o Início do painel mostrar a
+# versão no ar (revisão de 17/11/2026).
+printf '%s\n%s\n' "$(date -Iseconds)" "${GIT_SHA:-${SOURCE_COMMIT:-}}" > storage/.deployed-at
+
 # Conteúdo de exemplo: SNAPSHOT_URL aponta para um zip de `php artisan franccino:snapshot export`. Importa uma vez
 # só: o comando grava storage/.snapshot-imported (também no import manual), e daí em diante vale o que for
 # editado no painel. Link fora do ar não derruba a API.

@@ -15,6 +15,7 @@ export const EMPTY_SETTINGS: Settings = {
   linkedin_url: null,
   youtube_url: null,
   footer_documents: [],
+  cookie_banner: {},
 };
 
 export type SocialPlatform = 'instagram' | 'facebook' | 'pinterest' | 'linkedin' | 'youtube';

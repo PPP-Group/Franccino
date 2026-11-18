@@ -312,6 +312,9 @@ type Settings = {
   linkedin_url: string | null;
   youtube_url: string | null;
   footer_documents: { label: string; url: string }[]; // label no idioma pedido, url absoluta
+  // Textos do aviso de cookies editados no painel (2026-11-18), no idioma pedido com fallback pt; null = o texto
+  // padrão do site (web/messages, namespace consent).
+  cookie_banner: Record<'title' | 'body' | 'necessary' | 'analytics' | 'marketing', string | null>;
 };
 ```
 
@@ -438,6 +441,11 @@ até `franccino.uploads.video_max_kb`; as outras coleções, foto até 30 MB. Em
 `poster`; um bloco com o mesmo título recebe o arquivo novo, e os outros vídeos da página (ex.: o do YouTube) ficam.
 Em `product`, `collection=model_3d` grava o GLB do visualizador 3D (disco privado, até
 `franccino.uploads.model_3d_max_kb`), no lugar do anterior.
+
+**Fotos em WebP (2026-11-18).** Toda foto JPG, PNG ou BMP que entra (painel, importação, API de gestão e conector) é
+gravada em WebP, qualidade 90, de pé pela orientação da câmera e com no máximo 4096 px no lado maior; o PNG mantém a
+transparência. O nome do arquivo passa a terminar em `.webp`; o nome, o tipo e o tamanho enviados ficam na propriedade
+`uploaded` da mídia. SVG, GIF e WebP ficam como vieram (`App\Support\WebpImage`, `ConvertImageToWebp`).
 `media/remove` apaga as fotos `ids` daquele registro e daquela coleção (ex.: a cópia antiga de uma foto que voltou do
 Drive); um id de outro registro ou de outra coleção não é tocado e volta em `not_found`.
 

@@ -10,6 +10,7 @@ use App\Filament\Resources\Launches\LaunchResource;
 use App\Filament\Resources\Pages\PageResource;
 use App\Filament\Resources\Products\ProductResource;
 use App\Filament\Resources\Stores\StoreResource;
+use App\Filament\Support\GridFill;
 use App\Models\ContactMessage;
 use Filament\Resources\Resource;
 use Filament\Widgets\Widget;
@@ -17,7 +18,7 @@ use Filament\Widgets\Widget;
 /** Big buttons for the daily tasks; each one only shows when the user may open that screen. */
 class QuickActionsWidget extends Widget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     protected static bool $isLazy = false;
 
@@ -41,7 +42,7 @@ class QuickActionsWidget extends Widget
         'messages' => [ContactMessageResource::class, 'index', 'heroicon-o-envelope'],
     ];
 
-    /** @return array{shortcuts: list<array{label: string, url: string, icon: string, badge: ?int}>} */
+    /** @return array{shortcuts: list<array{label: string, url: string, icon: string, badge: ?int}>, grid: array{columns: int, last_span: int}} */
     protected function getViewData(): array
     {
         $shortcuts = [];
@@ -61,6 +62,6 @@ class QuickActionsWidget extends Widget
             ];
         }
 
-        return ['shortcuts' => $shortcuts];
+        return ['shortcuts' => $shortcuts, 'grid' => GridFill::for(count($shortcuts))];
     }
 }
