@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (42, de 18/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (43, de 18/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1853,3 +1853,17 @@ seção 39.
   - as 12 peças que entraram depois de 23/10 ganharam a regra exata (notas "manual 18/11", que o gerador não mexe). A
     Mesa de cabeceira Isa não está no catálogo novo: leva a Mesas de cabeceira até ser cadastrada.
   - O `php artisan franccino:redirects:generate` depois do deploy só confirma o que já está no preview.
+
+## 43. 18/11/2026: troca de tela do painel e documentação da API
+
+- **Troca de tela no painel:** cada clique recarregava a página inteira; a barra lateral voltava ao topo e rolava de
+  novo até o item (o "pulo para cima e para baixo") e o conteúdo piscava. O painel passou ao modo SPA do Filament
+  (`->spa(hasPrefetching: true)` no `AdminPanelProvider`): só o conteúdo troca, a barra lateral e o topo ficam parados,
+  a tela começa a carregar com o ponteiro em cima, e o conteúdo novo entra com um fade de 0,22 s. A documentação da API,
+  o OAuth e a aprovação de conexão abrem como página comum (`spaUrlExceptions`). Conferido com captura quadro a quadro:
+  sem tela em branco, a barra lateral rolada não se mexe, o Início (gráficos) e a Ajuda funcionam depois de navegar.
+- **Cores do site no painel e na documentação:** seleção de texto em preto sobre papel e barra de rolagem fina com
+  trilho areia, como em `web/src/styles/base.css`.
+- **Documentação da API** (`resources/views/manage/docs.blade.php`): fonte Jost; busca no topo do menu (tecla `/`),
+  que filtra as funções pelo nome, pela ferramenta, pelo caminho ou pela descrição e diz quantas achou; o menu da
+  esquerda marca a seção e a função que estão na tela enquanto rola e abre as funções da área atual.

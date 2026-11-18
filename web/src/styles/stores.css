@@ -112,3 +112,60 @@
     transition: none;
   }
 }
+
+/*
+  Celular: as lojas em duas colunas, como a grade das peças (retorno de 18/11/2026: uma por linha ficava gigante e a
+  lista, longa demais). Vale na página Lojas e na seção de lojas da home. Texto e contatos menores para caber na coluna;
+  os contatos ficam um embaixo do outro, com o alvo de toque de 44 px de sempre.
+*/
+@media (max-width: 35rem) {
+  .store-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-3);
+  }
+
+  .store {
+    padding-top: var(--space-3);
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .store h3 {
+    font-size: var(--fs-ui);
+    line-height: 1.3;
+  }
+
+  .store address,
+  .store__description,
+  .store__hours {
+    font-size: var(--fs-label);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .store .meta {
+    font-size: var(--fs-label);
+  }
+
+  .store__links {
+    flex-direction: column;
+    font-size: var(--fs-label);
+  }
+
+  /* O e-mail é uma palavra só e passava para a coluna vizinha: quebra onde precisar. */
+  .store__links li,
+  .store__links a {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .store__links a[href^='mailto:'] {
+    display: block;
+    padding-block: var(--space-3);
+    word-break: break-all;
+  }
+
+  .store .tag {
+    font-size: var(--fs-label);
+  }
+}
