@@ -123,6 +123,21 @@
     .fr-photo-points__label { font-size: 0.8125rem; line-height: 1.4; }
     .fr-photo-points__count { font-size: 0.75rem; color: var(--fr-muted); }
 
+    /* Seleção de texto e barras de rolagem como no site (web/src/styles/base.css; revisão de 18/11/2026). */
+    ::selection { background: var(--fr-ink); color: #fff; }
+    html { scrollbar-color: var(--fr-muted) var(--fr-sand); }
+    * { scrollbar-width: thin; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--fr-sand); }
+    ::-webkit-scrollbar-thumb { background: var(--fr-muted); border: 2px solid var(--fr-sand); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--fr-ink); }
+    ::-webkit-scrollbar-corner { background: var(--fr-sand); }
+
+    /* Troca de tela: o conteúdo entra com um fade curto; a barra lateral e o topo ficam parados (modo SPA). */
+    @keyframes fr-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    .fi-main { animation: fr-enter 0.22s ease-out both; }
+    @media (prefers-reduced-motion: reduce) { .fi-main { animation: none; } }
+
     .fr-help { display: grid; gap: 2.5rem; }
     .fr-help__index { display: grid; gap: 2.5rem; }
     .fr-help__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }

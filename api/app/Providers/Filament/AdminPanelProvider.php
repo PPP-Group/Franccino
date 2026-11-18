@@ -41,6 +41,11 @@ class AdminPanelProvider extends PanelProvider
             ->favicon('/favicon-panel.svg')
             ->darkMode(false)
             ->sidebarCollapsibleOnDesktop()
+            // Troca de tela sem recarregar a página (revisão de 18/11/2026: cada clique recarregava tudo, a barra lateral
+            // voltava ao topo e rolava de novo até o item, e o conteúdo piscava). Com o ponteiro em cima, a tela já
+            // começa a carregar. A documentação da API e o OAuth abrem como página comum.
+            ->spa(hasPrefetching: true)
+            ->spaUrlExceptions(fn (): array => ['*/api/manage/*', '*/oauth/*', '*/connect-app*'])
             ->login()
             ->passwordReset()
             ->profile(isSimple: false)
