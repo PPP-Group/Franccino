@@ -55,6 +55,71 @@ final class PanelGuides
         'users' => [UserResource::class],
     ];
 
+    /**
+     * Help center groups (revisão de 17/11/2026: "um monte de cardzinho um em cima do outro"): guide key => group, and
+     * an icon per guide, so the topics read by subject instead of a long list.
+     *
+     * @var array<string, list<string>>
+     */
+    private const GROUPS = [
+        'basics' => ['start', 'writing', 'photos'],
+        'catalog' => ['products', 'collections', 'launches', 'designers', 'finishes', 'downloads', 'model3d'],
+        'site' => ['banners', 'pages', 'projects', 'scenes', 'stores', 'clients'],
+        'people' => ['messages', 'users'],
+    ];
+
+    /** @var array<string, string> */
+    private const ICONS = [
+        'start' => 'heroicon-o-flag',
+        'writing' => 'heroicon-o-pencil',
+        'photos' => 'heroicon-o-camera',
+        'products' => 'heroicon-o-cube',
+        'collections' => 'heroicon-o-rectangle-stack',
+        'launches' => 'heroicon-o-sparkles',
+        'designers' => 'heroicon-o-identification',
+        'finishes' => 'heroicon-o-swatch',
+        'downloads' => 'heroicon-o-arrow-down-tray',
+        'model3d' => 'heroicon-o-cube-transparent',
+        'banners' => 'heroicon-o-photo',
+        'pages' => 'heroicon-o-document-text',
+        'projects' => 'heroicon-o-building-office',
+        'scenes' => 'heroicon-o-cursor-arrow-rays',
+        'stores' => 'heroicon-o-map-pin',
+        'clients' => 'heroicon-o-building-office-2',
+        'messages' => 'heroicon-o-envelope',
+        'users' => 'heroicon-o-users',
+    ];
+
+    /**
+     * The guides by group, in the help center order; a key missing from GROUPS goes to the last group.
+     *
+     * @return list<array{key: string, title: string, guides: list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string, icon: string}>}>
+     */
+    public static function grouped(): array
+    {
+        $grouped = [];
+        $placed = [];
+        foreach (self::GROUPS as $group => $keys) {
+            $keys = array_values(array_filter($keys, fn (string $key): bool => array_key_exists($key, self::GUIDES)));
+            $placed = [...$placed, ...$keys];
+            $grouped[$group] = $keys;
+        }
+        $rest = array_values(array_diff(self::keys(), $placed));
+        if ($rest !== []) {
+            $grouped[array_key_last($grouped)] = [...$grouped[array_key_last($grouped)], ...$rest];
+        }
+
+        return array_values(array_map(
+            fn (string $group, array $keys): array => [
+                'key' => $group,
+                'title' => trans("guides.center.groups.{$group}"),
+                'guides' => array_map(self::guide(...), $keys),
+            ],
+            array_keys($grouped),
+            $grouped,
+        ));
+    }
+
     /** @return list<string> */
     public static function keys(): array
     {
@@ -64,7 +129,7 @@ final class PanelGuides
     /**
      * Everything the help center renders for one guide.
      *
-     * @return array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string}
+     * @return array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string, icon: string}
      */
     public static function guide(string $key): array
     {
@@ -79,10 +144,11 @@ final class PanelGuides
             'tips' => $texts['tips'],
             'url' => self::screenUrl($key),
             'video' => self::videoEmbedUrl(self::videos()[$key] ?? null),
+            'icon' => self::ICONS[$key] ?? 'heroicon-o-question-mark-circle',
         ];
     }
 
-    /** @return list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string}> */
+    /** @return list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string, icon: string}> */
     public static function all(): array
     {
         return array_map(self::guide(...), self::keys());

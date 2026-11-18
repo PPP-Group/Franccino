@@ -8,6 +8,7 @@ use App\Filament\Support\InitialsAvatarProvider;
 use App\Filament\Support\PanelGuides;
 use App\Http\Middleware\RequireAdminMultiFactor;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
+use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -48,21 +49,24 @@ class AdminPanelProvider extends PanelProvider
                 AppAuthentication::make()->recoverable(),
             ], isRequired: (bool) config('franccino.panel.admin_mfa_required'))
             ->multiFactorAuthenticationRequiredMiddlewareName(RequireAdminMultiFactor::class)
+            // Mesma fonte do site (Jost, licença aberta), servida pelo Google Fonts.
+            ->font('Jost', provider: GoogleFontProvider::class)
             ->colors([
-                // Madeira do site (web/src/styles/tokens.css, --wood) no tom 600, que é o dos botões; cinzas quentes
-                // como o fundo do site. A paleta é fixa porque a gerada a partir do hex sai alaranjada.
+                // Preto no branco, como o site (revisão de 17/11/2026: o painel tem de parecer o site): o tom 600 é o
+                // --ink dos botões do site (web/src/styles/tokens.css), e os claros são as linhas e a areia de lá. A
+                // madeira fica como cor de destaque (`wood`) para avisos e marcações.
                 'primary' => array_map(Color::convertToOklch(...), [
-                    50 => '#faf6f2',
-                    100 => '#f3eae1',
-                    200 => '#e5d2bf',
-                    300 => '#d0b293',
-                    400 => '#b38a66',
-                    500 => '#966b47',
-                    600 => '#7b4b2a',
-                    700 => '#653d22',
-                    800 => '#4f301b',
-                    900 => '#3d2515',
-                    950 => '#22140b',
+                    50 => '#f7f5f0',
+                    100 => '#efebe3',
+                    200 => '#dcd9d1',
+                    300 => '#bdb9ae',
+                    400 => '#8a887f',
+                    500 => '#57564f',
+                    600 => '#171717',
+                    700 => '#121212',
+                    800 => '#0d0d0d',
+                    900 => '#080808',
+                    950 => '#030303',
                 ]),
                 'gray' => Color::Stone,
             ])
@@ -81,6 +85,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->renderHook(PanelsRenderHook::HEAD_END, fn (): View => view('filament.hooks.styles'))
+            ->renderHook(PanelsRenderHook::CONTENT_START, fn (): View => view('filament.hooks.desktop-note'))
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, fn (): View => view('filament.hooks.login-note'))
             ->renderHook(PanelsRenderHook::USER_MENU_BEFORE, fn (): View => view('filament.hooks.topbar-help'))
             ->renderHook(PanelsRenderHook::BODY_END, fn (): string => filament()->auth()->check()
