@@ -26,7 +26,7 @@ final class Areas
         'lojas' => ['label' => 'Lojas', 'write' => true],
         'banners' => ['label' => 'Banners', 'write' => true],
         'paginas' => ['label' => 'Páginas', 'write' => true],
-        'clientes' => ['label' => 'Clientes (logos)', 'write' => true],
+        'clientes' => ['label' => 'Logos de clientes', 'write' => true],
         'redirecionamentos' => ['label' => 'Redirecionamentos', 'write' => true],
         'configuracoes' => ['label' => 'Configurações gerais', 'write' => true],
         'mensagens' => ['label' => 'Mensagens, listas e downloads', 'write' => false],
@@ -92,6 +92,31 @@ final class Areas
     }
 
     /** "pecas:escrever" → "Peças: ler e mudar". */
+    /**
+     * The scopes in one short sentence, grouped by level: "Todas as áreas: ler e mudar" or "Ler e mudar: Peças,
+     * Coleções. Só ler: Mensagens, listas e downloads."
+     *
+     * @param  list<string>  $scopes
+     */
+    public static function summarize(array $scopes): string
+    {
+        $write = [];
+        $read = [];
+        foreach ($scopes as $scope) {
+            [$area, $level] = explode(':', $scope) + [1 => ''];
+            $label = self::LIST[$area]['label'] ?? $area;
+            $level === 'escrever' ? $write[] = $label : $read[] = $label;
+        }
+        if ($scopes !== [] && array_diff(self::fullScopes(), $scopes) === []) {
+            return 'Todas as áreas (ler e mudar)';
+        }
+
+        return implode(' ', array_filter([
+            $write === [] ? null : 'Ler e mudar: '.implode(', ', $write).'.',
+            $read === [] ? null : 'Só ler: '.implode(', ', $read).'.',
+        ])) ?: 'Nenhuma';
+    }
+
     public static function describe(string $scope): string
     {
         [$area, $level] = explode(':', $scope) + [1 => ''];

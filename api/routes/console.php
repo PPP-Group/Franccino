@@ -2,7 +2,10 @@
 
 use App\Jobs\RevalidateFrontend;
 use App\Models\Banner;
+use App\Support\PanelAlerts;
+use App\Support\SiteStatus;
 use Filament\Actions\Exports\Models\Export;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -39,3 +42,16 @@ Schedule::call(function () {
         RevalidateFrontend::dispatch(['banners', 'home']);
     }
 })->name('banner-de-campanha')->everyFiveMinutes()->onOneServer();
+
+// Site fora do ar: duas checagens seguidas sem resposta (10 minutos) avisam os administradores no sino do painel.
+Schedule::call(function () {
+    Cache::forget('panel.status.frontend');
+    $up = app(SiteStatus::class)->frontend()['up'];
+    $misses = $up ? 0 : ((int) Cache::get('panel.status.frontend-misses', 0)) + 1;
+    Cache::put('panel.status.frontend-misses', $misses, now()->addHour());
+    if ($misses >= 2) {
+        PanelAlerts::send('site-down', __('guides.dashboard.alerts.site_down_title'), __('guides.dashboard.alerts.site_down_body', [
+            'url' => config('franccino.frontend.url'),
+        ]));
+    }
+})->name('site-no-ar')->everyFiveMinutes()->onOneServer();

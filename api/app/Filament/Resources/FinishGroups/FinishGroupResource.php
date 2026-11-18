@@ -42,6 +42,12 @@ class FinishGroupResource extends Resource
         return 8;
     }
 
+    /** Under Acabamentos in the menu (revisão de 17/11/2026: "acabamentos e grupos juntos"). */
+    public static function getNavigationParentItem(): ?string
+    {
+        return __('Finishes');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return FinishGroupForm::configure($schema);

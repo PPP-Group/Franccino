@@ -8,6 +8,7 @@ use App\Models\NewsletterSubscriber;
 use App\Models\Page;
 use App\Models\QuoteList;
 use App\Settings\GeneralSettings;
+use App\Support\WebpImage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -133,7 +134,7 @@ final class Specials
             throw new ApiProblem(403, 'sem_permissao', 'Não permitido', 'O painel não deixa mudar esta página.');
         }
         $file = IncomingFile::from($input, 'image');
-        $path = Storage::disk('media')->putFileAs('pages', $file->path, Str::random(40).'.'.$file->extension);
+        $path = WebpImage::store('media', 'pages/'.Str::random(40).'.'.$file->extension, (string) file_get_contents($file->path), mime_content_type($file->path) ?: null);
 
         return new Result(201, ['data' => [
             'path' => $path,

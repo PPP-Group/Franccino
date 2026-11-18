@@ -3,6 +3,9 @@
 use App\Filament\Pages\HelpCenter;
 use App\Filament\Pages\ManageGeneralSettings;
 use App\Filament\Support\PanelGuides;
+use App\Filament\Widgets\ActivityChartWidget;
+use App\Filament\Widgets\CatalogCompletenessWidget;
+use App\Filament\Widgets\SiteStatusWidget;
 use App\Models\ContactMessage;
 use App\Models\User;
 use App\Settings\GeneralSettings;
@@ -122,4 +125,30 @@ it('lets an admin set a tutorial video that the help center then plays', functio
 it('keeps the tutorial videos out of the public settings', function () {
     $this->getJson('/api/v1/settings', ['X-Frontend-Key' => config('franccino.frontend.api_key') ?? ''])
         ->assertJsonMissingPath('data.tutorial_videos');
+});
+
+it('groups every guide once in the help center, each with an icon', function () {
+    $grouped = PanelGuides::grouped();
+    $keys = array_merge(...array_map(fn (array $group): array => array_column($group['guides'], 'key'), $grouped));
+
+    expect($keys)->toHaveCount(count(PanelGuides::keys()))
+        ->and(array_unique($keys))->toEqualCanonicalizing(PanelGuides::keys())
+        ->and(array_column($grouped, 'title'))->toContain('Comece por aqui', 'Catálogo');
+
+    foreach ($grouped as $group) {
+        foreach ($group['guides'] as $guide) {
+            expect($guide['icon'])->toStartWith('heroicon-');
+        }
+    }
+});
+
+it('shows the site status, the charts and the catalog completeness on the panel home', function () {
+    $this->actingAs(User::factory()->admin()->create());
+
+    livewire(SiteStatusWidget::class)
+        ->assertOk()
+        ->assertSee('Saúde do site')
+        ->assertSee('Último backup');
+    livewire(ActivityChartWidget::class)->assertOk()->assertSee('Contatos no site');
+    livewire(CatalogCompletenessWidget::class)->assertOk()->assertSee('Catálogo completo');
 });

@@ -28,9 +28,15 @@ class HelpCenter extends Page
         return __('guides.center.title');
     }
 
-    /** @return list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string}> */
+    /** @return list<array{key: string, title: string, summary: string, steps: list<string>, tips: list<string>, url: ?string, video: ?string, icon: string}> */
     public function getGuides(): array
     {
         return PanelGuides::all();
+    }
+
+    /** @return list<array{key: string, title: string, guides: list<array<string, mixed>>}> */
+    public function getGroups(): array
+    {
+        return PanelGuides::grouped();
     }
 }

@@ -92,7 +92,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           </div>
           <SiteFooter settings={settings} />
           <ToastRegion />
-          <ConsentBanner />
+          <ConsentBanner texts={settings.cookie_banner} />
           <ImageLoadWatcher />
           <RevealObserver />
         </NextIntlClientProvider>

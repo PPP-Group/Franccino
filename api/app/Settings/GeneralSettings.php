@@ -46,6 +46,12 @@ class GeneralSettings extends Settings
      */
     public array $tutorial_videos;
 
+    /**
+     * Texts of the cookie notice: `['title' => ['pt' => ..., 'en' => ...], 'body' => [...], 'necessary' => [...],
+     * 'analytics' => [...], 'marketing' => [...]]`. A text left empty uses the site's default.
+     */
+    public array $cookie_banner;
+
     public static function group(): string
     {
         return 'general';

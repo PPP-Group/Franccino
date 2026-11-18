@@ -15,6 +15,14 @@ return [
         'video' => 'Vídeo',
         'restart_tour' => 'Ver o tour de boas-vindas de novo',
         'contents' => 'Assuntos',
+        'back' => 'Todos os assuntos',
+        'step' => 'Passo :number',
+        'groups' => [
+            'basics' => 'Comece por aqui',
+            'catalog' => 'Catálogo',
+            'site' => 'Páginas e conteúdo do site',
+            'people' => 'Contatos e acessos',
+        ],
     ],
 
     'contextual' => 'Como preencher',
@@ -105,9 +113,10 @@ return [
 
         'scenes' => [
             'title' => 'Ambientes com pontos clicáveis',
-            'summary' => 'Fotos de ambientes montados, com um ponto em cada peça que leva à página dela. Aparecem na página inicial.',
+            'summary' => 'Pontos sobre as fotos, um em cada peça, que levam à página dela: num ambiente da página inicial ou em qualquer foto de projeto, coleção, área ou página.',
             'steps' => [
-                'Menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
+                'Numa foto que já está no site (capa ou galeria de projeto ou coleção, capa de área ou de página): abra a tela dela e clique em "Pontos nas fotos", no topo. Escolha a foto e marque as peças, como nos passos abaixo.',
+                'Para um ambiente novo na página inicial: menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
                 'Salve uma vez com a foto. Na edição, a foto aparece grande: clique em cima de cada peça e escolha qual é na busca que abre ali mesmo. O ponto entra na lista Pontos com a posição preenchida.',
                 'Clique num ponto já marcado para trocar a peça, mover o ponto (clique depois no novo lugar) ou remover.',
                 'A posição também pode ser digitada na lista, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
@@ -116,6 +125,7 @@ return [
             'tips' => [
                 'Ponha o ponto no meio da peça, longe da borda da foto.',
                 'Peça despublicada some do ambiente sozinha; o ponto volta quando ela for publicada de novo.',
+                'Na lista de Ambientes, embaixo do nome, aparece onde cada um está no site; o filtro separa os da página inicial, os de projeto e os de fotos.',
             ],
         ],
 
@@ -340,6 +350,47 @@ return [
             'no_recipients_hint' => 'Cadastre os e-mails em Configurações → Contato',
             'job_failed_title' => 'Uma tarefa automática falhou',
             'job_failed_body' => ':job: :message. As próximas falhas iguais na próxima hora não geram aviso.',
+        ],
+        'alerts' => [
+            'exception_title' => 'Erro no servidor do site',
+            'exception_body' => 'Em :path: :message (:where). Avise a equipe técnica. O mesmo erro na próxima hora não gera outro aviso.',
+            'site_down_title' => 'O site está fora do ar',
+            'site_down_body' => ':url não respondeu nas duas últimas checagens (10 minutos). Avise a equipe técnica.',
+        ],
+        'status' => [
+            'heading' => 'Saúde do site',
+            'description' => 'Conferido a cada 5 minutos.',
+            'site' => 'Site',
+            'up' => 'No ar',
+            'down' => 'Fora do ar',
+            'site_ms' => 'Respondeu em :ms ms',
+            'site_down_hint' => 'O site não respondeu. Avise a equipe técnica.',
+            'version' => 'Última atualização',
+            'queue' => 'Tarefas na fila',
+            'queue_ok' => 'Nenhuma falha nos últimos 7 dias',
+            'queue_failed' => ':count falha(s) nos últimos 7 dias',
+            'backup' => 'Último backup',
+            'backup_none' => 'Nenhum',
+            'backup_ok' => 'Em dia (todo dia de madrugada)',
+            'backup_late' => 'Atrasado: avise a equipe técnica',
+        ],
+        'chart' => [
+            'activity' => 'Contatos no site',
+            'activity_hint' => 'Por dia, nos últimos 30 dias.',
+            'messages' => 'Mensagens',
+            'lists' => 'Listas de desejos enviadas',
+            'downloads' => 'Downloads técnicos',
+            'completeness' => 'Catálogo completo',
+            'completeness_hint' => 'Quanto das peças publicadas tem cada parte, em %.',
+            'percent' => '% das peças',
+            'part' => [
+                'cover' => 'Foto de capa',
+                'description' => 'Descrição',
+                'english' => 'Nome em inglês',
+                'dimensions' => 'Medidas',
+                'model' => 'Modelo 3D',
+                'files' => 'Arquivos técnicos',
+            ],
         ],
     ],
 

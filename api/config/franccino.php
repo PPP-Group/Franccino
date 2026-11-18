@@ -102,7 +102,7 @@ return [
 
         // Páginas e listagens do site antigo (sitemap `page`, menu e taxonomias sem registro próprio).
         'paths' => [
-            '/seja-um-parceiro' => '/pt/contato',
+            '/seja-um-parceiro' => '/pt/seja-um-parceiro',
             '/6369-2' => '/pt/contato',
             '/belohorizonte' => '/pt/lojas',
             '/designers' => '/pt/designers',
@@ -111,6 +111,34 @@ return [
             '/todos-produtos' => '/pt/produtos',
             '/produtos-indoor' => '/pt/indoor',
             '/produtos-outdoor' => '/pt/outdoor',
+            // A categoria de tendas do site antigo não tem área no caminho (auditoria de 18/11/2026: caía no 410).
+            '/categoria/tenda' => '/pt/outdoor/tenda',
+            // Categorias do site antigo separadas por área (cadeira-casa, cadeira-giardini...) que viraram uma categoria
+            // só, nas duas áreas (auditoria de 18/11/2026: caíam só na área, sem a categoria).
+            '/categoria/interna/acessorios-casa' => '/pt/indoor/acessorios',
+            '/categoria/interna/aparadores-casa' => '/pt/indoor/aparadores-e-buffets',
+            '/categoria/interna/balanco-casa' => '/pt/indoor/balancos',
+            '/categoria/interna/banco-casa' => '/pt/indoor/banquetas-e-bancos',
+            '/categoria/interna/cadeira-casa' => '/pt/indoor/cadeiras',
+            '/categoria/interna/mesa-de-centro-casa' => '/pt/indoor/mesas-de-centro',
+            '/categoria/interna/mesa-de-jantar-casa' => '/pt/indoor/mesas-de-jantar',
+            '/categoria/interna/mesa-lateral-casa' => '/pt/indoor/mesas-laterais',
+            '/categoria/interna/poltrona-casa' => '/pt/indoor/poltronas',
+            '/categoria/interna/puff-casa' => '/pt/indoor/puffs',
+            '/categoria/interna/sofa-casa' => '/pt/indoor/sofas',
+            '/categoria/interna/banquetas-casa' => '/pt/indoor/banquetas-e-bancos',
+            '/categoria/externa/acessorios-giardini' => '/pt/outdoor/acessorios',
+            '/categoria/externa/aparadores-giardini' => '/pt/outdoor/aparadores-e-buffets',
+            '/categoria/externa/balanco-giardini' => '/pt/outdoor/balancos',
+            '/categoria/externa/banco-giardini' => '/pt/outdoor/banquetas-e-bancos',
+            '/categoria/externa/cadeira-giardini' => '/pt/outdoor/cadeiras',
+            '/categoria/externa/mesa-de-centro-giardini' => '/pt/outdoor/mesas-de-centro',
+            '/categoria/externa/mesa-de-jantar-giardini' => '/pt/outdoor/mesas-de-jantar',
+            '/categoria/externa/mesa-lateral-giardini' => '/pt/outdoor/mesas-laterais',
+            '/categoria/externa/poltrona-giardini' => '/pt/outdoor/poltronas',
+            '/categoria/externa/puff-giardini' => '/pt/outdoor/puffs',
+            '/categoria/externa/sofa-giardini' => '/pt/outdoor/sofas',
+            '/categoria/externa/banqueta-giardini' => '/pt/outdoor/banquetas-e-bancos',
             '/areas/area-interna' => '/pt/indoor',
             '/areas/area-externa' => '/pt/outdoor',
             '/institucional' => '/pt/fabrica',
@@ -133,8 +161,8 @@ return [
             '/lojas/*' => '/pt/lojas',
             '/estado/*' => '/pt/lojas',
             '/clientes/*' => '/pt/corporativo',
-            '/downloads/*' => '/pt/downloads',
-            '/categorias-de-downloads/*' => '/pt/downloads',
+            '/downloads/*' => '/pt/area-do-profissional',
+            '/categorias-de-downloads/*' => '/pt/area-do-profissional',
         ],
 
         // Respondem 410: conteúdo sem equivalente no site novo (popups, rascunhos, blog e autor).

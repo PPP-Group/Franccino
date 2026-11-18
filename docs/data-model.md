@@ -415,7 +415,8 @@ telefone de assistência técnica, redes sociais (Instagram, Facebook, Pinterest
 destinatários do formulário de contato (lista de e-mails, não exposta na API) e documentos do rodapé
 (lista `label` tr + arquivo, ex. relatórios de transparência salarial, que são exigência legal). Também guarda os vídeos
 dos tutoriais da central de ajuda do painel (`tutorial_videos`: lista `guide` + `url` do YouTube, Vimeo ou Google Drive,
-não exposta na API).
+não exposta na API) e os textos do aviso de cookies (`cookie_banner`: `title`, `body`, `necessary`, `analytics` e
+`marketing`, cada um tr; vazio usa o texto padrão do site; migração de configurações `2026_11_18_100000`).
 
 ## Relacionamento com o público
 

@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Filament\Pages\ManageGeneralSettings;
 use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Support\GridFill;
 use App\Models\ContactMessage;
 use App\Models\Product;
 use App\Settings\GeneralSettings;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 /** What still needs work in the catalog, so the team knows where to start. */
 class ContentHealthWidget extends StatsOverviewWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 6;
 
     protected static bool $isLazy = false;
 
@@ -102,6 +103,20 @@ class ContentHealthWidget extends StatsOverviewWidget
                 ->url(ContactMessageResource::getUrl());
         }
 
+        // No empty slot at the end of the grid: the last card takes what is left of its row.
+        $grid = GridFill::for(count($stats));
+        if ($grid['last_span'] > 1) {
+            $stats[array_key_last($stats)]->columnSpan(['@xl' => $grid['last_span'], '!@lg' => $grid['last_span']]);
+        }
+
         return $stats;
+    }
+
+    /** @return array<string, int> */
+    protected function getColumns(): array
+    {
+        $columns = GridFill::for(count($this->getCachedStats()))['columns'];
+
+        return ['@md' => min($columns, 2), '@xl' => $columns, '!@lg' => $columns];
     }
 }

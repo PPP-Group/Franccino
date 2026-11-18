@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Areas\Pages;
 
+use App\Filament\Actions\PhotoPointsAction;
 use App\Filament\Concerns\HydratesTranslations;
 use App\Filament\Resources\Areas\AreaResource;
 use Filament\Resources\Pages\EditRecord;
@@ -15,6 +16,7 @@ class EditArea extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            PhotoPointsAction::make(),
             //
         ];
     }

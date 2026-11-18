@@ -53,6 +53,11 @@ TXT;
                     'title' => 'Franccino: painel do site',
                     'version' => '1.0.0',
                     'websiteUrl' => (string) config('franccino.frontend.url'),
+                    // The Franccino F, the same as the site favicon, for the connector list of Claude and ChatGPT.
+                    'icons' => [
+                        ['src' => OAuth::issuer().'/connector-icon.png', 'mimeType' => 'image/png', 'sizes' => ['180x180']],
+                        ['src' => OAuth::issuer().'/connector-icon.svg', 'mimeType' => 'image/svg+xml', 'sizes' => ['any']],
+                    ],
                 ],
                 'instructions' => self::INSTRUCTIONS,
             ]),

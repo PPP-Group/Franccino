@@ -18,6 +18,7 @@ use App\Models\ProductFile;
 use App\Models\Project;
 use App\Models\Scene;
 use App\Models\Store;
+use App\Support\WebpImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -185,11 +186,13 @@ class ImportController extends Controller
             $index = array_key_last($content);
         }
         $images = array_values((array) ($content[$index]['data']['images'] ?? []));
-        if (collect($images)->contains(fn ($path) => str_ends_with((string) $path, '-'.$name))) {
+        // Skipped by name, with or without the WebP extension the photo got when it was saved.
+        $stem = pathinfo($name, PATHINFO_FILENAME);
+        if (collect($images)->contains(fn ($path) => str_ends_with((string) $path, '-'.$name) || str_ends_with((string) $path, '-'.$stem.'.webp'))) {
             return response()->json(['data' => ['path' => null, 'skipped' => true]]);
         }
 
-        $path = $data['file']->storeAs('pages', Str::lower(Str::random(8)).'-'.$name, 'media');
+        $path = WebpImage::store('media', 'pages/'.Str::lower(Str::random(8)).'-'.$name, $data['file']->get(), $data['file']->getMimeType());
         $images[] = $path;
         $content[$index]['data']['images'] = $images;
         $page->update(['content' => $content]);
