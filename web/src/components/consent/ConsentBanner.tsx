@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useState, useSyncExternalStore } from 'react';
 import type { Locale } from '@/i18n/config';
+import type { CookieBannerTexts } from '@/lib/api/types';
 import { Link } from '@/i18n/navigation';
 import { applyConsent, denyConsentByDefault, loadGtm } from '@/lib/consent/gtm';
 import { saveConsentChoice } from '@/lib/consent/save';
@@ -26,7 +27,7 @@ const getServerCategories = () => null;
  * Consent Mode do Google na escolha da pessoa. A escolha fica registrada na API (`POST /consents`) e o aviso reabre pelo
  * "Preferências de cookies" do rodapé. Com a AdOpt (`NEXT_PUBLIC_CONSENT_PROVIDER=adopt`), o aviso é o dela.
  */
-export function ConsentBanner() {
+export function ConsentBanner({ texts = {} }: { texts?: CookieBannerTexts }) {
   const t = useTranslations('consent');
   const locale = useLocale() as Locale;
   const isClient = useIsClient();
@@ -83,16 +84,16 @@ export function ConsentBanner() {
     <section className="consent-banner" aria-labelledby={`${id}-title`} role="region">
       <div className="consent-banner__copy">
         <h2 id={`${id}-title`} className="consent-banner__title">
-          {t('title')}
+          {texts.title || t('title')}
         </h2>
-        <p>{t('body')}</p>
+        <p>{texts.body || t('body')}</p>
         {customizing ? (
           <fieldset className="consent-banner__options">
             <legend className="visually-hidden">{t('categories')}</legend>
             <label>
               <input type="checkbox" checked disabled />
               <span>
-                <strong>{t('necessary')}</strong> {t('necessaryText')}
+                <strong>{t('necessary')}</strong> {texts.necessary || t('necessaryText')}
               </span>
             </label>
             <label>
@@ -102,7 +103,7 @@ export function ConsentBanner() {
                 onChange={(event) => setDraft({ ...draft, analytics: event.target.checked })}
               />
               <span>
-                <strong>{t('analytics')}</strong> {t('analyticsText')}
+                <strong>{t('analytics')}</strong> {texts.analytics || t('analyticsText')}
               </span>
             </label>
             <label>
@@ -112,7 +113,7 @@ export function ConsentBanner() {
                 onChange={(event) => setDraft({ ...draft, marketing: event.target.checked })}
               />
               <span>
-                <strong>{t('marketing')}</strong> {t('marketingText')}
+                <strong>{t('marketing')}</strong> {texts.marketing || t('marketingText')}
               </span>
             </label>
           </fieldset>

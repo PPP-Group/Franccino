@@ -384,7 +384,13 @@ export type Settings = {
   youtube_url: string | null;
   /** Rótulo no idioma pedido e URL absoluta. */
   footer_documents: { label: string; url: string }[];
+  /** Textos do aviso de cookies editados no painel; `null` usa o texto padrão do site (messages). */
+  cookie_banner?: CookieBannerTexts;
 };
+
+export type CookieBannerTexts = Partial<
+  Record<'title' | 'body' | 'necessary' | 'analytics' | 'marketing', string | null>
+>;
 
 export type Home = {
   banners: Banner[];

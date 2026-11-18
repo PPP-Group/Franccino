@@ -30,6 +30,15 @@ final class Settings
         'youtube_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'YouTube.'],
     ];
 
+    /** Texts of the cookie notice and how they are called in the panel. */
+    private const COOKIE_TEXTS = [
+        'title' => 'Título.',
+        'body' => 'Texto do aviso.',
+        'necessary' => 'Cookies necessários: o que fazem.',
+        'analytics' => 'Cookies de análise: o que fazem.',
+        'marketing' => 'Cookies de marketing: o que fazem.',
+    ];
+
     /** @return array<string, array<string, mixed>> */
     public static function schema(): array
     {
@@ -50,6 +59,11 @@ final class Settings
             ],
         ]];
 
+        $schema['cookie_banner'] = ['type' => 'object', 'description' => 'Textos do aviso de cookies do site. Vazio, o site usa o texto padrão. `title`, `body` (o texto do aviso), `necessary`, `analytics` e `marketing` (o que cada categoria faz).', 'properties' => (object) array_map(
+            fn (string $label) => Schema::json(['kind' => 'i18n', 'max' => 600, 'description' => $label]),
+            self::COOKIE_TEXTS,
+        )];
+
         return $schema;
     }
 
@@ -67,6 +81,7 @@ final class Settings
             'tutorial_videos' => 'vídeos da central de ajuda',
             'tutorial_videos.*.guide' => 'vídeos da central de ajuda › guia',
             'tutorial_videos.*.url' => 'vídeos da central de ajuda › link',
+            'cookie_banner' => 'aviso de cookies',
         ];
     }
 
@@ -94,6 +109,9 @@ final class Settings
             'tutorial_videos' => ['sometimes', 'array', 'max:50'],
             'tutorial_videos.*.guide' => ['required', 'distinct', Rule::in(array_keys(PanelGuides::options()))],
             'tutorial_videos.*.url' => ['required', 'url'],
+            'cookie_banner' => ['sometimes', 'array:'.implode(',', array_keys(self::COOKIE_TEXTS))],
+            'cookie_banner.*' => ['nullable', 'array:pt,en'],
+            'cookie_banner.*.*' => ['nullable', 'string', 'max:600'],
         ];
     }
 
@@ -109,6 +127,7 @@ final class Settings
             'contact_recipients' => $settings->contact_recipients,
             'footer_documents' => array_values($settings->footer_documents),
             'tutorial_videos' => array_values($settings->tutorial_videos),
+            'cookie_banner' => (object) $settings->cookie_banner,
         ];
     }
 
@@ -116,7 +135,7 @@ final class Settings
     public static function write(GeneralSettings $settings, array $input): void
     {
         foreach ($input as $name => $value) {
-            if (array_key_exists($name, self::FIELDS) || in_array($name, ['contact_recipients', 'footer_documents', 'tutorial_videos'], true)) {
+            if (array_key_exists($name, self::FIELDS) || in_array($name, ['contact_recipients', 'footer_documents', 'tutorial_videos', 'cookie_banner'], true)) {
                 $settings->{$name} = is_string($value) ? trim($value) : $value;
             }
         }

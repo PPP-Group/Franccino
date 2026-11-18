@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState, useSyncExternalStore } from 'react';
 import type { Locale } from '@/i18n/config';
+import type { CookieBannerTexts } from '@/lib/api/types';
 import { saveConsentChoice } from '@/lib/consent/save';
 import { getConsentCategories, subscribeConsent, type ConsentCategories } from '@/lib/consent/store';
 import { useIsClient } from '@/lib/ui/use-is-client';
@@ -14,7 +15,7 @@ const getServerCategories = () => null;
  * Preferências de cookies dentro da página Política de cookies (retorno de 13/11/2026: no rodapé fica um link só). Mostra
  * a escolha atual, com os necessários sempre ligados, e grava a nova como o aviso da primeira visita.
  */
-export function ConsentPreferences() {
+export function ConsentPreferences({ texts = {} }: { texts?: CookieBannerTexts }) {
   const t = useTranslations('consent');
   const locale = useLocale() as Locale;
   const id = useId();
@@ -47,7 +48,7 @@ export function ConsentPreferences() {
         <label>
           <input type="checkbox" checked disabled />
           <span>
-            <strong>{t('necessary')}</strong> {t('necessaryText')}
+            <strong>{t('necessary')}</strong> {texts.necessary || t('necessaryText')}
           </span>
         </label>
         <label>
@@ -57,7 +58,7 @@ export function ConsentPreferences() {
             onChange={(event) => change({ ...value, analytics: event.target.checked })}
           />
           <span>
-            <strong>{t('analytics')}</strong> {t('analyticsText')}
+            <strong>{t('analytics')}</strong> {texts.analytics || t('analyticsText')}
           </span>
         </label>
         <label>
@@ -67,7 +68,7 @@ export function ConsentPreferences() {
             onChange={(event) => change({ ...value, marketing: event.target.checked })}
           />
           <span>
-            <strong>{t('marketing')}</strong> {t('marketingText')}
+            <strong>{t('marketing')}</strong> {texts.marketing || t('marketingText')}
           </span>
         </label>
       </fieldset>

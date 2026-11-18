@@ -312,6 +312,9 @@ type Settings = {
   linkedin_url: string | null;
   youtube_url: string | null;
   footer_documents: { label: string; url: string }[]; // label no idioma pedido, url absoluta
+  // Textos do aviso de cookies editados no painel (2026-11-18), no idioma pedido com fallback pt; null = o texto
+  // padrão do site (web/messages, namespace consent).
+  cookie_banner: Record<'title' | 'body' | 'necessary' | 'analytics' | 'marketing', string | null>;
 };
 ```
 

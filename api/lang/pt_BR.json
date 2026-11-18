@@ -553,5 +553,12 @@
     "gallery": "galeria",
     "photo": "foto",
     "Corporate strip and project page": "faixa do Corporativo e página do projeto",
-    "Home page · Scenes section": "Página inicial · seção Ambientes"
+    "Home page · Scenes section": "Página inicial · seção Ambientes",
+    "Cookie notice": "Aviso de cookies",
+    "Texts of the cookie notice the site shows on the first visit. Leave a text empty to keep the standard one.": "Textos do aviso de cookies que o site mostra na primeira visita. Deixe um texto vazio para usar o padrão. As páginas Política de cookies e Política de privacidade se editam em Páginas.",
+    "Cookies and privacy": "Cookies e privacidade",
+    "Notice text": "Texto do aviso",
+    "Necessary cookies: what they do": "Cookies necessários: o que fazem",
+    "Analytics cookies: what they do": "Cookies de análise: o que fazem",
+    "Marketing cookies: what they do": "Cookies de marketing: o que fazem"
 }

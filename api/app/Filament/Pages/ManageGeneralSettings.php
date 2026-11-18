@@ -12,6 +12,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Section;
@@ -101,6 +102,34 @@ class ManageGeneralSettings extends SettingsPage
                             ->required()
                             ->hiddenLabel()
                             ->columnSpanFull(),
+                    ]),
+                // Revisão de 17/11/2026: os textos do aviso de cookies também se editam aqui (e pela API e pelo conector).
+                Section::make(__('Cookie notice'))
+                    ->description(__('Texts of the cookie notice the site shows on the first visit. Leave a text empty to keep the standard one.'))
+                    ->collapsible()
+                    ->schema([
+                        Translatable::tabs(fn (string $locale): array => [
+                            TextInput::make("cookie_banner.title.{$locale}")
+                                ->label(__('Title'))
+                                ->placeholder(__('Cookies and privacy'))
+                                ->maxLength(600),
+                            Textarea::make("cookie_banner.body.{$locale}")
+                                ->label(__('Notice text'))
+                                ->rows(3)
+                                ->maxLength(600),
+                            Textarea::make("cookie_banner.necessary.{$locale}")
+                                ->label(__('Necessary cookies: what they do'))
+                                ->rows(2)
+                                ->maxLength(600),
+                            Textarea::make("cookie_banner.analytics.{$locale}")
+                                ->label(__('Analytics cookies: what they do'))
+                                ->rows(2)
+                                ->maxLength(600),
+                            Textarea::make("cookie_banner.marketing.{$locale}")
+                                ->label(__('Marketing cookies: what they do'))
+                                ->rows(2)
+                                ->maxLength(600),
+                        ]),
                     ]),
                 Section::make(__('Footer documents'))
                     ->schema([

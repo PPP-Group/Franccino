@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Storage;
  */
 class SettingsController extends Controller
 {
+    /** Texts of the cookie notice (GeneralSettings::$cookie_banner). */
+    public const COOKIE_TEXTS = ['title', 'body', 'necessary', 'analytics', 'marketing'];
+
     public function __invoke(GeneralSettings $settings): JsonResponse
     {
         return response()->json(['data' => [
@@ -37,6 +40,10 @@ class SettingsController extends Controller
                     'url' => Storage::disk('media')->url($document['path']),
                 ])
                 ->values()
+                ->all(),
+            // Each text in the requested locale (fallback pt); null keeps the site's default text.
+            'cookie_banner' => collect(self::COOKIE_TEXTS)
+                ->mapWithKeys(fn (string $key) => [$key => Localized::array($settings->cookie_banner[$key] ?? null)])
                 ->all(),
         ]]);
     }
