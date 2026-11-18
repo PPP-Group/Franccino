@@ -964,6 +964,13 @@
   padding-top: var(--space-7);
 }
 
+/* Celular: menos vão entre o banner e o caminho (retorno de 17/11/2026: até os filtros eram ~300 px de espaço). */
+@media (max-width: 35rem) {
+  .page-banner + .wrap {
+    padding-top: var(--space-3);
+  }
+}
+
 /*
   Arte larga (faixa do WordPress, ~1920×500) e capa da coleção: a imagem segue a própria proporção, sem recorte nem
   ampliação; o título vem logo abaixo, no cabeçalho de texto. Uma foto alta usada como capa é limitada a 72% da
@@ -1028,6 +1035,17 @@
 
   .page-banner-art--fixed .photo-points {
     height: var(--art-h);
+  }
+}
+
+/*
+  Celular: sem pontos nos banners do topo (retorno de 17/11/2026: na foto estreita eles cobrem a peça e o título). As
+  outras fotos da página (galerias, faixa do Corporativo) continuam com os pontos.
+*/
+@media (max-width: 35rem) {
+  .page-banner .photo-points,
+  .page-banner-art .photo-points {
+    display: none;
   }
 }
 
@@ -2050,6 +2068,40 @@
   .designer-strip--pieces,
   .designer-strip--text.designer-strip--pieces {
     grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .designer-strip__pieces {
+    grid-column: 1 / -1;
+  }
+}
+
+/*
+  Celular: o retrato pequeno ao lado do nome, e o texto, o link e as peças na largura inteira embaixo (retorno de
+  17/11/2026: com o retrato de um lado e o texto do outro, o texto ficava espremido numa coluna estreita).
+*/
+@media (max-width: 35rem) {
+  .designer-strip,
+  .designer-strip.designer-strip--pieces,
+  .designer-strip--text.designer-strip--pieces {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: var(--space-4) var(--space-5);
+  }
+
+  .designer-strip > img {
+    width: 88px;
+    max-width: none;
+  }
+
+  .designer-strip__copy {
+    display: contents;
+  }
+
+  .designer-strip__copy > * {
+    grid-column: 1 / -1;
+  }
+
+  .designer-strip > img + .designer-strip__copy > h2 {
+    grid-column: 2;
   }
 
   .designer-strip__pieces {

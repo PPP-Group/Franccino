@@ -520,6 +520,15 @@ body:has(.hero--full) #conteudo {
     font-size: var(--fs-lead);
     max-height: calc(100dvh - var(--header));
     overflow-y: auto;
+    /*
+      Do topo para baixo (o desktop centraliza): com Produtos aberto, o menu passa da altura da tela, e centralizado o
+      começo transbordava para cima, fora do alcance da rolagem (retorno de 17/11/2026).
+    */
+    justify-content: flex-start;
+  }
+
+  .nav.is-open > * {
+    flex-shrink: 0;
   }
 
   .nav.is-open > a,
@@ -615,9 +624,26 @@ body:has(.hero--full) #conteudo {
     min-height: 44px;
   }
 
+  /*
+    Área interna, Área externa e Acabamentos na mesma linha, com o mesmo peso (retorno de 17/11/2026: quebravam e
+    Acabamentos descia sozinho). Em 320 px o nome quebra dentro da própria coluna.
+  */
+  .nav-panel__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+    gap: 0 var(--space-2);
+  }
+
+  .nav-panel__tab {
+    padding-left: var(--space-3);
+  }
+
   .nav-panel__tab > button,
   .nav-panel__tab-link {
-    font-size: var(--fs-lead);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.02em;
+    text-align: left;
   }
   .site-header__bar {
     gap: var(--space-3);

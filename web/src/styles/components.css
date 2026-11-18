@@ -262,6 +262,12 @@
   padding-block: var(--space-5);
 }
 
+@media (max-width: 35rem) {
+  .crumbs {
+    padding-block: var(--space-3);
+  }
+}
+
 .crumbs a {
   text-decoration: none;
 }

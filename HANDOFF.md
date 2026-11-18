@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (38, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (40, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1758,8 +1758,31 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
   de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
 
-## 35. 17/11/2026: foto no menu do topo e revisão do painel
+## 39. 17/11/2026: foto no menu do topo e revisão do painel
 
 - **Menu do topo:** ao passar o mouse numa categoria, coleção, Área interna, Área externa ou Acabamentos, a capa flutua
   ao lado do ponteiro, como nos filtros (`RowPeek` no painel do menu, `navTabImages` em `area-menu.ts`). Acabamentos usa
   a capa da página Acabamentos ou, sem ela, a primeira amostra.
+
+## 40. 17/11/2026 (noite): sete ajustes do celular
+
+Branch `fix/mobile-ajustes`, saída da `develop`. Só o celular muda (até 560 px), menos o menu e a busca, que valem em
+toda largura.
+
+- **Espaço até os filtros:** o banner, o caminho, o título e a barra ficaram mais juntos. Na Área externa as peças
+  começam em 820 px; antes, em 1120.
+- **Filtros recolhidos:** o botão "Filtros" fica ao lado de Grade/Tabela, com o número de filtros ativos, e abre as
+  listas e o "Aplicar" embaixo (`FilterDisclosure`). Sem JavaScript, os filtros ficam abertos. No celular, Grade e
+  Tabela técnica aparecem sem ícone, para caber na linha.
+- **Menu no meio da página:** abria e levava ao topo. Com `overflow: hidden` no `body`, o `body` virava o contêiner de
+  rolagem e o cabeçalho `sticky` voltava ao topo do documento. A trava agora é no `html`.
+- **Produtos no menu do celular:** abria cortando os primeiros itens. O menu aberto herdava o `justify-content: center`
+  do desktop, e o que passava da altura transbordava para cima, fora da rolagem. Área interna, Área externa e
+  Acabamentos ficam na mesma linha.
+- **Busca:** as sugestões vinham de uma server action. Agora vêm da rota `GET /api/suggest` (`lib/search/server.ts`), e
+  cada letra cancela o pedido anterior. Com a action, a aba aberta antes de um deploy pedia um id que não existia mais;
+  as actions também rodam uma por vez. O detalhe das peças tem prazo de 1,5 s: passou dele, a sugestão sai só com foto,
+  nome e tipo. A rota confere a senha do staging, porque o proxy não passa por `/api`. **Não conferido no preview:** o
+  navegador do app não aceita a senha. Depois do deploy, digitar na busca do celular e tocar numa sugestão.
+- **Faixa do designer na peça:** retrato pequeno ao lado do nome; o texto, o link e as peças ficam na largura inteira.
+- **Pontos clicáveis:** saíram dos banners do topo no celular. Nas outras fotos continuam.
