@@ -4,6 +4,7 @@ import type { AppHref } from '@/i18n/navigation';
 import type { FacetMatrix, FacetName } from '@/lib/catalog/facets';
 import type { CatalogView, FilterOption, ListingPatch } from '@/lib/catalog/view';
 import { FacetFilters } from './FacetFilters';
+import { FilterDisclosure } from './FilterDisclosure';
 import { FilterForm } from './FilterForm';
 import { ViewHiddenInput, ViewToggle } from './ViewToggle';
 
@@ -52,23 +53,25 @@ export function CatalogToolbar(props: CatalogToolbarProps) {
       </div>
       <div className="toolbar__end">
         {filters.length > 0 ? (
-          <FilterForm className="filter-form" action={props.formAction}>
-            {Object.entries(props.hiddenQuery)
-              .filter(([name]) => name !== 'view')
-              .map(([name, value]) => (
-                <input key={name} type="hidden" name={name} value={value} />
-              ))}
-            <ViewHiddenInput />
-            {/* Remonta quando os filtros aplicados mudam: "Limpar filtros" volta as listas para "Todas". */}
-            <FacetFilters
-              key={filters.map((filter) => filter.active ?? '').join('|')}
-              filters={filters}
-              matrix={props.matrix}
-            />
-            <button type="submit" className="btn btn--ghost btn--compact">
-              {t('apply')}
-            </button>
-          </FilterForm>
+          <FilterDisclosure active={filters.filter((filter) => filter.active).length}>
+            <FilterForm className="filter-form" action={props.formAction}>
+              {Object.entries(props.hiddenQuery)
+                .filter(([name]) => name !== 'view')
+                .map(([name, value]) => (
+                  <input key={name} type="hidden" name={name} value={value} />
+                ))}
+              <ViewHiddenInput />
+              {/* Remonta quando os filtros aplicados mudam: "Limpar filtros" volta as listas para "Todas". */}
+              <FacetFilters
+                key={filters.map((filter) => filter.active ?? '').join('|')}
+                filters={filters}
+                matrix={props.matrix}
+              />
+              <button type="submit" className="btn btn--ghost btn--compact">
+                {t('apply')}
+              </button>
+            </FilterForm>
+          </FilterDisclosure>
         ) : null}
         <ViewToggle
           view={props.view}

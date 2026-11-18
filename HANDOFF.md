@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (39, de 18/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (42, de 18/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1758,15 +1758,53 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
   de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
 
-## 39. 17 e 18/11/2026: foto no menu do topo e revisão do painel
-
-Pedido do Pedro Ivo: o painel com a cara do site e fácil de usar, e tudo editável igual no painel, na API e no conector.
-PR [#149](https://github.com/PPP-Group/Franccino/pull/149) (menu, mergeado na `develop`) e PR
-[#150](https://github.com/PPP-Group/Franccino/pull/150) (painel, branch `claude/menu-e-painel`).
+## 39. 17/11/2026: foto no menu do topo
 
 - **Menu do topo:** ao passar o mouse numa categoria, coleção, Área interna, Área externa ou Acabamentos, a capa flutua
   ao lado do ponteiro, como nos filtros (`RowPeek` no painel do menu, `navTabImages` em `area-menu.ts`). Acabamentos usa
   a capa da página Acabamentos ou, sem ela, a primeira amostra.
+
+## 40. 17/11/2026 (noite): sete ajustes do celular
+
+Branch `fix/mobile-ajustes`, saída da `develop`. Só o celular muda (até 560 px), menos o menu e a busca, que valem em
+toda largura.
+
+- **Espaço até os filtros:** o banner, o caminho, o título e a barra ficaram mais juntos. Na Área externa as peças
+  começam em 820 px; antes, em 1120.
+- **Filtros recolhidos:** o botão "Filtros" fica ao lado de Grade/Tabela, com o número de filtros ativos, e abre as
+  listas e o "Aplicar" embaixo (`FilterDisclosure`). Sem JavaScript, os filtros ficam abertos. No celular, Grade e
+  Tabela técnica aparecem sem ícone, para caber na linha.
+- **Menu no meio da página:** abria e levava ao topo. Com `overflow: hidden` no `body`, o `body` virava o contêiner de
+  rolagem e o cabeçalho `sticky` voltava ao topo do documento. A trava agora é no `html`.
+- **Produtos no menu do celular:** abria cortando os primeiros itens. O menu aberto herdava o `justify-content: center`
+  do desktop, e o que passava da altura transbordava para cima, fora da rolagem. Área interna, Área externa e
+  Acabamentos ficam na mesma linha.
+- **Busca:** as sugestões vinham de uma server action. Agora vêm da rota `GET /api/suggest` (`lib/search/server.ts`), e
+  cada letra cancela o pedido anterior. Com a action, a aba aberta antes de um deploy pedia um id que não existia mais;
+  as actions também rodam uma por vez. O detalhe das peças tem prazo de 1,5 s: passou dele, a sugestão sai só com foto,
+  nome e tipo. A rota confere a senha do staging, porque o proxy não passa por `/api`. **Não conferido no preview:** o
+  navegador do app não aceita a senha. Depois do deploy, digitar na busca do celular e tocar numa sugestão.
+- **Faixa do designer na peça:** retrato pequeno ao lado do nome; o texto, o link e as peças ficam na largura inteira.
+- **Pontos clicáveis:** saíram dos banners do topo no celular. Nas outras fotos continuam.
+
+## 41. 17/11/2026 (noite): toque nas sugestões da busca e vão do carrossel no celular
+
+- **Sugestões da busca no celular:** depois da seção 40 elas apareciam, mas o toque não abria nada. Com mouse, a
+  sugestão abre também num build de produção local. O que falhava era o toque com o teclado aberto: ele fecha o
+  teclado, a tela muda de altura e o navegador pode não mandar o clique. Agora o toque curto, sem arrastar a lista,
+  navega já no `pointerup`; o clique que chegar depois é ignorado e não arma a foto que cresce. Testado no navegador com
+  um toque sem clique, que abre a peça, e com um arrasto, que não abre. **Falta conferir num celular de verdade** depois
+  do deploy.
+- **Carrossel (Lançamentos, coleções, designers):** no celular, a peça do centro fica mais afastada das duas vizinhas
+  (`coverflowXs` com `centerGap`; `MOBILE_CENTER_GAP` = 0,12 da largura da peça). O vão entre as outras peças não mudou,
+  e no computador nada muda.
+
+## 42. 17 e 18/11/2026: revisão do painel
+
+Pedido do Pedro Ivo: o painel com a cara do site e fácil de usar, e tudo editável igual no painel, na API e no conector.
+PR [#150](https://github.com/PPP-Group/Franccino/pull/150) (branch `claude/menu-e-painel`). O menu do topo com foto é a
+seção 39.
+
 - **Visual do painel:** Jost, preto no branco, cantos retos, sem sombra, logo em vetor (`hooks/brand.blade.php`,
   `hooks/styles.blade.php`). No celular, um aviso de que o painel foi feito para o computador.
 - **Início:** "Saúde do site" (site no ar, última atualização com o commit, fila e falhas, último backup;
@@ -1799,7 +1837,7 @@ PR [#149](https://github.com/PPP-Group/Franccino/pull/149) (menu, mergeado na `d
 - **Redes sociais:** Instagram (`franccino.oficial`) e Facebook (`Franccinooficial`) cadastrados são os mesmos do rodapé
   do site atual. Pinterest, LinkedIn e YouTube não aparecem no site atual e ficaram vazios.
 
-### 39.1 Pendências
+### 42.1 Pendências
 
 - Perguntar à Franccino: e-mails que recebem as mensagens do site (hoje ninguém recebe), Pinterest, LinkedIn e o canal do
   YouTube, documentos do rodapé (relatório de transparência salarial), a amostra dos dois azuis.

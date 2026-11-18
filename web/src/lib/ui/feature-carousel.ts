@@ -83,7 +83,10 @@ export function coverflowPose(offset: number): CoverflowPose {
 /** Vão entre duas peças vizinhas, em larguras da peça do centro (a vizinha menor, vão menor). */
 const PIECE_GAP = 0.1;
 
-function layoutAt(widths: readonly number[], center: number, total: number): number[] {
+/** Vão a mais entre a peça do centro e as vizinhas no celular (`coverflowXs`). */
+export const MOBILE_CENTER_GAP = 0.12;
+
+function layoutAt(widths: readonly number[], center: number, total: number, centerGap: number): number[] {
   const xs = new Array<number>(total).fill(0);
   const byOffset = widths.map((_, index) => ({
     index,
@@ -101,7 +104,8 @@ function layoutAt(widths: readonly number[], center: number, total: number): num
       const step = Math.abs(item.offset);
       const scale = lerpTable(STEP_SCALE, step);
       const current = width(item.index, step);
-      x += previous / 2 + (PIECE_GAP * (scale + previousScale)) / 2 + current / 2;
+      x +=
+        previous / 2 + (PIECE_GAP * (scale + previousScale)) / 2 + current / 2 + (step === 1 ? centerGap : 0);
       xs[item.index] = side * x;
       previous = current;
       previousScale = scale;
@@ -114,15 +118,21 @@ function layoutAt(widths: readonly number[], center: number, total: number): num
  * Distância de cada peça ao centro, em larguras da peça do centro, pela largura real de cada uma (`widths`, a de
  * `pieceWidthFactor`): entre duas peças sempre há um vão, mesmo com dois sofás largos lado a lado (retorno de
  * 14/11/2026: "um sofá em cima do outro"). Fracionária durante o arrasto: mistura as duas posições inteiras vizinhas;
- * a peça que dá a volta (troca de lado) fica na mais próxima, sem atravessar o palco.
+ * a peça que dá a volta (troca de lado) fica na mais próxima, sem atravessar o palco. `centerGap`: vão a mais entre a
+ * peça do centro e as duas vizinhas (no celular, retorno de 17/11/2026: estavam uma em cima da outra).
  */
-export function coverflowXs(widths: readonly number[], position: number, total: number): number[] {
+export function coverflowXs(
+  widths: readonly number[],
+  position: number,
+  total: number,
+  centerGap = 0,
+): number[] {
   if (total <= 0) return [];
   const low = Math.floor(position);
   const fraction = position - low;
-  const a = layoutAt(widths, low, total);
+  const a = layoutAt(widths, low, total, centerGap);
   if (fraction < 1e-6) return a;
-  const b = layoutAt(widths, low + 1, total);
+  const b = layoutAt(widths, low + 1, total, centerGap);
   return a.map((x, index) => {
     const next = b[index] ?? x;
     if (Math.sign(x) !== Math.sign(next) && Math.abs(x) > 1 && Math.abs(next) > 1) {

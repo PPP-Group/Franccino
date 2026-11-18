@@ -344,7 +344,9 @@
       "room": "Ambiente",
       "allRooms": "Todos os ambientes",
       "allCategories": "Todas as categorias",
-      "allCollections": "Todas as coleções"
+      "allCollections": "Todas as coleções",
+      "toggle": "Filtros",
+      "toggleActive": "Filtros ({count})"
     },
     "sort": {
       "featured": "Destaques",

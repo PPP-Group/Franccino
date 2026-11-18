@@ -1,7 +1,16 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { type CSSProperties, type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type FormEvent,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { RowPeek } from '@/components/catalog/RowPeek';
 import { ApiImage } from '@/components/media/ApiImage';
 import { MorphImage } from '@/components/media/MorphImage';
@@ -10,11 +19,14 @@ import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { formatDimension } from '@/lib/format/dimensions';
-import { suggestSearch } from '@/lib/search/actions';
 import { normalizeSuggestQuery, type Suggestion } from '@/lib/search/suggest';
 import { morphName, morphTypes } from '@/lib/ui/morph';
 
 const DEBOUNCE_MS = 250;
+// Toque que anda mais que isso é rolagem da lista, não escolha.
+const TAP_SLOP_PX = 10;
+// Depois do toque que já navegou, o clique que o navegador ainda mandar não navega de novo.
+const TAP_CLICK_MS = 1000;
 
 function suggestionHref(item: Suggestion) {
   if (item.kind === 'designer') {
@@ -112,13 +124,26 @@ export function HeaderSearch() {
     if (!normalized) {
       return;
     }
+    // Rota própria (`/api/suggest`), não server action: cada letra cancela o pedido anterior, e a aba aberta antes de
+    // um deploy continua funcionando (retorno de 17/11/2026: as sugestões não apareciam no preview).
+    const controller = new AbortController();
     const timer = window.setTimeout(async () => {
-      const found = await suggestSearch(locale, normalized);
-      if (id === requestRef.current) {
-        setResult({ q: normalized, path: pathRef.current, items: found });
+      try {
+        const query = new URLSearchParams({ locale, q: normalized });
+        const response = await fetch(`/api/suggest?${query}`, { signal: controller.signal });
+        if (!response.ok) return;
+        const { data } = (await response.json()) as { data: Suggestion[] };
+        if (id === requestRef.current) {
+          setResult({ q: normalized, path: pathRef.current, items: data });
+        }
+      } catch {
+        // Cancelado pela letra seguinte, ou sem rede: fica o que já estava.
       }
     }, DEBOUNCE_MS);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
   }, [query, locale]);
 
   const current = normalizeSuggestQuery(query);
@@ -129,6 +154,34 @@ export function HeaderSearch() {
   const peeks = items.flatMap((item, index) =>
     item.preview && item.preview.length > 0 ? [{ id: index, images: item.preview, colors: item.colors }] : [],
   );
+
+  // Toque numa sugestão (retorno de 17/11/2026: no celular as sugestões apareciam, mas o toque não levava a nada). Com o
+  // teclado aberto, o toque fecha o teclado, a tela muda de altura e o navegador pode não disparar o clique. O toque
+  // curto (sem arrastar a lista) navega já no `pointerup`, sem depender do clique; o clique que vier depois é ignorado.
+  const tap = useRef<{ id: number; x: number; y: number } | null>(null);
+  const tapped = useRef(0);
+
+  function onRowPointerDown(event: ReactPointerEvent) {
+    tap.current =
+      event.pointerType === 'mouse' ? null : { id: event.pointerId, x: event.clientX, y: event.clientY };
+  }
+
+  function onRowPointerUp(event: ReactPointerEvent, item: Suggestion) {
+    const start = tap.current;
+    tap.current = null;
+    if (!start || start.id !== event.pointerId) return;
+    if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > TAP_SLOP_PX) return;
+    tapped.current = event.timeStamp;
+    // O clique atrasado não deve armar a foto que cresce (navigation-motion) para uma navegação que já começou.
+    const link = event.currentTarget;
+    link.setAttribute('data-no-motion', '');
+    window.setTimeout(() => link.removeAttribute('data-no-motion'), TAP_CLICK_MS);
+    router.push(suggestionHref(item));
+  }
+
+  function onRowClick(event: ReactMouseEvent) {
+    if (tapped.current > 0 && event.timeStamp - tapped.current < TAP_CLICK_MS) event.preventDefault();
+  }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -190,6 +243,12 @@ export function HeaderSearch() {
                         href={suggestionHref(item)}
                         transitionTypes={morph ? morphTypes(morph) : undefined}
                         data-morph-link={morph}
+                        onPointerDown={onRowPointerDown}
+                        onPointerUp={(event) => onRowPointerUp(event, item)}
+                        onPointerCancel={() => {
+                          tap.current = null;
+                        }}
+                        onClick={onRowClick}
                       >
                         <span
                           className={`header-search__thumb header-search__thumb--${item.kind}`}
