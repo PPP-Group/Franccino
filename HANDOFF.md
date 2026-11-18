@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (38, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (39, de 18/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1758,8 +1758,50 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
   de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
 
-## 35. 17/11/2026: foto no menu do topo e revisão do painel
+## 39. 17 e 18/11/2026: foto no menu do topo e revisão do painel
+
+Pedido do Pedro Ivo: o painel com a cara do site e fácil de usar, e tudo editável igual no painel, na API e no conector.
+PR [#149](https://github.com/PPP-Group/Franccino/pull/149) (menu, mergeado na `develop`) e PR
+[#150](https://github.com/PPP-Group/Franccino/pull/150) (painel, branch `claude/menu-e-painel`).
 
 - **Menu do topo:** ao passar o mouse numa categoria, coleção, Área interna, Área externa ou Acabamentos, a capa flutua
   ao lado do ponteiro, como nos filtros (`RowPeek` no painel do menu, `navTabImages` em `area-menu.ts`). Acabamentos usa
   a capa da página Acabamentos ou, sem ela, a primeira amostra.
+- **Visual do painel:** Jost, preto no branco, cantos retos, sem sombra, logo em vetor (`hooks/brand.blade.php`,
+  `hooks/styles.blade.php`). No celular, um aviso de que o painel foi feito para o computador.
+- **Início:** "Saúde do site" (site no ar, última atualização com o commit, fila e falhas, último backup;
+  `App\Support\SiteStatus`), gráfico dos contatos dos últimos 30 dias, "Catálogo completo" (capa, descrição, inglês,
+  medidas, 3D, arquivos). Atalhos e cartões em grade sem buraco na última linha (`GridFill`). O entrypoint grava
+  `storage/.deployed-at` (data e commit) a cada subida.
+- **Central de ajuda:** os assuntos em 4 grupos, um cartão com ícone por assunto; clicar abre só aquele guia, com os
+  passos numerados e as dicas ao lado. O "Como preencher" de cada tela cai direto no guia dela.
+- **Fotos em WebP:** toda foto JPG, PNG ou BMP que entra (painel, importação, API de gestão, conector, blocos de página)
+  vira WebP, qualidade 90, de pé pela orientação da câmera e com no máximo 4096 px (`WebpImage`, `ConvertImageToWebp`).
+  O PNG mantém a transparência. Nos campos de foto: prévia em quadrados pequenos, editor para cortar, girar e
+  reenquadrar antes de salvar (o do próprio Filament), o nome do arquivo original e a dica dos formatos aceitos
+  (`PanelUploads`).
+- **Pontos clicáveis em qualquer foto:** botão "Pontos nas fotos" nas telas de projeto, coleção, área e página; ele lista
+  as fotos com quantos pontos cada uma tem e abre a foto para marcar as peças (cria o ambiente na primeira vez,
+  `Scenes/Pages/PhotoPoints`). A lista de Ambientes mostra a foto, onde ela aparece e um filtro (página inicial, projeto,
+  foto de página).
+- **Sino de notificações:** além das tarefas que falham, um erro de servidor da API (uma vez por hora por erro) e o site
+  fora do ar em duas checagens seguidas (de 5 em 5 minutos) avisam os administradores (`PanelAlerts`).
+- **API e conectores:** a documentação completa é o primeiro bloco da tela (antes não se achava), os passos são numerados,
+  a coluna de permissões resume por nível (antes repetia a frase inteira em cada área) e o conector manda o ícone da
+  Franccino (`serverInfo.icons`, `public/connector-icon.png`).
+- **Aviso de cookies:** os textos (título, texto e o que cada categoria faz, em pt e en) se editam em Configurações ›
+  Aviso de cookies, na API de gestão e no conector; `GET /settings` devolve `cookie_banner`, e o site usa o texto padrão
+  quando o campo está vazio. As páginas Política de cookies e Política de privacidade já se editavam em Páginas.
+- **Menu do painel:** Grupos de acabamento dentro de Acabamentos; "Clientes" virou "Logos de clientes"; a aba "Files"
+  virou "Arquivos técnicos".
+- **Acabamentos no preview:** apagados os 3 de teste ("Teste Madeira", "Teste Tecido", "Teste Couro"). Ficaram os 6
+  "(exemplo)" e os rascunhos "AZUL MAYA (040)" e "AZUL MARINHO (026)", cadastrados por alguém da Franccino, sem amostra.
+- **Redes sociais:** Instagram (`franccino.oficial`) e Facebook (`Franccinooficial`) cadastrados são os mesmos do rodapé
+  do site atual. Pinterest, LinkedIn e YouTube não aparecem no site atual e ficaram vazios.
+
+### 39.1 Pendências
+
+- Perguntar à Franccino: e-mails que recebem as mensagens do site (hoje ninguém recebe), Pinterest, LinkedIn e o canal do
+  YouTube, documentos do rodapé (relatório de transparência salarial), a amostra dos dois azuis.
+- Apagar o usuário "Claude" do painel do preview depois do teste do conector (Usuários).
+- A auditoria dos redirecionamentos do site antigo (698 regras) está em andamento.
