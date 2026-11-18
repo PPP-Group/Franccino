@@ -1805,11 +1805,13 @@ PR [#149](https://github.com/PPP-Group/Franccino/pull/149) (menu, mergeado na `d
   YouTube, documentos do rodapé (relatório de transparência salarial), a amostra dos dois azuis.
 - Apagar o usuário "Claude" do painel do preview depois do teste do conector (Usuários).
 - **Redirecionamentos (auditoria de 18/11):** as 1.096 URLs dos 19 sitemaps do site antigo têm regra (exata, por prefixo
-  ou 410); nenhuma regra é de teste nem sobra. Corrigido no preview pelo conector: `/cases`, `/projetos` e os 3 projetos
-  iam para `/pt/projetos` (2 saltos), agora `/pt/corporativo`; `/downloads/*` e `/categorias-de-downloads/*` vão para
-  `/pt/area-do-profissional`; `/seja-um-parceiro` vai para a página nova; `/categoria/tenda` (dava 410) vai para
-  `/pt/outdoor`. A configuração (`config/franccino.php`, `legacy.paths`) acompanha. **Depois do deploy, rodar
-  `php artisan franccino:redirects:generate`:** cria as regras exatas das 12 peças que entraram depois de 23/10 (Mesa
-  bistrô Treviso, Mesas de cabeceira Alfa, Belo, Isa e Xove, Ombrelone Sunless, Poltronas Tagli e Tatu, Revisteiro
-  Marine, Sofá Tokio, Tendas Porto e Tokio), que hoje caem na lista de produtos. 25 categorias antigas caem na área
-  (`/pt/indoor` ou `/pt/outdoor`) e não na categoria nova; para isso, precisam de `legacy_url`.
+  ou 410); nenhuma regra é de teste nem sobra. Corrigido no preview pelo conector e na configuração
+  (`config/franccino.php`, `legacy.paths`):
+  - `/cases`, `/projetos` e os 3 projetos iam para `/pt/projetos` (2 saltos), agora `/pt/corporativo`;
+  - `/downloads/*` e `/categorias-de-downloads/*` vão para `/pt/area-do-profissional`; `/seja-um-parceiro` vai para a
+    página nova; `/categoria/tenda` (dava 410) vai para `/pt/outdoor/tenda`;
+  - as 24 categorias antigas separadas por área (`cadeira-casa`, `sofa-giardini`...) vão para a categoria nova na área
+    certa (`/pt/indoor/cadeiras`, `/pt/outdoor/sofas`...), em vez de só para a área;
+  - as 12 peças que entraram depois de 23/10 ganharam a regra exata (notas "manual 18/11", que o gerador não mexe). A
+    Mesa de cabeceira Isa não está no catálogo novo: leva a Mesas de cabeceira até ser cadastrada.
+  - O `php artisan franccino:redirects:generate` depois do deploy só confirma o que já está no preview.
