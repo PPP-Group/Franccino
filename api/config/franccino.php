@@ -102,7 +102,7 @@ return [
 
         // Páginas e listagens do site antigo (sitemap `page`, menu e taxonomias sem registro próprio).
         'paths' => [
-            '/seja-um-parceiro' => '/pt/contato',
+            '/seja-um-parceiro' => '/pt/seja-um-parceiro',
             '/6369-2' => '/pt/contato',
             '/belohorizonte' => '/pt/lojas',
             '/designers' => '/pt/designers',
@@ -111,6 +111,8 @@ return [
             '/todos-produtos' => '/pt/produtos',
             '/produtos-indoor' => '/pt/indoor',
             '/produtos-outdoor' => '/pt/outdoor',
+            // A categoria de tendas do site antigo não tem área no caminho (auditoria de 18/11/2026: caía no 410).
+            '/categoria/tenda' => '/pt/outdoor',
             '/areas/area-interna' => '/pt/indoor',
             '/areas/area-externa' => '/pt/outdoor',
             '/institucional' => '/pt/fabrica',
@@ -133,8 +135,8 @@ return [
             '/lojas/*' => '/pt/lojas',
             '/estado/*' => '/pt/lojas',
             '/clientes/*' => '/pt/corporativo',
-            '/downloads/*' => '/pt/downloads',
-            '/categorias-de-downloads/*' => '/pt/downloads',
+            '/downloads/*' => '/pt/area-do-profissional',
+            '/categorias-de-downloads/*' => '/pt/area-do-profissional',
         ],
 
         // Respondem 410: conteúdo sem equivalente no site novo (popups, rascunhos, blog e autor).

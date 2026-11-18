@@ -1804,4 +1804,12 @@ PR [#149](https://github.com/PPP-Group/Franccino/pull/149) (menu, mergeado na `d
 - Perguntar à Franccino: e-mails que recebem as mensagens do site (hoje ninguém recebe), Pinterest, LinkedIn e o canal do
   YouTube, documentos do rodapé (relatório de transparência salarial), a amostra dos dois azuis.
 - Apagar o usuário "Claude" do painel do preview depois do teste do conector (Usuários).
-- A auditoria dos redirecionamentos do site antigo (698 regras) está em andamento.
+- **Redirecionamentos (auditoria de 18/11):** as 1.096 URLs dos 19 sitemaps do site antigo têm regra (exata, por prefixo
+  ou 410); nenhuma regra é de teste nem sobra. Corrigido no preview pelo conector: `/cases`, `/projetos` e os 3 projetos
+  iam para `/pt/projetos` (2 saltos), agora `/pt/corporativo`; `/downloads/*` e `/categorias-de-downloads/*` vão para
+  `/pt/area-do-profissional`; `/seja-um-parceiro` vai para a página nova; `/categoria/tenda` (dava 410) vai para
+  `/pt/outdoor`. A configuração (`config/franccino.php`, `legacy.paths`) acompanha. **Depois do deploy, rodar
+  `php artisan franccino:redirects:generate`:** cria as regras exatas das 12 peças que entraram depois de 23/10 (Mesa
+  bistrô Treviso, Mesas de cabeceira Alfa, Belo, Isa e Xove, Ombrelone Sunless, Poltronas Tagli e Tatu, Revisteiro
+  Marine, Sofá Tokio, Tendas Porto e Tokio), que hoje caem na lista de produtos. 25 categorias antigas caem na área
+  (`/pt/indoor` ou `/pt/outdoor`) e não na categoria nova; para isso, precisam de `legacy_url`.
