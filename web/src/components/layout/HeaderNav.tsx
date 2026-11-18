@@ -8,9 +8,10 @@ import {
   useRef,
   useState,
 } from 'react';
+import { RowPeek, type RowPeekItem } from '@/components/catalog/RowPeek';
 import { Icon } from '@/components/ui/Icon';
 import { Link, usePathname } from '@/i18n/navigation';
-import type { AreaMenuKey, NavMenuKey, NavMenus } from './area-menu';
+import type { AreaMenuCategory, AreaMenuKey, NavMenuKey, NavMenus, NavTabImages } from './area-menu';
 import { HeaderSearch } from './HeaderSearch';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { activeNavKey, NAV_ITEMS } from './nav';
@@ -30,6 +31,32 @@ function isMenuKey(key: string): key is NavMenuKey {
 /** Linhas que viram abas no painel de Produtos, na ordem da referência da Franccino (Área interna, Área externa). */
 const PRODUCT_AREAS: AreaMenuKey[] = ['indoor', 'outdoor'];
 
+/** Ids das abas na prévia de foto do painel (os itens da lista usam a posição, de 0 em diante). */
+const TAB_PEEK_IDS: Record<AreaMenuKey | 'finishes', number> = {
+  indoor: 10_001,
+  outdoor: 10_002,
+  finishes: 10_003,
+};
+
+/**
+ * Fotos que flutuam no hover dos itens do painel (retorno de 17/11/2026, como nos filtros): a capa de cada categoria,
+ * coleção, área e de Acabamentos. Item sem capa fica sem foto.
+ */
+function panelPeeks(entries: AreaMenuCategory[], tabs: NavTabImages | null): RowPeekItem[] {
+  const items: RowPeekItem[] = entries.flatMap((entry, index) =>
+    entry.image ? [{ id: index, images: [entry.image] }] : [],
+  );
+  if (tabs) {
+    for (const [key, image] of Object.entries(tabs) as [
+      keyof NavTabImages,
+      NavTabImages[keyof NavTabImages],
+    ][]) {
+      if (image) items.push({ id: TAB_PEEK_IDS[key], images: [image] });
+    }
+  }
+  return items;
+}
+
 function isDesktop() {
   return !window.matchMedia(COLLAPSED_NAV_QUERY).matches;
 }
@@ -47,7 +74,7 @@ function entryHref(menu: NavMenuKey, slug: string) {
   return categoryHref(menu, slug);
 }
 
-export function HeaderNav({ menus }: { menus: NavMenus }) {
+export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: NavTabImages }) {
   const t = useTranslations('header');
   const nav = useTranslations('nav');
   const pathname = usePathname();
@@ -298,6 +325,7 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
           }
           const panelId = `nav-panel-${area}`;
           const expanded = panel === area;
+          const listed = area === 'products' && productsTab ? menus[productsTab] : entries;
           return (
             <div
               key={area}
@@ -338,6 +366,7 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
                         <div key={line} className="nav-panel__tab">
                           <button
                             type="button"
+                            data-row-id={TAB_PEEK_IDS[line]}
                             aria-pressed={productsTab === line}
                             onClick={() => setProductsTab((current) => (current === line ? null : line))}
                           >
@@ -354,7 +383,12 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
                       ))}
                       {/* Acabamentos ao lado das áreas (retorno de 13/11/2026: a página só se achava pelo endereço). */}
                       <div className="nav-panel__tab">
-                        <Link className="nav-panel__tab-link" href="/finishes" onClick={() => setOpen(false)}>
+                        <Link
+                          className="nav-panel__tab-link"
+                          href="/finishes"
+                          data-row-id={TAB_PEEK_IDS.finishes}
+                          onClick={() => setOpen(false)}
+                        >
                           {nav('finishes')}
                         </Link>
                       </div>
@@ -370,9 +404,10 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
                     </Link>
                   )}
                   <ul className="nav-panel__list">
-                    {(area === 'products' && productsTab ? menus[productsTab] : entries).map((entry) => (
+                    {listed.map((entry, index) => (
                       <li key={entry.slug}>
                         <Link
+                          data-row-id={entry.image ? index : undefined}
                           href={
                             area === 'products' && productsTab
                               ? categoryHref(productsTab, entry.slug)
@@ -386,6 +421,15 @@ export function HeaderNav({ menus }: { menus: NavMenus }) {
                     ))}
                   </ul>
                 </div>
+                {/* Ao lado do conteúdo do painel (a prévia procura `.nav-panel__inner` entre os irmãos). */}
+                {expanded ? (
+                  <RowPeek
+                    items={panelPeeks(listed, area === 'products' ? tabImages : null)}
+                    container=".nav-panel__inner"
+                    className="row-peek--top"
+                    natural
+                  />
+                ) : null}
               </div>
             </div>
           );

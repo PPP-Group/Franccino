@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (39, de 17/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (40, de 17/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1758,7 +1758,13 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
   e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
   de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
 
-## 39. 17/11/2026 (noite): sete ajustes do celular
+## 39. 17/11/2026: foto no menu do topo e revisão do painel
+
+- **Menu do topo:** ao passar o mouse numa categoria, coleção, Área interna, Área externa ou Acabamentos, a capa flutua
+  ao lado do ponteiro, como nos filtros (`RowPeek` no painel do menu, `navTabImages` em `area-menu.ts`). Acabamentos usa
+  a capa da página Acabamentos ou, sem ela, a primeira amostra.
+
+## 40. 17/11/2026 (noite): sete ajustes do celular
 
 Branch `fix/mobile-ajustes`, saída da `develop`. Só o celular muda (até 560 px), menos o menu e a busca, que valem em
 toda largura.
