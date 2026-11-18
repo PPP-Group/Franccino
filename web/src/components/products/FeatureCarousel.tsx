@@ -27,6 +27,7 @@ import {
   counterNumber,
   coverflowPose,
   coverflowXs,
+  MOBILE_CENTER_GAP,
   carouselSlots,
   cutoutMorphBox,
   pieceWidthFactor,
@@ -42,6 +43,7 @@ import {
   wrapIndex,
   type CoverflowPose,
 } from '@/lib/ui/feature-carousel';
+import { useMediaQuery } from '@/lib/ui/use-media-query';
 import { useReducedMotion } from '@/lib/ui/use-reduced-motion';
 
 export type FeatureCarouselProduct = Pick<
@@ -164,6 +166,8 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   // O nome curto da área, como no menu (Casa, Giardini).
   const nav = useTranslations('nav');
   const reduceMotion = useReducedMotion();
+  // No celular, a peça do centro fica mais afastada das vizinhas (retorno de 17/11/2026).
+  const centerGap = useMediaQuery('(max-width: 560px)') ? MOBILE_CENTER_GAP : 0;
   const pathname = usePathname();
   const total = products.length;
   const looping = loops(total);
@@ -210,7 +214,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   /** Põe cada peça na pose da posição dada (fracionária durante o arrasto), direto no DOM. */
   const paint = useCallback(
     (position: number) => {
-      const xs = coverflowXs(widths, position, total);
+      const xs = coverflowXs(widths, position, total, centerGap);
       itemRefs.current.forEach((node, index) => {
         if (!node) return;
         const offset = loopOffset(index, position, total);
@@ -232,7 +236,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
         node.toggleAttribute('data-hidden', pose.hidden);
       });
     },
-    [total, widths],
+    [total, widths, centerGap],
   );
 
   const goTo = useCallback(
@@ -458,7 +462,7 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   }
 
   const current = products[shown] ?? products[activeIndex];
-  const layoutXs = coverflowXs(widths, active, total);
+  const layoutXs = coverflowXs(widths, active, total, centerGap);
   // Só capas em fundo branco (ou uma parte delas): as peças ficam um pouco mais afastadas, porque a capa fundida no
   // palco não tapa a vizinha de trás (carousel.css).
   const rootClass = products.every((product) => product.cutout)
