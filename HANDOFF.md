@@ -1757,3 +1757,9 @@ clip` (`base.css`); o cabeçalho que se esconde e a barra presa do catálogo con
 - **Quantidade e botão da lista na mesma linha** no celular (pedido do Pedro): o número da quantidade ficou mais estreito
   e o botão com menos respiro, com o texto em `--fs-caption`. O "Adicionar à lista de desejos" cabe em uma linha a partir
   de 360 px (até 389 px sem o ícone). Em 320 px o texto quebra em duas linhas dentro do botão.
+
+## 35. 17/11/2026: foto no menu do topo e revisão do painel
+
+- **Menu do topo:** ao passar o mouse numa categoria, coleção, Área interna, Área externa ou Acabamentos, a capa flutua
+  ao lado do ponteiro, como nos filtros (`RowPeek` no painel do menu, `navTabImages` em `area-menu.ts`). Acabamentos usa
+  a capa da página Acabamentos ou, sem ela, a primeira amostra.
