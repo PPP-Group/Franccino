@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Scenes\Schemas;
 
 use App\Filament\Support\CommonFields;
+use App\Filament\Support\PhotoPlaces;
 use App\Filament\Support\Translatable;
 use App\Models\Product;
 use App\Models\Scene;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -38,7 +40,13 @@ class SceneForm
                     ->relationship('project', 'title')
                     ->searchable()
                     ->preload()
-                    ->nullable(),
+                    ->nullable()
+                    ->visible(fn (?Scene $record): bool => $record?->photo_media_id === null),
+                // A scene on a site photo: where that photo is (the project is the photo's own place).
+                TextEntry::make('place')
+                    ->label(__('Where it shows'))
+                    ->state(fn (?Scene $record): string => $record === null ? '' : PhotoPlaces::forScene($record))
+                    ->visible(fn (?Scene $record): bool => $record?->photo_media_id !== null),
                 // Points on a photo already on the site (banner, cover, gallery): no photo of its own to upload.
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label(__('Image'))

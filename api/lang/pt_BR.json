@@ -540,5 +540,18 @@
     "SVG, PNG, JPG or WebP. Photos are saved as WebP.": "SVG, PNG, JPG ou WebP. Fotos viram WebP ao salvar.",
     "Technical files": "Arquivos técnicos",
     "Client logo": "Logo de cliente",
-    "Client logos": "Logos de clientes"
+    "Client logos": "Logos de clientes",
+    "Points on the photos": "Pontos nas fotos",
+    "Choose a photo to mark the pieces that appear in it. On the site, each point opens the page of the piece.": "Escolha uma foto para marcar as peças que aparecem nela. No site, cada ponto abre a página da peça.",
+    "No points yet": "Sem pontos ainda",
+    ":count point|:count points": ":count ponto|:count pontos",
+    "Where it shows": "Onde aparece",
+    "Home page": "Página inicial",
+    "Photo of a page, project or collection": "Foto de página, projeto ou coleção",
+    "Photo removed": "Foto removida",
+    "cover": "capa",
+    "gallery": "galeria",
+    "photo": "foto",
+    "Corporate strip and project page": "faixa do Corporativo e página do projeto",
+    "Home page · Scenes section": "Página inicial · seção Ambientes"
 }

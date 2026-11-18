@@ -113,9 +113,10 @@ return [
 
         'scenes' => [
             'title' => 'Ambientes com pontos clicáveis',
-            'summary' => 'Fotos de ambientes montados, com um ponto em cada peça que leva à página dela. Aparecem na página inicial.',
+            'summary' => 'Pontos sobre as fotos, um em cada peça, que levam à página dela: num ambiente da página inicial ou em qualquer foto de projeto, coleção, área ou página.',
             'steps' => [
-                'Menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
+                'Numa foto que já está no site (capa ou galeria de projeto ou coleção, capa de área ou de página): abra a tela dela e clique em "Pontos nas fotos", no topo. Escolha a foto e marque as peças, como nos passos abaixo.',
+                'Para um ambiente novo na página inicial: menu Conteúdo → Ambientes → "Criar". Escreva o nome do ambiente e envie a foto.',
                 'Salve uma vez com a foto. Na edição, a foto aparece grande: clique em cima de cada peça e escolha qual é na busca que abre ali mesmo. O ponto entra na lista Pontos com a posição preenchida.',
                 'Clique num ponto já marcado para trocar a peça, mover o ponto (clique depois no novo lugar) ou remover.',
                 'A posição também pode ser digitada na lista, em porcentagem: "Da esquerda" 0 é a borda esquerda e 100 a direita; "Do topo" 0 é o topo e 100 a base.',
@@ -124,6 +125,7 @@ return [
             'tips' => [
                 'Ponha o ponto no meio da peça, longe da borda da foto.',
                 'Peça despublicada some do ambiente sozinha; o ponto volta quando ela for publicada de novo.',
+                'Na lista de Ambientes, embaixo do nome, aparece onde cada um está no site; o filtro separa os da página inicial, os de projeto e os de fotos.',
             ],
         ],
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Scenes;
 use App\Filament\Resources\Scenes\Pages\CreateScene;
 use App\Filament\Resources\Scenes\Pages\EditScene;
 use App\Filament\Resources\Scenes\Pages\ListScenes;
+use App\Filament\Resources\Scenes\Pages\PhotoPoints;
 use App\Filament\Resources\Scenes\Schemas\SceneForm;
 use App\Filament\Resources\Scenes\Tables\ScenesTable;
 use App\Models\Scene;
@@ -58,6 +59,7 @@ class SceneResource extends Resource
             'index' => ListScenes::route('/'),
             'create' => CreateScene::route('/create'),
             'edit' => EditScene::route('/{record}/edit'),
+            'photo' => PhotoPoints::route('/foto/{media}'),
         ];
     }
 }

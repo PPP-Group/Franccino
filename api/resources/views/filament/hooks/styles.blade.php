@@ -115,6 +115,14 @@
     .fr-api__steps strong, .fr-api__tips strong { font-weight: 500; }
     .fr-api__tips { margin: 0; padding-left: 1.125rem; list-style: disc; display: grid; gap: 0.5rem; line-height: 1.6; font-size: 0.9375rem; }
 
+    /* Pontos nas fotos: as fotos do registro em grade, com quantos pontos cada uma tem. */
+    .fr-photo-points { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.75rem; }
+    .fr-photo-points__item { display: grid; gap: 0.375rem; padding: 0.5rem; border: 1px solid var(--fr-line); background: #fff; color: var(--fr-ink); }
+    .fr-photo-points__item:hover, .fr-photo-points__item:focus-visible { border-color: var(--fr-ink); background: var(--fr-sand); }
+    .fr-photo-points__item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--fr-sand); }
+    .fr-photo-points__label { font-size: 0.8125rem; line-height: 1.4; }
+    .fr-photo-points__count { font-size: 0.75rem; color: var(--fr-muted); }
+
     .fr-help { display: grid; gap: 2.5rem; }
     .fr-help__index { display: grid; gap: 2.5rem; }
     .fr-help__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }

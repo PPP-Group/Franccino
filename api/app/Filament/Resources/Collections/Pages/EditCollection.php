@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Collections\Pages;
 
+use App\Filament\Actions\PhotoPointsAction;
 use App\Filament\Concerns\HydratesTranslations;
 use App\Filament\Resources\Collections\CollectionResource;
 use Filament\Actions\DeleteAction;
@@ -16,6 +17,7 @@ class EditCollection extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            PhotoPointsAction::make(),
             DeleteAction::make(),
         ];
     }
