@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { fontVariables } from '@/app/fonts';
 import { SiteFooter } from '@/components/layout/SiteFooter';
-import { navMenus } from '@/components/layout/area-menu';
+import { navMenus, navTabImages } from '@/components/layout/area-menu';
 import { BootScript } from '@/components/layout/BootScript';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -16,8 +16,8 @@ import { ToastRegion } from '@/components/ui/ToastRegion';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { htmlLang, locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
-import { getArea } from '@/lib/api/catalog';
-import { getCollections, getSettings } from '@/lib/api/content';
+import { getArea, getFinishes } from '@/lib/api/catalog';
+import { getCollections, getPage, getSettings } from '@/lib/api/content';
 import { serverEnv } from '@/lib/env';
 import { organizationJsonLd } from '@/lib/seo/jsonld';
 import '../globals.css';
@@ -50,12 +50,15 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   }
   setRequestLocale(locale);
 
-  const [t, settings, indoor, outdoor, collections] = await Promise.all([
+  const [t, settings, indoor, outdoor, collections, finishesPage, finishGroups] = await Promise.all([
     getTranslations({ locale, namespace: 'common' }),
     getSettings(locale),
     getArea(locale, 'indoor'),
     getArea(locale, 'outdoor'),
     getCollections(locale),
+    // Foto de Acabamentos no hover do menu: a capa da página ou, sem ela, a primeira amostra.
+    getPage(locale, 'finishes').catch(() => null),
+    getFinishes(locale).catch(() => []),
   ]);
 
   return (
@@ -75,7 +78,15 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             {t('skipToContent')}
           </a>
           <JsonLd data={organizationJsonLd(settings)} />
-          <SiteHeader menus={navMenus(indoor, outdoor, collections)} />
+          <SiteHeader
+            menus={navMenus(indoor, outdoor, collections)}
+            tabImages={navTabImages(
+              indoor,
+              outdoor,
+              finishesPage,
+              finishGroups.flatMap((group) => group.items.map((item) => item.swatch)),
+            )}
+          />
           <div id="conteudo" tabIndex={-1}>
             <PageTransition>{children}</PageTransition>
           </div>
