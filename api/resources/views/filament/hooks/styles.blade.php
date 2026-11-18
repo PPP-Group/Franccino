@@ -89,6 +89,20 @@
     .fr-shortcut__icon { width: 1.5rem; height: 1.5rem; flex: none; color: var(--fr-wood); }
     .fr-shortcut__label { flex: 1; }
 
+    /* Uploads (revisão de 17/11/2026): fotos em quadrados pequenos lado a lado, sobre a areia, sem esticar; o nome do
+       arquivo some (fica o tamanho); vídeo e 3D numa faixa estreita, com a prévia do vídeo baixa. */
+    .fr-upload--photo .filepond--root[data-style-panel-layout=grid] .filepond--item { width: 10.5rem !important; }
+    .fr-upload--photo .filepond--image-preview-wrapper, .fr-upload--photo .filepond--image-preview { background: var(--fr-sand); }
+    .fr-upload--photo .filepond--file-info-main { display: none; }
+    .fr-upload--photo .filepond--image-preview-overlay-idle { display: none; }
+    .fr-upload--photo .filepond--file-info { color: var(--fr-ink); text-shadow: none; }
+    .fr-upload--photo .filepond--image-preview-wrapper, .fr-upload--photo .filepond--item > fieldset { border-radius: 0; }
+    .fr-upload--photo .filepond--item-panel { border-radius: 0; }
+    .fr-upload--file .filepond--root { max-width: 32rem; }
+    .fr-upload--file video, .fr-upload--file .filepond--media-preview-wrapper { max-height: 12rem; }
+    .fr-upload .filepond--panel-root { border-radius: 0; background: #fff; border: 1px dashed var(--fr-line); }
+    .fr-upload .filepond--drop-label { min-height: 4rem; }
+
     .fr-help { display: grid; gap: 2.5rem; }
     .fr-help__index { display: grid; gap: 2.5rem; }
     .fr-help__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }

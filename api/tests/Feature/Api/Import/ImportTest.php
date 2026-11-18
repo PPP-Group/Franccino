@@ -202,7 +202,7 @@ it('adds a designer portrait and a photo to the gallery of a page', function () 
     expect($content)->toHaveCount(2)
         ->and($content[1]['type'])->toBe('gallery')
         ->and($content[1]['data']['images'])->toHaveCount(1)
-        ->and($content[1]['data']['images'][0])->toStartWith('pages/')->toEndWith('-fabrica-metal-01.jpg');
+        ->and($content[1]['data']['images'][0])->toStartWith('pages/')->toEndWith('-fabrica-metal-01.webp');
     Storage::disk('media')->assertExists($content[1]['data']['images'][0]);
 });
 

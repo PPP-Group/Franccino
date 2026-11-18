@@ -35,9 +35,9 @@ it('turns the listed gallery photo into the cover, once', function () {
     $this->artisan('franccino:covers:apply', ['file' => $this->list])->assertSuccessful();
 
     $product->refresh();
-    expect($product->getFirstMedia('cover')->file_name)->toBe('diagonal.jpg')
+    expect($product->getFirstMedia('cover')->file_name)->toBe('diagonal.webp')
         ->and($product->getMedia('cover'))->toHaveCount(1)
-        ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente-copia.jpg'])
+        ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente-copia.webp'])
         ->and(File::exists(ApplyCovers::marker('teste')))->toBeTrue();
 
     // Second start of the container: the marker skips the list, nothing changes.
@@ -54,8 +54,8 @@ it('keeps the old cover as a gallery photo', function () {
     $this->artisan('franccino:covers:apply', ['file' => $this->list])->assertSuccessful();
 
     $product->refresh();
-    expect($product->getFirstMedia('cover')->file_name)->toBe('diagonal.jpg')
-        ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente.jpg']);
+    expect($product->getFirstMedia('cover')->file_name)->toBe('diagonal.webp')
+        ->and($product->getMedia('gallery')->pluck('file_name')->all())->toBe(['frente.webp']);
 });
 
 it('swaps the photos in place, keeping their ids and files, so built pages never point at a deleted file', function () {
@@ -93,7 +93,7 @@ it('skips a photo that is not in that product gallery and changes nothing on a d
 
     $this->artisan('franccino:covers:apply', ['file' => $this->list])->assertSuccessful();
 
-    expect($product->refresh()->getFirstMedia('cover')->file_name)->toBe('diagonal.jpg')
+    expect($product->refresh()->getFirstMedia('cover')->file_name)->toBe('diagonal.webp')
         ->and($other->refresh()->getMedia('gallery'))->toHaveCount(1);
 });
 

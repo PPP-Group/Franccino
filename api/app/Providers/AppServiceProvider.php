@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Filament\Support\FieldHelp;
+use App\Filament\Support\PanelUploads;
 use App\Jobs\RevalidateFrontend;
+use App\Listeners\ConvertImageToWebp;
 use App\Listeners\NotifyAdminsOfFailedJob;
 use App\Listeners\RecordPanelActivity;
 use App\Listeners\StoreBlurPlaceholder;
@@ -119,6 +121,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(NewsletterSubscriber::class, InboxPolicy::class);
         Gate::policy(ConsentRecord::class, InboxPolicy::class);
 
+        // WebP first: the metadata and the sizes then read the converted file.
+        Event::listen(MediaHasBeenAddedEvent::class, ConvertImageToWebp::class);
         Event::listen(MediaHasBeenAddedEvent::class, StoreImageMetadata::class);
         Event::listen(ConversionHasBeenCompletedEvent::class, StoreBlurPlaceholder::class);
 
@@ -134,9 +138,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configurePanelUploads(): void
     {
-        SpatieMediaLibraryFileUpload::configureUsing(
-            fn (SpatieMediaLibraryFileUpload $upload) => $upload->disk(config('media-library.disk_name')),
-        );
+        SpatieMediaLibraryFileUpload::configureUsing(PanelUploads::configure(...));
 
         // Dica embaixo de cada campo do painel (lang/pt_BR/panel-help.php). Um helperText escrito no formulário vale
         // por cima desta, porque é aplicado depois.

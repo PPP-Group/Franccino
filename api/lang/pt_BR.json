@@ -535,5 +535,8 @@
     "Video cover": "Capa do vídeo",
     "Signature (logo)": "Assinatura (logo)",
     "Diameter up to (mm)": "Diâmetro até (mm)",
-    "The panel works best on a computer. On the phone you can check things, but editing photos and pages is easier on a larger screen.": "O painel foi feito para o computador. No celular dá para conferir as coisas, mas editar fotos e páginas é mais fácil numa tela maior."
+    "The panel works best on a computer. On the phone you can check things, but editing photos and pages is easier on a larger screen.": "O painel foi feito para o computador. No celular dá para conferir as coisas, mas editar fotos e páginas é mais fácil numa tela maior.",
+    "JPG, PNG or WebP. Saved as WebP, lighter and with the same quality.": "JPG, PNG ou WebP. Vira WebP ao salvar: mais leve, com a mesma qualidade.",
+    "SVG, PNG, JPG or WebP. Photos are saved as WebP.": "SVG, PNG, JPG ou WebP. Fotos viram WebP ao salvar.",
+    "Technical files": "Arquivos técnicos"
 }

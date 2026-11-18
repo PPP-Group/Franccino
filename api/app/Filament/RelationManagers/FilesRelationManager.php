@@ -20,6 +20,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -31,6 +32,11 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 class FilesRelationManager extends RelationManager
 {
     protected static string $relationship = 'files';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Technical files');
+    }
 
     public function form(Schema $schema): Schema
     {

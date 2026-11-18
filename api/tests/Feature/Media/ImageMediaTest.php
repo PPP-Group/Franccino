@@ -48,7 +48,9 @@ it('presents an image in the api format', function () {
     expect($image)->toMatchArray(['id' => $media->id, 'alt' => 'Cadeira Aura', 'width' => 1200, 'height' => 800])
         ->and(collect($image['srcset'])->pluck('width')->all())->toBe([480, 960, 1200])
         ->and($image['src'])->toBe($image['srcset'][2]['url'])
-        ->and($image['src'])->toBe($media->getFullUrl('w1440'))
+        // The JPEG was saved as WebP (ConvertImageToWebp), so at its own size the original itself is served.
+        ->and($image['src'])->toBe($media->getFullUrl())
+        ->and($media->mime_type)->toBe('image/webp')
         ->and($image['blur_data_url'])->toStartWith('data:image/webp;base64,');
 });
 
