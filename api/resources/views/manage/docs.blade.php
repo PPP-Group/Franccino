@@ -5,50 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <title>API de gestão · Franccino</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --ink: #171717; --muted: #57564f; --line: #dcd9d1; --paper: #fff; --sand: #f7f6f3; --accent: #2e4a37; }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--sand); line-height: 1.55; }
-        .wrap { display: grid; grid-template-columns: 15rem 1fr; max-width: 78rem; margin: 0 auto; gap: 2rem; padding: 1.5rem 1rem 4rem; }
-        nav { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: .9rem; }
-        nav a { display: block; color: var(--muted); text-decoration: none; padding: .15rem 0; }
-        nav a:hover { color: var(--ink); }
-        nav h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; margin: 1rem 0 .25rem; color: var(--ink); }
+        /* As cores e a fonte do site (web/src/styles/tokens.css e base.css; revisão de 18/11/2026). */
+        :root { --ink: #171717; --muted: #57564f; --line: #dcd9d1; --line-strong: #bdb9ae; --paper: #fff; --sand: #f4efe6; --sand-soft: #faf8f4; --wood: #7b4b2a; --garden: #2e4a37; --alert: #9b2c1f; }
+        * { box-sizing: border-box; scrollbar-width: thin; }
+        html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; scrollbar-color: var(--muted) var(--sand); }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+        ::selection { background: var(--ink); color: var(--paper); }
+        pre ::selection, pre::selection { background: var(--sand); color: var(--ink); }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--sand); }
+        ::-webkit-scrollbar-thumb { background: var(--muted); border: 2px solid var(--sand); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ink); }
+        ::-webkit-scrollbar-corner { background: var(--sand); }
+        body { margin: 0; font-family: Jost, system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--sand-soft); line-height: 1.6; }
+        a { color: var(--ink); }
+        .wrap { display: grid; grid-template-columns: 17rem minmax(0, 1fr); max-width: 80rem; margin: 0 auto; gap: 2.5rem; padding: 2rem 1.25rem 5rem; }
+
+        .toc { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); display: flex; flex-direction: column; gap: .75rem; font-size: .9rem; }
+        .toc__search { position: relative; }
+        .toc__search input { width: 100%; padding: .6rem .75rem .6rem 2.1rem; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line-strong); border-radius: 0; outline: none; }
+        .toc__search input:focus { border-color: var(--ink); }
+        .toc__search svg { position: absolute; left: .7rem; top: 50%; width: 1rem; height: 1rem; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+        .toc__search kbd { position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); font: .75rem Jost, sans-serif; color: var(--muted); border: 1px solid var(--line); padding: 0 .35rem; }
+        .toc__search input::-webkit-search-cancel-button { -webkit-appearance: none; width: .9rem; height: .9rem; cursor: pointer;
+            background: linear-gradient(45deg, transparent 45%, var(--ink) 45%, var(--ink) 55%, transparent 55%), linear-gradient(-45deg, transparent 45%, var(--ink) 45%, var(--ink) 55%, transparent 55%); }
+        .toc__search input:not(:placeholder-shown) ~ kbd { display: none; }
+        .toc__count { margin: 0; font-size: .8rem; color: var(--muted); min-height: 1.2em; }
+        .toc__list { overflow-y: auto; padding-right: .5rem; }
+        .toc h2 { font-size: .72rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; margin: 1.25rem 0 .35rem; color: var(--muted); }
+        .toc h2:first-child { margin-top: 0; }
+        .toc a { display: block; color: var(--muted); text-decoration: none; padding: .2rem 0 .2rem .75rem; border-left: 2px solid var(--line); transition: color .15s, border-color .15s; }
+        .toc a:hover { color: var(--ink); }
+        .toc a.is-active { color: var(--ink); border-left-color: var(--ink); font-weight: 500; }
+        .toc__ops { display: none; margin: .1rem 0 .4rem; }
+        .toc__ops a { padding-left: 1.5rem; font-size: .84rem; }
+        .toc__group.is-current .toc__ops, .toc.is-searching .toc__ops { display: block; }
+        .toc.is-searching .toc__guide { display: none; }
+        .toc [hidden] { display: none !important; }
+
         main { min-width: 0; }
-        h1 { font-size: 1.8rem; margin: 0 0 .5rem; }
+        h1 { font-size: 2rem; font-weight: 400; margin: 0 0 .5rem; }
         section.guide, article { background: var(--paper); border: 1px solid var(--line); padding: 1.25rem 1.5rem; margin: 0 0 1rem; }
-        h2.area { margin: 2.5rem 0 .75rem; font-size: 1.3rem; }
-        h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+        h2.area { margin: 2.75rem 0 .75rem; font-size: 1.4rem; font-weight: 400; }
+        h3 { margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 500; }
         code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85rem; }
-        pre { background: #1c1c1a; color: #f3f1ec; padding: .9rem 1rem; overflow-x: auto; margin: .5rem 0 0; }
-        .method { display: inline-block; min-width: 4.2rem; padding: .1rem .4rem; font: 600 .75rem ui-monospace, monospace; color: #fff; background: var(--accent); text-align: center; margin-right: .5rem; }
-        .method.DELETE { background: #9b2c1f; } .method.PATCH, .method.PUT { background: #7b4b2a; } .method.POST { background: #2b4a6f; }
-        .meta { color: var(--muted); font-size: .9rem; }
+        pre { background: var(--ink); color: #f3f1ec; padding: .9rem 1rem; overflow-x: auto; margin: .5rem 0 0; scrollbar-color: var(--line-strong) var(--ink); }
+        .method { display: inline-block; min-width: 4.2rem; padding: .1rem .4rem; font: 600 .75rem ui-monospace, monospace; color: #fff; background: var(--garden); text-align: center; margin-right: .5rem; }
+        .method.DELETE { background: var(--alert); } .method.PATCH, .method.PUT { background: var(--wood); } .method.POST { background: #2b4a6f; }
+        .meta { color: var(--muted); font-size: .95rem; }
         table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: .75rem; }
         th, td { text-align: left; padding: .35rem .5rem; border-top: 1px solid var(--line); vertical-align: top; }
-        th { font-weight: 600; }
+        th { font-weight: 500; }
         .tag { font-size: .75rem; padding: .05rem .4rem; border: 1px solid var(--line); margin-left: .25rem; color: var(--muted); }
-        @media (max-width: 52rem) { .wrap { grid-template-columns: 1fr; } nav { position: static; max-height: none; } }
+        mark { background: var(--sand); color: inherit; padding: 0 .1em; }
+        .empty { padding: 2rem; text-align: center; color: var(--muted); border: 1px dashed var(--line-strong); }
+        @media (max-width: 52rem) {
+            .wrap { grid-template-columns: 1fr; gap: 1.5rem; }
+            .toc { position: sticky; top: 0; z-index: 2; max-height: none; background: var(--sand-soft); padding: .75rem 0; }
+            .toc__list { display: none; }
+            .toc.is-searching .toc__list { display: block; max-height: 50vh; }
+        }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <nav aria-label="Seções">
-        <h2>Guia</h2>
-        <a href="#comecar">Primeira chamada</a>
-        <a href="#autenticacao">Autenticação</a>
-        <a href="#permissoes">Permissões</a>
-        <a href="#ia">Claude e ChatGPT</a>
-        <a href="#regras">Textos, fotos e regras</a>
-        <a href="#limites">Limites</a>
-        <a href="#erros">Erros</a>
-        <a href="#versao">Idempotência e ETag</a>
-        <a href="#paginas">Listas e páginas</a>
-        <a href="#seguranca">Segurança</a>
-        <h2>Referência ({{ $count }})</h2>
-        @foreach ($groups as $area => $ops)
-            <a href="#area-{{ $area }}">{{ $areas[$area]['label'] ?? 'Geral' }} ({{ count($ops) }})</a>
-        @endforeach
+    <nav class="toc" aria-label="Seções" id="toc">
+        <div class="toc__search" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="busca" placeholder="Buscar função (ex.: capa, products_update)" aria-label="Buscar uma função da API" autocomplete="off">
+            <kbd aria-hidden="true">/</kbd>
+        </div>
+        <p class="toc__count" id="busca-resultado" aria-live="polite"></p>
+        <div class="toc__list">
+            <div class="toc__guide">
+                <h2>Guia</h2>
+                <a href="#comecar">Primeira chamada</a>
+                <a href="#autenticacao">Autenticação</a>
+                <a href="#permissoes">Permissões</a>
+                <a href="#ia">Claude e ChatGPT</a>
+                <a href="#regras">Textos, fotos e regras</a>
+                <a href="#limites">Limites</a>
+                <a href="#erros">Erros</a>
+                <a href="#versao">Idempotência e ETag</a>
+                <a href="#paginas">Listas e páginas</a>
+                <a href="#seguranca">Segurança</a>
+            </div>
+            <h2>Referência ({{ $count }})</h2>
+            @foreach ($groups as $area => $ops)
+                <div class="toc__group" data-area="area-{{ $area }}">
+                    <a href="#area-{{ $area }}">{{ $areas[$area]['label'] ?? 'Geral' }} ({{ count($ops) }})</a>
+                    <div class="toc__ops">
+                        @foreach ($ops as $op)
+                            <a href="#op-{{ $op['id'] }}" data-op="op-{{ $op['id'] }}">{{ $op['title'] }}</a>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </nav>
     <main>
         <h1>API de gestão da Franccino</h1>
@@ -135,14 +192,14 @@
         </section>
 
         @foreach ($groups as $area => $ops)
-            <h2 class="area" id="area-{{ $area }}">{{ $areas[$area]['label'] ?? 'Geral' }}</h2>
+            <h2 class="area" id="area-{{ $area }}" data-area-heading="area-{{ $area }}">{{ $areas[$area]['label'] ?? 'Geral' }}</h2>
             @foreach ($ops as $op)
                 @php
                     $props = (array) ($op['input']['properties'] ?? []);
                     $required = $op['input']['required'] ?? [];
                     $curlPath = preg_replace('/\{(\w+)\}/', '1', $op['path']);
                 @endphp
-                <article id="op-{{ $op['id'] }}">
+                <article id="op-{{ $op['id'] }}" data-area="area-{{ $area }}" data-search="{{ \Illuminate\Support\Str::of($op['id'].' '.$op['title'].' '.$op['method'].' '.$op['path'].' '.$op['description'].' '.($areas[$area]['label'] ?? ''))->ascii()->lower() }}">
                     <h3><span class="method {{ $op['method'] }}">{{ $op['method'] }}</span><code>{{ $op['path'] }}</code></h3>
                     <p><strong>{{ $op['title'] }}</strong> <span class="tag">{{ $op['scope'] === '*' ? 'qualquer credencial' : $op['scope'] }}</span> <span class="tag">ferramenta {{ $op['id'] }}</span>@if ($op['destructive'])<span class="tag">muda ou desfaz algo</span>@endif</p>
                     <p class="meta">{{ $op['description'] }}</p>
@@ -169,7 +226,86 @@
                 </article>
             @endforeach
         @endforeach
+        <p class="empty" id="busca-vazia" hidden>Nenhuma função encontrada. Tente outra palavra, o nome da ferramenta (ex.: <code>products_list</code>) ou o caminho (ex.: <code>/collections</code>).</p>
     </main>
 </div>
+<script>
+/* Busca e menu que acompanha a rolagem (revisão de 18/11/2026). */
+(() => {
+    const toc = document.getElementById('toc');
+    const input = document.getElementById('busca');
+    const count = document.getElementById('busca-resultado');
+    const empty = document.getElementById('busca-vazia');
+    const list = toc.querySelector('.toc__list');
+    const articles = [...document.querySelectorAll('article[data-search]')];
+    const guides = [...document.querySelectorAll('section.guide')];
+    const headings = [...document.querySelectorAll('h2[data-area-heading]')];
+    const groups = [...toc.querySelectorAll('.toc__group')];
+    const links = new Map([...toc.querySelectorAll('a[href^="#"]')].map((a) => [a.getAttribute('href').slice(1), a]));
+    const norm = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+    // Busca: todas as palavras precisam aparecer (nome, ferramenta, caminho, método ou descrição).
+    const search = () => {
+        const words = norm(input.value).split(/\s+/).filter(Boolean);
+        const on = words.length > 0;
+        toc.classList.toggle('is-searching', on);
+        guides.forEach((section) => { section.hidden = on; });
+        let shown = 0;
+        const areasShown = new Set();
+        articles.forEach((article) => {
+            const hit = !on || words.every((word) => article.dataset.search.includes(word));
+            article.hidden = !hit;
+            const link = links.get(article.id);
+            if (link) link.hidden = !hit;
+            if (hit) { shown++; areasShown.add(article.dataset.area); }
+        });
+        headings.forEach((heading) => { heading.hidden = !areasShown.has(heading.dataset.areaHeading); });
+        groups.forEach((group) => { group.hidden = !areasShown.has(group.dataset.area); });
+        empty.hidden = !on || shown > 0;
+        count.textContent = on ? (shown === 1 ? '1 função encontrada' : shown + ' funções encontradas') : '';
+        if (on) spy();
+    };
+    input.addEventListener('input', search);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === '/' && document.activeElement !== input) { event.preventDefault(); input.focus(); }
+        if (event.key === 'Escape' && document.activeElement === input) { input.value = ''; search(); }
+    });
+
+    // Menu: marca a seção e a função que estão no topo da tela e rola o menu para mantê-las à vista.
+    const targets = [...document.querySelectorAll('section.guide, h2[data-area-heading], article[data-search]')];
+    let current = null;
+    const spy = () => {
+        const line = window.innerHeight * 0.25;
+        let active = null;
+        for (const element of targets) {
+            if (element.hidden || element.offsetParent === null) continue;
+            if (element.getBoundingClientRect().top - line <= 0) active = element; else break;
+        }
+        active ??= targets.find((element) => !element.hidden);
+        if (!active || active === current) return;
+        current = active;
+        links.forEach((link) => link.classList.remove('is-active'));
+        const area = active.dataset.area || active.dataset.areaHeading || null;
+        groups.forEach((group) => group.classList.toggle('is-current', group.dataset.area === area));
+        const marked = [links.get(active.id), area ? links.get(area) : null].filter(Boolean);
+        marked.forEach((link) => link.classList.add('is-active'));
+        const link = marked[0];
+        if (link && list.scrollHeight > list.clientHeight) {
+            const top = link.offsetTop - list.offsetTop;
+            if (top < list.scrollTop + 40 || top > list.scrollTop + list.clientHeight - 60) {
+                list.scrollTo({ top: Math.max(0, top - list.clientHeight / 3), behavior: 'smooth' });
+            }
+        }
+    };
+    let queued = false;
+    window.addEventListener('scroll', () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => { queued = false; spy(); });
+    }, { passive: true });
+    window.addEventListener('resize', spy);
+    spy();
+})();
+</script>
 </body>
 </html>
