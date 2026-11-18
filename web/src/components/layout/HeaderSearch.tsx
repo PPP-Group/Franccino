@@ -10,7 +10,6 @@ import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { formatDimension } from '@/lib/format/dimensions';
-import { suggestSearch } from '@/lib/search/actions';
 import { normalizeSuggestQuery, type Suggestion } from '@/lib/search/suggest';
 import { morphName, morphTypes } from '@/lib/ui/morph';
 
@@ -112,13 +111,26 @@ export function HeaderSearch() {
     if (!normalized) {
       return;
     }
+    // Rota própria (`/api/suggest`), não server action: cada letra cancela o pedido anterior, e a aba aberta antes de
+    // um deploy continua funcionando (retorno de 17/11/2026: as sugestões não apareciam no preview).
+    const controller = new AbortController();
     const timer = window.setTimeout(async () => {
-      const found = await suggestSearch(locale, normalized);
-      if (id === requestRef.current) {
-        setResult({ q: normalized, path: pathRef.current, items: found });
+      try {
+        const query = new URLSearchParams({ locale, q: normalized });
+        const response = await fetch(`/api/suggest?${query}`, { signal: controller.signal });
+        if (!response.ok) return;
+        const { data } = (await response.json()) as { data: Suggestion[] };
+        if (id === requestRef.current) {
+          setResult({ q: normalized, path: pathRef.current, items: data });
+        }
+      } catch {
+        // Cancelado pela letra seguinte, ou sem rede: fica o que já estava.
       }
     }, DEBOUNCE_MS);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
   }, [query, locale]);
 
   const current = normalizeSuggestQuery(query);

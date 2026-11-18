@@ -8,18 +8,18 @@ vi.mock('@/lib/api/catalog', () => ({
   getProductDetails: (...args: unknown[]) => getProductDetails(...args),
 }));
 
-const { suggestSearch } = await import('./actions');
+const { DETAIL_TIMEOUT_MS, findSuggestions } = await import('./server');
 
 const result = { products: [{ slug: 'aura', name: 'Aura', cover: null }], designers: [], collections: [] };
 
-describe('suggestSearch', () => {
+describe('findSuggestions', () => {
   afterEach(() => {
     search.mockReset();
     getProductDetails.mockReset();
   });
 
   it('não consulta a API com texto curto', async () => {
-    expect(await suggestSearch('pt', 'a')).toEqual([]);
+    expect(await findSuggestions('pt', 'a')).toEqual([]);
     expect(search).not.toHaveBeenCalled();
   });
 
@@ -27,7 +27,7 @@ describe('suggestSearch', () => {
     search.mockResolvedValue(result as unknown as SearchResult);
     getProductDetails.mockResolvedValue([]);
 
-    const list = await suggestSearch('xx', '  cadeira   aura ');
+    const list = await findSuggestions('xx', '  cadeira   aura ');
 
     expect(search).toHaveBeenCalledWith('pt', 'cadeira aura');
     expect(list).toEqual([{ kind: 'product', slug: 'aura', name: 'Aura', image: null }]);
@@ -47,7 +47,7 @@ describe('suggestSearch', () => {
       },
     ]);
 
-    const [item] = await suggestSearch('pt', 'aura');
+    const [item] = await findSuggestions('pt', 'aura');
 
     expect(getProductDetails).toHaveBeenCalledWith('pt', ['aura']);
     expect(item?.facts).toMatchObject({
@@ -63,14 +63,29 @@ describe('suggestSearch', () => {
     search.mockResolvedValue(result as unknown as SearchResult);
     getProductDetails.mockRejectedValue(new Error('lenta'));
 
-    expect(await suggestSearch('pt', 'aura')).toEqual([
+    expect(await findSuggestions('pt', 'aura')).toEqual([
       { kind: 'product', slug: 'aura', name: 'Aura', image: null },
     ]);
+  });
+
+  it('o detalhe que passa do prazo não segura as sugestões', async () => {
+    vi.useFakeTimers();
+    try {
+      search.mockResolvedValue(result as unknown as SearchResult);
+      getProductDetails.mockReturnValue(new Promise(() => {}));
+
+      const pending = findSuggestions('pt', 'aura');
+      await vi.advanceTimersByTimeAsync(DETAIL_TIMEOUT_MS);
+
+      expect(await pending).toEqual([{ kind: 'product', slug: 'aura', name: 'Aura', image: null }]);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('devolve lista vazia quando a API falha', async () => {
     search.mockRejectedValue(new Error('fora do ar'));
 
-    expect(await suggestSearch('en', 'aura')).toEqual([]);
+    expect(await findSuggestions('en', 'aura')).toEqual([]);
   });
 });
