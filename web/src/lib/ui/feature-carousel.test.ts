@@ -255,6 +255,15 @@ describe('coverflowXs', () => {
     expect(xs[6]).toBeLessThan(0);
   });
 
+  it('o vão do centro afasta as vizinhas e mantém o vão entre as outras', () => {
+    const widths = [1, 1, 1, 1, 1, 1, 1];
+    const plain = coverflowXs(widths, 0, 7);
+    const wide = coverflowXs(widths, 0, 7, 0.12);
+    expect(wide[1] - plain[1]).toBeCloseTo(0.12);
+    expect(wide[6] - plain[6]).toBeCloseTo(-0.12);
+    expect(wide[2] - wide[1]).toBeCloseTo(plain[2] - plain[1]);
+  });
+
   it('peças estreitas ficam mais perto que as largas', () => {
     const narrow = coverflowXs([0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], 0, 7);
     const wide = coverflowXs([1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5], 0, 7);
