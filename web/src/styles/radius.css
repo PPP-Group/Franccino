@@ -1,0 +1,267 @@
+/*
+  Regra única de cantos (web/DESIGN.md, "The Corner Rule"). É o único arquivo do site que declara `border-radius`:
+  nenhum outro CSS do `web/` pode ter raio, para todo elemento seguir a mesma lógica. Vem numa camada própria
+  (`layer(radius)` em app/globals.css), depois de `components`, e por isso vale sobre qualquer regra de componente.
+
+  A Franccino pediu cantos levemente arredondados (revisão de 18/11/2026). O padrão vale para tudo:
+  - `--radius` (6 px): toda caixa. Controles (botões, campos, listas de opções, chips, setas, quantidade, abas),
+    fotos dentro da coluna de conteúdo (cards, galerias, palco da peça, miniaturas, vídeos, amostras), cartões e
+    blocos com moldura, janelas e painéis que flutuam (menu, busca, cartão do ponto, aviso, cookies, WhatsApp).
+  - `--radius-inner` (2 px): o que fica dentro de uma caixa arredondada com folga de até 4 px (raio interno = raio
+    externo menos a folga): opções da lista, botões do alternador, caixa de seleção de 18 px.
+  - `--radius-round` (círculo): só os marcadores, que não são caixas: pontos das fotos, pinos do mapa, bolinhas da
+    linha do tempo e da área, botão de rádio.
+  - Reto (0): só o que encosta na borda da tela (banner, faixas, rodapé, mosaicos de ponta a ponta, barra de
+    cookies) e as linhas que separam conteúdo. Uma caixa cortada pela borda da tela não tem canto para arredondar.
+
+  Componente novo: acrescente o seletor no grupo certo aqui, nunca um `border-radius` no arquivo dele.
+*/
+
+/* ---------- caixas: controles ---------- */
+button,
+input,
+select,
+textarea,
+.btn,
+.chip,
+.tag,
+.file-link,
+.select__button,
+.view-toggle,
+.filter-disclosure__toggle,
+.pagination a,
+.pagination span,
+.qty,
+.stepper,
+.stage-toggle,
+.quick-add,
+.stage-zoom,
+.photo-arrow,
+.feature-carousel__button,
+.scroll-rail__button,
+.timeline-block__button,
+.video__play .icon,
+.back-to-top,
+.skip-link,
+.wa__toggle,
+.wa__options a,
+.collection-tile__more,
+.faq__icon,
+.finish-card__zoom-icon,
+.canvas-bar button,
+.piece-option button,
+a:focus-visible {
+  border-radius: var(--radius);
+}
+
+/* ---------- caixas: fotos na coluna de conteúdo ---------- */
+.hover-zoom,
+.plate__media,
+.card-rail__media,
+.feature-piece__media,
+.catalog-file__cover,
+.project-row__media,
+.tile__media,
+.store__image,
+.designer__photo,
+.designer-portraits__photo,
+.designer-strip img,
+.designer-strip__pieces img,
+.gallery__stage,
+.thumbs button,
+.gallery-peek__thumbs button,
+.gallery-strip img,
+.block-gallery img,
+.block-image-text img,
+.editorial-gallery__item img,
+.video__frame,
+.finish-card__swatch,
+.swatch,
+.colors__item,
+.variants__item,
+.variants__thumb,
+.shared-list__media,
+.quote-item__blank,
+.quote-skeleton__thumb,
+.quote-more,
+.piece-option,
+.piece-option__blank,
+.tech-table .thumb,
+.header-search__thumb,
+.row-peek__photo,
+.scene__card-media,
+.store-map__frame,
+.planner__canvas,
+.dims svg,
+.micro-demo__skeleton-photo,
+.quote-fly,
+.feature-carousel__frame--empty,
+.finish-zoom__stage {
+  border-radius: var(--radius);
+}
+
+/* A foto, o vídeo e a moldura de carregamento dentro do quadro seguem o canto dele. */
+:is(
+    .hover-zoom,
+    .plate__media,
+    .card-rail__media,
+    .feature-piece__media,
+    .catalog-file__cover,
+    .project-row__media,
+    .tile__media,
+    .store__image,
+    .designer__photo,
+    .designer-portraits__photo,
+    .designer-strip img,
+    .designer-strip__pieces img,
+    .gallery__stage,
+    .thumbs button,
+    .gallery-peek__thumbs button,
+    .gallery-strip img,
+    .block-gallery img,
+    .block-image-text img,
+    .editorial-gallery__item img,
+    .video__frame,
+    .finish-card__swatch,
+    .swatch,
+    .colors__item,
+    .variants__item,
+    .variants__thumb,
+    .shared-list__media,
+    .quote-item__blank,
+    .quote-skeleton__thumb,
+    .quote-more,
+    .piece-option,
+    .piece-option__blank,
+    .tech-table .thumb,
+    .header-search__thumb,
+    .row-peek__photo,
+    .scene__card-media,
+    .store-map__frame,
+    .planner__canvas,
+    .dims svg,
+    .micro-demo__skeleton-photo,
+    .quote-fly,
+    .feature-carousel__frame--empty,
+    .finish-zoom__stage
+  )
+  :is(picture, img, video, canvas) {
+  border-radius: inherit;
+}
+
+/* ---------- caixas: blocos com moldura, janelas e painéis ---------- */
+.table-scroll,
+.list-count,
+.faq-page__aside,
+.block-cta,
+.empty,
+.recent,
+.form-error,
+.form-status,
+.idea__status,
+.toast,
+.select__list,
+.scene__card,
+.row-peek__caption,
+.wa__panel,
+.wa__bubble,
+.lead-dialog,
+.finish-zoom {
+  border-radius: var(--radius);
+}
+
+/* O conteúdo fica preso no canto arredondado da moldura. Caixas que rolam (listas, janelas, tabela) já cortam pelo
+   próprio `overflow` e não entram aqui. */
+.hover-zoom,
+.gallery__stage,
+.video__frame,
+.scene__card,
+.stepper,
+.stage-toggle,
+.view-toggle {
+  overflow: clip;
+}
+
+.finish-zoom__panel {
+  border-radius: inherit;
+}
+
+/* ---------- dentro de uma caixa arredondada: raio interno ---------- */
+input[type='checkbox'],
+.select__option,
+.view-toggle button,
+.view-toggle a,
+.stage-toggle a,
+.stage-toggle button,
+.stepper button,
+.wa__options button {
+  border-radius: var(--radius-inner);
+}
+
+/* ---------- marcadores: círculo ---------- */
+input[type='radio'],
+input[type='radio']::before,
+.scene__dot-core,
+.scene__dot,
+.area-dot,
+.timeline__dot,
+.timeline__dot::after,
+.store-map__pin::after {
+  border-radius: var(--radius-round);
+}
+
+/* O pino do mapa é uma gota: círculo com a ponta embaixo, à esquerda (girado 45° no stores/pages.css). */
+.store-map__pin {
+  border-radius: var(--radius-round) var(--radius-round) var(--radius-round) 0;
+}
+
+/* ---------- retos: encostam na borda da tela ---------- */
+.hero,
+.hero__img,
+.page-banner,
+.page-banner-art,
+.page-banner__img,
+.band,
+.section,
+.site-footer,
+.factory-band,
+.factory-next,
+.lines,
+.line-panel,
+.collection-tile,
+.collection-tile__media,
+.consent-banner,
+.nav-panel,
+.header-search__panel,
+.gallery-dialog,
+.splash__panel,
+.editorial--gallery,
+.editorial--timeline {
+  border-radius: 0;
+}
+
+/* No celular a foto da peça vai de uma borda à outra da tela (product.css): sem canto. */
+@media (max-width: 560px) {
+  .gallery__stage {
+    border-radius: 0;
+  }
+}
+
+/* ---------- retos: linhas ----------
+   Borda de um lado só é linha, não caixa: separa lojas, perguntas, grupos e seções, ou marca a aba escolhida. Com
+   raio, a linha entortaria nas pontas. */
+.tabs [role='tab'],
+.toolbar,
+.store,
+.faq,
+.faq__item,
+.facts,
+.finish-groups,
+.download-index,
+.factory-next__link,
+.factory-next__links,
+.consent-preferences,
+.buy__links,
+section.block {
+  border-radius: 0;
+}

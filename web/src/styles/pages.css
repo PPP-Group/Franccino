@@ -1566,7 +1566,6 @@
   width: 22px;
   height: 22px;
   border: 2px solid var(--paper);
-  border-radius: 50% 50% 50% 0;
   background: var(--ink);
   transform: rotate(-45deg);
   transition: transform var(--t-fast) var(--ease-out);
@@ -1576,7 +1575,6 @@
   content: '';
   position: absolute;
   inset: 5px;
-  border-radius: 50%;
   background: var(--paper);
 }
 

@@ -79,7 +79,7 @@ src/
     images/srcset.ts
     seo/{metadata,jsonld,sitemap,site-map}.ts
     security/{basic-auth,csp,csp-report}.ts
-  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,ideas,motion}.css
+  styles/{tokens,base,components,forms,chrome,plates,catalog,product,planner,home,quote,pages,ideas,motion,radius}.css
   test/{fixtures,intl,navigation-mock}.ts(x)
   proxy.ts
   types/model-viewer.d.ts
@@ -110,7 +110,9 @@ Alias `@/*` aponta para `src/*`.
   ali); utilitários Tailwind usam os tokens (`bg-stone`, `text-ink-muted`…), a paleta padrão do
   Tailwind está desligada. Classes de componente por área em `src/styles/*.css`, portadas do
   protótipo aprovado (`design/prototype/`).
-- Cantos retos, sem sombra (o hover de foto clicável é o zoom `.hover-zoom`, desde 06/11/2026), madeira = Casa,
+- Cantos: uma regra só, em `src/styles/radius.css` (o único CSS com `border-radius`; 6 px em toda caixa, 2 px dentro
+  dela, círculo nos marcadores, reto na borda da tela). Sem sombra (o hover de foto clicável é o zoom `.hover-zoom`,
+  desde 06/11/2026), madeira = Casa,
   verde = Giardini/sucesso, metadado nunca acima do título.
 - Fonte em `src/app/fonts.ts`: Jost no site inteiro, títulos e texto (pedido de 06/11/2026, licença aberta). A logo é
   o desenho da marca em vetor (`components/layout/Logo.tsx`). Troca de fonte só ali e nos tokens.

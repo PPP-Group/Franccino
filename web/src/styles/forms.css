@@ -67,7 +67,6 @@
 /* Texto, busca, número e área de texto: canto reto, sem o relevo nem os botões do navegador. */
 input:not([type='checkbox'], [type='radio'], [type='range'], [type='file'], [type='color'], [type='hidden']),
 textarea {
-  border-radius: 0;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -157,7 +156,6 @@ input[type='radio'] {
   height: 18px;
   margin: 0;
   border: 1px solid var(--control-edge, var(--line-field));
-  border-radius: 0;
   background: var(--control-ground, var(--paper));
   color: var(--control-mark, var(--paper));
   vertical-align: middle;
@@ -183,14 +181,12 @@ input[type='checkbox']:checked::before {
 }
 
 input[type='radio'] {
-  border-radius: 50%;
 }
 
 input[type='radio']::before {
   content: '';
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   background: var(--control-on, var(--ink));
   transform: scale(0);
 }
@@ -251,7 +247,6 @@ input[type='radio']:disabled {
   min-height: 48px;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--line-field);
-  border-radius: 0;
   background: var(--paper);
   color: var(--ink);
   font-size: var(--fs-ui);

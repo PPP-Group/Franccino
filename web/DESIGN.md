@@ -42,7 +42,9 @@ typography:
     lineHeight: 1.4
 rounded:
   none: '0px'
-  pill: '999px'
+  box: '6px'
+  inner: '2px'
+  round: '50%'
 spacing:
   xs: '8px'
   sm: '12px'
@@ -54,7 +56,7 @@ components:
   button-primary:
     backgroundColor: '{colors.ink}'
     textColor: '{colors.paper}'
-    rounded: '{rounded.none}'
+    rounded: '{rounded.box}'
     padding: '0 24px'
     height: '50px'
   button-primary-hover:
@@ -62,7 +64,7 @@ components:
   button-ghost:
     backgroundColor: 'transparent'
     textColor: '{colors.ink}'
-    rounded: '{rounded.none}'
+    rounded: '{rounded.box}'
     padding: '0 24px'
     height: '50px'
   button-ghost-hover:
@@ -74,7 +76,7 @@ components:
   chip:
     backgroundColor: 'transparent'
     textColor: '{colors.ink}'
-    rounded: '{rounded.none}'
+    rounded: '{rounded.box}'
     padding: '6px 12px'
   chip-active:
     backgroundColor: '{colors.ink}'
@@ -82,12 +84,12 @@ components:
   tag:
     backgroundColor: '{colors.paper}'
     textColor: '{colors.ink-muted}'
-    rounded: '{rounded.none}'
+    rounded: '{rounded.box}'
     padding: '3px 8px'
   quantity-badge:
     backgroundColor: '{colors.ink}'
     textColor: '{colors.paper}'
-    rounded: '{rounded.pill}'
+    rounded: '{rounded.box}'
     size: '22px'
 ---
 
@@ -99,7 +101,7 @@ components:
 
 **Creative North Star: "The Showroom Plate."**
 
-Franccino reads as a precise, factual showroom rather than an editorial lifestyle magazine. Every product sits on a white "plate" — a plain rectangle of paper-white floating on a warm stone ground — carrying only what a buyer or a specifying architect needs at a glance: designer, category, dimensions, finish. The system explicitly rejects the furniture category's default identity — the dark, full-bleed slider paired with a luxury serif — in favor of daylight photography, a single expanded grotesque, and square corners throughout. Nothing is decorated for its own sake: no drop shadows as ornament, no rounded cards, no italic flourishes. The one indulgence is scale: display type runs wide and large, and full-bleed photography (hero, area diptychs, "línea" panels) does the emotional work, while every card, table and form stays flat and legible.
+Franccino reads as a precise, factual showroom rather than an editorial lifestyle magazine. Every product sits on a white "plate" — a plain rectangle of paper-white floating on a warm stone ground — carrying only what a buyer or a specifying architect needs at a glance: designer, category, dimensions, finish. The system explicitly rejects the furniture category's default identity — the dark, full-bleed slider paired with a luxury serif — in favor of daylight photography, a single expanded grotesque, and one soft corner shared by every box (6px, since the client's review of 2026-11-18). Nothing is decorated for its own sake: no drop shadows as ornament, no mixed corner sizes, no italic flourishes. The one indulgence is scale: display type runs wide and large, and full-bleed photography (hero, area diptychs, "línea" panels) does the emotional work, while every card, table and form stays flat and legible.
 
 The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23) with a functional showroom grid is the core tension the system resolves: warmth comes from photography and material color-coding (wood tone for Casa, garden green for Giardini), not from surface texture or type flourish.
 
@@ -107,7 +109,7 @@ The pairing of "serious, category-grade craft" (PRODUCT.md, confirmed 2026-09-23
 
 - White plates on a stone ground; paper is the surface color, stone is the field.
 - One family, Jost, for headings and running text (request of 2026-11-06; it replaced the Garamond pairing).
-- Square corners everywhere except two small functional exceptions (badge pill, status dot).
+- One corner for every box (6px), its inner version (2px) for what sits inside a box, circles only for markers (The Corner Rule).
 - Flat always: no shadows. Since 06/11/2026 the hover feedback on clickable photos is a slow 5% zoom inside the frame (`.hover-zoom`), never a shadow.
 - Two accent hues (wood, garden) are structural area-identifiers (Casa / Giardini), not decorative color.
 
@@ -184,17 +186,17 @@ The system is flat by default: separation between surfaces comes from hairline b
 
 ## Shapes
 
-Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips and the planner canvas all carry `border-radius: 0` (inputs set it explicitly, overriding any browser default). The only rounded forms in the build are functional indicators, not surfaces: the header's quote-count badge (a `999px`/pill shape) and the small area-identity dot (a true circle) next to category text. Borders are consistently 1px, using `--line` for quiet dividers and `--line-strong` for interactive boundaries (inputs, toggles).
+Every box has the same soft corner. Since the client's review of 2026-11-18 ("cantos levemente arredondados"), buttons, inputs, selects and their option lists, chips, toggles, steppers, arrows, photos inside the content column (cards, galleries, the product stage, thumbnails, videos, swatches), framed blocks, dialogs and floating panels (point card, toast, WhatsApp, quote count) all carry `--radius` (6px). Whatever sits inside a rounded box with up to 4px of gap carries `--radius-inner` (2px: inner radius = outer radius minus the gap), such as list options, the toggle's pressed half and the checkbox. Markers that are not boxes (photo points, map pins, timeline and area dots, radio) are circles (`--radius-round`). Only two things stay square: what touches the edge of the screen (hero, page banners, bands, footer, edge-to-edge mosaics, full-width menu and search panels, the cookie bar, and the product photo on phones), and one-sided borders, which are dividers rather than boxes. Borders are consistently 1px, using `--line` for quiet dividers and `--line-strong` for interactive boundaries (inputs, toggles).
 
 ### Named Rules
 
-**The Square Corner Rule.** Every card, button, input, table and panel uses `border-radius: 0`. Rounding is reserved for two small non-rectangular indicators (count badge, area dot) and must never be extended to cards or buttons.
+**The Corner Rule.** `src/styles/radius.css` is the only stylesheet that declares `border-radius`, in its own cascade layer after `components`, with one selector group per kind (boxes, inner, markers, square). A new component gets its selector added to the right group there, never a radius in its own file; `src/styles/radius.test.ts` fails the build otherwise. The admin panel (`api/resources/views/filament/hooks/styles.blade.php`) and the API documentation page follow the same two values.
 
 ## Components
 
 ### Buttons
 
-- **Shape:** square corners (`{rounded.none}`), 1px border in `ink`, 50px min-height, 0 24px padding.
+- **Shape:** `{rounded.box}` corners, 1px border in `ink`, 50px min-height, 0 24px padding.
 - **Primary:** ink fill (`#171717`) with paper text; hover darkens to pure black (`#000`). Used for the one clear next action per screen (add to list, send quote, view catalog).
 - **Ghost:** transparent fill, ink text and border; hover inverts to ink fill / paper text. Used for secondary actions beside a primary button.
 - **Light:** paper fill/border for use over dark or photographic backgrounds (hero plate, line panels); hover softens to stone.
@@ -208,7 +210,7 @@ Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips a
 
 ### Cards / Plates
 
-- **Corner style:** square (0 radius).
+- **Corner style:** `--radius` (6px); the photo inside follows the card's corner.
 - **Background:** paper on a stone field.
 - **Shadow strategy:** none; hover is the photo zoom (see Elevation & Depth).
 - **Border:** a single `--stone` divider between media and body; no outer border on the plate itself.
@@ -217,7 +219,7 @@ Corners are square everywhere: cards, buttons, inputs, tables, swatches, chips a
 
 ### Inputs / Fields
 
-- **Style:** 1px `--line-strong` border, paper background, square corners, 11px 12px padding.
+- **Style:** 1px `--line-strong` border, paper background, `--radius` corners, 11px 12px padding.
 - **Focus:** 2px ink outline, inset by -1px (no glow, no color shift).
 - **Error:** border switches to `--alert`; helper text in `--alert` beneath the field.
 
@@ -241,7 +243,7 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 
 - **Do** treat every color, font-family, spacing and radius value as a swappable custom property — the brand manual will replace some of them, not the structure.
 - **Do** build hierarchy with size and weight inside Jost, never with a second family.
-- **Do** keep corners square (`border-radius: 0`); reserve rounding for the count badge and area dot only.
+- **Do** give every box the same corner through `radius.css` (6px, 2px inside a box, circle for markers, square at the screen edge).
 - **Do** reuse garden as the single success/confirmed signal and wood/garden as the only area identifiers.
 - **Do** keep metadata (`.meta`) below or beside headings as supporting fact, never as an uppercase kicker above them.
 
@@ -249,7 +251,7 @@ A three-pane tool: a scrollable piece library on the left, a to-scale SVG floor-
 
 - **Don't** add a shadow to a card, table row, or panel, at rest or on hover.
 - **Don't** introduce a third saturated accent color; wood and garden are reserved for Casa/Giardini identity.
-- **Don't** round a button, input, table, or card corner; square corners are the system's form language throughout.
+- **Don't** declare `border-radius` outside `radius.css`, mix corner sizes, or round a one-sided divider line.
 - **Don't** reintroduce the dark-slider-plus-luxury-serif pattern the direction contract explicitly rejects — daylight photography and one grotesque are the world.
 - **Don't** promote `--ink-3` into use without a real call site; it is declared but unused in the current build.
 

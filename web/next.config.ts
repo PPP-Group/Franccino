@@ -57,7 +57,11 @@ const nextConfig: NextConfig = {
       { source: '/en/contract', destination: '/en/corporate', permanent: true },
       // "Novelties" virou "New arrivals" (revisão da Franccino, 18/11/2026).
       { source: '/en/novelties', destination: '/en/new-arrivals', permanent: true },
-      { source: '/en/novelties/:slug', destination: '/en/new-arrivals/:slug', permanent: true },
+      { source: '/en/novelties/:slug', destination: '/en/new-arrivals', permanent: true },
+      // Uma página só de lançamentos (19/11/2026): a do lançamento repetia a lista de /lancamentos, que já traz as peças,
+      // os arquivos e os vídeos de todos os lançamentos. O endereço antigo de cada lançamento leva a ela.
+      { source: '/pt/lancamentos/:slug', destination: '/pt/lancamentos', permanent: true },
+      { source: '/en/new-arrivals/:slug', destination: '/en/new-arrivals', permanent: true },
     ];
   },
 };

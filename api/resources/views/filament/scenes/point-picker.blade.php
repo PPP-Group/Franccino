@@ -104,7 +104,7 @@
             alt=""
             draggable="false"
             x-on:click="clickPhoto($event)"
-            style="display: block; width: 100%; height: auto; cursor: crosshair; user-select: none"
+            style="display: block; width: 100%; height: auto; border-radius: 6px; cursor: crosshair; user-select: none"
         >
 
         <template x-for="([key, item], index) in entries()" :key="key">
@@ -126,7 +126,7 @@
                 ></span>
                 <div
                     x-on:click.stop
-                    :style="`position: absolute; ${cardStyle(draft)}; z-index: 10; width: 300px; max-width: 80%; padding: 12px; background: #fff; border: 1px solid rgb(229 231 235); line-height: 1.4; display: grid; gap: 8px`"
+                    :style="`position: absolute; ${cardStyle(draft)}; z-index: 10; width: 300px; max-width: 80%; padding: 12px; background: #fff; border: 1px solid rgb(229 231 235); border-radius: 6px; line-height: 1.4; display: grid; gap: 8px`"
                 >
                     <label style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgb(75 85 99)" for="scene-piece-search">
                         {{ __('Which piece is here?') }}
@@ -139,7 +139,7 @@
                         autocomplete="off"
                         placeholder="{{ __('Type the name of the piece') }}"
                         x-on:keydown.enter.prevent="results()[0] && choose(results()[0])"
-                        style="width: 100%; padding: 8px 10px; border: 1px solid rgb(209 213 219); font-size: 0.875rem"
+                        style="width: 100%; padding: 8px 10px; border: 1px solid rgb(209 213 219); border-radius: 6px; font-size: 0.875rem"
                     >
                     <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; max-height: 280px; overflow: auto">
                         <template x-for="product in results()" :key="product.id">
@@ -147,11 +147,11 @@
                                 <button
                                     type="button"
                                     x-on:click="choose(product)"
-                                    style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: 0; background: transparent; text-align: left; cursor: pointer; font-size: 0.875rem"
+                                    style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: 0; border-radius: 2px; background: transparent; text-align: left; cursor: pointer; font-size: 0.875rem"
                                     x-on:mouseenter="$el.style.background = 'rgb(243 244 246)'"
                                     x-on:mouseleave="$el.style.background = 'transparent'"
                                 >
-                                    <img :src="product.thumb" alt="" style="width: 40px; height: 40px; object-fit: contain; background: #fff; flex: none">
+                                    <img :src="product.thumb" alt="" style="width: 40px; height: 40px; object-fit: contain; background: #fff; border-radius: 2px; flex: none">
                                     <span x-text="product.name"></span>
                                 </button>
                             </li>
@@ -173,7 +173,7 @@
         <template x-if="selected">
             <div
                 x-on:click.stop
-                :style="`position: absolute; ${cardStyle(selected)}; z-index: 10; width: 280px; max-width: 80%; padding: 12px; background: #fff; border: 1px solid rgb(229 231 235); line-height: 1.4; display: grid; gap: 10px`"
+                :style="`position: absolute; ${cardStyle(selected)}; z-index: 10; width: 280px; max-width: 80%; padding: 12px; background: #fff; border: 1px solid rgb(229 231 235); border-radius: 6px; line-height: 1.4; display: grid; gap: 10px`"
             >
                 <strong style="font-size: 0.9375rem" x-text="productName(selected.product_id)"></strong>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px">
