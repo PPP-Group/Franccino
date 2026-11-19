@@ -95,7 +95,7 @@ return [
                 'A foto do topo da página Lançamentos fica em Conteúdo → Páginas → Lançamentos → Capa.',
             ],
             'tips' => [
-                'Todas as peças lançadas aparecem juntas na página Lançamentos.',
+                'Todas as peças lançadas aparecem juntas na página Lançamentos. Cada peça fica como lançamento por um ano a partir do dia em que foi anexada; depois sai sozinha da página e perde a etiqueta.',
             ],
         ],
 

@@ -14,10 +14,12 @@ import { ImageLoadWatcher } from '@/components/ui/ImageLoadWatcher';
 import { RevealObserver } from '@/components/ui/RevealObserver';
 import { ToastRegion } from '@/components/ui/ToastRegion';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
+import { WhatsappButton } from '@/components/contact/WhatsappButton';
 import { htmlLang, locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
 import { getArea, getFinishes } from '@/lib/api/catalog';
-import { getCollections, getPage, getSettings } from '@/lib/api/content';
+import { getCollections, getPage, getSettings, getStores } from '@/lib/api/content';
+import { whatsappCities } from '@/lib/contact/whatsapp-cities';
 import { serverEnv } from '@/lib/env';
 import { organizationJsonLd } from '@/lib/seo/jsonld';
 import '../globals.css';
@@ -50,16 +52,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   }
   setRequestLocale(locale);
 
-  const [t, settings, indoor, outdoor, collections, finishesPage, finishGroups] = await Promise.all([
-    getTranslations({ locale, namespace: 'common' }),
-    getSettings(locale),
-    getArea(locale, 'indoor'),
-    getArea(locale, 'outdoor'),
-    getCollections(locale),
-    // Foto de Acabamentos no hover do menu: a capa da página ou, sem ela, a primeira amostra.
-    getPage(locale, 'finishes').catch(() => null),
-    getFinishes(locale).catch(() => []),
-  ]);
+  const [t, settings, indoor, outdoor, collections, finishesPage, finishGroups, storeList] =
+    await Promise.all([
+      getTranslations({ locale, namespace: 'common' }),
+      getSettings(locale),
+      getArea(locale, 'indoor'),
+      getArea(locale, 'outdoor'),
+      getCollections(locale),
+      // Foto de Acabamentos no hover do menu: a capa da página ou, sem ela, a primeira amostra.
+      getPage(locale, 'finishes').catch(() => null),
+      getFinishes(locale).catch(() => []),
+      // Lojas do botão de WhatsApp (escolha da cidade).
+      getStores(locale).catch(() => null),
+    ]);
 
   return (
     // data-scroll-behavior: o Next tira a rolagem suave durante a troca de página, para a nova página abrir no topo.
@@ -92,6 +97,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             <PageTransition>{children}</PageTransition>
           </div>
           <SiteFooter settings={settings} />
+          <WhatsappButton
+            cities={whatsappCities(storeList?.stores ?? [])}
+            fallback={settings.quotes_whatsapp}
+          />
           <ToastRegion />
           <ConsentBanner texts={settings.cookie_banner} />
           <ImageLoadWatcher />

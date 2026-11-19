@@ -216,6 +216,36 @@ export async function requestModelLink(
 }
 
 /**
+ * `POST /collections/{slug}/download` (revisão de 18/11/2026): todos os arquivos da coleção num zip. Zip ainda sendo
+ * montado: `{ status: 'preparing' }` (pergunte de novo em alguns segundos); pronto: o link temporário.
+ */
+export async function requestCollectionZip(
+  slug: string,
+  locale: string,
+  leadToken: string | null,
+): Promise<{ status: 'preparing' } | { status: 'ready'; url: string; expires_at: string }> {
+  const path = `/collections/${encodeURIComponent(slug)}/download?locale=${encodeURIComponent(locale)}`;
+  const response = await fetch(apiUrl(path), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ lead_token: leadToken }),
+  });
+
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      await readJsonBody(response),
+      `A API respondeu ${response.status} para ${path}.`,
+    );
+  }
+
+  const json = (await response.json()) as {
+    data: { status: 'preparing' } | { status: 'ready'; url: string; expires_at: string };
+  };
+  return json.data;
+}
+
+/**
  * `POST /quote-lists`: guarda a lista de desejos e devolve o código do link (`/pt/lista/{code}`), que vai no WhatsApp
  * no lugar de uma linha por peça (retorno de 12/11/2026).
  */

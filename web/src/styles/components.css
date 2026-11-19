@@ -709,3 +709,123 @@
 .view-toggle {
   overflow: hidden;
 }
+
+/* ---------- WhatsApp em todas as páginas (revisão da Franccino, 18/11/2026) ---------- */
+
+.wa {
+  position: fixed;
+  right: max(var(--space-4), env(safe-area-inset-right, 0px));
+  bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-3);
+}
+
+.wa__toggle {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.wa__toggle:hover,
+.wa__toggle:focus-visible {
+  transform: scale(1.05);
+}
+
+.wa__panel {
+  width: min(320px, calc(100vw - 2 * var(--space-4)));
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.wa__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.wa__title {
+  margin: 0;
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wa__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--space-3));
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.wa__bubble {
+  margin: var(--space-2) 0 var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--sand);
+  font-size: var(--fs-caption);
+}
+
+.wa__options {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wa__options a,
+.wa__options button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--fs-caption);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wa__options a:hover,
+.wa__options button:hover,
+.wa__options a:focus-visible,
+.wa__options button:focus-visible {
+  border-color: var(--ink);
+}
+
+.wa__options .wa__back {
+  border-style: dashed;
+  color: var(--ink-muted);
+}
+
+@media print {
+  .wa {
+    display: none;
+  }
+}

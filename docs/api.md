@@ -92,7 +92,7 @@ type ProductCard = {
   designer: DesignerRef | null;
   cover: Image | null;
   cutout: Image | null; // foto sem fundo (PNG/WebP transparente) do carrossel de lançamentos e coleções; null sem ela
-  is_new: boolean;
+  is_new: boolean; // está num lançamento publicado e entrou nele há menos de um ano (18/11/2026)
   color: string | null; // nome da cor desta peça, quando ela está num grupo de cores (16/11/2026)
   colors: Array<{ id: number; slug: string; name: string; color: string | null; cover: Image | null }>; // a mesma peça nas outras cores publicadas, sem esta; [] fora de grupo
 };
@@ -403,6 +403,15 @@ cadastro. Gera URL temporária (10 minutos) para o arquivo e grava `download_log
 `201 { "data": { "url": "...", "expires_at": "..." } }`. Vale para arquivos de peça, designer ou lançamento.
 Arquivo inexistente, não publicado, ou cujo dono (peça, designer ou lançamento) não está publicado: `404`.
 Limite: 30 por minuto por IP.
+
+### `POST /collections/{slug}/download`
+
+Todos os arquivos técnicos publicados das peças publicadas da coleção num zip (revisão da Franccino, 18/11/2026), uma
+pasta por peça com os arquivos pelo nome original. Corpo e cadastro como em `POST /downloads/{file}/link` (sem token:
+`422`). Zip ainda não montado: `202 { "data": { "status": "preparing" } }` e ele entra na fila; o site pergunta de
+novo a cada poucos segundos. Pronto: `201 { "data": { "status": "ready", "url": "...", "expires_at": "..." } }`
+(10 minutos) e uma linha em `download_logs` por arquivo. O mesmo zip serve enquanto nenhum arquivo muda. Coleção sem
+arquivos: `404`. Limite: o dos downloads.
 
 ### `POST /products/{slug}/model-3d/link`
 

@@ -518,6 +518,13 @@
       "short": "Catalogs of our collections and lines, in PDF.",
       "empty": "Catalogs will be available here soon.",
       "download": "Download"
+    },
+    "all": {
+      "button": "Download all files in this collection",
+      "preparing": "Preparing the file…",
+      "wait": "We are gathering the blocks and sheets of every piece. The download will start on its own shortly.",
+      "failed": "We could not prepare the file right now. Please try again in a few minutes.",
+      "rateLimited": "Too many attempts in a short time. Please wait a minute and try again."
     }
   },
   "planner": {
@@ -965,5 +972,17 @@
     "open": "See {count, plural, one {the image} other {all # images}}",
     "openAt": "Open image {index}",
     "close": "Close the images"
+  },
+  "whatsapp": {
+    "open": "Chat on WhatsApp",
+    "close": "Close WhatsApp",
+    "title": "Talk to Franccino",
+    "whichCity": "Hello. Which city are you in? We will take you to the WhatsApp of the nearest store.",
+    "whichStore": "In {city} we have these stores. Which one would you like to talk to?",
+    "city": "{city}, {state}",
+    "otherCity": "Choose another city",
+    "elsewhere": "My city is not on the list",
+    "messageStore": "Hello, I found Franccino on the website and would like to talk to the {store} store.",
+    "messageCentral": "Hello, I found Franccino on the website and would like some help."
   }
 }

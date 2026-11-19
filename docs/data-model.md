@@ -265,8 +265,10 @@ Edições de lançamento (ex.: "Lançamentos 2026").
 | is_published, sort_order   |          |       |
 | seo_title, seo_description | json tr  |       |
 
-Mídia: `cover` (1), `gallery` (n). Pivot `launch_product` (`sort_order`).
-Um produto é "novo" (`is_new` na API) quando pertence a um lançamento publicado do ano corrente ou anterior.
+Mídia: `cover` (1), `gallery` (n). Pivot `launch_product` (`sort_order`, `created_at`, `updated_at`).
+Um produto é "novo" (`is_new` na API) quando pertence a um lançamento publicado e entrou nele há menos de um ano
+(`launch_product.created_at`; revisão de 18/11/2026). Depois disso ele sai sozinho da página de Lançamentos
+(`GET /launches/{slug}` e `GET /products?launch=` só trazem as peças dentro do prazo).
 
 ### projects
 

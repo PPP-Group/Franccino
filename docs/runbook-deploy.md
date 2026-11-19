@@ -164,9 +164,16 @@ A AdOpt instala o banner pelo modelo dela na Galeria de Modelos do Tag Manager. 
 
 ### Automação de marketing (newsletter)
 
-Os inscritos ficam no painel (Newsletter), com exportação em planilha. A integração automática depende de confirmar
-a ferramenta usada pela Franccino (a reunião citou "Zorro"; provavelmente Zoho Campaigns) e de uma chave de API dela.
-Até lá, a planilha exportada pode ser importada na ferramenta.
+A ferramenta é o Mailchimp (revisão da Franccino, 18/11/2026). Os inscritos ficam no painel (Newsletter) e, com as
+duas variáveis abaixo na API, cada inscrição, descadastro ou troca de nome vai sozinha para a audiência (fila
+`SyncNewsletterSubscriber`, três tentativas):
+
+1. No Mailchimp: Profile › Extras › API keys › Create A Key. A chave termina com o servidor da conta (ex.: `-us21`).
+2. Audience › Settings › Audience name and defaults: o "Audience ID".
+3. Na API (EasyPanel): `MAILCHIMP_API_KEY` e `MAILCHIMP_AUDIENCE_ID`, e o redeploy.
+
+Sem as variáveis, nada sai do site. Para quem se inscreveu antes, a planilha exportada do painel pode ser importada
+no Mailchimp.
 
 ### Saúde do site
 

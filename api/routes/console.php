@@ -2,10 +2,12 @@
 
 use App\Jobs\RevalidateFrontend;
 use App\Models\Banner;
+use App\Models\Launch;
 use App\Support\PanelAlerts;
 use App\Support\SiteStatus;
 use Filament\Actions\Exports\Models\Export;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -42,6 +44,16 @@ Schedule::call(function () {
         RevalidateFrontend::dispatch(['banners', 'home']);
     }
 })->name('banner-de-campanha')->everyFiveMinutes()->onOneServer();
+
+// Lançamento com prazo (revisão de 18/11/2026): a peça deixa de ser "Lançamento" um ano depois de entrar no lançamento.
+// Uma vez por dia, se alguma peça passou do prazo nas últimas 24 horas, o site tira a etiqueta e a página se atualiza.
+Schedule::call(function () {
+    $limit = now()->subMonths(Launch::NEW_FOR_MONTHS);
+    $expired = DB::table('launch_product')->whereBetween('created_at', [$limit->copy()->subDay(), $limit])->exists();
+    if ($expired) {
+        RevalidateFrontend::dispatch(['launches', 'products', 'home']);
+    }
+})->name('lancamentos-com-prazo')->dailyAt('04:10')->onOneServer();
 
 // Site fora do ar: duas checagens seguidas sem resposta (10 minutos) avisam os administradores no sino do painel.
 Schedule::call(function () {

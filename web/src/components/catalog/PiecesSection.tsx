@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { DownloadAllButton } from '@/components/downloads/DownloadAllButton';
 import { FeatureCarousel } from '@/components/products/FeatureCarousel';
 import type { Locale } from '@/i18n/config';
 import { getProductDetails } from '@/lib/api/catalog';
@@ -20,12 +21,15 @@ export async function PiecesSection({
   locale,
   products,
   carousel = true,
+  collectionSlug,
 }: {
   id: string;
   title: string;
   locale: Locale;
   products: ProductCard[];
   carousel?: boolean;
+  /** Na coleção: o botão de baixar todos os arquivos das peças num zip (18/11/2026). */
+  collectionSlug?: string;
 }) {
   if (products.length === 0) {
     return null;
@@ -47,6 +51,9 @@ export async function PiecesSection({
           <FeatureCarousel label={title} products={carouselPieces(products)} />
           <h3 className="pieces-downloads__title">{t('table.label')}</h3>
           <TechTable rows={details.map(toTechnicalRow)} />
+          {collectionSlug && details.some((detail) => detail.files.length > 0) ? (
+            <DownloadAllButton collectionSlug={collectionSlug} />
+          ) : null}
         </>
       ) : (
         <PiecesViews
