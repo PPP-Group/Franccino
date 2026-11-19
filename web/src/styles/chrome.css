@@ -332,6 +332,8 @@ body:has(.hero--full) #conteudo {
   background: none;
   border: 0;
   font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
   cursor: pointer;
 }
 
@@ -420,8 +422,11 @@ body:has(.hero--full) #conteudo {
   white-space: nowrap;
 }
 
-/* Menu completo na barra (1181 a 1360 px): o "Lista de desejos" quebrava em duas linhas; fica só o ícone e o contador. */
-@media (min-width: 1181px) and (max-width: 85rem) {
+/*
+  Menu completo na barra: o "Lista de desejos" não cabia; até 1680 px fica só o ícone e o contador (o menu cresceu com a
+  Área do Profissional, o Contato e as redes em 18/11/2026).
+*/
+@media (min-width: 1181px) and (max-width: 105rem) {
   .tools .label-optional {
     display: none;
   }

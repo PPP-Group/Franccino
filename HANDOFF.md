@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (43, de 18/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (44, de 19/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1867,3 +1867,53 @@ seção 39.
 - **Documentação da API** (`resources/views/manage/docs.blade.php`): fonte Jost; busca no topo do menu (tecla `/`),
   que filtra as funções pelo nome, pela ferramenta, pelo caminho ou pela descrição e diz quantas achou; o menu da
   esquerda marca a seção e a função que estão na tela enquanto rola e abre as funções da área atual.
+
+## 44. 19/11/2026: reunião com o Matheus (18/11) e os dois PDFs da Franccino
+
+Branch `claude/retorno-reuniao-18-11`, PR para a `develop`. Fontes: a reunião de 18/11 (Matheus), "Alterações site"
+(Marcelo) e "Revisão Website v2". Quando divergem, valeu a reunião (a mais recente), e o resto está em 44.2.
+
+- **Cabeçalho:** sempre à vista (saiu o sumir ao rolar); transparente só sobre o banner da home, branco quando o
+  conteúdo chega até ele. Menu em caixa alta pequena; Instagram, Pinterest e Casoca à direita (campo novo `casoca_url`
+  nas configurações, API e conector; o Facebook ficou vazio no preview).
+- **Menu Produtos por clique** (como a breton.co): Área interna e Área externa lado a lado, separadas por um fio, cada
+  uma com "Ver tudo" e as categorias; sem Acabamentos. Contato no lugar da Sala para montar; a Área do Profissional entrou
+  no menu.
+- **Sala para montar desligada** (`web/src/lib/features.ts`, `ROOM_PLANNER_ENABLED`): some do menu, rodapé, home,
+  catálogo, lista e sitemap, e a página responde 404. O código continua.
+- **Tipografia do site todo** (modelo franccino.lovable.app): Jost fina (300), títulos em caixa alta e espaçados e
+  menores, nomes de peça pequenos em caixa alta; cantos levemente arredondados em botões, campos e filtros
+  (`--radius-control`).
+- **Home enxuta:** banner sem texto por cima; títulos sem frase; lançamentos (carrossel sem a bolha "Arraste", sem
+  contador, sem categoria e com as laterais menores), designers logo depois (faixa em loop, ordem alfabética), áreas sem
+  "Conheça as peças", coleções sem nome e contagem embaixo da capa, ambientes, Corporativo e Fábrica. Saíram a peça
+  avulsa, os blocos técnicos e as lojas.
+- **Tabela técnica virou Downloads:** foto, nome, linha e arquivos (sem medida nem designer), peças com arquivo primeiro;
+  a troca Grade/Downloads continua nas listas. Coleção, designer e lançamento com carrossel mostram embaixo só os
+  downloads. Saiu o bloco "Gostaria de orientação na escolha?" das grades.
+- **Área do Profissional** (como a donaflormobilia.com): índice com Blocos 3D (`/area-do-profissional/blocos-3d`, a lista
+  com filtros) e Catálogos (`/area-do-profissional/catalogos`, `GET /downloads/catalogs`: arquivos do tipo Catálogo de peça,
+  designer ou lançamento). Título da página: "Biblioteca" (no painel). Prévia de fotos no hover com 3.
+- **Página da peça:** "Voltar" ao lado do caminho; Fotos/3D menores e arredondados; designer sem fotos das peças;
+  esteiras em fundo branco; a nota de acabamento foi para Materiais; GLB "(AR)"; desenho das medidas menor.
+- **Outros:** listas sem "Ver menos"; Acabamentos em grupos que abrem; coleções abrem uma da esquerda e outra da direita;
+  Lançamentos sem contagem; cartão do ponto arredondado; "New arrivals" no inglês (`/en/new-arrivals`, com 308 do
+  `/en/novelties`).
+- **No preview, pelo conector:** Grupo Robusti virou "Franccino Ribeirão Preto" (loja exclusiva); Facebook vazio; título da
+  Área do Profissional "Biblioteca"; inglês das 10 peças que faltavam (Sofá Tokio, Tendas Tokio e Porto, Poltrona Tagli,
+  Revisteiro Marine, Ombrelone Sunless, Mesa Bistro Treviso, Mesas de cabeceira Alfa, Belo e Xovê).
+- **Verificação:** site com lint, typecheck, 501 testes e build; API com 595 testes, Pint e Larastan; telas conferidas
+  num `next dev` contra a API do preview.
+
+### 44.1 Depois do deploy
+
+- A migração de configurações cria o Casoca com o endereço da Franccino.
+
+### 44.2 Para decidir com a Franccino
+
+- Paginação do "Ver mais" (hoje: 3 somas e depois a página seguinte); o Matheus vai confirmar.
+- Página da peça no estilo jaderalmeida.com e medidas desenhadas a partir do 2D: esperando a referência do Matheus.
+- Fonte dos títulos: o PDF do Marcelo ainda não chegou (a tipografia segue o lovable por enquanto).
+- Botão de WhatsApp em todas as páginas com escolha de cidade; baixar todos os arquivos da coleção de uma vez; tempo de
+  "Lançamento" de 1 ano; integração com o Mailchimp; captcha (Turnstile pede a conta da Cloudflare); AdOpt pelo Tag Manager.
+- Vídeo próprio da Fábrica no lugar do YouTube: falta o MP4 ("Conheça a Franccino").
