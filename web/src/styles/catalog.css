@@ -668,3 +668,26 @@ a.pagination__step:hover span {
   justify-content: center;
   gap: var(--space-3);
 }
+
+/* Downloads embaixo do carrossel de uma coleção, designer ou lançamento (18/11/2026). */
+.pieces-downloads__title {
+  margin: var(--space-7) 0 var(--space-4);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* "Baixar todos os arquivos da coleção", no fim dos downloads (18/11/2026). */
+.download-all {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.download-all .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}

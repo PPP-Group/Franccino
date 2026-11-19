@@ -16,7 +16,7 @@
     "indoor": "Indoor",
     "outdoor": "Outdoor",
     "products": "Products",
-    "launches": "Novelties",
+    "launches": "New arrivals",
     "collections": "Collections",
     "designers": "Designers",
     "projects": "Contract",
@@ -38,7 +38,7 @@
     "terms": "Terms and Conditions of Use",
     "wordmark": "Franccino",
     "factory": "Factory: {address}",
-    "catalog": "Catalogue",
+    "catalog": "Products",
     "service": "Customer care",
     "newsletter": "News by email",
     "quotesWhatsapp": "Quotes",
@@ -51,7 +51,8 @@
       "facebook": "Facebook",
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
-      "youtube": "YouTube"
+      "youtube": "YouTube",
+      "casoca": "Casoca"
     },
     "vortex": "A Vortex solution"
   },
@@ -314,7 +315,7 @@
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
         "revit": "Revit",
-        "glb": "GLB (3D)"
+        "glb": "GLB (AR)"
       },
       "professionalsPiece": "See this piece's files in the Professionals area",
       "allVersions": "See all {count} versions"
@@ -327,7 +328,8 @@
     },
     "variants": {
       "title": "Variations"
-    }
+    },
+    "back": "Back"
   },
   "catalog": {
     "filters": {
@@ -372,7 +374,7 @@
     "view": {
       "label": "View",
       "grid": "Grid",
-      "table": "Technical table"
+      "table": "Downloads"
     },
     "products": {
       "title": "Products",
@@ -384,18 +386,16 @@
     },
     "launches": {
       "downloads": "Catalogs and presentations",
-      "title": "Novelties",
+      "title": "New arrivals",
       "intro": "Collections and pieces launched by Franccino.",
-      "empty": "No novelties have been published at the moment."
+      "empty": "No new arrivals have been published at the moment."
     },
     "table": {
-      "label": "Technical table",
-      "caption": "Pieces with line, designer, dimensions and technical files",
+      "label": "Downloads",
+      "caption": "Pieces with line and technical files to download",
       "image": "Image",
       "piece": "Piece",
       "area": "Line",
-      "designer": "Designer",
-      "dimensions": "Dimensions",
       "files": "Files",
       "list": "Wishlist",
       "empty": "—",
@@ -413,7 +413,6 @@
       "nextPage": "See the next pieces",
       "count": "{shown} of {total} pieces",
       "error": "We could not load more pieces. Please try again.",
-      "less": "View less",
       "previousPage": "See the previous pieces"
     },
     "rooms": {
@@ -507,6 +506,25 @@
       "sending": "Sending…",
       "cancel": "Cancel",
       "failed": "We could not complete your registration. Please try again."
+    },
+    "blocks": {
+      "title": "3D blocks and technical sheets",
+      "lead": "Each piece's files for your project: SketchUp, Revit, AutoCAD, 3D model and technical sheets.",
+      "short": "SketchUp, Revit, AutoCAD, 3D model and technical sheets for each piece."
+    },
+    "catalogs": {
+      "title": "Catalogs",
+      "lead": "Catalogs of our collections and lines, to download.",
+      "short": "Catalogs of our collections and lines, in PDF.",
+      "empty": "Catalogs will be available here soon.",
+      "download": "Download"
+    },
+    "all": {
+      "button": "Download all files in this collection",
+      "preparing": "Preparing the file…",
+      "wait": "We are gathering the blocks and sheets of every piece. The download will start on its own shortly.",
+      "failed": "We could not prepare the file right now. Please try again in a few minutes.",
+      "rateLimited": "Too many attempts in a short time. Please wait a minute and try again."
     }
   },
   "planner": {
@@ -591,7 +609,7 @@
       "point": "Discover {name}"
     },
     "launches": {
-      "title": "Novelties",
+      "title": "New arrivals",
       "viewAll": "Discover the launch"
     },
     "lines": {
@@ -618,9 +636,9 @@
       "cta": "Discover the factory"
     },
     "technical": {
-      "title": "For specifiers",
-      "lead": "Dimensions and technical files for every piece, gathered in a single table.",
-      "cta": "Access the technical area"
+      "title": "Downloads",
+      "lead": "3D and 2D blocks and technical sheets of each piece, to download.",
+      "cta": "See all downloads"
     },
     "stores": {
       "title": "Discover the pieces in our stores",
@@ -647,7 +665,7 @@
     "gallery": "Collection images",
     "piecesTitle": "Pieces in the collection",
     "othersTitle": "Other collections",
-    "fillLaunch": "Discover the novelties",
+    "fillLaunch": "Discover the new arrivals",
     "fillAllTitle": "All pieces",
     "fillAllCta": "Discover the pieces",
     "video": "{name} collection film"
@@ -912,11 +930,8 @@
     "slideRoleDescription": "piece",
     "slide": "{current} of {total}: {name}",
     "status": "{current} of {total}: {name}",
-    "counter": "{current} / {total}",
-    "meta": "{category} · {area}",
     "previous": "Previous piece",
-    "next": "Next piece",
-    "drag": "Drag"
+    "next": "Next piece"
   },
   "featurePiece": {
     "label": "Featured piece",
@@ -957,5 +972,17 @@
     "open": "See {count, plural, one {the image} other {all # images}}",
     "openAt": "Open image {index}",
     "close": "Close the images"
+  },
+  "whatsapp": {
+    "open": "Chat on WhatsApp",
+    "close": "Close WhatsApp",
+    "title": "Talk to Franccino",
+    "whichCity": "Hello. Which city are you in? We will take you to the WhatsApp of the nearest store.",
+    "whichStore": "In {city} we have these stores. Which one would you like to talk to?",
+    "city": "{city}, {state}",
+    "otherCity": "Choose another city",
+    "elsewhere": "My city is not on the list",
+    "messageStore": "Hello, I found Franccino on the website and would like to talk to the {store} store.",
+    "messageCentral": "Hello, I found Franccino on the website and would like some help."
   }
 }

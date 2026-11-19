@@ -7,7 +7,8 @@ describe('SITE_MAP_PAGES', () => {
   it('lists every public page once and leaves the quote list out', () => {
     const hrefs = SITE_MAP_PAGES.map((page) => page.href);
     expect(new Set(hrefs).size).toBe(hrefs.length);
-    expect(hrefs).toContain('/room-planner');
+    // A Sala para montar está desligada (lib/features.ts).
+    expect(hrefs).not.toContain('/room-planner');
     expect(hrefs).not.toContain('/quote-list');
   });
 

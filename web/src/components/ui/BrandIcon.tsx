@@ -1,9 +1,15 @@
-import { IconBrandFacebook, IconBrandInstagram, IconBrandWhatsapp } from '@tabler/icons-react';
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandPinterest,
+  IconBrandWhatsapp,
+} from '@tabler/icons-react';
 
 const ICONS = {
   whatsapp: IconBrandWhatsapp,
   instagram: IconBrandInstagram,
   facebook: IconBrandFacebook,
+  pinterest: IconBrandPinterest,
 } as const;
 
 export type BrandName = keyof typeof ICONS;

@@ -1,6 +1,5 @@
 import { useTranslations } from 'next-intl';
 import { MorphImage } from '@/components/media/MorphImage';
-import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { Area, Image } from '@/lib/api/types';
 import { areaPath } from '@/lib/catalog/area';
@@ -47,11 +46,6 @@ export function LinesSection({ areas }: { areas: Area[] }) {
             {/* "Área interna" e "Área externa" no título; o nome da linha embaixo (revisão da Franccino, item 3). */}
             <h2 className="line-panel__title">{nav(area.key)}</h2>
             <p className="line-panel__brand">{area.brand_name}</p>
-            {area.description ? <p className="lead">{area.description}</p> : null}
-            <span className="link-arrow">
-              <span>{t('viewPieces')}</span>
-              <Icon name="arrow" />
-            </span>
           </div>
         </Link>
       ))}

@@ -101,7 +101,7 @@ export function TechnicalLibrary({ files, productName }: { files: DownloadFile[]
         <p className="meta">{t('soon')}</p>
       )}
       {/* Já filtrada pela peça (retorno de 13/11/2026: o link levava à lista inteira, e era preciso achar a peça de novo). */}
-      <Link className="link-arrow" href={{ pathname: '/downloads', query: { q: productName } }}>
+      <Link className="link-arrow" href={{ pathname: '/downloads/blocks', query: { q: productName } }}>
         <span>{files.length > 0 ? t('professionalsPiece') : t('professionals')}</span>
       </Link>
     </section>

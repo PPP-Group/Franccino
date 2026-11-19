@@ -23,7 +23,7 @@ it('exposes the public settings without contact_recipients', function () {
         'data' => [
             'company_name', 'contact_email', 'contact_phone', 'factory_address',
             'quotes_whatsapp', 'assistance_whatsapp', 'assistance_phone',
-            'instagram_url', 'facebook_url', 'pinterest_url', 'linkedin_url', 'youtube_url',
+            'instagram_url', 'facebook_url', 'pinterest_url', 'casoca_url', 'linkedin_url', 'youtube_url',
             'footer_documents' => ['*' => ['label', 'url']],
         ],
     ]);

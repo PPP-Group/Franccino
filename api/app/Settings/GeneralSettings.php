@@ -26,6 +26,8 @@ class GeneralSettings extends Settings
 
     public ?string $pinterest_url;
 
+    public ?string $casoca_url;
+
     public ?string $linkedin_url;
 
     public ?string $youtube_url;

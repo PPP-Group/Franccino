@@ -12,21 +12,26 @@ export const EMPTY_SETTINGS: Settings = {
   instagram_url: null,
   facebook_url: null,
   pinterest_url: null,
+  casoca_url: null,
   linkedin_url: null,
   youtube_url: null,
   footer_documents: [],
   cookie_banner: {},
 };
 
-export type SocialPlatform = 'instagram' | 'facebook' | 'pinterest' | 'linkedin' | 'youtube';
+export type SocialPlatform = 'instagram' | 'pinterest' | 'casoca' | 'facebook' | 'linkedin' | 'youtube';
 
 const SOCIAL_FIELDS: [SocialPlatform, keyof Settings][] = [
   ['instagram', 'instagram_url'],
-  ['facebook', 'facebook_url'],
   ['pinterest', 'pinterest_url'],
+  ['casoca', 'casoca_url'],
+  ['facebook', 'facebook_url'],
   ['linkedin', 'linkedin_url'],
   ['youtube', 'youtube_url'],
 ];
+
+/** As redes que aparecem ao lado do menu, no topo ("Alterações site", Franccino, 18/11/2026). */
+export const HEADER_SOCIAL: SocialPlatform[] = ['instagram', 'pinterest', 'casoca'];
 
 /** Redes sociais com URL cadastrada, na ordem acima. */
 export function socialLinks(settings: Settings): { platform: SocialPlatform; url: string }[] {

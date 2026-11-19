@@ -55,11 +55,11 @@ describe('ProductColors', () => {
 });
 
 describe('PeekPhotos', () => {
-  it('shows four photos per row and stacks the last one when there are more', () => {
+  it('shows three photos per row and stacks the last one when there are more', () => {
     const html = renderWithIntl(<PeekPhotos images={[1, 2, 3, 4, 5].map(image)} />);
-    expect(html.match(/row-peek__photo"/g)?.length ?? 0).toBe(3);
+    expect(html.match(/row-peek__photo"/g)?.length ?? 0).toBe(2);
     expect(html.match(/row-peek__photo--more/g)?.length).toBe(1);
-    expect(html).not.toContain('foto-5');
+    expect(html).not.toContain('foto-4');
   });
 
   it('puts the photos of the piece first and the other colours on a labelled row below', () => {

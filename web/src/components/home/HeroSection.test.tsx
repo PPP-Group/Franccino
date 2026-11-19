@@ -22,21 +22,21 @@ describe('HeroSection', () => {
         designerCount={16}
       />,
     );
-    expect(html).toContain('<h1');
-    expect(html).toContain('Casa e jardim no mesmo desenho');
+    // Sem texto por cima da foto (18/11/2026): o título fica só para o leitor de tela.
+    expect(html).toContain('<h1 class="visually-hidden"');
     expect(html).toContain('href="https://franccino.com.br/pt/colecoes/tempo"');
     expect(html).toContain('<source media=');
     expect(html).toContain('loading="eager"');
     // Banner com foto: só o que foi cadastrado, sem os atalhos e a contagem da placa sem foto.
     expect(html).not.toContain('href="/room-planner"');
     expect(html).not.toContain('16 designers');
-    // O botão some: o banner inteiro é o link, e o texto do botão fica pequeno sob o título.
+    // O banner inteiro é o link; o texto do botão não aparece por cima da foto.
     expect(html).toContain('class="hero__link"');
-    expect(html).toContain('hero__cta');
+    expect(html).not.toContain('hero__cta');
     expect(html).not.toContain('class="btn');
   });
 
-  it('fills the screen with the photo and writes only the small default title over it, linking the whole banner', () => {
+  it('fills the screen with the photo, with no text over it, and links the whole banner', () => {
     const html = renderWithIntl(
       <HeroSection
         banner={{
@@ -53,8 +53,8 @@ describe('HeroSection', () => {
       />,
     );
     expect(html).toContain('class="hero hero--photo hero--full"');
-    expect(html).toMatch(/<h1 class="hero__title" id="hero-title">Feito para permanecer<\/h1>/);
-    expect(html).toContain('<p class="hero__subtitle">Móveis de design autoral</p>');
+    expect(html).toMatch(/<h1 class="visually-hidden" id="hero-title">Feito para permanecer<\/h1>/);
+    expect(html).not.toContain('hero__subtitle');
     expect(html).toContain('hero__scroll');
     expect(html).not.toContain('class="btn');
     expect(html).toContain('class="hero__link" href="/pt/lancamentos" aria-label="Coleção Tempo"');
@@ -106,7 +106,7 @@ describe('HeroSection', () => {
         designerCount={0}
       />,
     );
-    expect(html).toContain('<h2 class="hero__title" id="hero-title-2">');
+    expect(html).toContain('<h2 class="visually-hidden" id="hero-title-2">');
     // Só o primeiro banner deixa o cabeçalho transparente (a página de ideias usa um slide seguinte).
     expect(html).toContain('class="hero hero--photo"');
     expect(html).toContain('loading="lazy"');

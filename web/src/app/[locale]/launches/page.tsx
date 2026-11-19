@@ -100,7 +100,6 @@ export default async function LaunchesPage({ params, searchParams }: Props) {
           <>
             <CatalogViewProvider key={view} initial={view}>
               <div className="toolbar">
-                <p className="meta num">{catalog('count', { count: products.length })}</p>
                 <ViewToggle
                   view={view}
                   hrefs={{

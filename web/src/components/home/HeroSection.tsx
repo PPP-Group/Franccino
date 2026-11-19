@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { ApiImage } from '@/components/media/ApiImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import type { Banner } from '@/lib/api/types';
 import { heroSizes } from '@/lib/images/cover';
 import { buildSrcSet } from '@/lib/images/srcset';
@@ -20,8 +21,8 @@ type HeroSectionProps = {
  *
  * - Com foto (ou vídeo), rodada 3 (06/11/2026, pedido do tech lead): a foto ocupa a tela inteira (`hero--photo`,
  *   100svh, `object-fit: cover`), sempre, inclusive a faixa larga do WordPress (vale sobre a regra anterior de seguir a
- *   proporção da arte). No meio, pequeno, o título cadastrado (ou o título padrão da home), que aparece devagar depois
- *   da foto; embaixo, uma linha fina que convida a rolar. Com `cta_url`, o banner inteiro é o link. O primeiro banner
+ *   proporção da arte). Sem texto por cima (18/11/2026): o título fica só para o leitor de tela; embaixo, uma linha fina
+ *   que convida a rolar. Com `cta_url`, o banner inteiro é o link. O primeiro banner
  *   leva `hero--full`, a marca que deixa o cabeçalho transparente por cima dele (chrome.css); a página de ideias usa
  *   um slide seguinte (`index` 1) e fica com o cabeçalho de sempre. O resto da home rola por cima do banner (home.css).
  * - Sem foto: a placa branca com o título padrão e os atalhos do catálogo, para a home nunca abrir vazia.
@@ -59,23 +60,13 @@ export function HeroSection({ banner, brandNames, designerCount, index = 0 }: He
         <ApiImage image={photo} sizes={heroSizes(photo)} priority={first} className="hero__img" />
       </picture>
       {banner.video ? <HeroVideo src={banner.video} /> : null}
-      <div className="hero__content">
-        <Heading className="hero__title" id={titleId}>
-          {banner.title ?? t('fallbackTitle')}
-        </Heading>
-        {/* Sem texto no painel: o slogan, com o "design autoral" na linha de apoio (revisão da Franccino, item 1). */}
-        {banner.subtitle ? (
-          <p className="hero__subtitle">{banner.subtitle}</p>
-        ) : banner.title ? null : (
-          <p className="hero__subtitle">{t('fallbackSubtitle')}</p>
-        )}
-        {cta?.label ? (
-          <span className="hero__cta" aria-hidden="true">
-            <span>{cta.label}</span>
-            <Icon name="arrow" />
-          </span>
-        ) : null}
-      </div>
+      {/*
+        Só a foto (ou o vídeo), sem texto por cima ("Alterações site", Franccino, 18/11/2026): o banner de campanha já
+        vem com o texto na arte. O título fica para o leitor de tela e para o Google.
+      */}
+      <Heading className="visually-hidden" id={titleId}>
+        {banner.title ?? t('fallbackTitle')}
+      </Heading>
       <span className="hero__scroll" aria-hidden="true" />
       {cta ? (
         <a className="hero__link" href={cta.url} aria-label={cta.label ?? (photo.alt || t('open'))} />
@@ -120,10 +111,12 @@ function PlainHero({
               {t('catalog')}
             </Link>
           )}
-          <Link className="btn btn--ghost" href="/room-planner">
-            <Icon name="ruler" />
-            <span>{t('planner')}</span>
-          </Link>
+          {ROOM_PLANNER_ENABLED ? (
+            <Link className="btn btn--ghost" href="/room-planner">
+              <Icon name="ruler" />
+              <span>{t('planner')}</span>
+            </Link>
+          ) : null}
         </div>
         {hasMeta ? (
           <ul className="meta hero__meta">

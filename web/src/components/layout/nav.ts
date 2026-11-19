@@ -7,6 +7,8 @@ import type { AppHref } from '@/i18n/navigation';
 /**
  * Revisão da Franccino (12/11/2026, item 5): Casa e Giardini viraram um item só, "Produtos", com as abas "Área interna"
  * e "Área externa" no painel; o clique em Produtos mostra as peças das duas linhas juntas.
+ * Reunião de 18/11/2026: a Sala para montar sai do menu (desligada, `lib/features.ts`) e Contato entra no lugar.
+ * A Área do Profissional (blocos e catálogos) entra no menu e sai da home ("Alterações site", Franccino, 18/11/2026).
  */
 export const NAV_ITEMS = [
   { key: 'products', href: '/products' },
@@ -16,7 +18,8 @@ export const NAV_ITEMS = [
   { key: 'projects', href: '/projects' },
   { key: 'factory', href: '/factory' },
   { key: 'stores', href: '/stores' },
-  { key: 'planner', href: '/room-planner' },
+  { key: 'downloads', href: '/downloads' },
+  { key: 'contact', href: '/contact' },
 ] as const satisfies { key: string; href: AppHref }[];
 
 export type NavKey = (typeof NAV_ITEMS)[number]['key'];
@@ -31,7 +34,8 @@ const PREFIXES: [string, NavKey][] = [
   ['/projects', 'projects'],
   ['/factory', 'factory'],
   ['/stores', 'stores'],
-  ['/room-planner', 'planner'],
+  ['/downloads', 'downloads'],
+  ['/contact', 'contact'],
 ];
 
 /** Recebe o pathname interno do next-intl (ex.: `/indoor/[category]`). */

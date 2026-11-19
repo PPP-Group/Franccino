@@ -22,13 +22,15 @@ it('attaches products to collections, launches and projects', function () {
         ->and($product->projects)->toHaveCount(1);
 });
 
-it('flags products from recent launches as new', function () {
+it('flags a product as new for a year after it entered a published launch', function () {
     $recent = Product::factory()->create();
     $old = Product::factory()->create();
-    Launch::factory()->create(['year' => now()->year])->products()->attach($recent);
-    Launch::factory()->create(['year' => now()->year - 3])->products()->attach($old);
+    $launch = Launch::factory()->create(['year' => now()->year, 'is_published' => true]);
+    $launch->products()->attach($recent);
+    $launch->products()->attach($old);
+    $launch->products()->updateExistingPivot($old->id, ['created_at' => now()->subMonths(13)]);
 
-    expect($recent->isNew())->toBeTrue()->and($old->isNew())->toBeFalse();
+    expect($recent->isNew())->toBeTrue()->and($old->fresh()->isNew())->toBeFalse();
 });
 
 it('shows banners only inside their window', function () {

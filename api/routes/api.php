@@ -33,6 +33,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('pages/{key}', [V1\PageController::class, 'show'])->name('pages.show');
         Route::get('settings', V1\SettingsController::class)->name('settings');
         Route::get('downloads', [V1\DownloadController::class, 'index'])->name('downloads.index');
+        Route::get('downloads/catalogs', [V1\DownloadController::class, 'catalogs'])->name('downloads.catalogs');
         Route::get('search', V1\SearchController::class)->name('search');
         Route::get('sitemap', V1\SitemapController::class)->name('sitemap');
         Route::get('redirects', [V1\RedirectController::class, 'index'])->name('redirects.index');
@@ -50,6 +51,9 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
     Route::post('downloads/{file}/link', [V1\DownloadController::class, 'link'])
         ->middleware('throttle:api-downloads')
         ->name('downloads.link');
+    Route::post('collections/{slug}/download', V1\CollectionDownloadController::class)
+        ->middleware('throttle:api-downloads')
+        ->name('collections.download');
     Route::post('products/{slug}/model-3d/link', [V1\ProductModelController::class, 'link'])
         ->middleware('throttle:api-downloads')
         ->name('products.model-3d.link');

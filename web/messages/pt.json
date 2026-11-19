@@ -38,7 +38,7 @@
     "terms": "Termos e Condições de Uso",
     "wordmark": "Franccino",
     "factory": "Fábrica: {address}",
-    "catalog": "Catálogo",
+    "catalog": "Produtos",
     "service": "Atendimento",
     "newsletter": "Novidades por e-mail",
     "quotesWhatsapp": "Orçamentos",
@@ -51,7 +51,8 @@
       "facebook": "Facebook",
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
-      "youtube": "YouTube"
+      "youtube": "YouTube",
+      "casoca": "Casoca"
     },
     "vortex": "Uma solução Vortex"
   },
@@ -314,7 +315,7 @@
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
         "revit": "Revit",
-        "glb": "GLB (3D)"
+        "glb": "GLB (AR)"
       },
       "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional",
       "allVersions": "Ver todas as {count} versões"
@@ -327,7 +328,8 @@
     },
     "variants": {
       "title": "Variações"
-    }
+    },
+    "back": "Voltar"
   },
   "catalog": {
     "filters": {
@@ -372,7 +374,7 @@
     "view": {
       "label": "Visualização",
       "grid": "Grade",
-      "table": "Tabela técnica"
+      "table": "Downloads"
     },
     "products": {
       "title": "Produtos",
@@ -389,13 +391,11 @@
       "empty": "Nenhum lançamento publicado no momento."
     },
     "table": {
-      "label": "Tabela técnica",
-      "caption": "Peças com linha, designer, medidas e arquivos técnicos",
+      "label": "Downloads",
+      "caption": "Peças com linha e arquivos técnicos para baixar",
       "image": "Imagem",
       "piece": "Peça",
       "area": "Linha",
-      "designer": "Designer",
-      "dimensions": "Medidas",
       "files": "Arquivos",
       "list": "Lista de desejos",
       "empty": "—",
@@ -413,7 +413,6 @@
       "nextPage": "Ver as próximas peças",
       "count": "{shown} de {total} peças",
       "error": "Não foi possível carregar mais peças. Por favor, tente novamente.",
-      "less": "Ver menos",
       "previousPage": "Ver as peças anteriores"
     },
     "rooms": {
@@ -507,6 +506,25 @@
       "sending": "Enviando…",
       "cancel": "Cancelar",
       "failed": "Não foi possível concluir o cadastro. Por favor, tente novamente."
+    },
+    "blocks": {
+      "title": "Blocos 3D e fichas técnicas",
+      "lead": "Os arquivos de cada peça para o seu projeto: SketchUp, Revit, AutoCAD, modelo 3D e fichas técnicas.",
+      "short": "SketchUp, Revit, AutoCAD, modelo 3D e fichas técnicas de cada peça."
+    },
+    "catalogs": {
+      "title": "Catálogos",
+      "lead": "Os catálogos das coleções e das linhas, para baixar.",
+      "short": "Os catálogos das coleções e das linhas, em PDF.",
+      "empty": "Os catálogos estarão aqui em breve.",
+      "download": "Baixar"
+    },
+    "all": {
+      "button": "Baixar todos os arquivos da coleção",
+      "preparing": "Preparando o arquivo…",
+      "wait": "Estamos juntando os blocos e fichas de todas as peças. O download começa sozinho em instantes.",
+      "failed": "Não foi possível preparar o arquivo agora. Por favor, tente novamente em alguns minutos.",
+      "rateLimited": "Muitas tentativas em pouco tempo. Por favor, aguarde um minuto e tente novamente."
     }
   },
   "planner": {
@@ -618,9 +636,9 @@
       "cta": "Conheça a fábrica"
     },
     "technical": {
-      "title": "Para especificadores",
-      "lead": "Medidas e arquivos técnicos de cada peça, reunidos em uma única tabela.",
-      "cta": "Acessar a área técnica"
+      "title": "Downloads",
+      "lead": "Blocos 3D, 2D e fichas técnicas das peças, para baixar.",
+      "cta": "Ver todos os downloads"
     },
     "stores": {
       "title": "Conheça as peças em nossas lojas",
@@ -912,11 +930,8 @@
     "slideRoleDescription": "peça",
     "slide": "{current} de {total}: {name}",
     "status": "{current} de {total}: {name}",
-    "counter": "{current} / {total}",
-    "meta": "{category} · {area}",
     "previous": "Peça anterior",
-    "next": "Próxima peça",
-    "drag": "Arraste"
+    "next": "Próxima peça"
   },
   "featurePiece": {
     "label": "Peça em destaque",
@@ -957,5 +972,17 @@
     "open": "Ver {count, plural, one {a imagem} other {as # imagens}}",
     "openAt": "Abrir a imagem {index}",
     "close": "Fechar as imagens"
+  },
+  "whatsapp": {
+    "open": "Falar pelo WhatsApp",
+    "close": "Fechar o WhatsApp",
+    "title": "Fale com a Franccino",
+    "whichCity": "Olá. Em que cidade você está? Vamos te levar ao WhatsApp da loja mais perto.",
+    "whichStore": "Em {city} temos estas lojas. Com qual você quer falar?",
+    "city": "{city}, {state}",
+    "otherCity": "Escolher outra cidade",
+    "elsewhere": "Minha cidade não está na lista",
+    "messageStore": "Olá, vim pelo site da Franccino e gostaria de falar com a loja {store}.",
+    "messageCentral": "Olá, vim pelo site da Franccino e gostaria de atendimento."
   }
 }

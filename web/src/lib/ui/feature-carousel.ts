@@ -36,9 +36,11 @@ export const WHEEL_STEP_PX = 60;
  * trás da peça do centro. Cada uma fica a mais de uma largura de distância, e a queda de tamanho é mais suave; na tela
  * de um notebook ficam cinco peças à vista (a do centro e duas de cada lado).
  */
-const STEP_X = [0, 1.02, 1.78, 2.4, 2.9];
-const STEP_SCALE = [1, 0.56, 0.42, 0.33, 0.26];
-const STEP_FADE = [0, 0.3, 0.55, 0.78, 1];
+// Revisão da Franccino (18/11/2026, "os produtos seguem encavalando"; referência jaderalmeida.com): as das laterais
+// menores e mais discretas, com mais vão até a do centro.
+const STEP_X = [0, 0.98, 1.62, 2.18, 2.64];
+const STEP_SCALE = [1, 0.44, 0.34, 0.27, 0.22];
+const STEP_FADE = [0, 0.4, 0.62, 0.82, 1];
 const STEP_OPACITY = [1, 1, 1, 1, 0];
 
 /** Peças à vista de cada lado do centro; a partir daí a peça fica invisível e fora do alcance do ponteiro. */
@@ -81,7 +83,7 @@ export function coverflowPose(offset: number): CoverflowPose {
 }
 
 /** Vão entre duas peças vizinhas, em larguras da peça do centro (a vizinha menor, vão menor). */
-const PIECE_GAP = 0.1;
+const PIECE_GAP = 0.16;
 
 /** Vão a mais entre a peça do centro e as vizinhas no celular (`coverflowXs`). */
 export const MOBILE_CENTER_GAP = 0.12;

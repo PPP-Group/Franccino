@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Translatable\HasTranslations;
 
@@ -58,6 +59,32 @@ class Launch extends Model implements HasMedia
     {
         return $this->belongsToMany(Product::class, 'launch_product')
             ->withPivot('sort_order')
+            ->withTimestamps()
             ->orderByPivot('sort_order');
+    }
+
+    /** Quanto tempo a peça fica como "Lançamento" depois de entrar no lançamento (revisão de 18/11/2026). */
+    public const NEW_FOR_MONTHS = 12;
+
+    /** A peça que entrou no lançamento nessa data ainda é "Lançamento"? Sem data (registro antigo), sim. */
+    public static function stillNew(mixed $addedAt): bool
+    {
+        if ($addedAt === null) {
+            return true;
+        }
+
+        return Carbon::parse($addedAt)->greaterThan(now()->subMonths(self::NEW_FOR_MONTHS));
+    }
+
+    /**
+     * Só as peças que ainda são "Lançamento": entraram no lançamento há menos de um ano (ou sem data).
+     *
+     * @param  Builder<*>|BelongsToMany<*, *>  $query
+     */
+    public static function onlyStillNew(Builder|BelongsToMany $query): void
+    {
+        $query->where(fn ($query) => $query
+            ->whereNull('launch_product.created_at')
+            ->orWhere('launch_product.created_at', '>', now()->subMonths(self::NEW_FOR_MONTHS)));
     }
 }

@@ -1,65 +1,76 @@
 import { useTranslations } from 'next-intl';
+import type { CSSProperties } from 'react';
+import { ApiImage } from '@/components/media/ApiImage';
+import { MorphImage } from '@/components/media/MorphImage';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
 import type { DesignerCard } from '@/lib/api/types';
-import { sectionClass, type Tone } from './tone';
-import { MorphImage } from '@/components/media/MorphImage';
 import { morphName, morphTypes } from '@/lib/ui/morph';
+import { sectionClass, type Tone } from './tone';
 
-const SHOWN = 4;
+/** Largura desenhada do retrato na faixa (motion.css e home.css: 15rem no computador, 10rem no celular). */
+const PORTRAIT_SIZES = '(max-width: 35rem) 160px, 240px';
 
-/** Quantos retratos a linha mostra: 4 com 4 ou mais; com menos, todos (a grade tem uma coluna por retrato). */
-export function designersShown(available: number): number {
-  return Math.min(SHOWN, available);
+/** Ordem alfabética: na faixa ninguém vem "primeiro" (reunião de 18/11/2026). */
+export function designersInRail(designers: DesignerCard[]): DesignerCard[] {
+  return [...designers].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
 }
 
-/** Largura desenhada do retrato: 2 colunas no celular e no tablet, 4 no computador (grade de até 1448px). */
-const PORTRAIT_SIZES = '(max-width: 56.25rem) 46vw, (max-width: 97.5rem) 23vw, 360px';
-
 /**
- * Designers da home: só retrato e nome, como os cards de peça (revisão de 06/11/2026). A biografia, de tamanho
- * diferente em cada um, desalinhava a linha; ela continua na página do designer. Rodada 3: a linha é sempre
- * completa (uma coluna por retrato quando há menos de 4) e o hover aproxima o retrato.
+ * Designers da home: só retrato e nome. Reunião com a Franccino (18/11/2026): no lugar de 4 retratos fixos, que davam a
+ * ideia de que uns designers valem mais que outros, todos passam numa faixa em loop contínuo, em ordem alfabética, como a
+ * faixa de clientes (para no hover; parada e rolável com movimento reduzido). Cada retrato abre a página do designer.
+ * A segunda cópia da faixa (para o loop sem emenda) fica fora do leitor de tela e do teclado, sem o nome do movimento.
  */
 export function DesignersSection({ designers, tone }: { designers: DesignerCard[]; tone: Tone }) {
   const t = useTranslations('home.designers');
-  const shown = designers.slice(0, designersShown(designers.length));
+  const sorted = designersInRail(designers);
+  const items = (copy: number) =>
+    sorted.map((designer) => {
+      const name = morphName('designer', designer.slug);
+      const morph = copy === 0 && designer.portrait ? name : undefined;
+      return (
+        <li key={`${copy}-${designer.id}`} className="designer-rail__item">
+          <Link
+            className="designer"
+            href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
+            transitionTypes={morph ? morphTypes(morph) : undefined}
+            data-morph-link={morph}
+            tabIndex={copy === 0 ? undefined : -1}
+          >
+            <div className="designer__photo hover-zoom">
+              {designer.portrait ? (
+                morph ? (
+                  <MorphImage name={morph} image={designer.portrait} sizes={PORTRAIT_SIZES} />
+                ) : (
+                  <ApiImage image={{ ...designer.portrait, alt: '' }} sizes={PORTRAIT_SIZES} />
+                )
+              ) : null}
+            </div>
+            <h3>{designer.name}</h3>
+          </Link>
+        </li>
+      );
+    });
   return (
     <section className={sectionClass(tone)} aria-labelledby="designers-title">
       <div className="wrap">
         <div className="section-head" data-reveal="">
           <div>
             <h2 id="designers-title">{t('title')}</h2>
-            <p className="lead">{t('lead')}</p>
           </div>
           <Link className="link-arrow" href="/designers">
             <span>{t('all')}</span>
             <Icon name="arrow" />
           </Link>
         </div>
-        <div className={`designers designers--${shown.length}`} data-reveal="stagger">
-          {shown.map((designer) => (
-            <Link
-              key={designer.id}
-              className="designer"
-              href={{ pathname: '/designers/[slug]', params: { slug: designer.slug } }}
-              transitionTypes={
-                designer.portrait ? morphTypes(morphName('designer', designer.slug)) : undefined
-              }
-              data-morph-link={designer.portrait ? morphName('designer', designer.slug) : undefined}
-            >
-              <div className="designer__photo hover-zoom">
-                {designer.portrait ? (
-                  <MorphImage
-                    name={morphName('designer', designer.slug)}
-                    image={designer.portrait}
-                    sizes={PORTRAIT_SIZES}
-                  />
-                ) : null}
-              </div>
-              <h3>{designer.name}</h3>
-            </Link>
-          ))}
+      </div>
+      <div className="designer-rail" data-reveal="">
+        <div className="designer-rail__track" style={{ '--rail-count': sorted.length } as CSSProperties}>
+          <ul className="designer-rail__list">{items(0)}</ul>
+          <ul className="designer-rail__list" aria-hidden="true">
+            {items(1)}
+          </ul>
         </div>
       </div>
     </section>

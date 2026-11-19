@@ -226,9 +226,11 @@
 
 .feature-carousel__name {
   font-family: var(--font-heading);
-  font-size: var(--fs-h3);
-  line-height: var(--lh-h3);
-  font-weight: 500;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-ui);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -311,67 +313,8 @@
   transform: scaleX(-1);
 }
 
-/*
-  Cursor "Arraste" (ideia 12): bolha redonda que segue o mouse sobre o palco. Só com mouse e sem movimento reduzido; o
-  FeatureCarousel põe `data-cursor` na raiz quando o mouse entra e move a bolha por `transform`.
-*/
-.feature-carousel__cursor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 300;
-  pointer-events: none;
-  display: none;
-}
-
-.feature-carousel__cursor-dot {
-  display: grid;
-  place-items: center;
-  /* Revisão da Franccino (12/11/2026): menor que os 88 px de antes, só o bastante para a palavra caber. */
-  width: 68px;
-  height: 68px;
-  margin: -34px 0 0 -34px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: var(--fs-label);
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transform: scale(0);
-  opacity: 0;
-  transition:
-    transform var(--t-mid) var(--ease-out),
-    opacity var(--t-fast) var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .feature-carousel__cursor {
-    display: block;
-  }
-
-  .feature-carousel[data-cursor] .feature-carousel__stage,
-  .feature-carousel[data-cursor] .feature-carousel__link {
-    cursor: none;
-  }
-
-  .feature-carousel[data-cursor] .feature-carousel__button {
-    cursor: pointer;
-  }
-
-  .feature-carousel[data-cursor] .feature-carousel__cursor-dot {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  .feature-carousel[data-cursor][data-pressed] .feature-carousel__cursor-dot {
-    transform: scale(0.82);
-  }
-}
-
-/* Mouse com movimento reduzido: sem a bolha, o cursor de arrastar do sistema. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+/* Com mouse: o cursor de arrastar do sistema (a bolha "Arraste" saiu na reunião de 18/11/2026). */
+@media (hover: hover) and (pointer: fine) {
   .feature-carousel__stage,
   .feature-carousel__item:not(.is-active) .feature-carousel__link {
     cursor: grab;

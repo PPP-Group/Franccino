@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { productDetail } from '@/test/fixtures';
 import { toProductCard } from './card';
-import { primaryDimension, toTechnicalRow, withDimensionsFirst } from './technical';
+import { primaryDimension, toTechnicalRow, withDimensionsFirst, withFilesFirst } from './technical';
 
 describe('technical rows', () => {
   it('picks the first dimension that has a value', () => {
@@ -46,7 +46,7 @@ describe('technical rows', () => {
     });
   });
 
-  it('previews four photos and keeps one more for the stack, cover first, without repeating it', () => {
+  it('previews three photos and keeps one more for the stack, cover first, without repeating it', () => {
     const detail = productDetail();
     const cover = detail.cover;
     if (!cover) {
@@ -57,7 +57,7 @@ describe('technical rows', () => {
       ...detail,
       gallery: [cover, extra(2), extra(3), extra(4), extra(5), extra(6)],
     });
-    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3, 4, 5]);
+    expect(row.preview?.map((image) => image.id)).toEqual([cover.id, 2, 3, 4]);
   });
 
   it('puts the covers of the other colours in the preview, skipping colours without a cover', () => {
@@ -88,5 +88,20 @@ describe('withDimensionsFirst', () => {
       { ...base, product: { ...base.product, id: 4 } },
     ];
     expect(withDimensionsFirst(rows).map((row) => row.product.id)).toEqual([2, 4, 1, 3]);
+  });
+});
+
+describe('withFilesFirst', () => {
+  it('puts the pieces with files first and keeps the order inside each group', () => {
+    const row = (id: number, files: number) =>
+      ({
+        product: { id },
+        dimension: null,
+        files: Array.from({ length: files }, (_, index) => ({ id: index })),
+      }) as never;
+    const rows = [row(1, 0), row(2, 1), row(3, 0), row(4, 2)];
+    expect(withFilesFirst(rows).map((item: { product: { id: number } }) => item.product.id)).toEqual([
+      2, 4, 1, 3,
+    ]);
   });
 });

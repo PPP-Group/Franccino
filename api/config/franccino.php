@@ -14,6 +14,13 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    // Newsletter no Mailchimp (revisão da Franccino, 18/11/2026). Sem a chave ou sem a audiência, nada sai do site: a
+    // lista continua no painel e na exportação. A chave termina com o servidor da conta (ex.: "...-us21").
+    'mailchimp' => [
+        'api_key' => env('MAILCHIMP_API_KEY'),
+        'audience_id' => env('MAILCHIMP_AUDIENCE_ID'),
+    ],
+
     'admin' => [
         'name' => env('ADMIN_NAME', 'Administrador'),
         'email' => env('ADMIN_EMAIL'),

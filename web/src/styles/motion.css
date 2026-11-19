@@ -71,9 +71,12 @@
     clip-path: inset(var(--curtain-bleed) 100% var(--curtain-bleed) var(--curtain-bleed));
   }
 
-  /* Duas por linha (blocos das coleções): o da direita abre logo depois do da esquerda. */
-  .collection-grid > :nth-child(even) {
-    --reveal-index: 1;
+  /*
+    Página Coleções, duas por linha: a da esquerda abre da esquerda para a direita e a da direita, ao mesmo tempo, da
+    direita para a esquerda (reunião de 18/11/2026). Na home a cortina continua só da esquerda.
+  */
+  [data-reveal-ready] .collection-grid > [data-reveal^='curtain']:nth-child(even):not(.is-revealed) > * {
+    clip-path: inset(var(--curtain-bleed) var(--curtain-bleed) var(--curtain-bleed) 100%);
   }
 
   /* O texto sobre a foto (projetos, linhas) sobe quando a cortina já passou por ele. */
@@ -334,6 +337,18 @@ html[data-img-fade]:active-view-transition img[data-img]:not([data-loaded]) {
   }
 
   .clients__marquee:hover .clients__track {
+    animation-play-state: paused;
+  }
+}
+
+/* Designers da home (reunião de 18/11/2026): a mesma faixa em loop, um pouco mais lenta, parada no hover. */
+@media (prefers-reduced-motion: no-preference) {
+  .designer-rail__track {
+    animation: clients-loop calc(var(--rail-count, 8) * 5s) linear infinite;
+  }
+
+  .designer-rail:hover .designer-rail__track,
+  .designer-rail:focus-within .designer-rail__track {
     animation-play-state: paused;
   }
 }

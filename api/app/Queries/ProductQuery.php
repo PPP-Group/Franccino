@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Models\Launch;
 use App\Models\Product;
 use App\Support\ContentLocale;
 use App\Support\LikeSearch;
@@ -68,7 +69,10 @@ final class ProductQuery
 
         if (filled($filters['launch'] ?? null)) {
             $launch = $filters['launch'];
-            $query->whereHas('launches', fn (Builder $query) => $query->published()->whereLocalizedSlug($launch, $locale));
+            $query->whereHas('launches', function (Builder $query) use ($launch, $locale) {
+                $query->published()->whereLocalizedSlug($launch, $locale);
+                Launch::onlyStillNew($query);
+            });
         }
 
         if (filled($filters['q'] ?? null)) {

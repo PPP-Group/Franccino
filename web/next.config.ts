@@ -55,6 +55,9 @@ const nextConfig: NextConfig = {
       { source: '/en/projects', destination: '/en/corporate', permanent: true },
       { source: '/en/projects/:slug', destination: '/en/corporate/:slug', permanent: true },
       { source: '/en/contract', destination: '/en/corporate', permanent: true },
+      // "Novelties" virou "New arrivals" (revisão da Franccino, 18/11/2026).
+      { source: '/en/novelties', destination: '/en/new-arrivals', permanent: true },
+      { source: '/en/novelties/:slug', destination: '/en/new-arrivals/:slug', permanent: true },
     ];
   },
 };

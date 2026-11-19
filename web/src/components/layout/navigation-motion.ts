@@ -49,6 +49,8 @@ let pendingHero: HeroAdoption | null = null;
 let pendingLead: LeadProduct | null = null;
 let lastKey = '';
 let lastPath = '';
+/** Trocas de página dentro do site desde o carregamento (o "Voltar" da peça só usa o histórico quando há alguma). */
+let routeCommits = 0;
 let restoring = false;
 let replaying = false;
 let pendingEdge: MorphEdge | null = null;
@@ -559,6 +561,7 @@ export function installNavigationMotion(): void {
  * movimento: devolve a rolagem da entrada (na volta) ou registra de onde a peça foi aberta (no clique).
  */
 export function onRouteCommit(): void {
+  routeCommits += 1;
   unpinScroll();
   onMorphSettled();
   const key = entryKey();
@@ -610,4 +613,17 @@ function scrollToLead() {
 /** A página de volta já entrou: a marca que trocava o 3D pela foto sai. */
 function onMorphSettled(): void {
   document.documentElement.removeAttribute('data-morph-leaving');
+}
+
+/**
+ * A página aberta veio de outra página do site (troca dentro do site, ou carregada a partir de um link do próprio site):
+ * o "Voltar" da peça usa o histórico; vindo de fora (Google, link direto), vai para a lista da categoria.
+ */
+export function cameFromSite(): boolean {
+  if (routeCommits > 0) return true;
+  try {
+    return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }

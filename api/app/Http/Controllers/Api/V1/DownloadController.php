@@ -3,11 +3,18 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\CreateDownloadLink;
+use App\Enums\ProductFileType;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\DownloadFileResource;
 use App\Http\Resources\V1\DownloadProductResource;
+use App\Models\Designer;
 use App\Models\DownloadLead;
+use App\Models\Launch;
+use App\Models\Product;
 use App\Models\ProductFile;
 use App\Queries\ProductQuery;
+use App\Support\ImagePresenter;
+use App\Support\Localized;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -56,6 +63,53 @@ class DownloadController extends Controller
                 'formats' => $this->formats(),
             ],
         ]);
+    }
+
+    /**
+     * `GET /downloads/catalogs` (reunião de 18/11/2026, como a área de downloads da donaflormobilia.com): os catálogos
+     * publicados, de peça, designer ou lançamento publicados, com o nome e a foto do dono para a capa do card. O
+     * arquivo só sai pelo `POST /downloads/{id}/link`, com o cadastro, como os outros.
+     */
+    public function catalogs(Request $request): JsonResponse
+    {
+        $files = ProductFile::query()
+            ->published()
+            ->where('type', ProductFileType::Catalog->value)
+            ->with(['product.media', 'designer.media', 'launch.media'])
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn (ProductFile $file) => (bool) $file->owner()?->is_published)
+            ->values();
+
+        return response()->json([
+            'data' => $files->map(fn (ProductFile $file) => $this->catalog($file, $request))->all(),
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function catalog(ProductFile $file, Request $request): array
+    {
+        $owner = $file->owner();
+        $name = $owner instanceof Designer ? $owner->name : (string) Localized::value($owner, $owner instanceof Launch ? 'title' : 'name');
+        $media = match (true) {
+            $owner instanceof Designer => $owner->getFirstMedia('portrait'),
+            default => $owner?->getFirstMedia('cover'),
+        };
+
+        return [
+            'file' => (new DownloadFileResource($file))->toArray($request),
+            'owner' => [
+                'type' => match (true) {
+                    $owner instanceof Product => 'product',
+                    $owner instanceof Designer => 'designer',
+                    default => 'launch',
+                },
+                'name' => $name,
+                'slug' => $owner instanceof Designer ? $owner->slug : Localized::value($owner, 'slug'),
+            ],
+            'cover' => ImagePresenter::present($media, $name),
+        ];
     }
 
     /**

@@ -24,7 +24,6 @@ import { markImageLoaded, morphName, morphTypes, pendingMorphFor } from '@/lib/u
 import {
   AUTOPLAY_MS,
   clampIndex,
-  counterNumber,
   coverflowPose,
   coverflowXs,
   MOBILE_CENTER_GAP,
@@ -145,7 +144,7 @@ function preloadStage(image: Image | null) {
  * (`ViewTransition`, ideia 10); o clique numa vizinha a traz para o centro.
  *
  * Nada rola: as peças ficam no mesmo lugar e só mudam `transform`, `opacity` e o véu (a pose vem de `coverflowPose`).
- * Arrasta com o dedo e com o mouse (com o cursor redondo "Arraste" da ideia 12), anda com as setas do teclado, com os
+ * Arrasta com o dedo e com o mouse (a bolha "Arraste" saiu na reunião de 18/11/2026; fica o cursor de arrastar do sistema), anda com as setas do teclado, com os
  * botões e com a rolagem lateral do trackpad. Com movimento reduzido as peças trocam sem animar.
  */
 export function FeatureCarousel({ label, products: items }: FeatureCarouselProps) {
@@ -163,8 +162,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
     [products],
   );
   const t = useTranslations('featureCarousel');
-  // O nome curto da área, como no menu (Casa, Giardini).
-  const nav = useTranslations('nav');
   const reduceMotion = useReducedMotion();
   // No celular, a peça do centro fica mais afastada das vizinhas (retorno de 17/11/2026).
   const centerGap = useMediaQuery('(max-width: 560px)') ? MOBILE_CENTER_GAP : 0;
@@ -201,7 +198,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   const stageRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const cursorRef = useRef<HTMLSpanElement | null>(null);
   const drag = useRef<Drag | null>(null);
   const suppressClick = useRef(false);
   const activeRef = useRef(active);
@@ -209,7 +205,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
   const shownRef = useRef(active);
   const wheel = useRef({ accumulated: 0, lockedUntil: 0 });
   const offsets = useRef<number[]>([]);
-  const cursor = useRef({ x: 0, y: 0, tx: 0, ty: 0, frame: 0, visible: false });
 
   /** Põe cada peça na pose da posição dada (fracionária durante o arrasto), direto no DOM. */
   const paint = useCallback(
@@ -326,11 +321,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
     return () => stage.removeEventListener('wheel', onWheel);
   }, [goTo, total]);
 
-  useEffect(() => {
-    const cursorState = cursor.current;
-    return () => window.cancelAnimationFrame(cursorState.frame);
-  }, []);
-
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const target = keyTarget(event.key, active, total);
     if (target === null) return;
@@ -357,11 +347,9 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
       lastT: event.timeStamp,
       velocity: 0,
     };
-    rootRef.current?.setAttribute('data-pressed', '');
   }
 
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {
-    moveCursor(event);
     const state = drag.current;
     const stage = stageRef.current;
     if (!state || !stage || event.pointerId !== state.pointerId) return;
@@ -371,7 +359,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
       // Gesto mais vertical que horizontal: é a página rolando, não o carrossel.
       if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) >= DRAG_THRESHOLD_PX) {
         drag.current = null;
-        rootRef.current?.removeAttribute('data-pressed');
         return;
       }
       if (Math.abs(dx) < DRAG_THRESHOLD_PX) return;
@@ -397,7 +384,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
 
   function endDrag(event: PointerEvent<HTMLDivElement>) {
     const state = drag.current;
-    rootRef.current?.removeAttribute('data-pressed');
     if (!state || event.pointerId !== state.pointerId) return;
     drag.current = null;
     const stage = stageRef.current;
@@ -411,7 +397,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
     const nearest = looping ? Math.round(state.position) : clampIndex(Math.round(state.position), total);
     const target = releaseIndex(nearest, state.startIndex, state.velocity, total);
     goTo(target);
-    if (event.pointerType !== 'mouse') hideCursor();
   }
 
   function onItemClick(event: MouseEvent<HTMLAnchorElement>, index: number) {
@@ -419,46 +404,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
     // A vizinha não abre a peça: vem para o centro.
     event.preventDefault();
     goTo(positionFor(index, active, total));
-  }
-
-  // ---------- cursor "Arraste" (ideia 12): segue o mouse com um leve atraso ----------
-
-  function moveCursor(event: PointerEvent<HTMLDivElement>) {
-    const root = rootRef.current;
-    if (!root || event.pointerType !== 'mouse' || reduceMotion || total < 2) return;
-    // Sobre as setas fica o cursor normal: a bolha esconderia o botão.
-    if (!drag.current?.moved && (event.target as Element).closest('button')) {
-      hideCursor();
-      return;
-    }
-    const rect = root.getBoundingClientRect();
-    const state = cursor.current;
-    state.tx = event.clientX - rect.left;
-    state.ty = event.clientY - rect.top;
-    if (!state.visible) {
-      state.visible = true;
-      state.x = state.tx;
-      state.y = state.ty;
-      root.setAttribute('data-cursor', '');
-      paintCursor();
-    }
-  }
-
-  function paintCursor() {
-    const state = cursor.current;
-    const node = cursorRef.current;
-    if (!node || !state.visible) return;
-    state.x += (state.tx - state.x) * 0.22;
-    state.y += (state.ty - state.y) * 0.22;
-    node.style.transform = `translate3d(${state.x}px, ${state.y}px, 0)`;
-    state.frame = window.requestAnimationFrame(paintCursor);
-  }
-
-  function hideCursor() {
-    const state = cursor.current;
-    state.visible = false;
-    window.cancelAnimationFrame(state.frame);
-    rootRef.current?.removeAttribute('data-cursor');
   }
 
   const current = products[shown] ?? products[activeIndex];
@@ -497,7 +442,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
-        onPointerLeave={hideCursor}
         onDragStart={(event) => event.preventDefault()}
         onClickCapture={(event) => {
           if (suppressClick.current) {
@@ -613,18 +557,8 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
       </div>
       {current ? (
         <div className="feature-carousel__caption" key={current.id} aria-hidden="true">
+          {/* Só o nome, pequeno (revisão da Franccino, 18/11/2026): sem categoria, área nem contador. */}
           <p className="feature-carousel__name">{current.name}</p>
-          <p className="feature-carousel__meta">
-            {t('meta', { category: current.category.name, area: nav(current.area.key) })}
-          </p>
-          {total > 1 ? (
-            <p className="feature-carousel__counter num">
-              {t('counter', {
-                current: counterNumber((shown % count) + 1),
-                total: counterNumber(count),
-              })}
-            </p>
-          ) : null}
         </div>
       ) : null}
       <p className="visually-hidden" aria-live="polite" aria-atomic="true">
@@ -636,9 +570,6 @@ export function FeatureCarousel({ label, products: items }: FeatureCarouselProps
             })
           : null}
       </p>
-      <span ref={cursorRef} className="feature-carousel__cursor" aria-hidden="true">
-        <span className="feature-carousel__cursor-dot">{t('drag')}</span>
-      </span>
     </div>
   );
 }
