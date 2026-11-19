@@ -1935,4 +1935,29 @@ Branch `claude/retorno-reuniao-18-11`, PR para a `develop`. Fontes: a reunião d
 - **Auditoria do site antigo × preview** (só leitura, arquivos na área temporária da sessão): 171 fotos que faltam em
   108 peças (a conferir a olho), 21 descrições vazias no novo, 148 fichas técnicas em PDF que não vieram, foto para
   Estante Bloco e Sofá Pinot Square, a Mesa de Cabeceira Isa (não cadastrada), a loja Franccino CasaShopping e 3 posts do
-  blog sem equivalente. Nada foi enviado: espera o ok do Pedro Ivo.
+  blog sem equivalente. O envio está na 44.4.
+
+### 44.4 Mesmo dia: o que a auditoria achou, no preview, e a prévia da página da peça
+
+Com o ok do Pedro Ivo, tudo foi enviado pelo conector (nada passou pelo repositório):
+
+- **Textos:** frase e descrição do site antigo nas 21 peças que estavam vazias, em português, e a tradução para o inglês.
+- **Fotos:** 170 das 171 na galeria de 108 peças (10 com o endereço `-scaled`, porque o original dá 404). A `Cama.webp`
+  é da Cama Lenyr e não entrou na Cama Link.
+- **Capas:** as 86 candidatas revistas a olho; 17 trocadas pela diagonal virada para a esquerda (a antiga foi para a
+  galeria) e capa nova na Estante Bloco e no Sofá Pinot Square, que não tinham foto. Ficaram como estavam, com dúvida:
+  Mesa de Centro Kit, Mesa de centro Trem, Mesa Polux e Mesa de Jantar ARP (a candidata tem a ponta esquerda mais perto),
+  Poltrona Samarti e Sofá Royale (o site antigo mostra outra peça), Sofá Samburá Oblongo e Cama Link.
+- **Fotos sem fundo a refazer** (eram da capa antiga): Buffet Bloco, Cadeira ARP, Cadeira Sirius, Penteadeira Lenyr,
+  Poltrona ARP, Sofá Majestic e Sofá Tasca (`design/recortes/recortar.py` e a importação em massa).
+- **Fichas técnicas:** 156 PDFs em 148 peças. As da Mesa de jantar Eros e da Poltrona Maria no site antigo são o catálogo
+  inteiro (85 MB): a página de cada uma foi separada (páginas 28 e 1) e falta enviar pela importação ou pelo painel.
+- **Mesa de Cabeceira Isa:** criada (peça 402, área interna, Estúdio Franccino, três larguras), com a capa e duas fotos
+  de detalhe; o redirecionamento `/produto/mesa-de-cabeceira-isa` aponta para ela. Falta frase, materiais e inglês.
+- **CasaShopping:** já existe como "Franccino RJ" (mesmo endereço). Renomear é decisão do Pedro Ivo.
+- **De passagem:** a Cadeira Dara Outdoor tem como bloco SketchUp o arquivo da versão Indoor.
+
+**Página da peça:** PDF "Franccino - página da peça, duas versões (19-11)" para a Franccino escolher, com a Chaise Cocê
+(fotos, textos e arquivos reais, no computador e no celular): versão 1, esteira em fundo branco e ficha organizada
+(recomendada); versão 2, editorial com a abertura em tela cheia. Entregue ao Pedro Ivo; não está no repositório. A
+implementação espera a escolha (PPP-43).
