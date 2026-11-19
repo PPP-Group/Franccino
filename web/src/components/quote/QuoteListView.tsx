@@ -11,6 +11,7 @@ import { htmlLang, type Locale } from '@/i18n/config';
 import { getPathname, Link } from '@/i18n/navigation';
 import { createSharedList } from '@/lib/api/forms';
 import { whatsappUrl } from '@/lib/contact-links';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import { refreshQuoteCovers } from '@/lib/covers/fresh';
 import { useQuoteItems } from '@/lib/quote/hooks';
 import { quoteItemKey, totalQuantity } from '@/lib/quote/list';
@@ -181,9 +182,11 @@ export function QuoteListView({ whatsapp }: { whatsapp: string | null }) {
             <Link className="btn" href="/products">
               {t('empty.catalog')}
             </Link>
-            <Link className="btn btn--ghost" href="/room-planner">
-              {t('empty.planner')}
-            </Link>
+            {ROOM_PLANNER_ENABLED ? (
+              <Link className="btn btn--ghost" href="/room-planner">
+                {t('empty.planner')}
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

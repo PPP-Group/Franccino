@@ -80,7 +80,7 @@ export function ViewToggle({ view, hrefs }: { view: CatalogView; hrefs: Record<C
         aria-current={current === 'table' ? 'true' : undefined}
         onClick={(event) => choose('table', event)}
       >
-        <Icon name="table" />
+        <Icon name="download" />
         <span>{t('table')}</span>
       </Link>
     </div>

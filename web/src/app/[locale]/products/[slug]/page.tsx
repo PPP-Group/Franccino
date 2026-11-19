@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound, redirect } from 'next/navigation';
 import { RichText } from '@/components/content/RichText';
 import { ContactForm } from '@/components/forms/ContactForm';
+import { BackLink } from '@/components/products/BackLink';
 import { DesignerStrip } from '@/components/products/DesignerStrip';
 import { DimensionsBlock } from '@/components/products/DimensionsBlock';
 import { ProductConfigurator } from '@/components/products/ProductConfigurator';
@@ -57,9 +58,6 @@ function leadPaths(product: ProductDetail, locale: Locale): string[] {
   const byCategory = `${all}?category=${encodeURIComponent(product.category.slug)}`;
   return [...hrefs.map((href) => getPathname({ href: href as Href, locale })), byCategory];
 }
-
-/** Outras peças do designer ao lado do texto dele, na faixa do designer. */
-const DESIGNER_PIECES = 2;
 
 const productHref = (slug: string) => ({ pathname: '/products/[slug]', params: { slug } }) as const;
 
@@ -141,12 +139,8 @@ export default async function ProductPage({ params }: Props) {
   // mesmo nome cancelariam a transição.
   const shown = new Set([product.id, ...product.line_products.map((item) => item.id)]);
   const related = product.related.filter((item) => !shown.has(item.id));
-  // Outras peças do designer ao lado do texto dele (no máximo duas), sem repetir as das esteiras.
-  const designerPieces = (designer?.products ?? [])
-    .filter((item) => item.cover && !shown.has(item.id) && !related.some((other) => other.id === item.id))
-    .slice(0, DESIGNER_PIECES);
   // "Peças que você viu" no fim não repete a peça aberta nem as das esteiras acima.
-  const onPage = [...shown, ...related.map((item) => item.id), ...designerPieces.map((item) => item.id)];
+  const onPage = [...shown, ...related.map((item) => item.id)];
   const card = toProductCard(product);
   // Conteúdo sem tradução volta em português (locale_fallback): marcar o idioma para leitores de tela.
   const contentLang = product.locale_fallback && locale !== 'pt' ? 'pt-BR' : undefined;
@@ -157,7 +151,10 @@ export default async function ProductPage({ params }: Props) {
       <JsonLd data={breadcrumb} />
       <TrackView product={card} locale={locale} slugs={product.slugs} />
       <div className="wrap">
-        <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
+        <div className="product-top">
+          <BackLink fallback={categoryHref(product)} />
+          <Breadcrumbs label={common('breadcrumb')} items={crumbs} />
+        </div>
         {product.cover ? (
           <LeadSource card={card} morph={productMorphName(product.slug)} paths={leadPaths(product, locale)} />
         ) : null}
@@ -216,14 +213,19 @@ export default async function ProductPage({ params }: Props) {
               </section>
             ) : null}
 
-            {product.materials ? (
+            {/*
+              Materiais com a nota de acabamento da peça logo embaixo: toda a descrição num lugar só (revisão da
+              Franccino, 18/11/2026: parte do texto aparecia sob Acabamentos).
+            */}
+            {product.materials || product.finishes_note ? (
               <section className="product-about block" aria-labelledby="product-materials-title">
                 <div className="block__title">
                   <h2 id="product-materials-title">{t('materials')}</h2>
                 </div>
                 <div lang={contentLang}>
                   <ClampedText lines={3} className="meta">
-                    <p>{product.materials}</p>
+                    {product.materials ? <p>{product.materials}</p> : null}
+                    {product.finishes_note ? <p>{product.finishes_note}</p> : null}
                   </ClampedText>
                 </div>
               </section>
@@ -236,7 +238,7 @@ export default async function ProductPage({ params }: Props) {
             <ProductConfigurator
               product={{ ...card, finishes: product.finishes }}
               whatsapp={settings.quotes_whatsapp}
-              finishesNote={product.finishes_note}
+              finishesNote={null}
               quoteForm={<ContactForm type="quote" productId={product.id} submitLabel={t('sendQuote')} />}
             >
               <DimensionsBlock dimensions={product.dimensions} />
@@ -259,8 +261,9 @@ export default async function ProductPage({ params }: Props) {
         outra (retorno do tech lead de 06/11/2026: "tudo no branco"). A alternância é do CSS (`.tone-stack`), então
         a seção que some não quebra a sequência.
       */}
-      <div className="tone-stack">
-        {designer ? <DesignerStrip designer={designer} pieces={designerPieces} /> : null}
+      <div className="tone-stack tone-stack--paper">
+        {/* Só o designer, sem as fotos das peças dele (revisão da Franccino, 18/11/2026). */}
+        {designer ? <DesignerStrip designer={designer} pieces={[]} /> : null}
 
         {product.line_products.length > 0 ? (
           <section className="section" aria-labelledby="line-title">

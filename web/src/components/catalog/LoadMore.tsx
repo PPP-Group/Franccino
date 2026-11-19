@@ -8,7 +8,7 @@ import type { ProductListParams } from '@/lib/api/catalog';
 import type { Paginated, ProductCard } from '@/lib/api/types';
 import { buildSrcSet } from '@/lib/images/srcset';
 import { loadMorePieces } from '@/lib/catalog/actions';
-import { loadMoreAction, type LoadMoreState, previousStart, undoLoad } from '@/lib/catalog/load-more';
+import { loadMoreAction, type LoadMoreState, previousStart } from '@/lib/catalog/load-more';
 
 type LoadMoreProps = {
   /** Filtros da listagem (os mesmos da primeira página). */
@@ -67,21 +67,12 @@ function warmCovers(products: ProductCard[]) {
   }
 }
 
-/** Rola suave até o elemento, abaixo do cabeçalho fixo. */
-function scrollToStart(element: HTMLElement | null) {
-  if (!element) return;
-  const header = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
-  const top = element.getBoundingClientRect().top - header - 16;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.scrollTo({ top: window.scrollY + top, behavior: reduce ? 'auto' : 'smooth' });
-}
-
 /**
  * "Ver mais" das listagens (revisão da Franccino, 12/11/2026, item 11): no lugar de "Próxima", o botão soma as peças da
  * página seguinte embaixo das que já estão na tela, com a contagem ("24 de 213 peças"). Depois de três vezes, vira o
  * link da página seguinte, para a página não crescer sem fim. As peças somadas ficam guardadas na aba: ao voltar de uma
- * peça, a lista volta inteira e a rolagem cai no mesmo lugar. Para voltar (retorno de 16/11/2026): "Ver menos" tira as
- * peças da última soma e "Ver as peças anteriores" abre o trecho de antes, sem depender da seta do navegador.
+ * peça, a lista volta inteira e a rolagem cai no mesmo lugar. "Ver as peças anteriores" abre o trecho de antes, sem
+ * depender da seta do navegador (o "Ver menos" saiu a pedido da Franccino, 18/11/2026).
  */
 export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHrefs }: LoadMoreProps) {
   const t = useTranslations('catalog.loadMore');
@@ -149,21 +140,6 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
     }
   }
 
-  function showLess() {
-    const updated = undoLoad(state, perPage);
-    setState(updated);
-    save(updated);
-    setFailed(false);
-    // Volta ao começo do grupo de peças que ficou por último (o primeiro, com só as da página, é o começo da lista).
-    window.requestAnimationFrame(() => {
-      const target =
-        updated.loads > 0
-          ? groups.current?.querySelector<HTMLElement>(`[data-load-group="${updated.loads - 1}"]`)
-          : document.querySelector<HTMLElement>('.catalog-results');
-      scrollToStart(target ?? null);
-    });
-  }
-
   const action = loadMoreAction(state, lastPage);
   const nextApiPage = state.page + 1;
   // O próximo grupo começa a vir assim que a lista está na tela, e de novo depois de cada "Ver mais".
@@ -182,7 +158,7 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
   return (
     <>
       {state.items.length > 0 ? (
-        // Um grupo por "Ver mais", para o "Ver menos" voltar ao começo do grupo certo.
+        // Um grupo por "Ver mais" (o "Ver menos" saiu a pedido da Franccino, 18/11/2026).
         <div ref={groups}>
           {Array.from({ length: Math.ceil(state.items.length / perPage) }, (_, group) => (
             <div key={group} className="grid-plates load-more__grid" data-load-group={group}>
@@ -197,11 +173,6 @@ export function LoadMore({ query, page, lastPage, total, shown, perPage, pageHre
         <div ref={bar} className="load-more" aria-live="polite">
           <p className="meta num">{t('count', { shown: visible, total })}</p>
           <div className="load-more__actions">
-            {state.loads > 0 ? (
-              <button type="button" className="btn btn--ghost" onClick={showLess} disabled={pending}>
-                {t('less')}
-              </button>
-            ) : null}
             {action === 'button' ? (
               <button
                 type="button"

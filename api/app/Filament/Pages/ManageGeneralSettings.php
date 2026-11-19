@@ -86,6 +86,9 @@ class ManageGeneralSettings extends SettingsPage
                         TextInput::make('pinterest_url')
                             ->label(__('Pinterest'))
                             ->url(),
+                        TextInput::make('casoca_url')
+                            ->label(__('Casoca'))
+                            ->url(),
                         TextInput::make('linkedin_url')
                             ->label(__('LinkedIn'))
                             ->url(),

@@ -6,7 +6,7 @@ import { TechTable } from './TechTable';
 vi.mock('@/i18n/navigation', async () => (await import('@/test/navigation-mock')).navigationMock);
 
 describe('TechTable', () => {
-  it('renders dimensions, files and the add button per row', () => {
+  it('renders the line, the files and the add button per row, without dimensions or designer', () => {
     const html = renderWithIntl(
       <TechTable
         rows={[
@@ -32,7 +32,8 @@ describe('TechTable', () => {
     );
     expect(html).toContain('<caption');
     expect(html).toContain('scope="col"');
-    expect(html).toContain('L 52 × P 56 × A 80 cm');
+    expect(html).not.toContain('L 52 × P 56 × A 80 cm');
+    expect(html).toContain('Franccino');
     expect(html).toContain('DWG');
     expect(html).toContain('aria-label="Baixar Bloco 2D (DWG)"');
     expect(html).toContain('aria-label="Adicionar Mesa Joey à lista de desejos"');

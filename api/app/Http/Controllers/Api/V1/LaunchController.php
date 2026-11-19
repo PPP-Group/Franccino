@@ -30,7 +30,8 @@ class LaunchController extends Controller
             ->whereLocalizedSlug($slug, $locale)
             ->with([
                 'media', 'mediaLinks', 'files' => fn ($query) => $query->published(),
-                'products' => fn ($query) => $query->published(),
+                // Só as peças que ainda são "Lançamento" (até um ano depois de entrarem no lançamento).
+                'products' => fn ($query) => Launch::onlyStillNew($query->published()),
                 'products.area', 'products.category', 'products.designer', 'products.media',
                 'products.launches' => fn ($query) => $query->published(),
             ])

@@ -23,7 +23,7 @@ export function PiecesViews({ count, grid, table }: { count: string; grid: React
             <span>{t('grid')}</span>
           </button>
           <button type="button" aria-pressed={view === 'table'} onClick={() => setView('table')}>
-            <Icon name="table" />
+            <Icon name="download" />
             <span>{t('table')}</span>
           </button>
         </div>

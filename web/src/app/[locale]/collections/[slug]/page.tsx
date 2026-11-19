@@ -121,6 +121,7 @@ export default async function CollectionPage({ params }: Props) {
           title={t('piecesTitle')}
           locale={locale}
           products={collection.products}
+          collectionSlug={collection.slug}
         />
         {collection.video ? (
           <PageVideo

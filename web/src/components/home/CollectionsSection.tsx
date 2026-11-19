@@ -76,12 +76,11 @@ export function CollectionsSection({ collections, tone }: { collections: Collect
                       />
                     ) : null}
                   </span>
-                  <div className="strip__caption">
-                    <h3 className="strip__name">{collection.name}</h3>
-                    {collection.product_count > 0 ? (
-                      <span className="meta num">{t('pieces', { count: collection.product_count })}</span>
-                    ) : null}
-                  </div>
+                  {/*
+                    O nome já vem na arte da capa (revisão da Franccino, 18/11/2026): sem legenda nem contagem embaixo;
+                    sem capa, o nome aparece.
+                  */}
+                  <h3 className={collection.cover ? 'visually-hidden' : 'strip__name'}>{collection.name}</h3>
                 </Link>
               </li>
             );

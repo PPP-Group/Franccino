@@ -11,7 +11,8 @@ describe('main navigation', () => {
       'projects',
       'factory',
       'stores',
-      'planner',
+      'downloads',
+      'contact',
     ]);
   });
 
@@ -21,7 +22,8 @@ describe('main navigation', () => {
     expect(activeNavKey('/outdoor/[category]')).toBe('products');
     expect(activeNavKey('/products')).toBe('products');
     expect(activeNavKey('/launches/[slug]')).toBe('launches');
-    expect(activeNavKey('/room-planner')).toBe('planner');
+    expect(activeNavKey('/downloads/blocks')).toBe('downloads');
+    expect(activeNavKey('/room-planner')).toBeNull();
     expect(activeNavKey('/products/[slug]')).toBe('products');
     expect(activeNavKey('/')).toBeNull();
   });

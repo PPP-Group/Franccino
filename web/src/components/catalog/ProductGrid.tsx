@@ -10,6 +10,7 @@ import { LeadPlate } from '@/components/products/LeadPlate';
 import { ProductPlate } from '@/components/products/ProductPlate';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import type { ProductCard } from '@/lib/api/types';
 import { gridFillClass } from '@/lib/catalog/grid-fill';
 
@@ -18,7 +19,7 @@ type ProductGridProps = {
   showNew?: boolean;
   /** Quantas primeiras imagens carregam com prioridade (LCP das listagens). */
   priorityCount?: number;
-  /** Completa a última linha com o bloco de ajuda (grade sempre completa, rodada 3). */
+  /** Completa a última linha com o bloco de ajuda (desligado desde 18/11/2026: a Franccino achou repetitivo). */
   fill?: boolean;
   /** Grade principal da lista: recebe em primeiro a peça de onde a lista foi aberta (`LeadPlate`). */
   lead?: boolean;
@@ -28,7 +29,7 @@ export function ProductGrid({
   products,
   showNew = false,
   priorityCount = 0,
-  fill = true,
+  fill = false,
   lead = false,
 }: ProductGridProps) {
   const fillClass = fill ? gridFillClass(products.length) : null;
@@ -56,10 +57,12 @@ function GridFill({ className }: { className: string }) {
         <p>{t('body')}</p>
       </div>
       <div className="grid-fill__links">
-        <Link className="link-arrow" href="/room-planner">
-          <span>{t('planner')}</span>
-          <Icon name="arrow" />
-        </Link>
+        {ROOM_PLANNER_ENABLED ? (
+          <Link className="link-arrow" href="/room-planner">
+            <span>{t('planner')}</span>
+            <Icon name="arrow" />
+          </Link>
+        ) : null}
         <Link className="link-arrow" href="/contact">
           <span>{t('contact')}</span>
           <Icon name="arrow" />

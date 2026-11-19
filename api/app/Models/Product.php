@@ -222,6 +222,7 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsToMany(Launch::class, 'launch_product')
             ->withPivot('sort_order')
+            ->withTimestamps()
             ->orderByPivot('sort_order');
     }
 
@@ -232,8 +233,8 @@ class Product extends Model implements HasMedia
     }
 
     /**
-     * Whether this product belongs to a published launch from the current or previous
-     * year. Uses the `launches` relation when it is already loaded, to avoid an extra
+     * Whether this product is a "Lançamento": it belongs to a published launch and entered it less than a year ago
+     * (revisão da Franccino, 18/11/2026). Uses the `launches` relation when it is already loaded, to avoid an extra
      * query when many products are checked at once.
      */
     public function isNew(): bool
@@ -241,7 +242,7 @@ class Product extends Model implements HasMedia
         $launches = $this->relationLoaded('launches') ? $this->launches : $this->launches()->get();
 
         return $launches->contains(
-            fn (Launch $launch) => $launch->is_published && $launch->year >= now()->year - 1
+            fn (Launch $launch) => $launch->is_published && Launch::stillNew($launch->getRelationValue('pivot')?->getAttribute('created_at'))
         );
     }
 }

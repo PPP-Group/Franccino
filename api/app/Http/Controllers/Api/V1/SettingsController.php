@@ -32,6 +32,7 @@ class SettingsController extends Controller
             'instagram_url' => $settings->instagram_url,
             'facebook_url' => $settings->facebook_url,
             'pinterest_url' => $settings->pinterest_url,
+            'casoca_url' => $settings->casoca_url,
             'linkedin_url' => $settings->linkedin_url,
             'youtube_url' => $settings->youtube_url,
             'footer_documents' => collect($settings->footer_documents)

@@ -161,3 +161,19 @@ it('filters by room and rejects an unknown room (revisão de 12/11/2026)', funct
     $this->getJson('/api/v1/products?room=balcony')->assertJsonPath('meta.total', 0);
     $this->getJson('/api/v1/products?room=attic')->assertStatus(422);
 });
+
+it('takes a piece out of the launch a year after it entered it', function () {
+    $indoor = area('indoor');
+    $launch = Launch::factory()->create(['year' => now()->year, 'is_published' => true]);
+    $new = Product::factory()->for($indoor)->create(['is_published' => true]);
+    $old = Product::factory()->for($indoor)->create(['is_published' => true]);
+    $launch->products()->attach([$new->id, $old->id]);
+    $launch->products()->updateExistingPivot($old->id, ['created_at' => now()->subMonths(13)]);
+    $slug = $launch->getTranslation('slug', 'pt');
+
+    $listed = collect($this->getJson('/api/v1/products?launch='.$slug)->assertOk()->json('data'))->pluck('id');
+    $shown = collect($this->getJson('/api/v1/launches/'.$slug)->assertOk()->json('data.products'))->pluck('id');
+
+    expect($listed->all())->toBe([$new->id])
+        ->and($shown->all())->toBe([$new->id]);
+});

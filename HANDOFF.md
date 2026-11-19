@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (43, de 18/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (44, de 19/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1867,3 +1867,97 @@ seção 39.
 - **Documentação da API** (`resources/views/manage/docs.blade.php`): fonte Jost; busca no topo do menu (tecla `/`),
   que filtra as funções pelo nome, pela ferramenta, pelo caminho ou pela descrição e diz quantas achou; o menu da
   esquerda marca a seção e a função que estão na tela enquanto rola e abre as funções da área atual.
+
+## 44. 19/11/2026: reunião com o Matheus (18/11) e os dois PDFs da Franccino
+
+Branch `claude/retorno-reuniao-18-11`, PR para a `develop`. Fontes: a reunião de 18/11 (Matheus), "Alterações site"
+(Marcelo) e "Revisão Website v2". Quando divergem, valeu a reunião (a mais recente), e o resto está em 44.2.
+
+- **Cabeçalho:** sempre à vista (saiu o sumir ao rolar); transparente só sobre o banner da home, branco quando o
+  conteúdo chega até ele. Menu em caixa alta pequena; Instagram, Pinterest e Casoca à direita (campo novo `casoca_url`
+  nas configurações, API e conector; o Facebook ficou vazio no preview).
+- **Menu Produtos por clique** (como a breton.co): Área interna e Área externa lado a lado, separadas por um fio, cada
+  uma com "Ver tudo" e as categorias; sem Acabamentos. Contato no lugar da Sala para montar; a Área do Profissional entrou
+  no menu.
+- **Sala para montar desligada** (`web/src/lib/features.ts`, `ROOM_PLANNER_ENABLED`): some do menu, rodapé, home,
+  catálogo, lista e sitemap, e a página responde 404. O código continua.
+- **Tipografia do site todo** (modelo franccino.lovable.app): Jost fina (300), títulos em caixa alta e espaçados e
+  menores, nomes de peça pequenos em caixa alta; cantos levemente arredondados em botões, campos e filtros
+  (`--radius-control`).
+- **Home enxuta:** banner sem texto por cima; títulos sem frase; lançamentos (carrossel sem a bolha "Arraste", sem
+  contador, sem categoria e com as laterais menores), designers logo depois (faixa em loop, ordem alfabética), áreas sem
+  "Conheça as peças", coleções sem nome e contagem embaixo da capa, ambientes, Corporativo e Fábrica. Saíram a peça
+  avulsa, os blocos técnicos e as lojas.
+- **Tabela técnica virou Downloads:** foto, nome, linha e arquivos (sem medida nem designer), peças com arquivo primeiro;
+  a troca Grade/Downloads continua nas listas. Coleção, designer e lançamento com carrossel mostram embaixo só os
+  downloads. Saiu o bloco "Gostaria de orientação na escolha?" das grades.
+- **Área do Profissional** (como a donaflormobilia.com): índice com Blocos 3D (`/area-do-profissional/blocos-3d`, a lista
+  com filtros) e Catálogos (`/area-do-profissional/catalogos`, `GET /downloads/catalogs`: arquivos do tipo Catálogo de peça,
+  designer ou lançamento). Título da página: "Biblioteca" (no painel). Prévia de fotos no hover com 3.
+- **Página da peça:** "Voltar" ao lado do caminho; Fotos/3D menores e arredondados; designer sem fotos das peças;
+  esteiras em fundo branco; a nota de acabamento foi para Materiais; GLB "(AR)"; desenho das medidas menor.
+- **Outros:** listas sem "Ver menos"; Acabamentos em grupos que abrem; coleções abrem uma da esquerda e outra da direita;
+  Lançamentos sem contagem; cartão do ponto arredondado; "New arrivals" no inglês (`/en/new-arrivals`, com 308 do
+  `/en/novelties`).
+- **No preview, pelo conector:** Grupo Robusti virou "Franccino Ribeirão Preto" (loja exclusiva); Facebook vazio; título da
+  Área do Profissional "Biblioteca"; inglês das 10 peças que faltavam (Sofá Tokio, Tendas Tokio e Porto, Poltrona Tagli,
+  Revisteiro Marine, Ombrelone Sunless, Mesa Bistro Treviso, Mesas de cabeceira Alfa, Belo e Xovê).
+- **Verificação:** site com lint, typecheck, 501 testes e build; API com 595 testes, Pint e Larastan; telas conferidas
+  num `next dev` contra a API do preview.
+
+### 44.1 Depois do deploy
+
+- A migração de configurações cria o Casoca com o endereço da Franccino.
+
+### 44.2 Para decidir com a Franccino
+
+- Paginação do "Ver mais" (hoje: 3 somas e depois a página seguinte); o Matheus vai confirmar.
+- Página da peça no estilo jaderalmeida.com e medidas desenhadas a partir do 2D: esperando a referência do Matheus.
+- Fonte dos títulos: o PDF do Marcelo ainda não chegou (a tipografia segue o lovable por enquanto).
+- No Linear: "Ver mais" (PPP-138), captcha (PPP-139), AdOpt (PPP-140) e vídeo próprio da Fábrica (PPP-141).
+
+### 44.3 Mesmo dia: o item 3 da revisão (aprovado pelo Pedro Ivo)
+
+- **WhatsApp em todas as páginas** (`WhatsappButton`, `lib/contact/whatsapp-cities.ts`): "Em que cidade você está?",
+  e o toque leva ao WhatsApp da loja (com mais de uma loja na cidade, a pessoa escolhe). Usa o WhatsApp da loja ou, sem
+  ele, o celular do telefone; fixo não entra. "Minha cidade não está na lista" vai para o WhatsApp de orçamentos.
+  Hoje só Porto Alegre tem WhatsApp cadastrado: vale preencher o WhatsApp de cada loja no painel.
+- **Baixar todos os arquivos da coleção:** `POST /collections/{slug}/download` monta um zip (uma pasta por peça) na
+  fila na primeira vez e serve o mesmo zip enquanto nada muda; mesmo cadastro dos downloads. Botão no fim dos downloads
+  da coleção.
+- **Lançamento com prazo:** a peça é "Lançamento" por 12 meses a partir de quando entrou no lançamento
+  (`launch_product.created_at`, migration `2026_11_19_110000`; as que já estavam contam a partir do deploy). A rotina
+  `lancamentos-com-prazo` (04h10) avisa o site quando alguma passa do prazo.
+- **Mailchimp:** inscrição, descadastro e nome vão para a audiência com `MAILCHIMP_API_KEY` e `MAILCHIMP_AUDIENCE_ID` na
+  API (`docs/runbook-deploy.md`). Sem as duas, nada sai do site.
+- **Página da peça:** referências e três caminhos em https://claude.ai/artifact/Va4MrJRnnw75dQeQ7dmvcq, para decidir
+  com a Franccino antes de implementar.
+- **Auditoria do site antigo × preview** (só leitura, arquivos na área temporária da sessão): 171 fotos que faltam em
+  108 peças (a conferir a olho), 21 descrições vazias no novo, 148 fichas técnicas em PDF que não vieram, foto para
+  Estante Bloco e Sofá Pinot Square, a Mesa de Cabeceira Isa (não cadastrada), a loja Franccino CasaShopping e 3 posts do
+  blog sem equivalente. O envio está na 44.4.
+
+### 44.4 Mesmo dia: o que a auditoria achou, no preview, e a prévia da página da peça
+
+Com o ok do Pedro Ivo, tudo foi enviado pelo conector (nada passou pelo repositório):
+
+- **Textos:** frase e descrição do site antigo nas 21 peças que estavam vazias, em português, e a tradução para o inglês.
+- **Fotos:** 170 das 171 na galeria de 108 peças (10 com o endereço `-scaled`, porque o original dá 404). A `Cama.webp`
+  é da Cama Lenyr e não entrou na Cama Link.
+- **Capas:** as 86 candidatas revistas a olho; 17 trocadas pela diagonal virada para a esquerda (a antiga foi para a
+  galeria) e capa nova na Estante Bloco e no Sofá Pinot Square, que não tinham foto. Ficaram como estavam, com dúvida:
+  Mesa de Centro Kit, Mesa de centro Trem, Mesa Polux e Mesa de Jantar ARP (a candidata tem a ponta esquerda mais perto),
+  Poltrona Samarti e Sofá Royale (o site antigo mostra outra peça), Sofá Samburá Oblongo e Cama Link.
+- **Fotos sem fundo a refazer** (eram da capa antiga): Buffet Bloco, Cadeira ARP, Cadeira Sirius, Penteadeira Lenyr,
+  Poltrona ARP, Sofá Majestic e Sofá Tasca (`design/recortes/recortar.py` e a importação em massa).
+- **Fichas técnicas:** 156 PDFs em 148 peças. As da Mesa de jantar Eros e da Poltrona Maria no site antigo são o catálogo
+  inteiro (85 MB): a página de cada uma foi separada (páginas 28 e 1) e falta enviar pela importação ou pelo painel.
+- **Mesa de Cabeceira Isa:** criada (peça 402, área interna, Estúdio Franccino, três larguras), com a capa e duas fotos
+  de detalhe; o redirecionamento `/produto/mesa-de-cabeceira-isa` aponta para ela. Falta frase, materiais e inglês.
+- **CasaShopping:** já existe como "Franccino RJ" (mesmo endereço). Renomear é decisão do Pedro Ivo.
+- **De passagem:** a Cadeira Dara Outdoor tem como bloco SketchUp o arquivo da versão Indoor.
+
+**Página da peça:** PDF "Franccino - página da peça, duas versões (19-11)" para a Franccino escolher, com a Chaise Cocê
+(fotos, textos e arquivos reais, no computador e no celular): versão 1, esteira em fundo branco e ficha organizada
+(recomendada); versão 2, editorial com a abertura em tela cheia. Entregue ao Pedro Ivo; não está no repositório. A
+implementação espera a escolha (PPP-43).

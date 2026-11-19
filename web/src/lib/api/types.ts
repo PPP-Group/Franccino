@@ -380,6 +380,8 @@ export type Settings = {
   instagram_url: string | null;
   facebook_url: string | null;
   pinterest_url: string | null;
+  /** Perfil no Casoca (18/11/2026); opcional enquanto a API publicada não manda o campo. */
+  casoca_url?: string | null;
   linkedin_url: string | null;
   youtube_url: string | null;
   /** Rótulo no idioma pedido e URL absoluta. */
