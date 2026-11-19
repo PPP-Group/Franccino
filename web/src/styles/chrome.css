@@ -616,6 +616,53 @@ body:has(.hero--full) #conteudo {
   }
 }
 
+/* Instagram, Pinterest e Casoca à direita do menu (18/11/2026); no menu recolhido, no fim do menu aberto. */
+.header-social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header-social a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  min-height: 44px;
+  color: var(--header-fg-muted);
+  text-decoration: none;
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.header-social a:hover,
+.header-social a:focus-visible {
+  color: var(--header-fg);
+}
+
+.header-social__name {
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.header-social--menu {
+  display: none;
+}
+
+@media (max-width: 1180px) {
+  .tools > .header-social {
+    display: none;
+  }
+
+  .nav.is-open .header-social--menu {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+}
+
 /* O PT/EN do menu aberto só existe no celular (no resto, ele fica na barra). */
 .nav__lang {
   display: none;

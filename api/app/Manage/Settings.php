@@ -26,6 +26,7 @@ final class Settings
         'instagram_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'Instagram.'],
         'facebook_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'Facebook.'],
         'pinterest_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'Pinterest.'],
+        'casoca_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'Casoca.'],
         'linkedin_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'LinkedIn.'],
         'youtube_url' => ['kind' => 'string', 'max' => 255, 'format' => 'url', 'description' => 'YouTube.'],
     ];

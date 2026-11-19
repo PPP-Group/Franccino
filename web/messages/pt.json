@@ -38,7 +38,7 @@
     "terms": "Termos e Condições de Uso",
     "wordmark": "Franccino",
     "factory": "Fábrica: {address}",
-    "catalog": "Catálogo",
+    "catalog": "Produtos",
     "service": "Atendimento",
     "newsletter": "Novidades por e-mail",
     "quotesWhatsapp": "Orçamentos",
@@ -51,7 +51,8 @@
       "facebook": "Facebook",
       "pinterest": "Pinterest",
       "linkedin": "LinkedIn",
-      "youtube": "YouTube"
+      "youtube": "YouTube",
+      "casoca": "Casoca"
     },
     "vortex": "Uma solução Vortex"
   },

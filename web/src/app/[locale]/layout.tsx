@@ -79,6 +79,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           </a>
           <JsonLd data={organizationJsonLd(settings)} />
           <SiteHeader
+            settings={settings}
             menus={navMenus(indoor, outdoor, collections)}
             tabImages={navTabImages(
               indoor,

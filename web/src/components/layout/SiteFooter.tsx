@@ -152,7 +152,9 @@ export function SiteFooter({ settings }: { settings: Settings }) {
             {socialLinks(settings).map((link) => (
               <li key={link.platform}>
                 <a className="footer-icon-link" href={link.url} rel="noopener noreferrer" target="_blank">
-                  {link.platform === 'instagram' || link.platform === 'facebook' ? (
+                  {link.platform === 'instagram' ||
+                  link.platform === 'facebook' ||
+                  link.platform === 'pinterest' ? (
                     <BrandIcon name={link.platform} size={18} />
                   ) : null}
                   {t(`social.${link.platform}`)}

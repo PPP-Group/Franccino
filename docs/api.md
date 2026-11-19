@@ -310,6 +310,7 @@ type Settings = {
   instagram_url: string | null;
   facebook_url: string | null;
   pinterest_url: string | null;
+  casoca_url: string | null;
   linkedin_url: string | null;
   youtube_url: string | null;
   footer_documents: { label: string; url: string }[]; // label no idioma pedido, url absoluta

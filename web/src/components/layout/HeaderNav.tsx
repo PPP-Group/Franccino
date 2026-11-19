@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
   useEffect,
   useRef,
   useState,
@@ -71,7 +72,18 @@ function entryHref(menu: NavMenuKey, slug: string) {
   return categoryHref(menu, slug);
 }
 
-export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: NavTabImages }) {
+export function HeaderNav({
+  menus,
+  tabImages,
+  social = null,
+  socialInMenu = null,
+}: {
+  menus: NavMenus;
+  tabImages: NavTabImages;
+  /** Instagram, Pinterest e Casoca (HeaderSocial): na barra no computador e no fim do menu aberto no celular. */
+  social?: ReactNode;
+  socialInMenu?: ReactNode;
+}) {
   const t = useTranslations('header');
   const nav = useTranslations('nav');
   const pathname = usePathname();
@@ -464,8 +476,10 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
         <div className="nav__lang">
           <LanguageSwitcher />
         </div>
+        {socialInMenu}
       </nav>
       <div className="tools">
+        {social}
         <HeaderSearch />
         <LanguageSwitcher />
         <QuoteListLink />
