@@ -1914,6 +1914,25 @@ Branch `claude/retorno-reuniao-18-11`, PR para a `develop`. Fontes: a reunião d
 - Paginação do "Ver mais" (hoje: 3 somas e depois a página seguinte); o Matheus vai confirmar.
 - Página da peça no estilo jaderalmeida.com e medidas desenhadas a partir do 2D: esperando a referência do Matheus.
 - Fonte dos títulos: o PDF do Marcelo ainda não chegou (a tipografia segue o lovable por enquanto).
-- Botão de WhatsApp em todas as páginas com escolha de cidade; baixar todos os arquivos da coleção de uma vez; tempo de
-  "Lançamento" de 1 ano; integração com o Mailchimp; captcha (Turnstile pede a conta da Cloudflare); AdOpt pelo Tag Manager.
-- Vídeo próprio da Fábrica no lugar do YouTube: falta o MP4 ("Conheça a Franccino").
+- No Linear: "Ver mais" (PPP-138), captcha (PPP-139), AdOpt (PPP-140) e vídeo próprio da Fábrica (PPP-141).
+
+### 44.3 Mesmo dia: o item 3 da revisão (aprovado pelo Pedro Ivo)
+
+- **WhatsApp em todas as páginas** (`WhatsappButton`, `lib/contact/whatsapp-cities.ts`): "Em que cidade você está?",
+  e o toque leva ao WhatsApp da loja (com mais de uma loja na cidade, a pessoa escolhe). Usa o WhatsApp da loja ou, sem
+  ele, o celular do telefone; fixo não entra. "Minha cidade não está na lista" vai para o WhatsApp de orçamentos.
+  Hoje só Porto Alegre tem WhatsApp cadastrado: vale preencher o WhatsApp de cada loja no painel.
+- **Baixar todos os arquivos da coleção:** `POST /collections/{slug}/download` monta um zip (uma pasta por peça) na
+  fila na primeira vez e serve o mesmo zip enquanto nada muda; mesmo cadastro dos downloads. Botão no fim dos downloads
+  da coleção.
+- **Lançamento com prazo:** a peça é "Lançamento" por 12 meses a partir de quando entrou no lançamento
+  (`launch_product.created_at`, migration `2026_11_19_110000`; as que já estavam contam a partir do deploy). A rotina
+  `lancamentos-com-prazo` (04h10) avisa o site quando alguma passa do prazo.
+- **Mailchimp:** inscrição, descadastro e nome vão para a audiência com `MAILCHIMP_API_KEY` e `MAILCHIMP_AUDIENCE_ID` na
+  API (`docs/runbook-deploy.md`). Sem as duas, nada sai do site.
+- **Página da peça:** referências e três caminhos em https://claude.ai/artifact/Va4MrJRnnw75dQeQ7dmvcq, para decidir
+  com a Franccino antes de implementar.
+- **Auditoria do site antigo × preview** (só leitura, arquivos na área temporária da sessão): 171 fotos que faltam em
+  108 peças (a conferir a olho), 21 descrições vazias no novo, 148 fichas técnicas em PDF que não vieram, foto para
+  Estante Bloco e Sofá Pinot Square, a Mesa de Cabeceira Isa (não cadastrada), a loja Franccino CasaShopping e 3 posts do
+  blog sem equivalente. Nada foi enviado: espera o ok do Pedro Ivo.
