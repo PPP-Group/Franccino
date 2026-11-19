@@ -28,31 +28,28 @@ function isMenuKey(key: string): key is NavMenuKey {
   return key === 'products' || key === 'indoor' || key === 'outdoor' || key === 'collections';
 }
 
-/** Linhas que viram abas no painel de Produtos, na ordem da referência da Franccino (Área interna, Área externa). */
+/** As duas colunas do painel de Produtos, na ordem da referência da Franccino (Área interna, Área externa). */
 const PRODUCT_AREAS: AreaMenuKey[] = ['indoor', 'outdoor'];
 
-/** Ids das abas na prévia de foto do painel (os itens da lista usam a posição, de 0 em diante). */
-const TAB_PEEK_IDS: Record<AreaMenuKey | 'finishes', number> = {
-  indoor: 10_001,
-  outdoor: 10_002,
-  finishes: 10_003,
-};
+/** Ids da prévia de foto no painel de Produtos: categorias da área externa depois das da interna, e as capas das áreas. */
+const OUTDOOR_PEEK_OFFSET = 1_000;
+const AREA_PEEK_IDS: Record<AreaMenuKey, number> = { indoor: 10_001, outdoor: 10_002 };
 
 /**
  * Fotos que flutuam no hover dos itens do painel (retorno de 17/11/2026, como nos filtros): a capa de cada categoria,
- * coleção, área e de Acabamentos. Item sem capa fica sem foto.
+ * coleção e área. Item sem capa fica sem foto.
  */
-function panelPeeks(entries: AreaMenuCategory[], tabs: NavTabImages | null): RowPeekItem[] {
-  const items: RowPeekItem[] = entries.flatMap((entry, index) =>
-    entry.image ? [{ id: index, images: [entry.image] }] : [],
+function panelPeeks(entries: AreaMenuCategory[], offset = 0): RowPeekItem[] {
+  return entries.flatMap((entry, index) =>
+    entry.image ? [{ id: offset + index, images: [entry.image] }] : [],
   );
-  if (tabs) {
-    for (const [key, image] of Object.entries(tabs) as [
-      keyof NavTabImages,
-      NavTabImages[keyof NavTabImages],
-    ][]) {
-      if (image) items.push({ id: TAB_PEEK_IDS[key], images: [image] });
-    }
+}
+
+function productsPeeks(menus: NavMenus, tabs: NavTabImages): RowPeekItem[] {
+  const items = [...panelPeeks(menus.indoor), ...panelPeeks(menus.outdoor, OUTDOOR_PEEK_OFFSET)];
+  for (const area of PRODUCT_AREAS) {
+    const image = tabs[area];
+    if (image) items.push({ id: AREA_PEEK_IDS[area], images: [image] });
   }
   return items;
 }
@@ -83,8 +80,6 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
   // lista completa; o painel abre só ao passar o mouse (com a intenção de hover) ou pela seta ao lado do nome (teclado,
   // toque e leitor de tela; a seta para baixo no nome também abre). No menu recolhido, a seta abre a sanfona.
   const [panel, setPanel] = useState<NavMenuKey | null>(null);
-  // Aba do painel de Produtos: nenhuma (todas as categorias) ou uma das linhas (só as categorias dela).
-  const [productsTab, setProductsTab] = useState<AreaMenuKey | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
   // Aberto pela seta (ou pelo teclado): fica aberto quando o mouse sai, até Esc, clique fora ou outro clique.
@@ -110,7 +105,6 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
   }
 
   function closePanel() {
-    setProductsTab(null);
     cancelClose();
     cancelOpen();
     pinned.current = false;
@@ -325,7 +319,78 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
           }
           const panelId = `nav-panel-${area}`;
           const expanded = panel === area;
-          const listed = area === 'products' && productsTab ? menus[productsTab] : entries;
+          // Produtos abre por clique, não pelo hover (reunião com a Franccino, 18/11/2026, como na breton.co): o nome
+          // é um botão que abre o painel com a Área interna e a Área externa lado a lado.
+          if (area === 'products') {
+            return (
+              <div
+                key={area}
+                className={expanded ? 'nav-area nav-area--click is-open' : 'nav-area nav-area--click'}
+              >
+                <button
+                  type="button"
+                  className="nav-area__trigger"
+                  data-panel-trigger={area}
+                  data-active={area === active ? 'true' : undefined}
+                  aria-expanded={expanded}
+                  aria-controls={panelId}
+                  onKeyDown={(event) => keyDownTrigger(area, event)}
+                  onClick={() => clickTrigger(area)}
+                >
+                  {nav(area)}
+                  <Icon name="chevron" />
+                </button>
+                <div id={panelId} className="nav-panel" hidden={!expanded}>
+                  <div className="wrap nav-panel__inner nav-panel__areas">
+                    {PRODUCT_AREAS.filter((line) => menus[line].length > 0).map((line) => (
+                      <div key={line} className="nav-panel__area">
+                        <p className="nav-panel__heading">{nav(line)}</p>
+                        <Link
+                          className="nav-panel__see-all"
+                          href={line === 'outdoor' ? '/outdoor' : '/indoor'}
+                          data-row-id={tabImages[line] ? AREA_PEEK_IDS[line] : undefined}
+                          onClick={() => {
+                            closePanel();
+                            setOpen(false);
+                          }}
+                        >
+                          {t('seeAllLine')}
+                        </Link>
+                        <ul className="nav-panel__list">
+                          {menus[line].map((entry, index) => (
+                            <li key={entry.slug}>
+                              <Link
+                                data-row-id={
+                                  entry.image
+                                    ? index + (line === 'outdoor' ? OUTDOOR_PEEK_OFFSET : 0)
+                                    : undefined
+                                }
+                                href={categoryHref(line, entry.slug)}
+                                onClick={() => {
+                                  closePanel();
+                                  setOpen(false);
+                                }}
+                              >
+                                {entry.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  {expanded ? (
+                    <RowPeek
+                      items={productsPeeks(menus, tabImages)}
+                      container=".nav-panel__inner"
+                      className="row-peek--top"
+                      natural
+                    />
+                  ) : null}
+                </div>
+              </div>
+            );
+          }
           return (
             <div
               key={area}
@@ -360,59 +425,20 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
               </button>
               <div id={panelId} className="nav-panel" hidden={!expanded}>
                 <div className="wrap nav-panel__inner">
-                  {area === 'products' ? (
-                    <div className="nav-panel__tabs" role="group" aria-label={nav('products')}>
-                      {PRODUCT_AREAS.filter((line) => menus[line].length > 0).map((line) => (
-                        <div key={line} className="nav-panel__tab">
-                          <button
-                            type="button"
-                            data-row-id={TAB_PEEK_IDS[line]}
-                            aria-pressed={productsTab === line}
-                            onClick={() => setProductsTab((current) => (current === line ? null : line))}
-                          >
-                            {nav(line)}
-                          </button>
-                          <Link
-                            className="nav-panel__see-all"
-                            href={line === 'outdoor' ? '/outdoor' : '/indoor'}
-                            onClick={() => setOpen(false)}
-                          >
-                            {t('seeAllLine')}
-                          </Link>
-                        </div>
-                      ))}
-                      {/* Acabamentos ao lado das áreas (retorno de 13/11/2026: a página só se achava pelo endereço). */}
-                      <div className="nav-panel__tab">
-                        <Link
-                          className="nav-panel__tab-link"
-                          href="/finishes"
-                          data-row-id={TAB_PEEK_IDS.finishes}
-                          onClick={() => setOpen(false)}
-                        >
-                          {nav('finishes')}
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <Link
-                      className="nav-panel__all"
-                      href={item.href}
-                      aria-current={area === active ? 'page' : undefined}
-                      onClick={() => setOpen(false)}
-                    >
-                      {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
-                    </Link>
-                  )}
+                  <Link
+                    className="nav-panel__all"
+                    href={item.href}
+                    aria-current={area === active ? 'page' : undefined}
+                    onClick={() => setOpen(false)}
+                  >
+                    {area === 'collections' ? t('collectionsAll') : t('areaAll', { area: nav(area) })}
+                  </Link>
                   <ul className="nav-panel__list">
-                    {listed.map((entry, index) => (
+                    {entries.map((entry, index) => (
                       <li key={entry.slug}>
                         <Link
                           data-row-id={entry.image ? index : undefined}
-                          href={
-                            area === 'products' && productsTab
-                              ? categoryHref(productsTab, entry.slug)
-                              : entryHref(area, entry.slug)
-                          }
+                          href={entryHref(area, entry.slug)}
                           onClick={() => setOpen(false)}
                         >
                           {entry.name}
@@ -424,7 +450,7 @@ export function HeaderNav({ menus, tabImages }: { menus: NavMenus; tabImages: Na
                 {/* Ao lado do conteúdo do painel (a prévia procura `.nav-panel__inner` entre os irmãos). */}
                 {expanded ? (
                   <RowPeek
-                    items={panelPeeks(listed, area === 'products' ? tabImages : null)}
+                    items={panelPeeks(entries)}
                     container=".nav-panel__inner"
                     className="row-peek--top"
                     natural

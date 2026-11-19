@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { BrandIcon } from '@/components/ui/BrandIcon';
 import { Link } from '@/i18n/navigation';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import type { Settings } from '@/lib/api/types';
 import { telHref, whatsappUrl } from '@/lib/contact-links';
 import { socialLinks } from '@/lib/settings';
@@ -56,12 +57,12 @@ export function SiteFooter({ settings }: { settings: Settings }) {
               <li>
                 <Link href="/collections">{nav('collections')}</Link>
               </li>
-              <li>
-                <Link href="/finishes">{nav('finishes')}</Link>
-              </li>
-              <li>
-                <Link href="/room-planner">{nav('planner')}</Link>
-              </li>
+              {/* Acabamentos fica só dentro das peças (reunião de 18/11/2026); a Sala para montar está desligada. */}
+              {ROOM_PLANNER_ENABLED ? (
+                <li>
+                  <Link href="/room-planner">{nav('planner')}</Link>
+                </li>
+              ) : null}
             </ul>
           </section>
 

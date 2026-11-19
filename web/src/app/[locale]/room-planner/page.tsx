@@ -5,6 +5,8 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import type { Locale } from '@/i18n/config';
 import { loadPlannerProducts } from '@/lib/planner/data';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
+import { notFound } from 'next/navigation';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -25,6 +27,7 @@ export default async function RoomPlannerPage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = raw as Locale;
   setRequestLocale(locale);
+  if (!ROOM_PLANNER_ENABLED) notFound();
   const [t, common, library] = await Promise.all([
     getTranslations({ locale, namespace: 'planner' }),
     getTranslations({ locale, namespace: 'common' }),

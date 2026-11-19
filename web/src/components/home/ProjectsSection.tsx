@@ -46,7 +46,6 @@ export function ProjectsSection({ projects, tone }: { projects: ProjectCard[]; t
         <div className="section-head" data-reveal="">
           <div>
             <h2 id="projects-title">{t('title')}</h2>
-            <p className="lead">{t('lead')}</p>
           </div>
           <Link className="link-arrow" href="/projects">
             <span>{t('all')}</span>

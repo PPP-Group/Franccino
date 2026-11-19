@@ -3,7 +3,7 @@ import type { CollectionCard, ProjectCard } from '@/lib/api/types';
 import { image } from '@/test/fixtures';
 import { renderWithIntl } from '@/test/intl';
 import { CollectionsSection, stripLayout } from './CollectionsSection';
-import { designersShown } from './DesignersSection';
+import { designersInRail } from './DesignersSection';
 import { mosaicCount, ProjectsSection } from './ProjectsSection';
 import { alternateTones, sectionClass } from './tone';
 
@@ -54,13 +54,13 @@ describe('stripLayout', () => {
 });
 
 describe('CollectionsSection', () => {
-  it('shows only collections with a cover, at most six, with the piece count', () => {
+  it('shows only collections with a cover, at most six, without the name or count under the cover', () => {
     const list = [...Array.from({ length: 7 }, (_, i) => collection(i + 1)), collection(9, { cover: null })];
     const html = renderWithIntl(<CollectionsSection collections={list} tone="sand" />);
     expect(html).toContain('section section--sand');
     expect(html.match(/class="strip strip--/g)).toHaveLength(6);
     expect(html).not.toContain('Coleção 7');
-    expect(html).toContain('4 peças');
+    expect(html).not.toContain('4 peças');
     expect(html).toContain('hover-zoom');
     expect(html).toContain('data-reveal="curtain"');
   });
@@ -91,9 +91,12 @@ describe('ProjectsSection', () => {
   });
 });
 
-describe('designersShown', () => {
-  it('fills the row: four with four or more, else one column each', () => {
-    expect(designersShown(9)).toBe(4);
-    expect(designersShown(3)).toBe(3);
+describe('designersInRail', () => {
+  it('lists every designer in alphabetical order, so no one comes first', () => {
+    const names = (list: { name: string }[]) => list.map((designer) => designer.name);
+    const designers = ['Zia Costa', 'Andrea Zanocchi', 'Marina Linhares'].map(
+      (name, index) => ({ id: index, slug: `d-${index}`, name, portrait: null }) as never,
+    );
+    expect(names(designersInRail(designers))).toEqual(['Andrea Zanocchi', 'Marina Linhares', 'Zia Costa']);
   });
 });

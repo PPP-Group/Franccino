@@ -10,6 +10,7 @@ import { LeadPlate } from '@/components/products/LeadPlate';
 import { ProductPlate } from '@/components/products/ProductPlate';
 import { Icon } from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import type { ProductCard } from '@/lib/api/types';
 import { gridFillClass } from '@/lib/catalog/grid-fill';
 
@@ -56,10 +57,12 @@ function GridFill({ className }: { className: string }) {
         <p>{t('body')}</p>
       </div>
       <div className="grid-fill__links">
-        <Link className="link-arrow" href="/room-planner">
-          <span>{t('planner')}</span>
-          <Icon name="arrow" />
-        </Link>
+        {ROOM_PLANNER_ENABLED ? (
+          <Link className="link-arrow" href="/room-planner">
+            <span>{t('planner')}</span>
+            <Icon name="arrow" />
+          </Link>
+        ) : null}
         <Link className="link-arrow" href="/contact">
           <span>{t('contact')}</span>
           <Icon name="arrow" />

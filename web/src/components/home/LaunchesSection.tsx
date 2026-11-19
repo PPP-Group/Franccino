@@ -15,7 +15,6 @@ export function LaunchesSection({ launch, products, tone }: LaunchesSectionProps
         <div className="section-head" data-reveal="">
           <div>
             <h2 id="launches-title">{t('title')}</h2>
-            <p className="lead">{launch.summary ?? launch.title}</p>
           </div>
           <Link className="link-arrow" href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}>
             <span>{t('viewAll')}</span>

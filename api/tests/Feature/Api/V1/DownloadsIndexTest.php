@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Designer;
 use App\Models\Product;
 use App\Models\ProductFile;
 
@@ -39,4 +40,29 @@ it('filters by file type and lists the formats with how many pieces have each', 
             ['format' => 'SKP', 'count' => 2],
             ['format' => 'GLB', 'count' => 1],
         ]);
+});
+
+it('lists the published catalogs of published owners, with the owner name and cover', function () {
+    $designer = Designer::factory()->create(['is_published' => true, 'name' => 'Marina Linhares']);
+    ProductFile::factory()->create([
+        'product_id' => null,
+        'designer_id' => $designer->id,
+        'type' => 'catalog',
+        'format' => 'PDF',
+        'is_published' => true,
+        'title' => ['pt' => 'Catálogo Gerais'],
+    ]);
+    $hidden = Designer::factory()->create(['is_published' => false]);
+    ProductFile::factory()->create(['product_id' => null, 'designer_id' => $hidden->id, 'type' => 'catalog', 'is_published' => true]);
+    ProductFile::factory()->create(['product_id' => null, 'designer_id' => $designer->id, 'type' => 'catalog', 'is_published' => false]);
+    ProductFile::factory()->for(publishedProduct())->create(['type' => 'block_3d', 'is_published' => true]);
+
+    $response = $this->getJson('/api/v1/downloads/catalogs')->assertOk();
+
+    expect($response->json('data'))->toHaveCount(1)
+        ->and($response->json('data.0.file.title'))->toBe('Catálogo Gerais')
+        ->and($response->json('data.0.file.format'))->toBe('PDF')
+        ->and($response->json('data.0.owner'))->toBe(['type' => 'designer', 'name' => 'Marina Linhares', 'slug' => $designer->slug])
+        ->and($response->json('data.0.cover'))->toBeNull();
+    $response->assertJsonMissingPath('data.0.file.path');
 });

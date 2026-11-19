@@ -4,6 +4,7 @@
  * `alternates.languages` for the other enabled locales.
  */
 
+import { ROOM_PLANNER_ENABLED } from '@/lib/features';
 import type { MetadataRoute } from 'next';
 import type { Locale } from '@/i18n/config';
 import { defaultLocale, htmlLang } from '@/i18n/config';
@@ -87,7 +88,12 @@ function entryFor(href: Href, locales: Locale[], lastModified?: string): Metadat
 }
 
 /** Rotas que só existem no site (não vêm de `/sitemap` da API). A lista de orçamento fica fora (`noindex`). */
-const WEB_ONLY_ROUTES: Href[] = [{ pathname: '/room-planner' }, { pathname: '/site-map' }];
+const WEB_ONLY_ROUTES: Href[] = [
+  ...(ROOM_PLANNER_ENABLED ? [{ pathname: '/room-planner' } as const] : []),
+  { pathname: '/downloads/blocks' },
+  { pathname: '/downloads/catalogs' },
+  { pathname: '/site-map' },
+];
 
 export function webOnlyEntries(locales: Locale[]): MetadataRoute.Sitemap {
   return WEB_ONLY_ROUTES.map((href) => entryFor(href, locales));

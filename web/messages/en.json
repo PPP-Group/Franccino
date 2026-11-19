@@ -372,7 +372,7 @@
     "view": {
       "label": "View",
       "grid": "Grid",
-      "table": "Technical table"
+      "table": "Downloads"
     },
     "products": {
       "title": "Products",
@@ -389,13 +389,11 @@
       "empty": "No novelties have been published at the moment."
     },
     "table": {
-      "label": "Technical table",
-      "caption": "Pieces with line, designer, dimensions and technical files",
+      "label": "Downloads",
+      "caption": "Pieces with line and technical files to download",
       "image": "Image",
       "piece": "Piece",
       "area": "Line",
-      "designer": "Designer",
-      "dimensions": "Dimensions",
       "files": "Files",
       "list": "Wishlist",
       "empty": "—",
@@ -507,6 +505,18 @@
       "sending": "Sending…",
       "cancel": "Cancel",
       "failed": "We could not complete your registration. Please try again."
+    },
+    "blocks": {
+      "title": "3D blocks and technical sheets",
+      "lead": "Each piece's files for your project: SketchUp, Revit, AutoCAD, 3D model and technical sheets.",
+      "short": "SketchUp, Revit, AutoCAD, 3D model and technical sheets for each piece."
+    },
+    "catalogs": {
+      "title": "Catalogs",
+      "lead": "Catalogs of our collections and lines, to download.",
+      "short": "Catalogs of our collections and lines, in PDF.",
+      "empty": "Catalogs will be available here soon.",
+      "download": "Download"
     }
   },
   "planner": {
@@ -618,9 +628,9 @@
       "cta": "Discover the factory"
     },
     "technical": {
-      "title": "For specifiers",
-      "lead": "Dimensions and technical files for every piece, gathered in a single table.",
-      "cta": "Access the technical area"
+      "title": "Downloads",
+      "lead": "3D and 2D blocks and technical sheets of each piece, to download.",
+      "cta": "See all downloads"
     },
     "stores": {
       "title": "Discover the pieces in our stores",
@@ -912,11 +922,8 @@
     "slideRoleDescription": "piece",
     "slide": "{current} of {total}: {name}",
     "status": "{current} of {total}: {name}",
-    "counter": "{current} / {total}",
-    "meta": "{category} · {area}",
     "previous": "Previous piece",
-    "next": "Next piece",
-    "drag": "Drag"
+    "next": "Next piece"
   },
   "featurePiece": {
     "label": "Featured piece",

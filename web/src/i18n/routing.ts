@@ -27,6 +27,9 @@ export const pathnames = {
   '/factory': { pt: '/fabrica', en: '/factory' },
   '/finishes': { pt: '/acabamentos', en: '/finishes' },
   '/downloads': { pt: '/area-do-profissional', en: '/professionals' },
+  // Área do Profissional como a da donaflormobilia.com (reunião de 18/11/2026): blocos das peças e catálogos.
+  '/downloads/blocks': { pt: '/area-do-profissional/blocos-3d', en: '/professionals/3d-blocks' },
+  '/downloads/catalogs': { pt: '/area-do-profissional/catalogos', en: '/professionals/catalogs' },
   '/stores': { pt: '/lojas', en: '/stores' },
   '/contact': { pt: '/contato', en: '/contact' },
   '/faq': { pt: '/tire-suas-duvidas', en: '/faq' },

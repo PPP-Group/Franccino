@@ -16,7 +16,7 @@ export function primaryDimension(dimensions: Dimension[]): Dimension | null {
  * Quantas fotos saem da linha da tabela no hover (capa e as primeiras da galeria), abertas lado a lado. Com mais
  * fotos, a última vira uma pilha (retorno de 16/11/2026), por isso a prévia guarda uma a mais.
  */
-export const PREVIEW_COUNT = 4;
+export const PREVIEW_COUNT = 3;
 
 /** As fotos da prévia: as que aparecem e uma a mais, para saber se a última vira pilha. */
 export function previewImages(images: Image[]): Image[] {
@@ -46,6 +46,11 @@ export function toTechnicalRow(detail: ProductDetail): TechnicalRow {
     preview: previewImages(galleryImages(detail)),
     colors: colorCovers(detail),
   };
+}
+
+/** Downloads (reunião de 18/11/2026): as peças com arquivo primeiro, na ordem do catálogo dentro de cada grupo. */
+export function withFilesFirst(rows: TechnicalRow[]): TechnicalRow[] {
+  return [...rows.filter((row) => row.files.length > 0), ...rows.filter((row) => row.files.length === 0)];
 }
 
 /**

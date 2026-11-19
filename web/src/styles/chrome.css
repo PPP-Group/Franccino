@@ -28,24 +28,8 @@
   color: var(--header-fg);
 }
 
-/*
-  Some ao rolar para baixo e volta ao rolar para cima (`data-header-hide`, BootScript). Com um painel aberto (menu, busca)
-  ou o foco dentro dele, fica à vista. O movimento (transição) está em motion.css.
-*/
-html[data-header-hide] .site-header:not(:has([aria-expanded='true'], :focus-within)) {
-  transform: translateY(-100%);
-}
-
-/*
-  O que fica preso embaixo do cabeçalho (a barra de filtros do catálogo, os índices laterais) sobe junto quando ele
-  some e desce junto quando ele volta (retorno de 12/11/2026: os filtros ficavam soltos no meio da tela).
-*/
 :root {
   --header-offset: var(--header);
-}
-
-html[data-header-hide]:not(:has(.site-header :is([aria-expanded='true'], :focus-within))) {
-  --header-offset: 0px;
 }
 
 .site-header::before,
@@ -153,9 +137,12 @@ body:has(.hero--full) #conteudo {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
-  font-size: var(--fs-ui);
+  gap: clamp(var(--space-3), 1.4vw, var(--space-5));
+  /* Caixa alta pequena e espaçada (modelo franccino.lovable.app, 18/11/2026). */
+  font-size: var(--fs-label);
   line-height: var(--lh-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .nav-area {
@@ -261,6 +248,10 @@ body:has(.hero--full) #conteudo {
 }
 
 .nav-panel {
+  /* As categorias do painel em texto normal, sem a caixa alta do menu. */
+  font-size: var(--fs-ui);
+  letter-spacing: 0;
+  text-transform: none;
   position: absolute;
   top: 100%;
   left: 0;
@@ -291,56 +282,6 @@ body:has(.hero--full) #conteudo {
   line-height: var(--lh-h3);
   text-decoration: none;
   color: var(--ink);
-}
-
-/*
-  Produtos (revisão da Franccino, 12/11/2026, item 5, exemplo 2): "Área interna | Área externa" em cima das categorias,
-  cada uma com "Ver tudo" embaixo. Clicar numa linha a deixa em negrito e mostra só as categorias dela; clicar de novo
-  volta para todas.
-*/
-.nav-panel__tabs {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-6);
-}
-
-.nav-panel__tab {
-  display: grid;
-  justify-items: start;
-  padding-left: var(--space-4);
-  border-left: 2px solid var(--line);
-}
-
-.nav-panel__tab:first-child {
-  padding-left: 0;
-  border-left: 0;
-}
-
-.nav-panel__tab > button,
-.nav-panel__tab-link {
-  min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--ink-muted);
-  font-family: var(--font-heading);
-  font-size: var(--fs-h3);
-  font-weight: 400;
-  line-height: var(--lh-h3);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-}
-
-.nav-panel__tab > button:hover,
-.nav-panel__tab-link:hover,
-.nav-panel__tab-link:focus-visible,
-.nav-panel__tab > button[aria-pressed='true'] {
-  color: var(--ink);
-}
-
-.nav-panel__tab > button[aria-pressed='true'] {
-  font-weight: 600;
 }
 
 .nav-panel__see-all {
@@ -380,6 +321,68 @@ body:has(.hero--full) #conteudo {
 .nav-panel__list a:hover,
 .nav-panel__list a:focus-visible {
   color: var(--ink);
+}
+
+/*
+  Produtos (reunião com a Franccino, 18/11/2026, como na breton.co): o nome é um botão que abre o painel por clique,
+  com a Área interna e a Área externa lado a lado, cada uma com "Ver tudo" e as categorias em colunas.
+*/
+.nav-area--click .nav-area__trigger {
+  gap: var(--space-1);
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-area--click .nav-area__trigger .icon {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.nav-area--click.is-open .nav-area__trigger .icon {
+  transform: rotate(180deg);
+}
+
+.nav-panel__areas {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 0;
+}
+
+.nav-panel__area {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--space-1);
+  padding-right: var(--space-6);
+}
+
+.nav-panel__area + .nav-panel__area {
+  padding-left: var(--space-6);
+  border-left: 1px solid var(--line);
+}
+
+.nav-panel__heading {
+  margin: 0;
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.nav-panel__area .nav-panel__see-all {
+  margin-bottom: var(--space-3);
+}
+
+.nav-panel__area .nav-panel__list {
+  width: 100%;
+  columns: 3 150px;
+}
+
+.nav-panel__area + .nav-panel__area .nav-panel__list {
+  columns: 2 150px;
 }
 
 /* Busca, idioma, lista e menu: sempre na última coluna, encostados à direita. */
@@ -589,10 +592,27 @@ body:has(.hero--full) #conteudo {
     font-size: var(--fs-ui);
   }
 
-  /* Área interna, Área externa e Acabamentos quebram de linha em vez de sair da tela. */
-  .nav-panel__tabs {
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-5);
+  /* Produtos no menu recolhido: o botão ocupa a linha inteira e as duas áreas ficam uma embaixo da outra. */
+  .nav-area--click .nav-area__trigger {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-panel__areas {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .nav-panel__area,
+  .nav-panel__area + .nav-panel__area {
+    padding: 0;
+    border-left: 0;
+  }
+
+  .nav-panel__area .nav-panel__list,
+  .nav-panel__area + .nav-panel__area .nav-panel__list {
+    columns: 2 140px;
   }
 }
 
@@ -622,28 +642,6 @@ body:has(.hero--full) #conteudo {
     align-items: center;
     min-width: 44px;
     min-height: 44px;
-  }
-
-  /*
-    Área interna, Área externa e Acabamentos na mesma linha, com o mesmo peso (retorno de 17/11/2026: quebravam e
-    Acabamentos descia sozinho). Em 320 px o nome quebra dentro da própria coluna.
-  */
-  .nav-panel__tabs {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    justify-content: space-between;
-    gap: 0 var(--space-2);
-  }
-
-  .nav-panel__tab {
-    padding-left: var(--space-3);
-  }
-
-  .nav-panel__tab > button,
-  .nav-panel__tab-link {
-    font-size: var(--fs-caption);
-    letter-spacing: 0.02em;
-    text-align: left;
   }
   .site-header__bar {
     gap: var(--space-3);
@@ -1221,11 +1219,4 @@ body:has(.hero--full) #conteudo {
 .back-to-top:focus-visible .back-to-top__label {
   text-decoration: underline;
   text-underline-offset: 4px;
-}
-
-/* "Acabamentos" no painel de Produtos: link com o desenho das abas Área interna e Área externa. */
-.nav-panel__tab-link {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
 }

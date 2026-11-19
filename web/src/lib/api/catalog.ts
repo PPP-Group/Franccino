@@ -174,6 +174,22 @@ export async function getDownloads(
   });
 }
 
+export type CatalogDownload = {
+  file: DownloadFile;
+  owner: { type: 'product' | 'designer' | 'launch'; name: string; slug: string };
+  cover: Image | null;
+};
+
+/** Catálogos para baixar (Área do Profissional › Catálogos, reunião de 18/11/2026). Sem a API, a lista fica vazia. */
+export async function getCatalogDownloads(locale: Locale): Promise<CatalogDownload[]> {
+  const { data } = await apiGet<Item<CatalogDownload[]>>('/downloads/catalogs', {
+    locale,
+    tags: ['products', 'designers', 'launches'],
+    fallback: { data: [] },
+  });
+  return data;
+}
+
 /** Detalhes pedidos à API ao mesmo tempo (a API do preview atende 4 por vez). */
 const DETAIL_CONCURRENCY = 6;
 

@@ -12,7 +12,6 @@ export function ScenesSection({ scenes, tone }: { scenes: Scene[]; tone: Tone })
         <div className="section-head" data-reveal="">
           <div>
             <h2 id="scenes-title">{t('title')}</h2>
-            <p className="lead">{t('lead')}</p>
           </div>
         </div>
         <div className="scenes__list">

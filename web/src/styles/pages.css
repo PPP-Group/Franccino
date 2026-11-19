@@ -2495,3 +2495,105 @@
     translate: none;
   }
 }
+
+/* ---------- Área do Profissional (reunião de 18/11/2026, como a donaflormobilia.com) ---------- */
+
+/* Índice: Blocos 3D e Catálogos, uma linha larga cada, com a seta à direita. */
+.download-index {
+  list-style: none;
+  margin: var(--space-6) 0 var(--section-y);
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.download-index li {
+  border-bottom: 1px solid var(--line);
+}
+
+.download-index__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-block: var(--space-8);
+  color: inherit;
+  text-decoration: none;
+}
+
+.download-index__copy {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.download-index__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2);
+  font-weight: 300;
+  line-height: var(--lh-h2);
+}
+
+.download-index__lead {
+  color: var(--ink-muted);
+}
+
+.download-index__link .icon {
+  flex: none;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.download-index__link:hover .icon,
+.download-index__link:focus-visible .icon {
+  transform: translateX(var(--space-1));
+}
+
+/* Catálogos: um card por catálogo, com a capa, o nome, o dono, o formato e o botão de baixar. */
+.catalog-files {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space-6) var(--space-5);
+  margin: var(--space-6) 0 var(--section-y);
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-file {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.catalog-file__cover {
+  aspect-ratio: 3 / 4;
+  margin-bottom: var(--space-2);
+  background: var(--sand);
+  overflow: hidden;
+}
+
+.catalog-file__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.catalog-file__title {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+
+.catalog-file__meta {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+}
+
+@media (max-width: 35rem) {
+  .download-index__link {
+    padding-block: var(--space-6);
+  }
+
+  .catalog-files {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-4);
+  }
+}

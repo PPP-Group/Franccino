@@ -33,6 +33,7 @@ Route::prefix('v1')->name('api.v1.')->middleware(['no-store', 'content.locale'])
         Route::get('pages/{key}', [V1\PageController::class, 'show'])->name('pages.show');
         Route::get('settings', V1\SettingsController::class)->name('settings');
         Route::get('downloads', [V1\DownloadController::class, 'index'])->name('downloads.index');
+        Route::get('downloads/catalogs', [V1\DownloadController::class, 'catalogs'])->name('downloads.catalogs');
         Route::get('search', V1\SearchController::class)->name('search');
         Route::get('sitemap', V1\SitemapController::class)->name('sitemap');
         Route::get('redirects', [V1\RedirectController::class, 'index'])->name('redirects.index');

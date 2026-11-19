@@ -1023,24 +1023,30 @@
 
 /* ---------- designers ---------- */
 
-/* Uma coluna por retrato com menos de 4 (`designersShown`): a linha nunca fica com buraco. */
-.designers {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+/*
+  Faixa em loop (reunião de 18/11/2026): todos os designers passam em ordem alfabética, como a faixa de clientes. Duas
+  cópias lado a lado e a faixa anda a largura de uma (motion.css); as bordas somem num degradê.
+*/
+.designer-rail {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+}
+
+.designer-rail__track {
+  display: flex;
+  width: max-content;
+}
+
+.designer-rail__list {
+  display: flex;
   gap: var(--space-5);
+  padding: 0 var(--space-5) 0 0;
+  margin: 0;
+  list-style: none;
 }
 
-.designers--3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.designers--2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.designers--1 {
-  grid-template-columns: minmax(0, 1fr);
-  max-width: 28rem;
+.designer-rail__item {
+  width: 15rem;
 }
 
 /* Só foto e nome, como o card de peça; `align-content: start` mantém os nomes na mesma linha. */
@@ -1064,18 +1070,26 @@
   filter: grayscale(1) contrast(1.02);
 }
 
-@media (max-width: 56.25rem) {
-  .designers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-5) var(--space-4);
+@media (max-width: 35rem) {
+  .designer-rail__list {
+    gap: var(--space-4);
+    padding-right: var(--space-4);
   }
 
-  .designers--3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .designer-rail__item {
+    width: 10rem;
+  }
+}
+
+/* Parada (movimento reduzido): a faixa rola com o dedo, sem a cópia. */
+@media (prefers-reduced-motion: reduce) {
+  .designer-rail {
+    overflow-x: auto;
+    mask-image: none;
   }
 
-  .designers--1 {
-    grid-template-columns: minmax(0, 1fr);
+  .designer-rail__list[aria-hidden] {
+    display: none;
   }
 }
 

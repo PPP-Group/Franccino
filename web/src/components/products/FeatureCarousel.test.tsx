@@ -30,7 +30,7 @@ describe('FeatureCarousel', () => {
     expect(html).toMatch(/feature-carousel__item is-packshot is-active/);
     expect(html).toContain('feature-carousel__name">Mesa Época');
     expect(html.match(/tabindex="0"/g)).toHaveLength(1);
-    expect(html).toContain('01 / 03');
+    expect(html).not.toContain('01 / 03');
     // Dando a volta, a seta da esquerda já funciona na primeira peça.
     expect(html).not.toMatch(/feature-carousel__button--previous"[^>]*disabled/);
   });

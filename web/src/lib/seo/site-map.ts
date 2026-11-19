@@ -18,7 +18,6 @@ export const SITE_MAP_PAGES = [
   { key: 'finishes', namespace: 'nav', href: '/finishes' },
   { key: 'stores', namespace: 'nav', href: '/stores' },
   { key: 'downloads', namespace: 'nav', href: '/downloads' },
-  { key: 'planner', namespace: 'nav', href: '/room-planner' },
   { key: 'contact', namespace: 'nav', href: '/contact' },
   { key: 'faq', namespace: 'nav', href: '/faq' },
   { key: 'partner', namespace: 'nav', href: '/partner' },
