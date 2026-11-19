@@ -138,9 +138,7 @@ export default async function SiteMapPage({ params }: Props) {
             <ul>
               {byName(launches, (launch) => launch.title).map((launch) => (
                 <li key={launch.id}>
-                  <Link href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}>
-                    {launch.title}
-                  </Link>
+                  <Link href="/launches">{launch.title}</Link>
                 </li>
               ))}
             </ul>

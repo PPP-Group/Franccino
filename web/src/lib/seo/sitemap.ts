@@ -65,8 +65,9 @@ function hrefForEntry(entry: SitemapEntry, slug: string | null): Href | null {
       return { pathname: '/collections/[slug]', params: { slug } };
     case 'designer':
       return { pathname: '/designers/[slug]', params: { slug } };
+    // Cada lançamento leva a /lancamentos (next.config.ts), que já está entre as páginas fixas.
     case 'launch':
-      return { pathname: '/launches/[slug]', params: { slug } };
+      return null;
     case 'project':
       return { pathname: '/projects/[slug]', params: { slug } };
     default:

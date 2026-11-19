@@ -16,7 +16,7 @@ export function LaunchesSection({ launch, products, tone }: LaunchesSectionProps
           <div>
             <h2 id="launches-title">{t('title')}</h2>
           </div>
-          <Link className="link-arrow" href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}>
+          <Link className="link-arrow" href="/launches">
             <span>{t('viewAll')}</span>
             <Icon name="arrow" />
           </Link>

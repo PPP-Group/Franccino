@@ -1987,3 +1987,10 @@ lista de opções, quantidade, fotos, cartões, janelas); o painel e a documenta
 - **Documentação da API e erro do OAuth:** os mesmos 6 e 2 px.
 - **Verificação:** levantamento por script de todas as caixas em 22 páginas (antes e depois), capturas no computador e no
   celular (menu, busca, lista de opções, acabamento ampliado, cartão do ponto, WhatsApp); lint, typecheck e 507 testes.
+
+### 45.1 Mesmo dia: uma página só de lançamentos
+
+O menu levava a `/pt/lancamentos` e o "Ver todos" do carrossel da home a `/pt/lancamentos/lancamentos-2026` (a página do
+único lançamento, com as mesmas peças). Agora tudo leva a `/pt/lancamentos` (home, bloco da página Coleções e mapa do
+site); o endereço de cada lançamento redireciona para ela (308, `next.config.ts`, também `/en/new-arrivals/...`) e saiu
+do sitemap. A página por lançamento continua no código, sem link.
