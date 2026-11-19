@@ -2,7 +2,7 @@
 
 Documento de passagem de contexto, para continuar o trabalho em outra conta ou sessão. As seções 1 a 11 fecham a
 sessão de 2026-09-30 a 2026-10-04; as seções 12 em diante registram cada sessão seguinte, em ordem. Cada seção
-descreve o estado do dia dela: **o estado atual é o da última seção** (44, de 19/11/2026). Quando uma seção antiga
+descreve o estado do dia dela: **o estado atual é o da última seção** (45, de 19/11/2026). Quando uma seção antiga
 diz que um PR está aberto ou que não há outras branches, vale o que vem depois.
 
 - **Estado técnico detalhado do projeto** (fases P1–P5, ledgers, pendências de contrato):
@@ -1961,3 +1961,29 @@ Com o ok do Pedro Ivo, tudo foi enviado pelo conector (nada passou pelo reposit�
 (fotos, textos e arquivos reais, no computador e no celular): versão 1, esteira em fundo branco e ficha organizada
 (recomendada); versão 2, editorial com a abertura em tela cheia. Entregue ao Pedro Ivo; não está no repositório. A
 implementação espera a escolha (PPP-43).
+
+## 45. 19/11/2026 (noite): uma regra só para os cantos, no site, no painel e na documentação da API
+
+Pedido do Pedro Ivo: elementos arredondados misturados com quadrados. O arredondamento veio da revisão da Franccino de
+18/11 (a seção 44: "cantos levemente arredondados", modelo franccino.lovable.app), mas a sessão daquele dia pôs 6 px só
+em botões, campos e filtros, uma pílula de 999 px no WhatsApp e no Fotos/3D e deixou o resto reto (setas, "+" do card,
+lista de opções, quantidade, fotos, cartões, janelas); o painel e a documentação da API seguiam todos retos.
+
+- **A regra** (`web/src/styles/radius.css`, `web/DESIGN.md` "The Corner Rule"):
+  - 6 px (`--radius`) em toda caixa: controles, fotos na coluna do conteúdo (a foto dentro segue o canto do quadro),
+    blocos com moldura, janelas e painéis que flutuam;
+  - 2 px (`--radius-inner`) no que fica dentro de uma caixa com folga de até 4 px (raio interno = externo menos a folga):
+    opções da lista, metade escolhida da Grade/Downloads e do Fotos/3D, caixa de seleção;
+  - círculo só nos marcadores (pontos das fotos, pinos do mapa, bolinhas da linha do tempo e da área, rádio);
+  - reto no que encosta na borda da tela (banners, faixas, rodapé, mosaicos de ponta a ponta, menu e busca abertos, barra
+    de cookies, foto da peça no celular) e nas bordas de um lado só, que são linhas e entortariam nas pontas.
+- **Como fica garantido:** o `radius.css` é o único CSS com `border-radius`, numa camada própria depois de `components`
+  (vale sobre qualquer regra de componente). Os raios soltos dos outros arquivos saíram. `radius.test.ts` reprova raio
+  fora dele, valor fora dos tokens e `borderRadius`/`rounded-*` nos componentes. Componente novo: o seletor entra no
+  grupo certo do `radius.css`.
+- **Painel:** os tamanhos do Filament (`--radius-xs` a `--radius-3xl`) caem em 2 e 6 px, e as caixas próprias (boas-vindas,
+  atalhos, central de ajuda, uploads, pontos nas fotos, tour) e a marcação dos pontos seguem os mesmos valores. **Não
+  conferido na tela** (sem PHP 8.4 aqui): olhar o painel depois do deploy.
+- **Documentação da API e erro do OAuth:** os mesmos 6 e 2 px.
+- **Verificação:** levantamento por script de todas as caixas em 22 páginas (antes e depois), capturas no computador e no
+  celular (menu, busca, lista de opções, acabamento ampliado, cartão do ponto, WhatsApp); lint, typecheck e 507 testes.

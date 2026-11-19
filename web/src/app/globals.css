@@ -16,6 +16,7 @@
 @import '../styles/ideas.css' layer(components);
 @import '../styles/carousel.css' layer(components);
 @import '../styles/motion.css' layer(components);
+@import '../styles/radius.css' layer(radius);
 
 @theme inline {
   --color-*: initial;

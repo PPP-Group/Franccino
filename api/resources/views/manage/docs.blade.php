@@ -10,7 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         /* As cores e a fonte do site (web/src/styles/tokens.css e base.css; revisão de 18/11/2026). */
-        :root { --ink: #171717; --muted: #57564f; --line: #dcd9d1; --line-strong: #bdb9ae; --paper: #fff; --sand: #f4efe6; --sand-soft: #faf8f4; --wood: #7b4b2a; --garden: #2e4a37; --alert: #9b2c1f; }
+        :root { --ink: #171717; --muted: #57564f; --line: #dcd9d1; --line-strong: #bdb9ae; --paper: #fff; --sand: #f4efe6; --sand-soft: #faf8f4; --wood: #7b4b2a; --garden: #2e4a37; --alert: #9b2c1f;
+            /* Cantos: a regra do site (web/src/styles/radius.css): 6 px nas caixas, 2 px nas etiquetas pequenas. */
+            --radius: 6px; --radius-inner: 2px; }
         * { box-sizing: border-box; scrollbar-width: thin; }
         html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; scrollbar-color: var(--muted) var(--sand); }
         @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -27,7 +29,7 @@
 
         .toc { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); display: flex; flex-direction: column; gap: .75rem; font-size: .9rem; }
         .toc__search { position: relative; }
-        .toc__search input { width: 100%; padding: .6rem .75rem .6rem 2.1rem; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line-strong); border-radius: 0; outline: none; }
+        .toc__search input { width: 100%; padding: .6rem .75rem .6rem 2.1rem; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius); outline: none; }
         .toc__search input:focus { border-color: var(--ink); }
         .toc__search svg { position: absolute; left: .7rem; top: 50%; width: 1rem; height: 1rem; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
         .toc__search kbd { position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); font: .75rem Jost, sans-serif; color: var(--muted); border: 1px solid var(--line); padding: 0 .35rem; }
@@ -62,6 +64,8 @@
         th { font-weight: 500; }
         .tag { font-size: .75rem; padding: .05rem .4rem; border: 1px solid var(--line); margin-left: .25rem; color: var(--muted); }
         mark { background: var(--sand); color: inherit; padding: 0 .1em; }
+        section.guide, article, pre, .empty, .toc__search input { border-radius: var(--radius); }
+        .method, .tag, .toc__search kbd, :not(pre) > code { border-radius: var(--radius-inner); }
         .empty { padding: 2rem; text-align: center; color: var(--muted); border: 1px dashed var(--line-strong); }
         @media (max-width: 52rem) {
             .wrap { grid-template-columns: 1fr; gap: 1.5rem; }

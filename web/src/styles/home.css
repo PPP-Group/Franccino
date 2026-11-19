@@ -674,7 +674,6 @@
   width: 18px;
   height: 18px;
   border: 2px solid var(--paper);
-  border-radius: 50%;
   background: var(--on-photo-rule);
   box-shadow: 0 0 0 0 var(--on-photo-muted);
   transition: transform var(--t-fast) var(--ease-out);
@@ -718,7 +717,6 @@
   width: 200px;
   background: var(--paper);
   /* Cantos arredondados (revisão da Franccino, 18/11/2026: o quadrado branco sobre a foto ficava duro). */
-  border-radius: var(--radius-control);
   overflow: hidden;
   /* Sobre os banners o texto da página é claro: o cartão tem sempre o texto escuro (o nome sumia em alguns pontos). */
   color: var(--ink);
