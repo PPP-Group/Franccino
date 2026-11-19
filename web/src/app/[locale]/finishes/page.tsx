@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { FinishZoom } from '@/components/catalog/FinishZoom';
 import { EmptyNotice } from '@/components/content/EmptyNotice';
 import { PageHead } from '@/components/layout/PageHead';
+import { Icon } from '@/components/ui/Icon';
 import type { Locale } from '@/i18n/config';
 import { getFinishes } from '@/lib/api/catalog';
 import { getPage } from '@/lib/api/content';
@@ -46,12 +47,16 @@ export default async function FinishesPage({ params }: Props) {
       {groups.length === 0 ? (
         <EmptyNotice text={common('nothingYet')} />
       ) : (
-        <div className="finish-groups">
-          {groups.map((group) => (
-            <section key={group.id} className="finish-group" aria-labelledby={`finish-group-${group.id}`}>
-              <h2 id={`finish-group-${group.id}`} className="section-title">
-                {group.name}
-              </h2>
+        // Cada grupo (Madeiras, Tecidos...) abre ali mesmo, embaixo do nome (reunião com a Franccino, 18/11/2026: com
+        // dezenas de acabamentos por grupo, um embaixo do outro a página não acabava). O primeiro já vem aberto.
+        <div className="finish-groups finish-groups--accordion">
+          {groups.map((group, index) => (
+            <details key={group.id} className="finish-group" open={index === 0}>
+              <summary className="finish-group__summary">
+                <h2 className="finish-group__name">{group.name}</h2>
+                <span className="meta num">{t('count', { count: group.items.length })}</span>
+                <Icon name="chevron" className="finish-group__chevron" />
+              </summary>
               <ul className="finish-grid">
                 {group.items.map((item) => (
                   <li key={item.id} className="finish-card">
@@ -75,7 +80,7 @@ export default async function FinishesPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
-            </section>
+            </details>
           ))}
         </div>
       )}

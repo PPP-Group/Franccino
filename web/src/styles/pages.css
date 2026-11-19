@@ -2610,3 +2610,48 @@
     gap: var(--space-5) var(--space-4);
   }
 }
+
+/* Acabamentos em grupos que abrem (reunião de 18/11/2026): o nome do grupo numa linha larga, com a contagem e a seta. */
+.finish-groups--accordion {
+  display: block;
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.finish-groups--accordion .finish-group {
+  border-bottom: 1px solid var(--line);
+}
+
+.finish-group__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 72px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.finish-group__summary::-webkit-details-marker {
+  display: none;
+}
+
+.finish-group__name {
+  flex: 1;
+  font-size: var(--fs-h3);
+  letter-spacing: var(--tracking-title);
+  text-transform: uppercase;
+}
+
+.finish-group__chevron {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.finish-group[open] .finish-group__chevron {
+  transform: rotate(180deg);
+}
+
+.finish-groups--accordion .finish-grid {
+  padding-bottom: var(--space-6);
+}
