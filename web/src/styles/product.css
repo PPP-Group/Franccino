@@ -94,7 +94,6 @@
   display: inline-flex;
   /* R17: borda de controle >= 3:1 (`--line` sozinho fica abaixo disso). Menor e arredondado (revisão de 18/11/2026). */
   border: 1px solid var(--line-field);
-  border-radius: var(--radius-pill);
   overflow: hidden;
   background: var(--paper);
 }

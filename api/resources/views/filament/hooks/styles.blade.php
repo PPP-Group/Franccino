@@ -5,14 +5,24 @@
 <style>
     /*
         Visual do site no painel (revisão de 17/11/2026: "tem que ficar muito parecido com o próprio site"). Regras do
-        site (web/DESIGN.md): Jost em tudo, preto no branco, cantos retos, sem sombra, linhas finas, fundo areia para
+        site (web/DESIGN.md): Jost em tudo, preto no branco, cantos levemente arredondados, sem sombra, linhas finas, fundo areia para
         separar áreas e espaços na grade de 4 px. A fonte vem do `->font('Jost')` do painel.
     */
     :root {
-        --radius-sm: 0;
-        --radius-md: 0;
-        --radius-lg: 0;
-        --radius-xl: 0;
+        /*
+            Cantos: a mesma regra do site (web/src/styles/radius.css). 6 px em toda caixa (botão, campo, cartão, janela,
+            foto), 2 px no que fica dentro dela (caixa de seleção, item da lista) e círculo só nos marcadores. Os tamanhos
+            do Filament (rounded-sm a rounded-3xl) caem nesses dois valores.
+        */
+        --fr-radius: 6px;
+        --fr-radius-inner: 2px;
+        --radius-xs: var(--fr-radius-inner);
+        --radius-sm: var(--fr-radius-inner);
+        --radius-md: var(--fr-radius);
+        --radius-lg: var(--fr-radius);
+        --radius-xl: var(--fr-radius);
+        --radius-2xl: var(--fr-radius);
+        --radius-3xl: var(--fr-radius);
         --fr-ink: #171717;
         --fr-muted: #57564f;
         --fr-line: #dcd9d1;
@@ -44,7 +54,7 @@
     .fi-section-header-heading, .fi-modal-heading { font-weight: 500; letter-spacing: 0; }
     /* Rótulos de grupo do menu em versalete, como os metadados do site. */
     .fi-sidebar-group-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fr-muted); }
-    .fi-sidebar-item-btn { border-radius: 0; }
+    .fi-sidebar-item-btn { border-radius: var(--fr-radius); }
     .fi-sidebar-item.fi-active .fi-sidebar-item-btn { background: var(--fr-sand); }
     .fi-sidebar-item.fi-active .fi-sidebar-item-label, .fi-sidebar-item.fi-active .fi-sidebar-item-icon { color: var(--fr-ink); }
     /* Botões principais em preto, texto branco e cantos retos, como "Aceitar todos" do site. */
@@ -63,7 +73,7 @@
 
     .fr-topbar-help {
         display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.25rem; padding: 0 0.75rem;
-        margin-inline-end: 0.5rem; border-radius: 0; color: var(--gray-700); font-size: 0.875rem; font-weight: 500;
+        margin-inline-end: 0.5rem; border-radius: var(--fr-radius); color: var(--gray-700); font-size: 0.875rem; font-weight: 500;
     }
     .fr-topbar-help:hover, .fr-topbar-help:focus-visible { background: var(--gray-100); color: var(--gray-950); }
     .fr-topbar-help__icon { width: 1.25rem; height: 1.25rem; }
@@ -77,6 +87,13 @@
     .fr-welcome__title { margin: 0; font-size: 1.875rem; line-height: 1.2; color: var(--gray-950); }
     .fr-welcome__text { margin: 0.25rem 0 0; max-width: 60ch; color: var(--gray-700); }
     .fr-welcome__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    /* Caixas próprias do painel, no mesmo canto das do Filament. */
+    .fr-desktop-note, .fr-welcome, .fr-shortcut, .fr-api__url, .fr-api__steps li::before, .fr-photo-points__item,
+    .fr-photo-points__item img, .fr-help__card, .fr-help__step-number, .fr-help__tips-box, .fr-help__video {
+        border-radius: var(--fr-radius);
+    }
+    .fr-photo-points__item img { border-radius: var(--fr-radius-inner); }
 
     .fr-shortcuts { display: grid; grid-template-columns: repeat(var(--fr-cols, 4), minmax(0, 1fr)); gap: 0.75rem; }
     @media (max-width: 767px) { .fr-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fr-shortcuts > * { grid-column: auto !important; } }
@@ -96,11 +113,11 @@
     .fr-upload--photo .filepond--file-info-main { display: none; }
     .fr-upload--photo .filepond--image-preview-overlay-idle { display: none; }
     .fr-upload--photo .filepond--file-info { color: var(--fr-ink); text-shadow: none; }
-    .fr-upload--photo .filepond--image-preview-wrapper, .fr-upload--photo .filepond--item > fieldset { border-radius: 0; }
-    .fr-upload--photo .filepond--item-panel { border-radius: 0; }
+    .fr-upload--photo .filepond--image-preview-wrapper, .fr-upload--photo .filepond--item > fieldset { border-radius: var(--fr-radius); }
+    .fr-upload--photo .filepond--item-panel { border-radius: var(--fr-radius); }
     .fr-upload--file .filepond--root { max-width: 32rem; }
     .fr-upload--file video, .fr-upload--file .filepond--media-preview-wrapper { max-height: 12rem; }
-    .fr-upload .filepond--panel-root { border-radius: 0; background: #fff; border: 1px dashed var(--fr-line); }
+    .fr-upload .filepond--panel-root { border-radius: var(--fr-radius); background: #fff; border: 1px dashed var(--fr-line); }
     .fr-upload .filepond--drop-label { min-height: 4rem; }
 
     /* API e conectores (revisão de 17/11/2026: espaçamento, texto amontoado e fontes diferentes). */
@@ -190,7 +207,7 @@
     .fr-tour { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 1rem; }
     .fr-tour__backdrop { position: absolute; inset: 0; background: rgb(15 15 15 / 0.45); }
     .fr-tour__dialog {
-        position: relative; width: min(32rem, 100%); padding: 1.75rem; border-radius: 0;
+        position: relative; width: min(32rem, 100%); padding: 1.75rem; border-radius: var(--fr-radius);
         background: #fff; box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.35); outline: none;
     }
     .fr-tour__counter { margin: 0; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary-600); }

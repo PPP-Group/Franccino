@@ -54,7 +54,7 @@ export default async function CollectionsPage({ params }: Props) {
           ))}
           {fill && launch ? (
             <CoverTile
-              href={{ pathname: '/launches/[slug]', params: { slug: launch.slug } }}
+              href="/launches"
               title={launch.title}
               cta={t('fillLaunch')}
               image={launch.cover}

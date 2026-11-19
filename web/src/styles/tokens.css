@@ -83,11 +83,13 @@
   --tracking-heading: 0.02em;
   --tracking-title: 0.12em;
   /*
-    Cantos levemente arredondados em botões, campos e filtros (revisão da Franccino, 18/11/2026: o site todo em linhas
-    retas ficava sério demais para uma marca de peças orgânicas). Fotos e blocos continuam retos.
+    Cantos (revisão da Franccino, 18/11/2026: cantos levemente arredondados). Um raio só para toda caixa, o interno para
+    o que fica dentro dela (raio externo menos a folga de 4 px) e o círculo para os marcadores. Quem usa cada um está
+    em styles/radius.css, o único arquivo que declara `border-radius` (web/DESIGN.md, "The Corner Rule").
   */
-  --radius-control: 6px;
-  --radius-pill: 999px;
+  --radius: 6px;
+  --radius-inner: 2px;
+  --radius-round: 50%;
   --weight-light: 300;
   --tracking-label: 0.08em;
 
