@@ -5,7 +5,7 @@ describe('localized pathnames', () => {
   it.each([
     [{ pathname: '/products' }, 'pt', '/pt/produtos'],
     [{ pathname: '/products' }, 'en', '/en/products'],
-    [{ pathname: '/launches' }, 'en', '/en/novelties'],
+    [{ pathname: '/launches' }, 'en', '/en/new-arrivals'],
     [{ pathname: '/projects' }, 'pt', '/pt/corporativo'],
     [{ pathname: '/projects' }, 'en', '/en/corporate'],
     [{ pathname: '/projects/[slug]', params: { slug: 'clara-arte' } }, 'pt', '/pt/corporativo/clara-arte'],

@@ -82,6 +82,12 @@
   --lh-ui: 1.4;
   --tracking-heading: 0.02em;
   --tracking-title: 0.12em;
+  /*
+    Cantos levemente arredondados em botões, campos e filtros (revisão da Franccino, 18/11/2026: o site todo em linhas
+    retas ficava sério demais para uma marca de peças orgânicas). Fotos e blocos continuam retos.
+  */
+  --radius-control: 6px;
+  --radius-pill: 999px;
   --weight-light: 300;
   --tracking-label: 0.08em;
 

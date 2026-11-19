@@ -16,7 +16,7 @@
     "indoor": "Indoor",
     "outdoor": "Outdoor",
     "products": "Products",
-    "launches": "Novelties",
+    "launches": "New arrivals",
     "collections": "Collections",
     "designers": "Designers",
     "projects": "Contract",
@@ -315,7 +315,7 @@
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
         "revit": "Revit",
-        "glb": "GLB (3D)"
+        "glb": "GLB (AR)"
       },
       "professionalsPiece": "See this piece's files in the Professionals area",
       "allVersions": "See all {count} versions"
@@ -328,7 +328,8 @@
     },
     "variants": {
       "title": "Variations"
-    }
+    },
+    "back": "Back"
   },
   "catalog": {
     "filters": {
@@ -385,9 +386,9 @@
     },
     "launches": {
       "downloads": "Catalogs and presentations",
-      "title": "Novelties",
+      "title": "New arrivals",
       "intro": "Collections and pieces launched by Franccino.",
-      "empty": "No novelties have been published at the moment."
+      "empty": "No new arrivals have been published at the moment."
     },
     "table": {
       "label": "Downloads",
@@ -602,7 +603,7 @@
       "point": "Discover {name}"
     },
     "launches": {
-      "title": "Novelties",
+      "title": "New arrivals",
       "viewAll": "Discover the launch"
     },
     "lines": {
@@ -658,7 +659,7 @@
     "gallery": "Collection images",
     "piecesTitle": "Pieces in the collection",
     "othersTitle": "Other collections",
-    "fillLaunch": "Discover the novelties",
+    "fillLaunch": "Discover the new arrivals",
     "fillAllTitle": "All pieces",
     "fillAllCta": "Discover the pieces",
     "video": "{name} collection film"

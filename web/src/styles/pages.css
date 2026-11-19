@@ -2045,6 +2045,19 @@
   background: var(--paper);
 }
 
+/*
+  Página da peça: tudo em branco (revisão da Franccino, 18/11/2026: as peças em quadrados brancos sobre o areia não
+  ficavam bem); as seções se separam por um fio.
+*/
+.tone-stack--paper > :nth-child(odd),
+.tone-stack--paper > :nth-child(even) {
+  background: var(--paper);
+}
+
+.tone-stack--paper > * + * {
+  border-top: 1px solid var(--line);
+}
+
 /* Faixa do designer com outras peças dele à direita do texto (sem a direita vazia). */
 .designer-strip--pieces {
   grid-template-columns: 160px minmax(0, 6fr) minmax(0, 5fr);

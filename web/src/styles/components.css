@@ -687,3 +687,25 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
+
+/* Cantos levemente arredondados nos controles (revisão da Franccino, 18/11/2026). Fotos e blocos continuam retos. */
+.btn,
+.chip,
+.file-link,
+.select__button,
+.select__list,
+.view-toggle,
+.filter-disclosure__toggle,
+.pagination a,
+.pagination span,
+.field input,
+.field select,
+.field textarea,
+.search-form input,
+.qty {
+  border-radius: var(--radius-control);
+}
+
+.view-toggle {
+  overflow: hidden;
+}

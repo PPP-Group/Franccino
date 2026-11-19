@@ -315,7 +315,7 @@
         "sketchup": "SketchUp",
         "autocad": "AutoCAD",
         "revit": "Revit",
-        "glb": "GLB (3D)"
+        "glb": "GLB (AR)"
       },
       "professionalsPiece": "Ver os arquivos desta peça na Área do Profissional",
       "allVersions": "Ver todas as {count} versões"
@@ -328,7 +328,8 @@
     },
     "variants": {
       "title": "Variações"
-    }
+    },
+    "back": "Voltar"
   },
   "catalog": {
     "filters": {

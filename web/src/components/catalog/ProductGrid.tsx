@@ -19,7 +19,7 @@ type ProductGridProps = {
   showNew?: boolean;
   /** Quantas primeiras imagens carregam com prioridade (LCP das listagens). */
   priorityCount?: number;
-  /** Completa a última linha com o bloco de ajuda (grade sempre completa, rodada 3). */
+  /** Completa a última linha com o bloco de ajuda (desligado desde 18/11/2026: a Franccino achou repetitivo). */
   fill?: boolean;
   /** Grade principal da lista: recebe em primeiro a peça de onde a lista foi aberta (`LeadPlate`). */
   lead?: boolean;
@@ -29,7 +29,7 @@ export function ProductGrid({
   products,
   showNew = false,
   priorityCount = 0,
-  fill = true,
+  fill = false,
   lead = false,
 }: ProductGridProps) {
   const fillClass = fill ? gridFillClass(products.length) : null;

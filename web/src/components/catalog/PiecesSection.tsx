@@ -10,8 +10,9 @@ import { ProductGrid } from './ProductGrid';
 import { TechTable } from './TechTable';
 
 /**
- * As peças de uma coleção, designer ou lançamento, sempre no mesmo formato (retorno de 09/11/2026): o carrossel da
- * ideia 01 quando há peças para ele, e embaixo a grade e a tabela técnica com a barra do catálogo.
+ * As peças de uma coleção, designer ou lançamento, sempre no mesmo formato (retorno de 09/11/2026). Com o carrossel da
+ * ideia 01, embaixo dele vêm só os downloads das peças (revisão da Franccino, 18/11/2026: a grade repetia as fotos do
+ * carrossel). Sem carrossel (poucas peças), a grade e os downloads com a barra do catálogo.
  */
 export async function PiecesSection({
   id,
@@ -42,13 +43,18 @@ export async function PiecesSection({
         {title}
       </h2>
       {carousel && fitsFeatureCarousel(products.length) ? (
-        <FeatureCarousel label={title} products={carouselPieces(products)} />
-      ) : null}
-      <PiecesViews
-        count={t('count', { count: products.length })}
-        grid={<ProductGrid lead products={products} priorityCount={3} />}
-        table={<TechTable rows={details.map(toTechnicalRow)} />}
-      />
+        <>
+          <FeatureCarousel label={title} products={carouselPieces(products)} />
+          <h3 className="pieces-downloads__title">{t('table.label')}</h3>
+          <TechTable rows={details.map(toTechnicalRow)} />
+        </>
+      ) : (
+        <PiecesViews
+          count={t('count', { count: products.length })}
+          grid={<ProductGrid lead products={products} priorityCount={3} />}
+          table={<TechTable rows={details.map(toTechnicalRow)} />}
+        />
+      )}
     </section>
   );
 }

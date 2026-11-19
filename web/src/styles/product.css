@@ -92,17 +92,19 @@
   top: var(--space-4);
   left: var(--space-4);
   display: inline-flex;
-  /* R17: borda de controle >= 3:1 (`--line` sozinho fica abaixo disso). */
+  /* R17: borda de controle >= 3:1 (`--line` sozinho fica abaixo disso). Menor e arredondado (revisão de 18/11/2026). */
   border: 1px solid var(--line-field);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
   background: var(--paper);
 }
 
 .stage-toggle button {
   border: 0;
   background: transparent;
-  padding: var(--space-2) var(--space-4);
-  min-height: 44px;
-  font-size: var(--fs-ui);
+  padding: var(--space-1) var(--space-3);
+  min-height: 34px;
+  font-size: var(--fs-caption);
   cursor: pointer;
   display: inline-flex;
   gap: var(--space-2);
@@ -300,7 +302,8 @@
 
 .dims svg {
   width: 100%;
-  max-width: 26rem;
+  /* Menor (revisão da Franccino, 18/11/2026: a parte técnica mais discreta). */
+  max-width: 16rem;
   height: auto;
   background: var(--paper);
   border: 1px solid var(--line);
@@ -990,4 +993,33 @@ a.colors__item:focus-visible {
 
 .clamped__toggle:hover {
   text-decoration-thickness: 2px;
+}
+
+/* "Voltar" ao lado do caminho, no alto da peça (revisão da Franccino, 18/11/2026). */
+.product-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+}
+
+.back-link__arrow {
+  width: 16px;
+  height: 16px;
+  transform: scaleX(-1);
 }
